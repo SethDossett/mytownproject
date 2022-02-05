@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0b74fa13b73f9546a2101f1fe594207, type: 3}
+  m_Name: Jerry
+  m_EditorClassIdentifier: 
+  runDestination: 0
+  atDestination: 1
+  currentDestinationIndex: 3
+  destinations:
+  - {fileID: 2135613231336341715, guid: 88f5c0fa4a3a2f246a7d63b3f8af2bb9, type: 3}
+  - {fileID: 906247134492879977, guid: 5201169036174b34282c7281aa95e6da, type: 3}
+  - {fileID: 2135613231336341715, guid: 88f5c0fa4a3a2f246a7d63b3f8af2bb9, type: 3}
+  - {fileID: 906247134492879977, guid: 5201169036174b34282c7281aa95e6da, type: 3}
