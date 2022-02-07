@@ -45,7 +45,6 @@ namespace KinematicCharacterController.Examples
     public class TheCharacterController : MonoBehaviour, ICharacterController
     {
         public KinematicCharacterMotor Motor;
-        private Interactable interactableScript;
 
         [Header("Stable Movement")]
         public float MaxStableMoveSpeed = 10f;
@@ -95,12 +94,6 @@ namespace KinematicCharacterController.Examples
         private Vector3 _internalVelocityAdd = Vector3.zero;
         private bool _shouldBeCrouching = false;
         private bool _isCrouching = false;
-        private bool _interactRequested = false;
-        private bool _hasInteracted = false;
-        [SerializeField] private bool _canInteract = false;
-        public LayerMask interactableLayer;
-        [SerializeField] private Vector3 offset;
-        [SerializeField] private float interactRayLength = 2f;
 
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
@@ -153,6 +146,7 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
+                        
                         break;
                     }
             }
@@ -224,32 +218,6 @@ namespace KinematicCharacterController.Examples
                         {
                             _shouldBeCrouching = false;
                         }
-
-                        // Interact input
-                        /*if (Physics.Raycast(transform.position + offset, transform.forward, out RaycastHit hitinfo, interactRayLength))
-                        {
-                            if (hitinfo.collider.gameObject.layer == 8 && (interactableScript == null || hitinfo.collider.gameObject.GetInstanceID() != interactableScript.GetInstanceID()))
-                            {
-                                hitinfo.collider.TryGetComponent(out interactableScript);
-
-                                if (interactableScript)
-                                    interactableScript.OnFocus();
-                                Debug.DrawRay(transform.position + offset, transform.forward,Color.red, interactRayLength);
-
-                            }
-                            else if (interactableScript)
-                            {
-                                interactableScript.OnLoseFocus();
-                                interactableScript = null;
-                            }
-                        }
-
-                        if (inputs.Interact && interactableScript != null && Physics.Raycast(transform.position + offset, transform.forward, out RaycastHit hit, interactRayLength, interactableLayer))
-                        {
-                            Debug.Log("input hit");
-                            interactableScript.OnInteract();
-                            
-                        }*/
                         break;
                     }
             }
@@ -521,9 +489,6 @@ namespace KinematicCharacterController.Examples
                             }
                         }
 
-                        // Handle interacting
-                        
-                        
                         break;
                     }
             }

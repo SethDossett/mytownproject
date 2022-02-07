@@ -75,29 +75,6 @@ namespace KinematicCharacterController.Examples
             UpdateOnImages();
         }
 
-        public void Spawn()
-        {
-            for (int i = 0; i < AIController.Characters.Count; i++)
-            {
-                Destroy(AIController.Characters[i].gameObject);
-            }
-            AIController.Characters.Clear();
-
-            int charsPerRow = Mathf.CeilToInt(Mathf.Sqrt(SpawnCount));
-            Vector3 firstPos = ((charsPerRow * SpawnDistance) * 0.5f) * -Vector3.one;
-            firstPos.y = 0f;
-
-            for (int i = 0; i < SpawnCount; i++)
-            {
-                int row = i / charsPerRow;
-                int col = i % charsPerRow;
-                Vector3 pos = firstPos + (Vector3.right * row * SpawnDistance) + (Vector3.forward * col * SpawnDistance);
-
-                TheCharacterController newChar = Instantiate(CharacterPrefab);
-                newChar.Motor.SetPosition(pos);
-
-                AIController.Characters.Add(newChar);
-            }
-        }
+        
     }
 }
