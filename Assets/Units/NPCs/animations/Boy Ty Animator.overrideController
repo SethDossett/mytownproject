@@ -7,10 +7,9 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Boy Ty Animator
-  m_Controller: {fileID: 9100000, guid: e9202455a42796c4f9a99e321cb099a3, type: 2}
+  m_Controller: {fileID: 9100000, guid: b9abafac811479648986164c9f5a6990, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: dfef10ac66d7f8a46a62dc5ee9d46653, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 6ae14e147fd279849931c430b74ca6b5, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 6ae14e147fd279849931c430b74ca6b5, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: 8775dd44a26a2164dbd2a0bd2a0bc329, type: 2}
-    m_OverrideClip: {fileID: -203655887218126122, guid: add7555790a382643a986ac51309f708,
-      type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 28e7826b357027b49969c98115bc12ac, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 014ecbe553353774caee4c8db7be11f7, type: 2}

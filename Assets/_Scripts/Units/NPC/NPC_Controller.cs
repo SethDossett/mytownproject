@@ -4,14 +4,22 @@ using KinematicCharacterController;
 
 
 
+public struct NPCCharacterInputs
+{
+    public Vector3 MoveVector;
+    public Vector3 LookVector;
+}
+
 public class NPC_Controller : MonoBehaviour, ICharacterController
 {
-    public enum CharacterState
+    public enum NPCCharacterState
     {
         Default, Talking
     }
 
-    [field: SerializeField] public CharacterState CurrentCharacterState { get; private set; }
+    
+
+    public NPCCharacterState CurrentCharacterState { get; private set; }
 
     [Header("References")]
     public KinematicCharacterMotor Motor;
@@ -35,8 +43,8 @@ public class NPC_Controller : MonoBehaviour, ICharacterController
     private RaycastHit[] _probedHits = new RaycastHit[8];
     private Vector3 _internalVelocityAdd = Vector3.zero;
 
-    [SerializeField] private Vector3 _lookInputVector;
-    [SerializeField] private Vector3 _moveInputVector;
+    private Vector3 _lookInputVector;
+    private Vector3 _moveInputVector;
 
     
 
@@ -44,7 +52,7 @@ public class NPC_Controller : MonoBehaviour, ICharacterController
     private void Awake()
     {
         // Handle initial state
-        TransitionToState(CharacterState.Default);
+        TransitionToState(NPCCharacterState.Default);
 
         // Assign the characterController to the motor
         Motor.CharacterController = this;
@@ -58,9 +66,9 @@ public class NPC_Controller : MonoBehaviour, ICharacterController
     /// <summary>
     /// Handles movement state transitions and enter/exit callbacks
     /// </summary>
-    public void TransitionToState(CharacterState newState)
+    public void TransitionToState(NPCCharacterState newState)
     {
-        CharacterState tmpInitialState = CurrentCharacterState;
+        NPCCharacterState tmpInitialState = CurrentCharacterState;
         OnStateExit(tmpInitialState, newState);
         CurrentCharacterState = newState;
         OnStateEnter(newState, tmpInitialState);
@@ -69,11 +77,11 @@ public class NPC_Controller : MonoBehaviour, ICharacterController
     /// <summary>
     /// Event when entering a state
     /// </summary>
-    public void OnStateEnter(CharacterState state, CharacterState fromState)
+    public void OnStateEnter(NPCCharacterState state, NPCCharacterState fromState)
     {
         switch (state)
         {
-            case CharacterState.Default:
+            case NPCCharacterState.Default:
                 {
                     break;
                 }
@@ -83,11 +91,11 @@ public class NPC_Controller : MonoBehaviour, ICharacterController
     /// <summary>
     /// Event when exiting a state
     /// </summary>
-    public void OnStateExit(CharacterState state, CharacterState toState)
+    public void OnStateExit(NPCCharacterState state, NPCCharacterState toState)
     {
         switch (state)
         {
-            case CharacterState.Default:
+            case NPCCharacterState.Default:
                 {
 
                     break;
@@ -99,6 +107,12 @@ public class NPC_Controller : MonoBehaviour, ICharacterController
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
 
+    }
+
+    public void SetInputs(ref NPCCharacterInputs inputs)
+    {
+        _moveInputVector = inputs.MoveVector;
+        _lookInputVector = inputs.LookVector;
     }
 
     public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
