@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class NPC_ScriptableObject : ScriptableObject
 {
     public float MoveSpeed = 1f;
+    public Vector3[] significantLocation;
 
     public bool runDestination = false;
     public bool atDestination = true;

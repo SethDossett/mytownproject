@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class NPC_DestinationHandler : MonoBehaviour
 {
+    public static UnityAction<Vector3> OnDestinationReached;
+
     [Header("References")]
     [SerializeField] NPC_ScriptableObject NPC;
     [SerializeField] NPC_StateHandler _stateHandler;
@@ -10,22 +13,23 @@ public class NPC_DestinationHandler : MonoBehaviour
     Transform _transform;
     Rigidbody rb;
 
+
+    [Header("Values")]
+    [SerializeField] bool _atDestination;
+    Vector3 _moveTowards;
     Vector3 _currentPosition;
     Vector3 _destination;
     Transform _nextDestination;
     int currentDestination;
-    [SerializeField] bool _atDestination;
+    
     bool _shouldMove;
 
-    float timer;
-    float duration = 5f;
     private void Awake()
     {
         _transform = transform;
         rb = GetComponent<Rigidbody>();
         AILerp = GetComponent<Pathfinding.AILerp>();
         AIDestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
-        //_stateHandler = NPC_StateHandler.instance;
     }
     private void Start()
     {
@@ -33,7 +37,7 @@ public class NPC_DestinationHandler : MonoBehaviour
         NPC.atDestination = true;
 
 
-        NPC.lastDestinationPosition = transform.position;
+        NPC.lastDestinationPosition = _transform.position;
         NPC.Index = 0;
         _shouldMove = true;
     }
@@ -106,17 +110,15 @@ public class NPC_DestinationHandler : MonoBehaviour
     {
         if (!_shouldMove)
             return;
-        
-        timer += Time.fixedDeltaTime;
-        
-        float pct = timer / duration;
 
-        Vector3 moveTowards = _transform.position;
-        moveTowards = Vector3.MoveTowards(_transform.position, NPC.Destination[NPC.Index], NPC.MoveSpeed * Time.fixedDeltaTime);
+        _moveTowards = _transform.position;
+        Quaternion _rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
+        _moveTowards = Vector3.MoveTowards(_transform.position, NPC.Destination[NPC.Index], NPC.MoveSpeed * Time.fixedDeltaTime);
+       
 
-        //_transform.position = Vector3.Lerp(NPC.lastDestinationPosition, NPC.Destination[NPC.Index], pct);
-        //_transform.position = Vector3.MoveTowards(_transform.position, NPC.Destination[NPC.Index], NPC.MoveSpeed * Time.fixedDeltaTime);
-        rb.MovePosition(moveTowards);
+
+        rb.MovePosition(_moveTowards);
+        rb.rotation = Quaternion.RotateTowards(rb.rotation, _rotation,  200 * Time.fixedDeltaTime);
 
 
     }
@@ -124,12 +126,14 @@ public class NPC_DestinationHandler : MonoBehaviour
     {
         if (!_shouldMove)
         {
-            _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.STANDING);
+            if(_stateHandler.npcState != NPC_StateHandler.NPCSTATE.STANDING)
+                _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.STANDING);
             return;
         }
         CheckDistance(NPC.Destination[NPC.Index]);
 
-        _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.WALKING);
+        if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.STANDING)
+            _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.WALKING);
 
     }
     
@@ -137,17 +141,14 @@ public class NPC_DestinationHandler : MonoBehaviour
     {
         if (Vector3.Distance(_transform.position, destination) <= 0.1f)
         {
-            //at destination
-            //check if we need to fire event
-
+            OnDestinationReached?.Invoke(destination);
+            CheckNewLocation(destination, NPC.significantLocation);
             UpdateValues();
         }
     }
     private void UpdateValues()
     {
-        NPC.lastDestinationPosition = _transform.position;
-        timer = 0;
-        if (NPC.Index >= NPC.Destination.Length - 1)
+        if (NPC.Index >= NPC.Destination.Length - 1) //at end of array
         {
             _shouldMove = false;
             return;
@@ -155,6 +156,19 @@ public class NPC_DestinationHandler : MonoBehaviour
 
 
         NPC.Index++;
+    }
+    private void CheckNewLocation(Vector3 pos, Vector3[] sigLoc)
+    {
+        foreach(var loc in sigLoc)
+        {
+            if (pos == loc)
+            {
+                _atDestination = true;
+                _shouldMove = false;
+            }
+
+            return;
+        }
     }
 }
 

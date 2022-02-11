@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Boy Ty
   m_EditorClassIdentifier: 
   MoveSpeed: 1
+  significantLocation:
+  - {x: 123, y: 1.5, z: 97.25}
   runDestination: 0
   atDestination: 1
   currentDestinationIndex: 0
@@ -20,15 +22,20 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  lastDestinationPosition: {x: 100, y: 1.9992933, z: 89.91076}
+  lastDestinationPosition: {x: 101, y: 2, z: 96}
   currentIndex: 1
   direction:
   - {x: 0, y: 0, z: 1}
   - {x: -1, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
   distance: 0a0000000500000005000000
-  Index: 2
+  Index: 7
   Destination:
-  - {x: 100, y: 1, z: 83.5}
-  - {x: 100, y: 2, z: 86}
-  - {x: 100, y: 2, z: 90}
+  - {x: 100, y: 2, z: 91}
+  - {x: 103.75, y: 2, z: 91}
+  - {x: 106.25, y: 1, z: 91}
+  - {x: 112.25, y: 1, z: 91}
+  - {x: 115.25, y: 1, z: 96}
+  - {x: 120.75, y: 1, z: 97.25}
+  - {x: 121.75, y: 1.5, z: 97.25}
+  - {x: 123, y: 1.5, z: 97.25}
