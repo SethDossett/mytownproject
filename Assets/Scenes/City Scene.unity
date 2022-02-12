@@ -6191,6 +6191,19 @@ MonoBehaviour:
   npc_scriptableObject: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d,
     type: 2}
   MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+--- !u!114 &908625631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908625626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58d044d45dc31547afe21090f55d8c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPC: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
 --- !u!54 &908625635
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6276,9 +6289,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 256491d83847e934cb17bb41b9c4c6ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ScriptableObjects:
+  NPC:
   - {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
   - {fileID: 11400000, guid: 0faadd275f34a1a49b90187f66236527, type: 2}
+  - {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
 --- !u!4 &924518874 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4781055319629210, guid: 13f6bf3e7a3228842b91e5332dd31c27,

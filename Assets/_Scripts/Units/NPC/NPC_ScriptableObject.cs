@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections.Generic;
 
 
@@ -18,10 +19,15 @@ public class NPC_ScriptableObject : ScriptableObject
     public Vector3[] direction;
     public int[] distance;
 
-    public int Index;
-    public Vector3[] Destination;
+    public DestinationPathsSO[] destinationPaths;
 
-    
 
+    [Header("Events")]
+    public UnityAction move;
+
+
+    public void RaiseEventMove() {
+        move?.Invoke();
+    }
     
 }

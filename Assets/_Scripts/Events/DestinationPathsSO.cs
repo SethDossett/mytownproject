@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class DestinationPathsSO : MonoBehaviour
+[CreateAssetMenu(menuName = "ScriptableObject/Event/DestinationPathSO")]
+public class DestinationPathsSO : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
+    public UnityAction<Vector3[]> destinations;
+    public int index;
+    public Vector3[] path;
+    public void RaiseEvent(Vector3[] pos)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        destinations?.Invoke(pos);
     }
 }

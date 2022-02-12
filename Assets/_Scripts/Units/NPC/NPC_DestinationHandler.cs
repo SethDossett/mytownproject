@@ -3,10 +3,11 @@ using UnityEngine.Events;
 
 public class NPC_DestinationHandler : MonoBehaviour
 {
-    public static UnityAction<Vector3> OnDestinationReached;
+    public static UnityAction<DestinationPathsSO> OnDestinationReached;
 
     [Header("References")]
     [SerializeField] NPC_ScriptableObject NPC;
+    private DestinationPathsSO Path;
     [SerializeField] NPC_StateHandler _stateHandler;
     private Pathfinding.AILerp AILerp;
     private Pathfinding.AIDestinationSetter AIDestinationSetter;
@@ -23,7 +24,14 @@ public class NPC_DestinationHandler : MonoBehaviour
     int currentDestination;
     
     bool _shouldMove;
-
+    private void OnEnable()
+    {
+        NPC.move += SetPath;
+    }
+    private void OnDisable()
+    {
+        NPC.move -= SetPath;
+    }
     private void Awake()
     {
         _transform = transform;
@@ -37,9 +45,7 @@ public class NPC_DestinationHandler : MonoBehaviour
         NPC.atDestination = true;
 
 
-        NPC.lastDestinationPosition = _transform.position;
-        NPC.Index = 0;
-        _shouldMove = true;
+        
     }
     /*private void Update()
     {
@@ -113,7 +119,9 @@ public class NPC_DestinationHandler : MonoBehaviour
 
         _moveTowards = _transform.position;
         Quaternion _rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
-        _moveTowards = Vector3.MoveTowards(_transform.position, NPC.Destination[NPC.Index], NPC.MoveSpeed * Time.fixedDeltaTime);
+        _rotation.x = 0;
+        _rotation.z = 0;
+        _moveTowards = Vector3.MoveTowards(_transform.position, Path.path[Path.index], NPC.MoveSpeed * Time.fixedDeltaTime);
        
 
 
@@ -130,32 +138,42 @@ public class NPC_DestinationHandler : MonoBehaviour
                 _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.STANDING);
             return;
         }
-        CheckDistance(NPC.Destination[NPC.Index]);
+        
+        CheckDistance(Path.path[Path.index]);
 
-        if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.STANDING)
+        if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.WALKING)
             _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.WALKING);
 
     }
-    
+    private void SetPath()
+    {
+        Path = NPC.destinationPaths[NPC.currentDestinationIndex];
+        Path.index = 0;
+        _shouldMove = true;
+        _atDestination = false; 
+    }
     private void CheckDistance(Vector3 destination)
     {
         if (Vector3.Distance(_transform.position, destination) <= 0.1f)
         {
-            OnDestinationReached?.Invoke(destination);
-            CheckNewLocation(destination, NPC.significantLocation);
+            
+            //CheckNewLocation(destination, NPC.significantLocation);
             UpdateValues();
         }
     }
     private void UpdateValues()
     {
-        if (NPC.Index >= NPC.Destination.Length - 1) //at end of array
+        if (Path.index >= Path.path.Length - 1) //at end of array
         {
             _shouldMove = false;
+            _atDestination = true;
+            OnDestinationReached?.Invoke(Path);
+            
+
             return;
         }
 
-
-        NPC.Index++;
+        Path.index++;
     }
     private void CheckNewLocation(Vector3 pos, Vector3[] sigLoc)
     {
@@ -163,7 +181,7 @@ public class NPC_DestinationHandler : MonoBehaviour
         {
             if (pos == loc)
             {
-                _atDestination = true;
+                
                 _shouldMove = false;
             }
 
