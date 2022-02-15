@@ -3,7 +3,9 @@ using Cinemachine;
 
 public class NPC_Interact : MonoBehaviour, IInteractable
 {
-     [field: SerializeField] public float MaxRange { get; private set; }
+    [field: SerializeField] public float MaxRange { get; private set; }
+
+    [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
 
     //[SerializeField] private const float _maxRange = 2.5f;
 

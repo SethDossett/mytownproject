@@ -7,11 +7,11 @@ using System.Collections.Generic;
 public class NPC_ScriptableObject : ScriptableObject
 {
     public float MoveSpeed = 1f;
+    public Vector3 currentPosition;
     public Vector3[] significantLocation;
 
     public bool runDestination = false;
     public bool atDestination = true;
-    public int currentDestinationIndex;
     public Transform[] destinations;
 
     public Vector3 lastDestinationPosition;
@@ -19,15 +19,17 @@ public class NPC_ScriptableObject : ScriptableObject
     public Vector3[] direction;
     public int[] distance;
 
+    // paths 
+    public int currentDestinationIndex;
     public DestinationPathsSO[] destinationPaths;
 
 
-    [Header("Events")]
+    #region Events
     public UnityAction move;
 
 
     public void RaiseEventMove() {
         move?.Invoke();
     }
-    
+    #endregion
 }

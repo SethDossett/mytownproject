@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5163913952611483568}
   - component: {fileID: 3713976082082698132}
   - component: {fileID: 4082612342331231118}
+  - component: {fileID: 7789931676572918753}
   m_Layer: 6
   m_Name: H.DoubleDoor
   m_TagString: Untagged
@@ -93,6 +94,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.617671, y: 2.9472396, z: 0.19551086}
   m_Center: {x: 0.7590054, y: 1.1934679, z: 0.0044530234}
+--- !u!135 &7789931676572918753
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8768190772259450037}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.1
+  m_Center: {x: 0.75, y: 1, z: 0}
 --- !u!1001 &3558366150288534151
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -14,11 +14,29 @@ public class NPC_Manager : MonoBehaviour
         NPC_DestinationHandler.OnDestinationReached -= NextAction;
     }
 
+    private void Start()
+    {
+        transform.position = NPC.currentPosition;
+    }
+
     void NextAction(DestinationPathsSO path)
     {
         //open door animation
         // change state if needed
+        if (path.hasDoor)
+        {
+            //door animation, could continue only after animation is over
+            //if animator is null, then waitforseconds(lengthofanimation).
 
+            if (path.continueMoving)
+            {
+                NPC.RaiseEventMove();
+            }
+            else
+            {
+                // switch to next state
+            }
+        }
 
 
 
@@ -29,7 +47,7 @@ public class NPC_Manager : MonoBehaviour
         if (NPC.currentDestinationIndex < NPC.destinationPaths.Length - 1)
         {
             NPC.currentDestinationIndex++;
-            NPC.RaiseEventMove();
+            
         }
 
         

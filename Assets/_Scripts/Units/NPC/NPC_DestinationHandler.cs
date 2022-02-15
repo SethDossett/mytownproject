@@ -168,8 +168,6 @@ public class NPC_DestinationHandler : MonoBehaviour
             _shouldMove = false;
             _atDestination = true;
             OnDestinationReached?.Invoke(Path);
-            
-
             return;
         }
 

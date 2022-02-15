@@ -1,6 +1,7 @@
 public interface IInteractable 
 {
     float MaxRange { get; }
+    bool CanBeInteractedWith { get; }
 
 
     void OnFocus(string _string);

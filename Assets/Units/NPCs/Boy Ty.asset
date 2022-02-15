@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b74fa13b73f9546a2101f1fe594207, type: 3}
   m_Name: Boy Ty
   m_EditorClassIdentifier: 
-  MoveSpeed: 3
+  MoveSpeed: 1
+  currentPosition: {x: 101, y: 2, z: 97}
   significantLocation:
   - {x: 123, y: 1.5, z: 97.25}
   runDestination: 0
   atDestination: 1
-  currentDestinationIndex: 0
   destinations:
   - {fileID: 0}
   - {fileID: 0}
@@ -29,6 +29,7 @@ MonoBehaviour:
   - {x: -1, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
   distance: 0a0000000500000005000000
+  currentDestinationIndex: 0
   destinationPaths:
   - {fileID: 11400000, guid: cbc732541be9d144594cbe5c44e72f29, type: 2}
   - {fileID: 11400000, guid: b160e1fc4b61aa347a7a80244288de0d, type: 2}

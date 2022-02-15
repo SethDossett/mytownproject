@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7543907da2c960a4584bb9c485ede902, type: 3}
   m_Name: HealersToHospital
   m_EditorClassIdentifier: 
-  index: 7
+  index: 8
   path:
   - {x: 123, y: 1.5, z: 97.25}
   - {x: 121.75, y: 1.5, z: 97.25}
@@ -22,4 +22,8 @@ MonoBehaviour:
   - {x: 106.25, y: 1, z: 91}
   - {x: 103.75, y: 2, z: 91}
   - {x: 101, y: 2, z: 91}
-  - {x: 101, y: 2, z: 96}
+  - {x: 101, y: 2, z: 97}
+  hasDoor: 0
+  continueMoving: 0
+  needToTeleport: 0
+  teleportPosition: {x: 0, y: 0, z: 0}
