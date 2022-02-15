@@ -7,7 +7,10 @@ public class NPC_Interact : MonoBehaviour, IInteractable
 
     [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
 
+    [SerializeField] private TextAsset inkJSON;
+
     //[SerializeField] private const float _maxRange = 2.5f;
+
 
     [Header("References")]
     [SerializeField] private CinemachineTargetGroup _targetGroup;
@@ -49,7 +52,7 @@ public class NPC_Interact : MonoBehaviour, IInteractable
 
     private void Speak()
     {
-        MainEventChannelSO.RaiseEventTalk();
+        MainEventChannelSO.RaiseEventTalk(gameObject, inkJSON);
         NPC_StateHandler.instance.UpdateNPCState(NPC_StateHandler.NPCSTATE.TALKING);
     }
 }

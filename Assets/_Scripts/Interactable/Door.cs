@@ -38,7 +38,14 @@ public class Door : MonoBehaviour, IInteractable
     int closeDoor = Animator.StringToHash("closeDoor");
 
 
-
+    private void OnEnable()
+    {
+        
+    }
+    private void OnDisable()
+    {
+        
+    }
     public void OnInteract()
     {
         _interactionEvent?.Invoke();

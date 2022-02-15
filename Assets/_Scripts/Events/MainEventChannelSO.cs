@@ -6,7 +6,7 @@ public class MainEventChannelSO : ScriptableObject
 {
     public UnityAction OnGamePaused;
     public UnityAction OnGameUnPaused;
-    public UnityAction OnTalk;
+    public UnityAction<GameObject, TextAsset> OnTalk;
 
     public void RaiseEventPaused()
     {
@@ -16,8 +16,8 @@ public class MainEventChannelSO : ScriptableObject
     {
         OnGameUnPaused?.Invoke();
     }
-    public void RaiseEventTalk()
+    public void RaiseEventTalk(GameObject npc, TextAsset inkJSON)
     {
-        OnTalk?.Invoke();
+        OnTalk?.Invoke(npc,inkJSON);
     }
 }

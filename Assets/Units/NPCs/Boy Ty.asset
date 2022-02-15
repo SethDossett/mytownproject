@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Boy Ty
   m_EditorClassIdentifier: 
   MoveSpeed: 1
-  currentPosition: {x: 101, y: 2, z: 97}
+  currentPosition: {x: 123, y: 1.5, z: 97.25}
   significantLocation:
   - {x: 123, y: 1.5, z: 97.25}
   runDestination: 0
@@ -29,7 +29,7 @@ MonoBehaviour:
   - {x: -1, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
   distance: 0a0000000500000005000000
-  currentDestinationIndex: 0
+  currentDestinationIndex: 1
   destinationPaths:
-  - {fileID: 11400000, guid: cbc732541be9d144594cbe5c44e72f29, type: 2}
   - {fileID: 11400000, guid: b160e1fc4b61aa347a7a80244288de0d, type: 2}
+  - {fileID: 11400000, guid: cbc732541be9d144594cbe5c44e72f29, type: 2}

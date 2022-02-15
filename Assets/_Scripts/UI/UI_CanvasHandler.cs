@@ -7,11 +7,14 @@ using TMPro;
 public class UI_CanvasHandler : MonoBehaviour
 {
     private UI_EventMaster ui_eventMaster;
+    [SerializeField] MainEventChannelSO eventChannel;
 
     [SerializeField] private GameObject _gameUI;
     [SerializeField] private GameObject _clock;
     [SerializeField] private GameObject _buttons;
+    [SerializeField] private GameObject _dialogue;
     [SerializeField] private TextMeshProUGUI _interactionText;
+    
 
     [SerializeField] private float _cycleLength = 2f;
 
@@ -19,12 +22,14 @@ public class UI_CanvasHandler : MonoBehaviour
     {
         ui_eventMaster = GameObject.Find("EventMaster").GetComponent<UI_EventMaster>();
         GameManager.OnGameStateChanged += CheckState;
+        eventChannel.OnTalk += TalkingWithNPC;
         UI_EventMaster.interactionTextOn += ShowInteractionText;
         ui_eventMaster.interactionTextOff += HideInteractionText;
     }
     private void OnDisable()
     {
         GameManager.OnGameStateChanged -= CheckState;
+        eventChannel.OnTalk -= TalkingWithNPC;
         UI_EventMaster.interactionTextOn -= ShowInteractionText;
         ui_eventMaster.interactionTextOff -= HideInteractionText;
     }
@@ -74,4 +79,12 @@ public class UI_CanvasHandler : MonoBehaviour
         _interactionText.text = "";
     }
     #endregion
+
+    void TalkingWithNPC(GameObject npc, TextAsset inkJSON)
+    {
+        if(!_dialogue.activeInHierarchy)
+            _dialogue?.SetActive(true);
+
+
+    }
 }

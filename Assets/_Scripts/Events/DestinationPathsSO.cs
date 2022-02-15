@@ -10,6 +10,11 @@ public class DestinationPathsSO : ScriptableObject
     {
         destinations?.Invoke(pos);
     }
+
+    public UnityAction walkThroughDoor;
+    public void RaiseEventDoor() => walkThroughDoor?.Invoke();
+    
+
     #endregion
 
 
@@ -23,5 +28,6 @@ public class DestinationPathsSO : ScriptableObject
     public bool continueMoving;
     public bool needToTeleport;
     public Vector3 teleportPosition;
+    public Quaternion teleportRotation;
     #endregion
 }

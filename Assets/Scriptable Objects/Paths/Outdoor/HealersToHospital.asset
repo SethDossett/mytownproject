@@ -25,5 +25,6 @@ MonoBehaviour:
   - {x: 101, y: 2, z: 97}
   hasDoor: 0
   continueMoving: 0
-  needToTeleport: 0
-  teleportPosition: {x: 0, y: 0, z: 0}
+  needToTeleport: 1
+  teleportPosition: {x: 240.6, y: 0, z: 101.51}
+  teleportRotation: {x: 0, y: 0, z: 0, w: 0}

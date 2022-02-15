@@ -25,7 +25,7 @@ public class NPC_Manager : MonoBehaviour
         // change state if needed
         if (path.hasDoor)
         {
-            //door animation, could continue only after animation is over
+            path.RaiseEventDoor();
             //if animator is null, then waitforseconds(lengthofanimation).
 
             if (path.continueMoving)
@@ -38,7 +38,11 @@ public class NPC_Manager : MonoBehaviour
             }
         }
 
-
+        if (path.needToTeleport)
+        {
+            transform.SetPositionAndRotation(path.teleportPosition, path.teleportRotation);
+            //transform.position = path.teleportPosition;
+        }
 
         Debug.Log(path);
 
