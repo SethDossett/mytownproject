@@ -1,5 +1,4 @@
 using DG.Tweening;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -21,30 +20,39 @@ public class UI_CanvasHandler : MonoBehaviour
     private void OnEnable()
     {
         ui_eventMaster = GameObject.Find("EventMaster").GetComponent<UI_EventMaster>();
-        GameManager.OnGameStateChanged += CheckState;
+        GameManager.OnGameStateChanged += CheckGameState;
         eventChannel.OnTalk += TalkingWithNPC;
+        eventChannel.OnGameUnPaused += ExitDialogue;
         UI_EventMaster.interactionTextOn += ShowInteractionText;
         ui_eventMaster.interactionTextOff += HideInteractionText;
     }
+
+
     private void OnDisable()
     {
-        GameManager.OnGameStateChanged -= CheckState;
+        GameManager.OnGameStateChanged -= CheckGameState;
         eventChannel.OnTalk -= TalkingWithNPC;
+        eventChannel.OnGameUnPaused -= ExitDialogue;
         UI_EventMaster.interactionTextOn -= ShowInteractionText;
         ui_eventMaster.interactionTextOff -= HideInteractionText;
     }
 
-   private void CheckState(GameManager.GameState state)
+   private void CheckGameState(GameManager.GameState state)
     {
         if(state == GameManager.GameState.GAME_PLAYING)
         {
             UI_UnhideAll();
+            if (_dialogue.activeInHierarchy)
+                _dialogue.SetActive(false);
+            return;
         }
         else
         {
             UI_HideAll();
+            return;
         }
 
+        
     }
     #region Control All UI Elements
     public void UI_HideAll()
@@ -80,11 +88,18 @@ public class UI_CanvasHandler : MonoBehaviour
     }
     #endregion
 
+    #region Talking
     void TalkingWithNPC(GameObject npc, TextAsset inkJSON)
     {
         if(!_dialogue.activeInHierarchy)
-            _dialogue?.SetActive(true);
+            _dialogue.SetActive(true);
 
 
     }
+    void ExitDialogue() // migth not need
+    {
+        //if (_dialogue.activeInHierarchy)
+            //_dialogue.SetActive(false);
+    }
+    #endregion
 }

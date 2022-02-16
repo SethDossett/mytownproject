@@ -141,7 +141,7 @@ public class NPC_DestinationHandler : MonoBehaviour
         
         CheckDistance(Path.path[Path.index]);
 
-        if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.WALKING)
+        if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.WALKING && _stateHandler.npcState != NPC_StateHandler.NPCSTATE.TALKING)
             _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.WALKING);
 
     }

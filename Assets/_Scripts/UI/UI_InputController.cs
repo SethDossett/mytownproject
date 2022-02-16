@@ -3,20 +3,32 @@ using UnityEngine.InputSystem;
 
 public class UI_InputController : MonoBehaviour
 {
-    private InputAction exit;
     public MainEventChannelSO MainEventChannelSO;
+    private InputAction exit;
+    private InputAction submit;
 
     private void OnEnable()
     {
         exit = InputManager.inputActions.UI.Exit;
-        InputManager.inputActions.UI.Exit.performed += ExitMenu;
+        submit = InputManager.inputActions.UI.Submit;
+        
+        exit.performed += ExitMenu;
+        submit.performed += SubmitAction;
     }
+
+
     private void OnDisable()
     {
-        InputManager.inputActions.UI.Exit.performed -= ExitMenu;
+        exit.performed -= ExitMenu;
+        submit.performed -= SubmitAction;
     }
     private void ExitMenu(InputAction.CallbackContext obj)
     {
         MainEventChannelSO.RaiseEventUnPaused();
+    }
+
+    private void SubmitAction(InputAction.CallbackContext obj)
+    {
+        MainEventChannelSO.RaiseEventSubmit();
     }
 }
