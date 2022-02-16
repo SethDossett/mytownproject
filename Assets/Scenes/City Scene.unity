@@ -420,9 +420,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc940b8ef813bb54db9804cfd1c8dd7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   _gameUI: {fileID: 2015725937}
   _clock: {fileID: 107054351}
   _buttons: {fileID: 2126392317}
+  _dialogue: {fileID: 182248839}
   _interactionText: {fileID: 948069203}
   _cycleLength: 0.3
 --- !u!114 &41796112
@@ -1795,7 +1797,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &182248840
 RectTransform:
   m_ObjectHideFlags: 0

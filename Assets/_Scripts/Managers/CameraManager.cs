@@ -26,7 +26,7 @@ public class CameraManager : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
     }
-    private void SwitchToDialogue()
+    private void SwitchToDialogue(GameObject npc, TextAsset inkJSON)
     {
         _animator.Play(dialogueVCam01);
     }
