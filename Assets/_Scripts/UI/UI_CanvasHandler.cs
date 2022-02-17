@@ -23,6 +23,7 @@ public class UI_CanvasHandler : MonoBehaviour
         GameManager.OnGameStateChanged += CheckGameState;
         eventChannel.OnTalk += TalkingWithNPC;
         eventChannel.OnGameUnPaused += ExitDialogue;
+        eventChannel.OnSubmit += ContinueIconSubmit;
         UI_EventMaster.interactionTextOn += ShowInteractionText;
         ui_eventMaster.interactionTextOff += HideInteractionText;
     }
@@ -33,6 +34,7 @@ public class UI_CanvasHandler : MonoBehaviour
         GameManager.OnGameStateChanged -= CheckGameState;
         eventChannel.OnTalk -= TalkingWithNPC;
         eventChannel.OnGameUnPaused -= ExitDialogue;
+        eventChannel.OnSubmit += ContinueIconSubmit;
         UI_EventMaster.interactionTextOn -= ShowInteractionText;
         ui_eventMaster.interactionTextOff -= HideInteractionText;
     }
@@ -94,6 +96,10 @@ public class UI_CanvasHandler : MonoBehaviour
         if(!_dialogue.activeInHierarchy)
             _dialogue.SetActive(true);
 
+
+    }
+    void ContinueIconSubmit()
+    {
 
     }
     void ExitDialogue() // migth not need
