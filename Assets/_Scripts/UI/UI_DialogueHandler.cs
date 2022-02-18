@@ -65,7 +65,9 @@ public class UI_DialogueHandler : MonoBehaviour
         }
         else
         {
-            ContinueStory();
+            if (currentStory.currentChoices.Count == 0)
+                ContinueStory();
+            else return;
         }
 
     }
@@ -75,10 +77,8 @@ public class UI_DialogueHandler : MonoBehaviour
         {
             StartCoroutine(DisplayLine(currentStory.Continue()));
 
-            if(currentStory.currentChoices.Count != 0)
-            {
-                ShowChoices();
-            }
+            ShowChoices();
+            
         }
         else
         {
@@ -144,7 +144,7 @@ public class UI_DialogueHandler : MonoBehaviour
 
         for(int i = index; i < _choices.Length; i++)
         {
-            _choices[i].SetActive(false);
+            _choices[i].gameObject.SetActive(false);
         }
 
         StartCoroutine(SelectFirstChoice());    
@@ -153,12 +153,19 @@ public class UI_DialogueHandler : MonoBehaviour
     IEnumerator SelectFirstChoice() {
         EventSystem.current.SetSelectedGameObject(null);
         yield return new WaitForEndOfFrame();
-        EventSystem.current.SetSelectedGameObject(_choices[0]);
+        EventSystem.current.SetSelectedGameObject(_choices[0].gameObject);
     }
 
     public void MakeChoice(int choiceIndex)
     {
         currentStory.ChooseChoiceIndex(choiceIndex);
+        StartCoroutine(TimeBetweenChoices());
+        
+    }
+    IEnumerator TimeBetweenChoices()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        ContinueStory();
     }
     void Submit()
     {
