@@ -5,23 +5,33 @@ using TMPro;
 using Ink.Runtime;
 using DG.Tweening;
 using UnityEngine.EventSystems;
+using System;
 
 public class UI_DialogueHandler : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] MainEventChannelSO evnt;
     [SerializeField] TextMeshProUGUI _dialogueText;
+    [SerializeField] TextMeshProUGUI _speakerText;
     [SerializeField] GameObject continueIcon;
     [SerializeField] GameObject[] _choices;
     TextMeshProUGUI[] _choicesText;
     private Story currentStory;
     private Choice choiceSelected;
+    Animator _animator;
 
     [Header("Values")]
     [SerializeField] float typingSpeed = 0.05f;
     bool _displayingLine = false;   
     bool _skipToEndOfLine = false;
 
+    [Header("Tags")]
+    private const string SPEAKER_TAG = "speaker";
+    private const string EMOTE_TAG = "emote";
+    private const string ICON_TAG = "icon";
+
+    [Header("Anim")]
+    int idle = Animator.StringToHash("Idle");
 
     private void OnEnable()
     {
@@ -51,10 +61,16 @@ public class UI_DialogueHandler : MonoBehaviour
     {
         currentStory = new Story(inkJSON.text);
 
-        ContinueStory();
+        _animator = npc.GetComponent<Animator>();
+        ResetTagValues();
 
+        ContinueStory();
     }
 
+    private void ResetTagValues() { // reset to defaults so info doesnt carry over from last npc.
+        _dialogueText.text = "???";
+        _animator.Play(idle);
+    }
 
     void SubmitButton()
     {
@@ -78,6 +94,8 @@ public class UI_DialogueHandler : MonoBehaviour
             StartCoroutine(DisplayLine(currentStory.Continue()));
 
             ShowChoices();
+
+            HandleTags(currentStory.currentTags);
             
         }
         else
@@ -123,14 +141,38 @@ public class UI_DialogueHandler : MonoBehaviour
         continueIcon.transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.InExpo).SetDelay(0.05f).SetUpdate(true);
         _displayingLine = false;
     }
+    void HandleTags(List<string> currentTags)
+    {
+        foreach (string tag in currentTags)
+        {
+            string[] splitTags = tag.Split(':');
+            if (splitTags.Length != 2) Debug.LogError($"Could not parse {tag} correctly!");
 
+            string tagKey = splitTags[0].Trim();
+            string tagValue = splitTags[1].Trim();
+
+            switch (tagKey)
+            {
+                case SPEAKER_TAG:
+                    _speakerText.text = tagValue;
+                    break;
+                case EMOTE_TAG:
+                    _animator.Play(tagValue);
+                    break;
+                case ICON_TAG:
+                    Debug.Log("icon=" + tagValue);
+                    break;
+                default:
+                    break;
+            }
+
+
+        }
+    }
     void ShowChoices()
     {
-        //is choice a yes or no or multiple?
-
         List<Choice> currentchoices = currentStory.currentChoices;
-        if(currentchoices.Count > _choices.Length)
-        {
+        if(currentchoices.Count > _choices.Length) {
             Debug.LogError("More Choices given than UI can support. Number of Choices given: " + currentchoices.Count);
         }
 
@@ -164,7 +206,7 @@ public class UI_DialogueHandler : MonoBehaviour
     }
     IEnumerator TimeBetweenChoices()
     {
-        yield return new WaitForSecondsRealtime(0.1f);
+        yield return new WaitForSecondsRealtime(0.5f);
         ContinueStory();
     }
     void Submit()

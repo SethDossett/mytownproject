@@ -1,3 +1,5 @@
+INCLUDE globals.ink
+
 -> Main
 
 ==Main==
