@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class DialogueEventsSO : MonoBehaviour
+using UnityEngine.Events;
+[CreateAssetMenu(menuName = "ScriptableObject/ Event/ DialogueEventSO")]
+public class DialogueEventsSO : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public UnityAction onEnter;
+    public UnityAction onSubmit;
+    public UnityAction onCancel;
+    public UnityAction onExit;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public void Enter() => onEnter?.Invoke();
+
+    public void Submit() => onSubmit?.Invoke();
+
+    public void Cancel() => onCancel?.Invoke();
+
+    public void Exit() => onExit?.Invoke();
+
+       
+    
+
 }

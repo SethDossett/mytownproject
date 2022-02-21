@@ -11,13 +11,15 @@ public class UI_DialogueHandler : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] MainEventChannelSO evnt;
+    [SerializeField] DialogueEventsSO DialogueEvents;
     [SerializeField] TextMeshProUGUI _dialogueText;
     [SerializeField] TextMeshProUGUI _speakerText;
     [SerializeField] GameObject continueIcon;
     [SerializeField] GameObject[] _choices;
     TextMeshProUGUI[] _choicesText;
+    DialogueVariables _dialogueVariables;
+    [SerializeField] TextAsset loadGlobalsJSON;
     private Story currentStory;
-    private Choice choiceSelected;
     Animator _animator;
 
     [Header("Values")]
@@ -37,6 +39,7 @@ public class UI_DialogueHandler : MonoBehaviour
     {
         evnt.OnTalk += EnterDialogueMode;
         evnt.OnSubmit += SubmitButton;
+        _dialogueVariables = new DialogueVariables(loadGlobalsJSON);
     }
     private void OnDisable()
     {
@@ -61,7 +64,11 @@ public class UI_DialogueHandler : MonoBehaviour
     {
         currentStory = new Story(inkJSON.text);
 
+        _dialogueVariables.StartListening(currentStory);
+        DialogueEvents.Enter();
+
         _animator = npc.GetComponent<Animator>();
+
         ResetTagValues();
 
         ContinueStory();
@@ -218,6 +225,8 @@ public class UI_DialogueHandler : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(0.2f);
         _dialogueText.text = "";
+        _dialogueVariables.StopListening(currentStory);
+        DialogueEvents.Exit();
         evnt.RaiseEventUnPaused();
     }
 }

@@ -470,6 +470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   evnt: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  DialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _dialogueText: {fileID: 2037304065}
   _speakerText: {fileID: 1906401014}
   continueIcon: {fileID: 136311415}
@@ -478,6 +479,7 @@ MonoBehaviour:
   - {fileID: 332102996}
   - {fileID: 1504545236}
   - {fileID: 447944334}
+  loadGlobalsJSON: {fileID: 4900000, guid: c00a0c87a31256e45b5828511e51ef30, type: 3}
   typingSpeed: 0.05
 --- !u!1001 &43224699
 PrefabInstance:
@@ -1752,7 +1754,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 144770364}
-  m_LocalRotation: {x: -0.055028282, y: -0.31742412, z: -0.018454514, w: 0.94650584}
+  m_LocalRotation: {x: 0.064652085, y: 0.9059194, z: 0.14990303, w: -0.39071646}
   m_LocalPosition: {x: 91.5048, y: 3.7407267, z: 114.19547}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -16994,7 +16996,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1815622633}
-  m_LocalRotation: {x: -0.0049833683, y: -0.9861987, z: 0.1420277, w: 0.08494299}
+  m_LocalRotation: {x: -0.0049833655, y: -0.9861987, z: 0.1420277, w: 0.084942944}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
