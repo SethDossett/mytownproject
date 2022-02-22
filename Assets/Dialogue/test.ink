@@ -1,16 +1,21 @@
 INCLUDE globals.ink
 
--> Main
+{ pokemon_name == "": -> main | -> already_chose }
 
-==Main==
+=== main ===
 Which pokemon do you choose?
-    +[Charmander]
+    + [Charmander]
         -> chosen("charmander")
-    +[Bulbasaur]
+    + [Bulbasaur]
         -> chosen("bulbasaur")
-    +[Squirtle]
+    + [Squirtle]
         -> chosen("squirtle")    
         
 === chosen(pokemon) ===
-You chose {pokemon}
+~ pokemon_name = pokemon
+You chose {pokemon}!
 ->END
+
+=== already_chose ===
+You already chose {pokemon_name}!
+-> END

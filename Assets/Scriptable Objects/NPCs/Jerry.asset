@@ -12,11 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b74fa13b73f9546a2101f1fe594207, type: 3}
   m_Name: Jerry
   m_EditorClassIdentifier: 
+  MoveSpeed: 1
+  currentPosition: {x: 98, y: 2, z: 94}
+  significantLocation: []
   runDestination: 0
   atDestination: 1
-  currentDestinationIndex: 3
   destinations:
   - {fileID: 2135613231336341715, guid: 88f5c0fa4a3a2f246a7d63b3f8af2bb9, type: 3}
   - {fileID: 906247134492879977, guid: 5201169036174b34282c7281aa95e6da, type: 3}
   - {fileID: 2135613231336341715, guid: 88f5c0fa4a3a2f246a7d63b3f8af2bb9, type: 3}
   - {fileID: 906247134492879977, guid: 5201169036174b34282c7281aa95e6da, type: 3}
+  lastDestinationPosition: {x: 0, y: 0, z: 0}
+  currentIndex: 0
+  direction: []
+  distance: 
+  currentDestinationIndex: 3
+  destinationPaths: []

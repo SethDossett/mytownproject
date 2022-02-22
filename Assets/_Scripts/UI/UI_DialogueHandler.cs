@@ -221,6 +221,11 @@ public class UI_DialogueHandler : MonoBehaviour
         continueIcon.transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBounce).SetUpdate(true);
         
     }
+
+    public Ink.Runtime.Object GetVariableState(string variableName)
+    {
+
+    }
     IEnumerator ExitDialogueMode()
     {
         yield return new WaitForSecondsRealtime(0.2f);
