@@ -224,7 +224,10 @@ public class UI_DialogueHandler : MonoBehaviour
 
     public Ink.Runtime.Object GetVariableState(string variableName)
     {
-
+        Ink.Runtime.Object variableValue = null;
+        _dialogueVariables.variables.TryGetValue(variableName, out variableValue);
+        if(variableValue == null) Debug.LogError("Ink Variable was found to be null" + variableName);
+        return variableValue;
     }
     IEnumerator ExitDialogueMode()
     {
