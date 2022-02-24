@@ -39,14 +39,14 @@ namespace MyTownProject.Dialogue
 
         private void OnEnable()
         {
-            evnt.OnTalk += EnterDialogueMode;
-            evnt.OnSubmit += SubmitButton;
+            DialogueEvents.onEnter += EnterDialogueMode;
+            DialogueEvents.onSubmit += SubmitButton;
             _dialogueVariables = new DialogueVariables(loadGlobalsJSON);
         }
         private void OnDisable()
         {
-            evnt.OnTalk -= EnterDialogueMode;
-            evnt.OnSubmit -= SubmitButton;
+            DialogueEvents.onEnter -= EnterDialogueMode;
+            DialogueEvents.onSubmit -= SubmitButton;
         }
         private void Start()
         {
@@ -67,19 +67,20 @@ namespace MyTownProject.Dialogue
             currentStory = new Story(inkJSON.text);
 
             _dialogueVariables.StartListening(currentStory);
-            DialogueEvents.Enter();
 
             _animator = npc.GetComponent<Animator>();
 
-            ResetTagValues();
+            ResetValues();
 
             ContinueStory();
         }
 
-        private void ResetTagValues()
+        private void ResetValues()
         { // reset to defaults so info doesnt carry over from last npc.
-            _dialogueText.text = "???";
+            _speakerText.text = "???";
             _animator.Play(idle);
+
+            ShowChoices();
         }
 
         void SubmitButton()
@@ -97,13 +98,11 @@ namespace MyTownProject.Dialogue
             }
 
         }
-        void ContinueStory()
+        public void ContinueStory()
         {
             if (currentStory.canContinue)
             {
                 StartCoroutine(DisplayLine(currentStory.Continue()));
-
-                ShowChoices();
 
                 HandleTags(currentStory.currentTags);
 
@@ -147,7 +146,7 @@ namespace MyTownProject.Dialogue
                 }
 
             }
-
+            ShowChoices();
             continueIcon.transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.InExpo).SetDelay(0.05f).SetUpdate(true);
             _displayingLine = false;
         }

@@ -15,10 +15,9 @@ namespace MyTownProject.Events
 
         public UnityAction walkThroughDoor;
         public void RaiseEventDoor() => walkThroughDoor?.Invoke();
-    
+
 
         #endregion
-
 
         #region Path
         public int index;

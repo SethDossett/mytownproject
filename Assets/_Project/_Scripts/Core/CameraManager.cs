@@ -8,7 +8,7 @@ namespace MyTownProject.Core
     public class CameraManager : MonoBehaviour
     {
         [Header("References")]
-        public MainEventChannelSO mainEventChannelSO;
+        [SerializeField] DialogueEventsSO dialogueEvents;
         private NPC_StateHandler npcStateHandler;
         private CinemachineFreeLook _freeLookCamera_01;
         private CinemachineVirtualCamera _virtualCamera_01;
@@ -21,12 +21,12 @@ namespace MyTownProject.Core
 
         private void OnEnable()
         {
-            mainEventChannelSO.OnTalk += SwitchToDialogue;
+            dialogueEvents.onEnter += SwitchToDialogue;
             GameManager.OnGameStateChanged += CheckGameState;
         }
         private void OnDisable()
         {
-            mainEventChannelSO.OnTalk -= SwitchToDialogue;
+            dialogueEvents.onEnter -= SwitchToDialogue;
             GameManager.OnGameStateChanged -= CheckGameState;
         }
         private void Start()

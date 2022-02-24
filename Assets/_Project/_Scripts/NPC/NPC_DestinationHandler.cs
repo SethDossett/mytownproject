@@ -46,10 +46,8 @@ namespace MyTownProject.NPC
         {
             NPC.runDestination = false;
             NPC.atDestination = true;
-
-
-
         }
+
         /*private void Update()
         {
             //put in a timed check so Update only runs once per second
@@ -114,7 +112,8 @@ namespace MyTownProject.NPC
             _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.STANDING);
             _npc.runDestination = false;
             return;
-        }*/
+        }*/ //old method for moving using A*. keeping just in case.
+
         private void FixedUpdate()
         {
             if (!_shouldMove)
@@ -159,7 +158,6 @@ namespace MyTownProject.NPC
         {
             if (Vector3.Distance(_transform.position, destination) <= 0.1f)
             {
-
                 //CheckNewLocation(destination, NPC.significantLocation);
                 UpdateValues();
             }
@@ -170,7 +168,8 @@ namespace MyTownProject.NPC
             {
                 _shouldMove = false;
                 _atDestination = true;
-                OnDestinationReached?.Invoke(Path);
+                //OnDestinationReached?.Invoke(Path);
+                DestinationReached();
                 return;
             }
 
@@ -187,6 +186,15 @@ namespace MyTownProject.NPC
                 }
 
                 return;
+            }
+        }
+
+        private void DestinationReached()
+        {
+            if (Path.needToTeleport)
+            {
+                transform.SetPositionAndRotation(Path.teleportPosition, Path.teleportRotation);
+                //transform.position = path.teleportPosition;
             }
         }
     }

@@ -6,12 +6,12 @@ namespace MyTownProject.Events
     [CreateAssetMenu(menuName = "ScriptableObject/ Event/ DialogueEventSO")]
     public class DialogueEventsSO : ScriptableObject
     {
-        public UnityAction onEnter;
+        public UnityAction<GameObject, TextAsset> onEnter;
         public UnityAction onSubmit;
         public UnityAction onCancel;
         public UnityAction onExit;
 
-        public void Enter() => onEnter?.Invoke();
+        public void Enter(GameObject npc, TextAsset inkJSON) => onEnter?.Invoke(npc, inkJSON);
 
         public void Submit() => onSubmit?.Invoke();
 

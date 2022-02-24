@@ -6,6 +6,7 @@ namespace MyTownProject.NPC
     public class NPC_Manager : MonoBehaviour
     {
         [SerializeField] NPC_ScriptableObject NPC;
+        [SerializeField] DialogueEventsSO dialogueEvents;
 
 
         private void OnEnable()

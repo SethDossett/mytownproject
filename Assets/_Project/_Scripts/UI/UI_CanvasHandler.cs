@@ -11,6 +11,7 @@ namespace MyTownProject.UI
     {
         private UI_EventMaster ui_eventMaster;
         [SerializeField] MainEventChannelSO eventChannel;
+        [SerializeField] DialogueEventsSO dialogueEvents;
 
         [SerializeField] private GameObject _gameUI;
         [SerializeField] private GameObject _clock;
@@ -25,7 +26,7 @@ namespace MyTownProject.UI
         {
             ui_eventMaster = GameObject.Find("EventMaster").GetComponent<UI_EventMaster>();
             GameManager.OnGameStateChanged += CheckGameState;
-            eventChannel.OnTalk += TalkingWithNPC;
+            dialogueEvents.onEnter += TalkingWithNPC;
             eventChannel.OnGameUnPaused += ExitDialogue;
             eventChannel.OnSubmit += ContinueIconSubmit;
             UI_EventMaster.interactionTextOn += ShowInteractionText;
@@ -36,7 +37,7 @@ namespace MyTownProject.UI
         private void OnDisable()
         {
             GameManager.OnGameStateChanged -= CheckGameState;
-            eventChannel.OnTalk -= TalkingWithNPC;
+            dialogueEvents.onEnter -= TalkingWithNPC;
             eventChannel.OnGameUnPaused -= ExitDialogue;
             eventChannel.OnSubmit += ContinueIconSubmit;
             UI_EventMaster.interactionTextOn -= ShowInteractionText;

@@ -21,7 +21,7 @@ namespace MyTownProject.Interaction
         [Header("References")]
         [SerializeField] private CinemachineTargetGroup _targetGroup;
         [SerializeField] private NPC_ScriptableObject npc_scriptableObject;
-        public MainEventChannelSO MainEventChannelSO;
+        [SerializeField] DialogueEventsSO dialogueEvents;
         private UI_EventMaster ui_eventMaster;
 
         private void OnEnable()
@@ -58,7 +58,7 @@ namespace MyTownProject.Interaction
 
         private void Speak()
         {
-            MainEventChannelSO.RaiseEventTalk(gameObject, inkJSON);
+            dialogueEvents.Enter(gameObject, inkJSON);
             NPC_StateHandler.instance.UpdateNPCState(NPC_StateHandler.NPCSTATE.TALKING);
         }
     }

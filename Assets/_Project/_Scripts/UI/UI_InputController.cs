@@ -7,7 +7,8 @@ namespace MyTownProject.UI
 {
     public class UI_InputController : MonoBehaviour
     {
-        public MainEventChannelSO MainEventChannelSO;
+        [SerializeField] MainEventChannelSO MainEventChannelSO;
+        [SerializeField] DialogueEventsSO DialogueEventsSO;
         private InputAction exit;
         private InputAction submit;
 
@@ -34,6 +35,7 @@ namespace MyTownProject.UI
         private void SubmitAction(InputAction.CallbackContext obj)
         {
             MainEventChannelSO.RaiseEventSubmit();
+            DialogueEventsSO.Submit();
         }
     }
 }

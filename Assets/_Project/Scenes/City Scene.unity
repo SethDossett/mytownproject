@@ -409,6 +409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  DialogueEventsSO: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
 --- !u!114 &41796111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -422,6 +423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _gameUI: {fileID: 2015725937}
   _clock: {fileID: 107054351}
   _buttons: {fileID: 2126392317}
@@ -1754,7 +1756,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 144770364}
-  m_LocalRotation: {x: -0.055028267, y: -0.31742412, z: -0.018454507, w: 0.94650584}
+  m_LocalRotation: {x: -0.055028263, y: -0.31742412, z: -0.018454507, w: 0.94650584}
   m_LocalPosition: {x: 91.5048, y: 3.7407267, z: 114.19547}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12847,7 +12849,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c1f4e524db64ca4c8ee8127e564e3ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _targetGroup_01: {fileID: 113544880}
 --- !u!1001 &1319401202
 PrefabInstance:
@@ -16952,7 +16954,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1815622633}
-  m_LocalRotation: {x: -0.0049833674, y: -0.9861987, z: 0.1420277, w: 0.084942974}
+  m_LocalRotation: {x: -0.0049833655, y: -0.9861987, z: 0.1420277, w: 0.084942944}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -26686,6 +26688,12 @@ PrefabInstance:
       objectReference: {fileID: 113544880}
     - target: {fileID: 1004980795796097278, guid: 098f05281936b4245a4e5f81f7c7f7bf,
         type: 3}
+      propertyPath: dialogueEvents
+      value: 
+      objectReference: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa,
+        type: 2}
+    - target: {fileID: 1004980795796097278, guid: 098f05281936b4245a4e5f81f7c7f7bf,
+        type: 3}
       propertyPath: <MaxRange>k__BackingField
       value: 2.5
       objectReference: {fileID: 0}
@@ -26765,6 +26773,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8669813202786129150, guid: 098f05281936b4245a4e5f81f7c7f7bf,
+        type: 3}
+      propertyPath: dialogueEvents
+      value: 
+      objectReference: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa,
+        type: 2}
     m_RemovedComponents:
     - {fileID: 1004980797275598656, guid: 098f05281936b4245a4e5f81f7c7f7bf, type: 3}
     - {fileID: 1004980796562242123, guid: 098f05281936b4245a4e5f81f7c7f7bf, type: 3}
@@ -26805,6 +26819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
 --- !u!1001 &1259432395584632833
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28154,6 +28169,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 544885013}
     m_Modifications:
+    - target: {fileID: 908625628, guid: 322ba6500f7523e46b42d283eab68ea5, type: 3}
+      propertyPath: dialogueEvents
+      value: 
+      objectReference: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa,
+        type: 2}
     - target: {fileID: 908625630, guid: 322ba6500f7523e46b42d283eab68ea5, type: 3}
       propertyPath: inkJSON
       value: 
@@ -28162,6 +28182,16 @@ PrefabInstance:
       propertyPath: _targetGroup
       value: 
       objectReference: {fileID: 113544880}
+    - target: {fileID: 908625630, guid: 322ba6500f7523e46b42d283eab68ea5, type: 3}
+      propertyPath: dialogueEvents
+      value: 
+      objectReference: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa,
+        type: 2}
+    - target: {fileID: 908625631, guid: 322ba6500f7523e46b42d283eab68ea5, type: 3}
+      propertyPath: dialogueEvents
+      value: 
+      objectReference: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa,
+        type: 2}
     - target: {fileID: 7179472169136125997, guid: 322ba6500f7523e46b42d283eab68ea5,
         type: 3}
       propertyPath: m_Name

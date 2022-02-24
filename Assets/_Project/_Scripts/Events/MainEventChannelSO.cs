@@ -8,25 +8,14 @@ namespace MyTownProject.Events
     {
         public UnityAction OnGamePaused;
         public UnityAction OnGameUnPaused;
-        public UnityAction<GameObject, TextAsset> OnTalk;
         public UnityAction OnSubmit;
 
-        public void RaiseEventPaused()
-        {
-            OnGamePaused?.Invoke();
-        }
-        public void RaiseEventUnPaused()
-        {
-            OnGameUnPaused?.Invoke();
-        }
-        public void RaiseEventTalk(GameObject npc, TextAsset inkJSON)
-        {
-            OnTalk?.Invoke(npc,inkJSON);
-        }
-        public void RaiseEventSubmit()
-        {
-            OnSubmit?.Invoke(); 
-        }
+        public void RaiseEventPaused() => OnGamePaused?.Invoke();
+        
+        public void RaiseEventUnPaused() => OnGameUnPaused?.Invoke();
+        
+        public void RaiseEventSubmit() => OnSubmit?.Invoke();
+        
     }
 
 }

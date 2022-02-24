@@ -1,25 +1,16 @@
 using UnityEngine;
 using System;
+using MyTownProject.Events;
 
 namespace MyTownProject.NPC
 {
     public class NPC_StateHandler : MonoBehaviour
     {
-        public static NPC_StateHandler instance;
+        #region State of NPC
+        
         public NPCSTATE npcState;
         public static event Action<NPCSTATE> OnNPCStateChange;
 
-        Animator _animator;
-        int _isWalking = Animator.StringToHash("isWalking");
-
-
-        private void Awake()
-        {
-            instance = this;
-            _animator = GetComponent<Animator>();
-
-        }
-        #region State of NPC
         public void UpdateNPCState(NPCSTATE newState)
         {
             npcState = newState;
@@ -45,8 +36,27 @@ namespace MyTownProject.NPC
             OnNPCStateChange?.Invoke(newState);
         }
 
+        public enum NPCSTATE
+        {
+            STANDING, WALKING, TALKING, WORKING
+        }
+        #endregion
+
+        #region State Logic
+        Animator _animator;
+        int _isWalking = Animator.StringToHash("isWalking");
+        int _isStanding = Animator.StringToHash("isStanding");
+        public static NPC_StateHandler instance;
+
+        private void Awake()
+        {
+            instance = this;
+            _animator = GetComponent<Animator>();
+        }
+
         private void HandleWorking()
         {
+            _animator.SetBool(_isStanding, false);
             _animator.SetBool(_isWalking, false);
         }
 
@@ -58,6 +68,7 @@ namespace MyTownProject.NPC
 
         private void HandleWalking()
         {
+            _animator.SetBool(_isStanding, false);
             _animator.SetBool(_isWalking, true);
             Debug.Log("Walking");
         }
@@ -65,12 +76,39 @@ namespace MyTownProject.NPC
         private void HandleStanding()
         {
             _animator.SetBool(_isWalking, false);
+            _animator.SetBool(_isStanding, true);
         }
 
-        public enum NPCSTATE
+
+        #endregion
+
+        #region Changing State
+
+        [SerializeField] DialogueEventsSO dialogueEvents;
+        
+        void OnEnable()
         {
-            STANDING, WALKING, TALKING, WORKING
+            dialogueEvents.onEnter += EnterTalkingState;
+            dialogueEvents.onExit += ReturnToBaseState;
         }
+        void OnDisable()
+        {
+            dialogueEvents.onEnter -= EnterTalkingState;
+            dialogueEvents.onExit -= ReturnToBaseState;
+        }
+
+        void EnterTalkingState(GameObject npc, TextAsset inkJSON)
+        {
+            if (npcState != NPCSTATE.TALKING)
+                UpdateNPCState(NPCSTATE.TALKING);
+        }
+        void ReturnToBaseState()
+        {
+            if(npcState != NPCSTATE.STANDING)
+                UpdateNPCState(NPCSTATE.STANDING);
+        }
+
+
         #endregion
     }
 }
