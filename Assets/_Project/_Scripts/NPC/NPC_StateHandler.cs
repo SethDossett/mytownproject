@@ -56,7 +56,6 @@ namespace MyTownProject.NPC
 
         private void HandleWorking()
         {
-            _animator.SetBool(_isStanding, false);
             _animator.SetBool(_isWalking, false);
         }
 
@@ -68,7 +67,6 @@ namespace MyTownProject.NPC
 
         private void HandleWalking()
         {
-            _animator.SetBool(_isStanding, false);
             _animator.SetBool(_isWalking, true);
             Debug.Log("Walking");
         }
@@ -76,7 +74,7 @@ namespace MyTownProject.NPC
         private void HandleStanding()
         {
             _animator.SetBool(_isWalking, false);
-            _animator.SetBool(_isStanding, true);
+            _animator.SetTrigger(_isStanding);
         }
 
 

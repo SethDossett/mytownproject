@@ -16,7 +16,7 @@ namespace MyTownProject.Core
 
         void Start()
         {
-            Application.targetFrameRate = 60;
+            //Application.targetFrameRate = 60;
             Minute = 0;
             Hour = 6;
             Day = 1;

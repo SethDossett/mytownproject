@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using MyTownProject.Events;
+using UnityEngine.SceneManagement;
 
 namespace MyTownProject.NPC
 {
@@ -7,63 +8,63 @@ namespace MyTownProject.NPC
     {
         [SerializeField] NPC_ScriptableObject NPC;
         [SerializeField] DialogueEventsSO dialogueEvents;
-
+        Scene currentScene;
+        [SerializeField] GameObject _meshes;
+        CapsuleCollider _collider;
 
         private void OnEnable()
         {
-            NPC_DestinationHandler.OnDestinationReached += NextAction;
+            NPC_DestinationHandler.UpdateScene += NextAction;
         }
         private void OnDisable()
         {
-            NPC_DestinationHandler.OnDestinationReached -= NextAction;
+            NPC_DestinationHandler.UpdateScene -= NextAction;
+        }
+        private void Awake()
+        {
+            _collider = GetComponent<CapsuleCollider>();
         }
 
         private void Start()
         {
-            transform.position = NPC.currentPosition;
+            currentScene = SceneManager.GetActiveScene();
+            //transform.position = NPC.currentPosition;
         }
 
-        void NextAction(DestinationPathsSO path)
+        private void Update()
         {
-            //open door animation
-            // change state if needed
-            if (path.hasDoor)
+            if (NPC.currentScene != currentScene.buildIndex)
             {
-                path.RaiseEventDoor();
-                //if animator is null, then waitforseconds(lengthofanimation).
-
-                if (path.continueMoving)
-                {
-                    NPC.RaiseEventMove();
-                }
-                else
-                {
-                    // switch to next state
-                }
+                HideNPC();
             }
-
-            if (path.needToTeleport)
+            else
             {
-                transform.SetPositionAndRotation(path.teleportPosition, path.teleportRotation);
-                //transform.position = path.teleportPosition;
+                UnHideNPC();
             }
-
-            Debug.Log(path);
-
-
-
-            if (NPC.currentDestinationIndex < NPC.destinationPaths.Length - 1)
-            {
-                NPC.currentDestinationIndex++;
-
-            }
-
-
-
         }
 
-        void MoveNPC()
+        void NextAction(DestinationPathsSO path) // check when scene starts and when npc action takes place.
         {
+            Debug.Log(currentScene.buildIndex);
+            Debug.Log(NPC.currentScene);
+            
+           
+        }
+
+        void HideNPC()
+        {
+            if(_meshes.activeInHierarchy == true)
+                _meshes.SetActive(false);
+            if(_collider.enabled)
+                _collider.enabled = false;
+        }
+
+        void UnHideNPC()
+        {
+            if (_meshes.activeInHierarchy == false)
+                _meshes.SetActive(true);
+            if (!_collider.enabled)
+                _collider.enabled = true;
         }
 
 

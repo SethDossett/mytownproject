@@ -10,23 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7543907da2c960a4584bb9c485ede902, type: 3}
-  m_Name: HospitalToHealersHouse
+  m_Name: Hopital to Desk
   m_EditorClassIdentifier: 
-  index: 1
+  index: 2
   path:
-  - {x: 101, y: 2, z: 91}
-  - {x: 103.75, y: 2, z: 91}
-  - {x: 106.25, y: 1, z: 91}
-  - {x: 112.25, y: 1, z: 91}
-  - {x: 115.25, y: 1, z: 96}
-  - {x: 120.75, y: 1, z: 97.25}
-  - {x: 121.75, y: 1.5, z: 97.25}
-  - {x: 123, y: 1.5, z: 97.25}
+  - {x: 240.6, y: 0, z: 91.5}
+  - {x: 240.6, y: 0, z: 94}
+  - {x: 244, y: 0, z: 97}
+  - {x: 249, y: 0, z: 97}
+  - {x: 249, y: 0, z: 102}
   hasDoor: 0
   continueMoving: 0
   needToTeleport: 0
   doorPosition: {x: 0, y: 0, z: 0}
   newSceneLocation: {x: 0, y: 0, z: 0}
   teleportRotation: {x: 0, y: 0, z: 0, w: 0}
-  thisPathScene: 0
-  nextSceneAfterDestination: 2
+  thisPathScene: 1
+  nextSceneAfterDestination: 1

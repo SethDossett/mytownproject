@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace MyTownProject.Events
 {
@@ -8,10 +9,7 @@ namespace MyTownProject.Events
     {
         #region Events
         public UnityAction<Vector3[]> destinations;
-        public void RaiseEvent(Vector3[] pos)
-        {
-            destinations?.Invoke(pos);
-        }
+        public void RaiseEvent(Vector3[] pos) => destinations?.Invoke(pos);
 
         public UnityAction walkThroughDoor;
         public void RaiseEventDoor() => walkThroughDoor?.Invoke();
@@ -28,8 +26,11 @@ namespace MyTownProject.Events
         public bool hasDoor;
         public bool continueMoving;
         public bool needToTeleport;
-        public Vector3 teleportPosition;
+        public Vector3 doorPosition;
+        public Vector3 newSceneLocation; // set position for new scene position
         public Quaternion teleportRotation;
+        public int thisPathScene;
+        public int nextSceneAfterDestination;
         #endregion
     }
 

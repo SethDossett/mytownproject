@@ -1,5 +1,5 @@
 using KinematicCharacterController.Examples;
-using System;
+using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -133,22 +133,26 @@ namespace MyTownProject.Interaction
             Debug.Log("locked");
         
         }
-        private void OnTriggerEnter(Collider other) // trigger door open event
+        private async void OnTriggerEnter(Collider other) // trigger door open event
         {
             CanBeInteractedWith = false;
             if (other.gameObject.CompareTag(_npcTag)){
                 _animatorRight.Play(opendoorR);
                 _animatorLeft.Play(opendoorL);
             }
-        }
-        private void OnTriggerExit(Collider other) // trigger door close event
-        {
+            await Task.Delay(1500);
+
             CanBeInteractedWith = true;
             if (other.gameObject.CompareTag(_npcTag))
             {
                 _animatorRight.SetTrigger(closeDoor);
                 _animatorLeft.SetTrigger(closeDoor);
             }
+
+        }
+        private void OnTriggerExit(Collider other) // trigger door close event
+        {
+            
         }
 
     }

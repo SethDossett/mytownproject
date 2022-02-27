@@ -3,7 +3,7 @@ INCLUDE globals.ink
 { pokemon_name == "": -> main | -> already_chose }
 
 === main ===
-Which pokemon do you choose? #speaker:Boy Ty #emote:Idle
+Which pokemon do you choose?  #speaker:Boy Ty #emote:Idle
     + [Charmander]
         -> chosen("charmander")
     + [Bulbasaur]
@@ -17,5 +17,5 @@ You chose {pokemon}! #emote:Happy
 ->END
 
 === already_chose ===
-You already chose {pokemon_name}!
+You already chose {pokemon_name}! #speaker:Boy Ty
 -> END

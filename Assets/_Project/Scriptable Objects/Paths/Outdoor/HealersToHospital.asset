@@ -22,9 +22,12 @@ MonoBehaviour:
   - {x: 106.25, y: 1, z: 91}
   - {x: 103.75, y: 2, z: 91}
   - {x: 101, y: 2, z: 91}
-  - {x: 101, y: 2, z: 97}
+  - {x: 101, y: 2, z: 94}
   hasDoor: 0
-  continueMoving: 0
+  continueMoving: 1
   needToTeleport: 1
-  teleportPosition: {x: 240.6, y: 0, z: 101.51}
+  doorPosition: {x: 101, y: 2, z: 97}
+  newSceneLocation: {x: 240.6, y: 0, z: 91.5}
   teleportRotation: {x: 0, y: 0, z: 0, w: 0}
+  thisPathScene: 0
+  nextSceneAfterDestination: 1

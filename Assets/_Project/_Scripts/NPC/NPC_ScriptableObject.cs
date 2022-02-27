@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using MyTownProject.Events;
+using UnityEngine.SceneManagement;
 
 namespace MyTownProject.NPC
 {
@@ -9,6 +10,7 @@ namespace MyTownProject.NPC
     {
         public float MoveSpeed = 1f;
         public Vector3 currentPosition;
+        public int currentScene;
         public Vector3[] significantLocation;
 
         public bool runDestination = false;

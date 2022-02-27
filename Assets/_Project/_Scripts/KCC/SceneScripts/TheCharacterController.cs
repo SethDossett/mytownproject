@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
 using System;
+using UnityEngine.InputSystem;
 
 namespace KinematicCharacterController.Examples
 {
     public enum CharacterState
     {
-        Default, Talking
+        Default, Talking, Climbing
     }
 
     public enum OrientationMethod
@@ -110,7 +111,13 @@ namespace KinematicCharacterController.Examples
         }
         private void Update()
         {
-            
+            if (Keyboard.current.lKey.wasPressedThisFrame)
+            {
+                if (CurrentCharacterState == CharacterState.Default)
+                    TransitionToState(CharacterState.Climbing);
+                else
+                    TransitionToState(CharacterState.Default);
+            }
         }
         /// <summary>
         /// Handles movement state transitions and enter/exit callbacks
@@ -134,6 +141,10 @@ namespace KinematicCharacterController.Examples
                     {
                         break;
                     }
+                case CharacterState.Climbing:
+                    {
+                        break;
+                    }
             }
         }
 
@@ -146,7 +157,10 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
-                        
+                        break;
+                    }
+                case CharacterState.Climbing:
+                    {
                         break;
                     }
             }
@@ -217,6 +231,24 @@ namespace KinematicCharacterController.Examples
                         else if (inputs.CrouchUp)
                         {
                             _shouldBeCrouching = false;
+                        }
+                        break;
+                    }
+                case CharacterState.Climbing:
+                    {
+                        Vector3 ladderInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveDirection.x, inputs.MoveDirection.y, 0f), 1f);
+
+                        // Move and look inputs
+                        _moveInputVector = cameraPlanarRotation * ladderInputVector;
+
+                        switch (OrientationMethod)
+                        {
+                            case OrientationMethod.TowardsCamera:
+                                _lookInputVector = cameraPlanarDirection;
+                                break;
+                            case OrientationMethod.TowardsMovement:
+                                _lookInputVector = _moveInputVector.normalized;
+                                break;
                         }
                         break;
                     }
@@ -293,6 +325,12 @@ namespace KinematicCharacterController.Examples
                             Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
                             currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
                         }
+                        break;
+                    }
+                case CharacterState.Climbing:
+                    {
+
+
                         break;
                     }
             }
@@ -424,6 +462,25 @@ namespace KinematicCharacterController.Examples
                             currentVelocity += _internalVelocityAdd;
                             _internalVelocityAdd = Vector3.zero;
                         }
+                        break;
+                    }
+                case CharacterState.Climbing:
+                    {
+                        transform.Translate(_moveInputVector * 5f* deltaTime);
+
+                        float currentVelocityMagnitude = currentVelocity.magnitude;
+
+                       //Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
+                       //// Calculate target velocity
+                       //Vector3 inputRight = Motor.CharacterUp;
+                       //Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+                       //Vector3 targetMovementVelocity = inputRight * MaxStableMoveSpeed;
+                       ////Motor.ForceUnground();
+                       //// Smooth movement Velocity
+                       //currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                       //currentVelocity *= (1f / (1f + (Drag * deltaTime)));
+                       //currentVelocity += Gravity * deltaTime;
+                       ////currentVelocity += (Motor.CharacterUp * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
                         break;
                     }
             }

@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
 using MyTownProject.Events;
+using System.Collections;
 
 namespace MyTownProject.NPC
 {
     public class NPC_DestinationHandler : MonoBehaviour
     {
-        public static UnityAction<DestinationPathsSO> OnDestinationReached;
+        public static UnityAction<DestinationPathsSO> UpdateScene;
 
         [Header("References")]
         [SerializeField] NPC_ScriptableObject NPC;
@@ -17,7 +18,6 @@ namespace MyTownProject.NPC
         Transform _transform;
         Rigidbody rb;
 
-
         [Header("Values")]
         [SerializeField] bool _atDestination;
         Vector3 _moveTowards;
@@ -27,6 +27,8 @@ namespace MyTownProject.NPC
         int currentDestination;
 
         bool _shouldMove;
+        bool _goThroughDoor = false;
+
         private void OnEnable()
         {
             NPC.move += SetPath;
@@ -44,6 +46,8 @@ namespace MyTownProject.NPC
         }
         private void Start()
         {
+            _currentPosition = _transform.position;
+            NPC.currentScene = Path.thisPathScene;
             NPC.runDestination = false;
             NPC.atDestination = true;
         }
@@ -116,28 +120,40 @@ namespace MyTownProject.NPC
 
         private void FixedUpdate()
         {
+            
+            if (_goThroughDoor)
+                GoThroughDoor();
+
+
             if (!_shouldMove)
                 return;
 
-            _moveTowards = _transform.position;
-            Quaternion _rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
-            _rotation.x = 0;
-            _rotation.z = 0;
-            _moveTowards = Vector3.MoveTowards(_transform.position, Path.path[Path.index], NPC.MoveSpeed * Time.fixedDeltaTime);
-
-
-
-            rb.MovePosition(_moveTowards);
-            rb.rotation = Quaternion.RotateTowards(rb.rotation, _rotation, 200 * Time.fixedDeltaTime);
+            DoMove();
 
 
         }
         private void Update()
         {
+            NPC.currentPosition = _currentPosition;
+            
+            if (_goThroughDoor)
+            {
+                CheckDistance(Path.doorPosition);
+            }
+
             if (!_shouldMove)
             {
-                if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.STANDING)
-                    _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.STANDING);
+                if (!_goThroughDoor)
+                {
+                    if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.STANDING)
+                        _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.STANDING);
+                }
+                else
+                {
+                    if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.WALKING && _stateHandler.npcState != NPC_StateHandler.NPCSTATE.TALKING)
+                        _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.WALKING);
+                }
+
                 return;
             }
 
@@ -150,52 +166,91 @@ namespace MyTownProject.NPC
         private void SetPath()
         {
             Path = NPC.destinationPaths[NPC.currentDestinationIndex];
+            NPC.currentScene = Path.thisPathScene;
             Path.index = 0;
+            _goThroughDoor = false;
             _shouldMove = true;
             _atDestination = false;
         }
+        private void DoMove()
+        {
+            //_moveTowards = _currentPosition;
+            Quaternion _rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
+            _rotation.x = 0;
+            _rotation.z = 0;
+            _currentPosition = Vector3.MoveTowards(_currentPosition, Path.path[Path.index], NPC.MoveSpeed * Time.fixedDeltaTime);
+
+            //rb.position = _currentPosition;
+            rb.MovePosition(_currentPosition);
+            rb.rotation = Quaternion.RotateTowards(rb.rotation, _rotation, 200 * Time.fixedDeltaTime);
+        }
         private void CheckDistance(Vector3 destination)
         {
-            if (Vector3.Distance(_transform.position, destination) <= 0.1f)
+            if (Vector3.Distance(_currentPosition, destination) <= 0.1f)
             {
-                //CheckNewLocation(destination, NPC.significantLocation);
                 UpdateValues();
             }
         }
         private void UpdateValues()
         {
+            if (_goThroughDoor)
+            {
+                _goThroughDoor = false;
+                return;
+            }
+
             if (Path.index >= Path.path.Length - 1) //at end of array
             {
                 _shouldMove = false;
                 _atDestination = true;
-                //OnDestinationReached?.Invoke(Path);
-                DestinationReached();
+                StartCoroutine(DestinationReached());
                 return;
             }
 
             Path.index++;
         }
-        private void CheckNewLocation(Vector3 pos, Vector3[] sigLoc)
+        
+        IEnumerator DestinationReached()
         {
-            foreach (var loc in sigLoc)
+            // start player in other scene
+            if (Path.continueMoving)
             {
-                if (pos == loc)
+                if (NPC.currentDestinationIndex < NPC.destinationPaths.Length - 1)
                 {
+                    NPC.currentDestinationIndex++;
+                    if (Path.needToTeleport)
+                    {
+                        NPC.currentScene = Path.nextSceneAfterDestination;
+                        //UpdateScene?.Invoke(Path);
+                        yield return new WaitForSecondsRealtime(0.1f);
+                        _currentPosition = Path.newSceneLocation;
+                    }
+                    
+                    SetPath();
+                } 
+            }
 
-                    _shouldMove = false;
-                }
+            if (Path.hasDoor) // moves player few more feet to pass through door
+            {
+                _goThroughDoor = true;
+            }
 
-                return;
+            if (Path.needToTeleport)
+            {
+                //_transform.SetPositionAndRotation(Path.teleportPosition, Path.teleportRotation);
             }
         }
 
-        private void DestinationReached()
+        private void GoThroughDoor()
         {
-            if (Path.needToTeleport)
-            {
-                transform.SetPositionAndRotation(Path.teleportPosition, Path.teleportRotation);
-                //transform.position = path.teleportPosition;
-            }
+            _moveTowards = _currentPosition;
+            Quaternion _rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
+            _rotation.x = 0;
+            _rotation.z = 0;
+            _moveTowards = Vector3.MoveTowards(_currentPosition, Path.doorPosition, NPC.MoveSpeed * Time.fixedDeltaTime);
+
+            rb.MovePosition(_moveTowards);
+            rb.rotation = Quaternion.RotateTowards(rb.rotation, _rotation, 200 * Time.fixedDeltaTime);
         }
     }
 }
