@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Boy Ty
   m_EditorClassIdentifier: 
   MoveSpeed: 2
-  currentPosition: {x: 210.0028, y: 0.43834755, z: 91.390274}
+  currentPosition: {x: 154.88284, y: 0, z: 55.338478}
+  currentScene: 1
   significantLocation:
   - {x: 123, y: 1.5, z: 97.25}
   runDestination: 0

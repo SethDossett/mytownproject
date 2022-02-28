@@ -27,7 +27,7 @@ MonoBehaviour:
   continueMoving: 1
   needToTeleport: 1
   doorPosition: {x: 101, y: 2, z: 97}
-  newSceneLocation: {x: 240.6, y: 0, z: 91.5}
-  teleportRotation: {x: 0, y: 0, z: 0, w: 0}
+  newSceneLocation: {x: 0, y: 0, z: -10}
+  teleportRotation: {x: 0, y: 0, z: 0, w: 1}
   thisPathScene: 0
   nextSceneAfterDestination: 1

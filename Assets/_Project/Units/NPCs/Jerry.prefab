@@ -536,13 +536,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4529536749757824938}
   - component: {fileID: 7510888691210495440}
-  - component: {fileID: 1004980795796097265}
-  - component: {fileID: 1004980796562242123}
-  - component: {fileID: 1004980797275598656}
   - component: {fileID: 1004980796562242122}
   - component: {fileID: 1004980795796097278}
   - component: {fileID: 8669813202786129150}
   - component: {fileID: 1004980797275598664}
+  - component: {fileID: 1004980797275598656}
+  - component: {fileID: 1004980797275598657}
   m_Layer: 8
   m_Name: Jerry
   m_TagString: Untagged
@@ -585,77 +584,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1004980795796097265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 4
-    exactEndPoint: 0
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
---- !u!114 &1004980796562242123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847a14d4dc9cc43679ab34fc78e0182f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 4
-  autoRepath:
-    mode: 2
-    interval: 0.5
-    sensitivity: 10
-    maximumInterval: 2
-    visualizeSensitivity: 0
-  canMove: 1
-  speed: 1
-  orientation: 0
-  enableRotation: 1
-  rotationSpeed: 10
-  interpolatePathSwitches: 1
-  switchPathInterpolationSpeed: 5
-  targetCompatibility: {fileID: 0}
-  repathRateCompatibility: NaN
-  canSearchCompability: 0
---- !u!114 &1004980797275598656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9679e68a0f1144e79c664d9a11ca121, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  target: {fileID: 0}
 --- !u!114 &1004980796562242122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -668,7 +596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36b6460fcaced5049b85925997508aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _npc: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
+  NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
   _stateHandler: {fileID: 8669813202786129150}
   _atDestination: 0
 --- !u!114 &1004980795796097278
@@ -683,10 +611,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f527eed4d979fc4bbff60dff5493f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <MaxRange>k__BackingField: 2.5
+  <CanBeInteractedWith>k__BackingField: 1
+  inkJSON: {fileID: 4900000, guid: 99bdfb1311d92d34c9c89f3d49afb339, type: 3}
   _targetGroup: {fileID: 0}
   npc_scriptableObject: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f,
     type: 2}
-  MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
 --- !u!114 &8669813202786129150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,6 +631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcState: 0
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
 --- !u!136 &1004980797275598664
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -714,6 +646,37 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &1004980797275598656
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3861824587936572688}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1004980797275598657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3861824587936572688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58d044d45dc31547afe21090f55d8c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  _meshes: {fileID: 5095986871245467832}
 --- !u!1 &4020160337252914402
 GameObject:
   m_ObjectHideFlags: 0

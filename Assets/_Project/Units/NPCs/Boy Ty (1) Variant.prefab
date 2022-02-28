@@ -51,17 +51,17 @@ PrefabInstance:
     - target: {fileID: 6045177863383812428, guid: c1a162a6a2892354ea5844d6180a3551,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 101
+      value: 123
       objectReference: {fileID: 0}
     - target: {fileID: 6045177863383812428, guid: c1a162a6a2892354ea5844d6180a3551,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6045177863383812428, guid: c1a162a6a2892354ea5844d6180a3551,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 97
+      value: 97.25
       objectReference: {fileID: 0}
     - target: {fileID: 6045177863383812428, guid: c1a162a6a2892354ea5844d6180a3551,
         type: 3}
@@ -119,6 +119,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4255200667487251419}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1030763528534881769 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3838055899741216306, guid: c1a162a6a2892354ea5844d6180a3551,
+    type: 3}
+  m_PrefabInstance: {fileID: 4255200667487251419}
+  m_PrefabAsset: {fileID: 0}
 --- !u!54 &908625635
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -135,6 +141,20 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &4020847672837395476
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7179472169136125997}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &908625628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcState: 0
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
 --- !u!114 &908625629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,10 +198,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MaxRange>k__BackingField: 2
   <CanBeInteractedWith>k__BackingField: 1
+  inkJSON: {fileID: 4900000, guid: 0399cd33086b95d498336c31540946b3, type: 3}
   _targetGroup: {fileID: 0}
   npc_scriptableObject: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d,
     type: 2}
-  MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
 --- !u!114 &908625631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,17 +216,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NPC: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
---- !u!136 &4020847672837395476
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7179472169136125997}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  _meshes: {fileID: 1030763528534881769}

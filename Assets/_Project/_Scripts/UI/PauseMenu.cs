@@ -25,7 +25,7 @@ namespace MyTownProject.UI
         }
         private void Pause()
         {
-            GameManager.instance.UpdateState(GameManager.GameState.GAME_PAUSED);
+            GameStateManager.instance.UpdateState(GameStateManager.GameState.GAME_PAUSED);
 
             if (!pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(true);
@@ -33,7 +33,7 @@ namespace MyTownProject.UI
         }
         private void Resume()
         {
-            GameManager.instance.UpdateState(GameManager.GameState.GAME_PLAYING);
+            GameStateManager.instance.UpdateState(GameStateManager.GameState.GAME_PLAYING);
 
             if (pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(false);

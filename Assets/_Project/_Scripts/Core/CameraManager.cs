@@ -22,12 +22,12 @@ namespace MyTownProject.Core
         private void OnEnable()
         {
             dialogueEvents.onEnter += SwitchToDialogue;
-            GameManager.OnGameStateChanged += CheckGameState;
+            GameStateManager.OnGameStateChanged += CheckGameState;
         }
         private void OnDisable()
         {
             dialogueEvents.onEnter -= SwitchToDialogue;
-            GameManager.OnGameStateChanged -= CheckGameState;
+            GameStateManager.OnGameStateChanged -= CheckGameState;
         }
         private void Start()
         {
@@ -42,9 +42,9 @@ namespace MyTownProject.Core
             _animator.Play(playerFreeLook01);
         }
 
-        void CheckGameState(GameManager.GameState state)
+        void CheckGameState(GameStateManager.GameState state)
         {
-            if (state == GameManager.GameState.GAME_PLAYING)
+            if (state == GameStateManager.GameState.GAME_PLAYING)
             {
                 SwitchToFreeLook();
             }

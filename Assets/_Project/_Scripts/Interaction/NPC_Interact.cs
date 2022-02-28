@@ -45,7 +45,7 @@ namespace MyTownProject.Interaction
         {
             Debug.Log($"Interacting with {gameObject.name}");
             _targetGroup.m_Targets[1].target = transform;
-            GameManager.instance.UpdateState(GameManager.GameState.CUTSCENE);
+            GameStateManager.instance.UpdateState(GameStateManager.GameState.CUTSCENE);
             ui_eventMaster.InteractionTextOFF();
             Speak();
             return;

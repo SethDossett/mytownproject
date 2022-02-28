@@ -58,7 +58,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 2a230514c860643f69b6a4d1871d3825, type: 3}
   m_ShaderKeywords: DR_OUTLINE_ON DR_RIM_ON DR_SPECULAR_ON _ALLOWALPHAOVERFLOW_OFF
     _DETAILMAPBLENDINGMODE_ADD _EMISSION _METALLICSPECGLOSSMAP _NORMALMAP _OCCLUSIONMAP
-    _RECEIVESHADOWS_OFF _RECEIVE_SHADOWS_OFF _TEXTUREBLENDINGMODE_MULTIPLY _UNITYSHADOW_OCCLUSION
+    _TEXTUREBLENDINGMODE_MULTIPLY _UNITYSHADOW_OCCLUSION
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -185,7 +185,7 @@ Material:
     - _OverrideLightmapDir: 0
     - _Parallax: 0.02
     - _QueueOffset: 0
-    - _ReceiveShadows: 0
+    - _ReceiveShadows: 1
     - _RimEnabled: 1
     - _SelfShadingSize: 0
     - _Smoothness: 1

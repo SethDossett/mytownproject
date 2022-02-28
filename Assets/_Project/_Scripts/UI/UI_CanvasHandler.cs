@@ -25,7 +25,7 @@ namespace MyTownProject.UI
         private void OnEnable()
         {
             ui_eventMaster = GameObject.Find("EventMaster").GetComponent<UI_EventMaster>();
-            GameManager.OnGameStateChanged += CheckGameState;
+            GameStateManager.OnGameStateChanged += CheckGameState;
             dialogueEvents.onEnter += TalkingWithNPC;
             eventChannel.OnGameUnPaused += ExitDialogue;
             eventChannel.OnSubmit += ContinueIconSubmit;
@@ -36,7 +36,7 @@ namespace MyTownProject.UI
 
         private void OnDisable()
         {
-            GameManager.OnGameStateChanged -= CheckGameState;
+            GameStateManager.OnGameStateChanged -= CheckGameState;
             dialogueEvents.onEnter -= TalkingWithNPC;
             eventChannel.OnGameUnPaused -= ExitDialogue;
             eventChannel.OnSubmit += ContinueIconSubmit;
@@ -44,9 +44,9 @@ namespace MyTownProject.UI
             ui_eventMaster.interactionTextOff -= HideInteractionText;
         }
 
-        private void CheckGameState(GameManager.GameState state)
+        private void CheckGameState(GameStateManager.GameState state)
         {
-            if (state == GameManager.GameState.GAME_PLAYING)
+            if (state == GameStateManager.GameState.GAME_PLAYING)
             {
                 UI_UnhideAll();
                 if (_dialogue.activeInHierarchy)

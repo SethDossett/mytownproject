@@ -93,7 +93,7 @@ namespace MyTownProject.Interaction
         }
         IEnumerator Teleport()
         {
-            GameManager.instance.UpdateState(GameManager.GameState.CUTSCENE);
+            GameStateManager.instance.UpdateState(GameStateManager.GameState.CUTSCENE);
 
             CinematicBars.instance.BarsOn();
             yield return new WaitForSecondsRealtime(1f);
@@ -124,7 +124,7 @@ namespace MyTownProject.Interaction
             yield return new WaitForSecondsRealtime(0.25f);
             CinematicBars.instance.BarsOff();
             yield return new WaitForSecondsRealtime(0.5f);
-            GameManager.instance.UpdateState(GameManager.GameState.GAME_PLAYING);
+            GameStateManager.instance.UpdateState(GameStateManager.GameState.GAME_PLAYING);
             yield break;
         }
         private void DoLockedDoor()

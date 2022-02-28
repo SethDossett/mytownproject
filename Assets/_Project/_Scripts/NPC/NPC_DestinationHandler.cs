@@ -25,9 +25,7 @@ namespace MyTownProject.NPC
         Vector3 _destination;
         Transform _nextDestination;
         int currentDestination;
-
         bool _shouldMove;
-        bool _goThroughDoor = false;
 
         private void OnEnable()
         {
@@ -120,11 +118,6 @@ namespace MyTownProject.NPC
 
         private void FixedUpdate()
         {
-            
-            if (_goThroughDoor)
-                GoThroughDoor();
-
-
             if (!_shouldMove)
                 return;
 
@@ -136,24 +129,11 @@ namespace MyTownProject.NPC
         {
             NPC.currentPosition = _currentPosition;
             
-            if (_goThroughDoor)
-            {
-                CheckDistance(Path.doorPosition);
-            }
-
             if (!_shouldMove)
             {
-                if (!_goThroughDoor)
-                {
-                    if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.STANDING)
-                        _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.STANDING);
-                }
-                else
-                {
-                    if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.WALKING && _stateHandler.npcState != NPC_StateHandler.NPCSTATE.TALKING)
-                        _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.WALKING);
-                }
-
+                if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.STANDING)
+                    _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.STANDING);
+                
                 return;
             }
 
@@ -168,7 +148,6 @@ namespace MyTownProject.NPC
             Path = NPC.destinationPaths[NPC.currentDestinationIndex];
             NPC.currentScene = Path.thisPathScene;
             Path.index = 0;
-            _goThroughDoor = false;
             _shouldMove = true;
             _atDestination = false;
         }
@@ -193,12 +172,6 @@ namespace MyTownProject.NPC
         }
         private void UpdateValues()
         {
-            if (_goThroughDoor)
-            {
-                _goThroughDoor = false;
-                return;
-            }
-
             if (Path.index >= Path.path.Length - 1) //at end of array
             {
                 _shouldMove = false;
@@ -230,27 +203,7 @@ namespace MyTownProject.NPC
                 } 
             }
 
-            if (Path.hasDoor) // moves player few more feet to pass through door
-            {
-                _goThroughDoor = true;
-            }
-
-            if (Path.needToTeleport)
-            {
-                //_transform.SetPositionAndRotation(Path.teleportPosition, Path.teleportRotation);
-            }
         }
 
-        private void GoThroughDoor()
-        {
-            _moveTowards = _currentPosition;
-            Quaternion _rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
-            _rotation.x = 0;
-            _rotation.z = 0;
-            _moveTowards = Vector3.MoveTowards(_currentPosition, Path.doorPosition, NPC.MoveSpeed * Time.fixedDeltaTime);
-
-            rb.MovePosition(_moveTowards);
-            rb.rotation = Quaternion.RotateTowards(rb.rotation, _rotation, 200 * Time.fixedDeltaTime);
-        }
     }
 }

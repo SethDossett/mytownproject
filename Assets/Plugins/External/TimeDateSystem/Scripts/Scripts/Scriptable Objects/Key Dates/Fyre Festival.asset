@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d359ed5d947187f42b3b24a2809d2644, type: 3}
+  m_Name: Fyre Festival
+  m_EditorClassIdentifier: 
+  KeyDate:
+    date: 10
+    year: 0
+    hour: 0
+    minutes: 0
+    season: 2
+  Yearly: 0
+  thumbnail: {fileID: 2920052613717862253, guid: 01add4f1d760c804d848bf40fb11527e, type: 3}
+  Description: It was a scam!

@@ -11,8 +11,8 @@ namespace MyTownProject.Interaction
         private IInteractable currentTarget;
         private NewControls _inputActions;
         private InputAction _interact;
-        private GameManager gameManager;
-        private GameManager.GameState _game_Playing_State;
+        private GameStateManager gameManager;
+        private GameStateManager.GameState _game_Playing_State;
         private RaycastHit _hitinfo;
         private Transform _transform;
 
@@ -34,8 +34,8 @@ namespace MyTownProject.Interaction
         }
         private void Start()
         {
-            gameManager = GameManager.instance;
-            _game_Playing_State = GameManager.GameState.GAME_PLAYING;
+            gameManager = GameStateManager.instance;
+            _game_Playing_State = GameStateManager.GameState.GAME_PLAYING;
             _transform = transform;
         }
         private void Update()
