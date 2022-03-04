@@ -36,11 +36,13 @@ namespace DPUtils.Systems.DateTime
         {
             OnDateTimeChanged?.Invoke(DateTime);
         }
+        private void FixedUpdate()
+        {
+            currentTimeBetweenTicks += Time.fixedDeltaTime;
 
+        }
         private void Update()
         {
-            currentTimeBetweenTicks += Time.deltaTime;
-
             if (currentTimeBetweenTicks >= TimeBetweenTicks)
             {
                 currentTimeBetweenTicks = 0;

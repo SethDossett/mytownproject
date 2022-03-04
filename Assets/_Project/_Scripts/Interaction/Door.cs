@@ -1,11 +1,11 @@
-using KinematicCharacterController.Examples;
 using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 using TMPro;
 using MyTownProject.UI;
 using MyTownProject.Core;
+using MyTownProject.Events;
+using MyTownProject.SO;
 
 namespace MyTownProject.Interaction
 {
@@ -13,15 +13,15 @@ namespace MyTownProject.Interaction
     {
         [field: SerializeField] public float MaxRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
-    
 
-        public UnityAction<TheCharacterController> OnCharacterTeleport;
-        [SerializeField] UnityEvent _interactionEvent;
+        [Header("ScriptableObjects")]
+        [SerializeField] MainEventChannelSO mainEventChannel;
+        [SerializeField] InteractionEventSO _interactionDoor;
+        [SerializeField] UIEventChannelSO uIEventChannel;
+        [SerializeField] SceneSO sceneSO;
+        [SerializeField] StateChangerEventSO stateChangerEvent;
 
         [Header("References")]
-        [SerializeField] private GameObject _player;
-        [SerializeField] private Transform _destination;
-        TheCharacterController cc;
         private TextMeshProUGUI interactionText;
         string _npcTag = "NPC";
 
@@ -29,7 +29,8 @@ namespace MyTownProject.Interaction
         [SerializeField] private bool _isLocked = false;
         [SerializeField] private bool _canInteract = true;
         private bool _needToTeleport;
-        public bool isBeingTeleportedTo { get; set; }
+        
+        [SerializeField] int _nextSceneIndex;
 
 
         [Header("Animations")]
@@ -52,7 +53,7 @@ namespace MyTownProject.Interaction
         }
         public void OnInteract()
         {
-            _interactionEvent?.Invoke();
+            OpenDoor();
             _canInteract = false;
             return;
         }
@@ -76,56 +77,35 @@ namespace MyTownProject.Interaction
     
         private void Start()
         {
-            cc = _player.GetComponent<TheCharacterController>();
+            
             interactionText = GameObject.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         }
     
         public void OpenDoor()
         {
-            Debug.Log("Open");
-        }
-        public void OpenDoorAndTeleportPlayer()
-        {
             if (!_isLocked)
+            {
+                Debug.Log("Open");
                 StartCoroutine(Teleport());
+            }
             else
                 DoLockedDoor();
         }
+        
         IEnumerator Teleport()
         {
-            GameStateManager.instance.UpdateState(GameStateManager.GameState.CUTSCENE);
+            stateChangerEvent.RaiseEvent(GameStateManager.GameState.CUTSCENE);
 
-            CinematicBars.instance.BarsOn();
+            uIEventChannel.RaiseBarsOn();
             yield return new WaitForSecondsRealtime(1f);
             _animatorRight.Play("Door_Open_Crack_01");
             _animatorLeft.Play("Door_Open_Crack_02");
-            TransitionHandler.instance.FadeOut();
+            uIEventChannel.RaiseFadeOut(Color.black, 1f);
             yield return new WaitForSecondsRealtime(1f);
-
-            if (!isBeingTeleportedTo)
-            {
-                if (cc)
-                {
-                    cc.Motor.SetPositionAndRotation(_destination.transform.position, _destination.transform.localRotation);
-
-                    if (OnCharacterTeleport != null)
-                    {
-                        OnCharacterTeleport(cc);
-                    }
-                    this.isBeingTeleportedTo = true;
-                }
-            }
-
-            isBeingTeleportedTo = false;
+            
             _canInteract = true;
+            mainEventChannel.RaiseEventChangeScene(_nextSceneIndex, sceneSO);
         
-            yield return new WaitForSecondsRealtime(1f);
-            TransitionHandler.instance.FadeIn();
-            yield return new WaitForSecondsRealtime(0.25f);
-            CinematicBars.instance.BarsOff();
-            yield return new WaitForSecondsRealtime(0.5f);
-            GameStateManager.instance.UpdateState(GameStateManager.GameState.GAME_PLAYING);
-            yield break;
         }
         private void DoLockedDoor()
         {

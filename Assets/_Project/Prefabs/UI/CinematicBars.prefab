@@ -203,6 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 730d4db63b33ba04a8343f5de01bbdeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uIEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
   _topBar: {fileID: 5035925611054078655}
   _bottomBar: {fileID: 5035925609917623141}
   _cycleLegth: 2

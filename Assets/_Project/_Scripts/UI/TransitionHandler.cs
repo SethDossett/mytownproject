@@ -1,56 +1,67 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using MyTownProject.Events;
+using UnityEngine.UI;
 
 namespace MyTownProject.UI
 {
     public class TransitionHandler : MonoBehaviour
     {
+        [SerializeField] UIEventChannelSO regularFade;
         public static TransitionHandler instance;
-        [SerializeField] private CanvasGroup _canvasGroup;
+        CanvasGroup _canvasGroup;
+        Image _image;
         private float _lerpTime;
-        private float _duration;
         private float _currentAlpha;
         private float _lerpPercentage;
 
-
+        private void OnEnable()
+        {
+            regularFade.OnFadeOut += FadeOut;
+            regularFade.OnFadeIn += FadeIn;
+        }
+        private void OnDisable()
+        {
+            regularFade.OnFadeOut -= FadeOut;
+            regularFade.OnFadeIn -= FadeIn;
+        }
         private void Awake()
         {
-            instance = this;
+            _image = GetComponent<Image>();
+            _canvasGroup = GetComponent<CanvasGroup>();
         }
-        public void FadeOut()
+        public void FadeOut(Color color, float duration)
         {
-            StartCoroutine(FadeOutCoroutine());
+            _image.color = color;
+            StartCoroutine(FadeOutCoroutine(duration));
         }
-        IEnumerator FadeOutCoroutine()
+        IEnumerator FadeOutCoroutine(float duration)
         {
             _lerpTime = 0f;
             _canvasGroup.alpha = 0f;
-            _duration = 1f;
-            while (_lerpTime < _duration)
+            while (_lerpTime < duration)
             {
                 _lerpTime += Time.unscaledDeltaTime;
-                _lerpPercentage = _lerpTime / _duration;
+                _lerpPercentage = _lerpTime / duration;
                 _canvasGroup.alpha = Mathf.Lerp(0f, 1f, _lerpPercentage);
                 yield return null;
             }
 
-
             yield break;
         }
-        public void FadeIn()
+        public void FadeIn(Color color, float duration)
         {
-            StartCoroutine(FadeInCoroutine());
+            _image.color = color;
+            StartCoroutine(FadeInCoroutine(duration));
         }
-        IEnumerator FadeInCoroutine()
+        IEnumerator FadeInCoroutine(float duration)
         {
             _lerpTime = 0f;
             _canvasGroup.alpha = 1f;
-            _duration = 1f;
-            while (_lerpTime < _duration)
+            while (_lerpTime < duration)
             {
                 _lerpTime += Time.unscaledDeltaTime;
-                _lerpPercentage = _lerpTime / _duration;
+                _lerpPercentage = _lerpTime / duration;
                 _canvasGroup.alpha = Mathf.Lerp(1f, 0f, _lerpPercentage);
                 yield return null;
             }

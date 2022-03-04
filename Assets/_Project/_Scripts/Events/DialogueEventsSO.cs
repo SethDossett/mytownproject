@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace MyTownProject.Events
 {
-    [CreateAssetMenu(menuName = "ScriptableObject/ Event/ DialogueEventSO")]
+    [CreateAssetMenu(menuName = "ScriptableObject/Event/DialogueEventSO")]
     public class DialogueEventsSO : ScriptableObject
     {
         public UnityAction<GameObject, TextAsset> onEnter;

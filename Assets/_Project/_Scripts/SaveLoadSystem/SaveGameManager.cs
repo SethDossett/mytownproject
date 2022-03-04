@@ -13,8 +13,8 @@ namespace MyTownProject.SaveLoadSystem
 
         public const string SaveDirectory = "/SaveData/";
         public const string FileName = "SaveGame.sav";
-        public static bool SaveGame() {
 
+        public static bool SaveGame() {
 
             var dir = Application.persistentDataPath + SaveDirectory;
 

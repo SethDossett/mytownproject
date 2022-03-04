@@ -1,19 +1,25 @@
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UI;
+using MyTownProject.Events;
 
 namespace MyTownProject.UI
 {
     public class CinematicBars : MonoBehaviour
     {
-        public static CinematicBars instance;
+        [SerializeField] UIEventChannelSO uIEventChannel;
         [SerializeField] private Transform _topBar;
         [SerializeField] private Transform _bottomBar;
         [SerializeField] private float _cycleLegth = 2f;
 
-        void Awake()
+        private void OnEnable()
         {
-            instance = this;
+            uIEventChannel.OnBarsOn += BarsOn;
+            uIEventChannel.OnBarsOff += BarsOff;
+        }
+        private void OnDisable()
+        {
+            uIEventChannel.OnBarsOn -= BarsOn;
+            uIEventChannel.OnBarsOff -= BarsOff;
         }
 
         public void BarsOn()

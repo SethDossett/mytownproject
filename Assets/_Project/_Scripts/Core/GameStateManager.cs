@@ -1,25 +1,17 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using KinematicCharacterController.Examples;
+using MyTownProject.Events;
 
 namespace MyTownProject.Core
 {
     public class GameStateManager : MonoBehaviour
     {
-        public GameState gameState;
+        #region State of Game
         public static event Action<GameState> OnGameStateChanged;
-        public static GameStateManager instance;
-        private PlayerInput playerInput;
-        [SerializeField] GameObject myPlayerInput;
-        private void Awake()
-        {
-            instance = this;
-        }
-        private void Start()
-        {
-            playerInput = myPlayerInput.GetComponent<PlayerInput>();
-            UpdateState(GameState.GAME_PLAYING);
-        }
+        public GameState gameState;
+
         public void UpdateState(GameState newState)
         {
             gameState = newState;
@@ -42,12 +34,34 @@ namespace MyTownProject.Core
             OnGameStateChanged?.Invoke(newState);
         }
 
+        public enum GameState
+        {
+            GAME_PLAYING, GAME_PAUSED, CUTSCENE
+        }
+
+        #endregion
+
+        #region State Logic
+
+        public static GameStateManager instance;
+        private PlayerInput playerInput;
+        [SerializeField] GameObject myPlayerInput;
+        private void Awake()
+        {
+            instance = this;
+        }
+        private void Start()
+        {
+            //playerInput = myPlayerInput.GetComponent<PlayerInput>();
+            UpdateState(GameState.CUTSCENE);
+        }
+
         private void HandleCutscene()
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 0f;
             InputManager.ToggleActionMap(InputManager.inputActions.UI);
-            myPlayerInput.GetComponent<KinematicCharacterController.Examples.ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
+            myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
         private void HandleGamePaused()
@@ -55,7 +69,7 @@ namespace MyTownProject.Core
             Debug.Log($"State = {gameState}");
             Time.timeScale = 0f;
             InputManager.ToggleActionMap(InputManager.inputActions.UI);
-            myPlayerInput.GetComponent<KinematicCharacterController.Examples.ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
+            myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
         private void HandleGamePlaying()
@@ -63,14 +77,31 @@ namespace MyTownProject.Core
             Debug.Log($"State = {gameState}");
             Time.timeScale = 1f;
             InputManager.ToggleActionMap(InputManager.inputActions.GamePlay);
-            myPlayerInput.GetComponent<KinematicCharacterController.Examples.ExamplePlayer>().enabled = true; //Turning on ExamplePlayerScript
+            myPlayerInput.GetComponent<ExamplePlayer>().enabled = true; //Turning on ExamplePlayerScript
 
         }
+        #endregion
 
-        public enum GameState
+        #region Changing State
+
+        [SerializeField] StateChangerEventSO stateChanger;
+        void OnEnable()
         {
-            GAME_PLAYING, GAME_PAUSED, CUTSCENE
+            stateChanger.OnGameState += UpdateState;
         }
+        void OnDisable()
+        {
+            stateChanger.OnGameState -= UpdateState;
+        }
+
+
+        #endregion
+
+
+
+
+
+
 
     }
 }

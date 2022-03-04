@@ -1,4 +1,6 @@
 using UnityEngine;
+using MyTownProject.UI;
+using System.Collections;
 
 namespace MyTownProject.Core
 {
@@ -14,6 +16,15 @@ namespace MyTownProject.Core
         {
             DontDestroyOnLoad(gameObject);
             gameObject.name = "New Game Manager";
+            StartCoroutine(EnterScene());
+        }
+
+        IEnumerator EnterScene()
+        {
+            // if has cutscene play,
+            // after return to play mode
+            yield break;
+            
         }
 
     }
