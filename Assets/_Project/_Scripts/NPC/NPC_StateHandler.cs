@@ -67,6 +67,7 @@ namespace MyTownProject.NPC
 
         private void HandleWalking()
         {
+            _animator.SetTrigger(_isStanding);
             _animator.SetBool(_isWalking, true);
             Debug.Log("Walking");
         }
@@ -81,20 +82,36 @@ namespace MyTownProject.NPC
         #endregion
 
         #region Changing State
-
+        [SerializeField] NPC_ScriptableObject NPC;
         [SerializeField] DialogueEventsSO dialogueEvents;
+        [SerializeField] StateChangerEventSO stateChanger;
         
         void OnEnable()
         {
+            stateChanger.OnNPCStateVoid += ChangeState;
             dialogueEvents.onEnter += EnterTalkingState;
-            dialogueEvents.onExit += ReturnToBaseState;
+            dialogueEvents.onExit += ChangeState;
         }
         void OnDisable()
         {
+            stateChanger.OnNPCStateVoid -= ChangeState;
             dialogueEvents.onEnter -= EnterTalkingState;
-            dialogueEvents.onExit -= ReturnToBaseState;
+            dialogueEvents.onExit -= ChangeState;
         }
 
+        void ChangeState()
+        {
+            if (NPC.moveTowardsDestination)
+                EnterWalkingState();
+            else 
+                ReturnToBaseState();
+        }
+
+        void EnterWalkingState()
+        {
+            if (npcState != NPCSTATE.WALKING)
+                UpdateNPCState(NPCSTATE.WALKING);
+        }
         void EnterTalkingState(GameObject npc, TextAsset inkJSON)
         {
             if (npcState != NPCSTATE.TALKING)

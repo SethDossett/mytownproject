@@ -168,7 +168,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcState: 0
+  NPC: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
 --- !u!114 &908625629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NPC: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
   _stateHandler: {fileID: 908625628}
+  _stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   _atDestination: 0
 --- !u!114 &908625630
 MonoBehaviour:
@@ -200,9 +203,10 @@ MonoBehaviour:
   <CanBeInteractedWith>k__BackingField: 1
   inkJSON: {fileID: 4900000, guid: 0399cd33086b95d498336c31540946b3, type: 3}
   _targetGroup: {fileID: 0}
-  npc_scriptableObject: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d,
-    type: 2}
+  npc: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  uIEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
 --- !u!114 &908625631
 MonoBehaviour:
   m_ObjectHideFlags: 0

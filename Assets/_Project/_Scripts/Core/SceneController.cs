@@ -75,7 +75,7 @@ namespace MyTownProject.Core
             yield return new WaitForSecondsRealtime(0.25f);
             uIEventChannel.RaiseBarsOff();
             yield return new WaitForSecondsRealtime(0.5f);
-            stateChangerEvent.RaiseEvent(GameStateManager.GameState.GAME_PLAYING);
+            stateChangerEvent.RaiseEventGame(GameStateManager.GameState.GAME_PLAYING);
             yield break;
         }
 

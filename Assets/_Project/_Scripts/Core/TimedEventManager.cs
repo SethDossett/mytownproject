@@ -26,20 +26,20 @@ namespace MyTownProject.Core
         private void SixThirtyEvent()
         {
             NPC[boyty].currentDestinationIndex = 0;
-            NPC[boyty].RaiseEventMove();
+            NPC[boyty].RaiseEventMove(); // can use NPC.canMove, but leaving it just in case I want event fired.
 
 
-            NPC[jerry].currentDestinationIndex = 3;
-            NPC[0].atDestination = false;
-            NPC[0].runDestination = true;
+            //NPC[jerry].currentDestinationIndex = 3;
+            //NPC[0].atDestination = false;
+            //NPC[0].moveTowardsDestination = true;
 
         }
         private void SevenEvent()
         {
-            NPC[1].currentDestinationIndex = 0;
-            NPC[1].atDestination = false;
-            NPC[1].runDestination = true;
-
+            //NPC[1].currentDestinationIndex = 0;
+            //NPC[1].atDestination = false;
+            //NPC[1].moveTowardsDestination = true;
+            
         }
         private void SevenThirtyEvent()
         {

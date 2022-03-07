@@ -23,5 +23,13 @@ namespace MyTownProject.Events
         public void RaiseBarsOn() => OnBarsOn?.Invoke();
         public void RaiseBarsOff() => OnBarsOff?.Invoke();
         #endregion
+
+        #region Interact Text
+        public UnityAction<string> OnShowTextInteract;
+        public UnityAction OnHideTextInteract;
+
+        public void ShowTextInteract(string text) => OnShowTextInteract?.Invoke(text);
+        public void HideTextInteract() => OnHideTextInteract?.Invoke();
+        #endregion
     }
 }

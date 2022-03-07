@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Boy Ty
   m_EditorClassIdentifier: 
   MoveSpeed: 2
-  currentPosition: {x: 154.88284, y: 0, z: 55.338478}
+  currentPosition: {x: 7.999686, y: 0, z: 0.9792096}
   currentScene: 1
   significantLocation:
   - {x: 123, y: 1.5, z: 97.25}
-  runDestination: 0
+  moveTowardsDestination: 0
   atDestination: 1
   destinations:
   - {fileID: 0}

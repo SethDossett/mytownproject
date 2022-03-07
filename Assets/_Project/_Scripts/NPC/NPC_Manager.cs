@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using MyTownProject.Events;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace MyTownProject.NPC
 {
@@ -32,6 +33,12 @@ namespace MyTownProject.NPC
         }
 
         private void Update()
+        {
+            CheckScene();
+
+        }
+
+        private void CheckScene()
         {
             if (NPC.currentScene != currentScene.buildIndex)
             {

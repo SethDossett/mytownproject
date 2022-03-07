@@ -9,8 +9,8 @@ namespace MyTownProject.UI
 {
     public class UI_CanvasHandler : MonoBehaviour
     {
-        private UI_EventMaster ui_eventMaster;
-        [SerializeField] MainEventChannelSO eventChannel;
+        [SerializeField] UIEventChannelSO uIEventChannel;
+        [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] DialogueEventsSO dialogueEvents;
 
         [SerializeField] private GameObject _gameUI;
@@ -24,13 +24,12 @@ namespace MyTownProject.UI
 
         private void OnEnable()
         {
-            ui_eventMaster = GameObject.Find("EventMaster").GetComponent<UI_EventMaster>();
             GameStateManager.OnGameStateChanged += CheckGameState;
             dialogueEvents.onEnter += TalkingWithNPC;
-            eventChannel.OnGameUnPaused += ExitDialogue;
-            eventChannel.OnSubmit += ContinueIconSubmit;
-            UI_EventMaster.interactionTextOn += ShowInteractionText;
-            ui_eventMaster.interactionTextOff += HideInteractionText;
+            mainEventChannel.OnGameUnPaused += ExitDialogue;
+            mainEventChannel.OnSubmit += ContinueIconSubmit;
+            uIEventChannel.OnShowTextInteract += ShowInteractionText;
+            uIEventChannel.OnHideTextInteract += HideInteractionText;
         }
 
 
@@ -38,10 +37,10 @@ namespace MyTownProject.UI
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             dialogueEvents.onEnter -= TalkingWithNPC;
-            eventChannel.OnGameUnPaused -= ExitDialogue;
-            eventChannel.OnSubmit += ContinueIconSubmit;
-            UI_EventMaster.interactionTextOn -= ShowInteractionText;
-            ui_eventMaster.interactionTextOff -= HideInteractionText;
+            mainEventChannel.OnGameUnPaused -= ExitDialogue;
+            mainEventChannel.OnSubmit += ContinueIconSubmit;
+            uIEventChannel.OnShowTextInteract -= ShowInteractionText;
+            uIEventChannel.OnHideTextInteract -= HideInteractionText;
         }
 
         private void CheckGameState(GameStateManager.GameState state)

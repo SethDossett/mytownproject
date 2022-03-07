@@ -100,13 +100,13 @@ namespace MyTownProject.Interaction
                     {
                         currentTarget.OnLoseFocus();
                         currentTarget = interactable;
-                        currentTarget.OnFocus(name);
+                        currentTarget.OnFocus(_hitinfo.collider.gameObject.name);
                         return;
                     }
                     else
                     {
                         currentTarget = interactable;
-                        currentTarget.OnFocus(name);
+                        currentTarget.OnFocus(_hitinfo.collider.gameObject.name);
                         return;
                     }
                 }

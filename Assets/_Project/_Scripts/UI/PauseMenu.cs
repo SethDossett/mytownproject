@@ -6,8 +6,9 @@ namespace MyTownProject.UI
 {
     public class PauseMenu : MonoBehaviour
     {
-        public MainEventChannelSO MainEventChannelSO;
-        [SerializeField] private GameObject pauseMenu;
+        [SerializeField] MainEventChannelSO MainEventChannelSO;
+        [SerializeField] StateChangerEventSO StateChanger;
+        [SerializeField] GameObject pauseMenu;
 
         private void OnEnable()
         {
@@ -25,7 +26,7 @@ namespace MyTownProject.UI
         }
         private void Pause()
         {
-            GameStateManager.instance.UpdateState(GameStateManager.GameState.GAME_PAUSED);
+            StateChanger.RaiseEventGame(GameStateManager.GameState.GAME_PAUSED);
 
             if (!pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(true);
@@ -33,7 +34,7 @@ namespace MyTownProject.UI
         }
         private void Resume()
         {
-            GameStateManager.instance.UpdateState(GameStateManager.GameState.GAME_PLAYING);
+            StateChanger.RaiseEventGame(GameStateManager.GameState.GAME_PLAYING);
 
             if (pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(false);

@@ -19,6 +19,7 @@ namespace MyTownProject.Events
 
         #region Path
         public int index;
+        public Vector3 startPosition;
         public Vector3[] path;
         #endregion
 

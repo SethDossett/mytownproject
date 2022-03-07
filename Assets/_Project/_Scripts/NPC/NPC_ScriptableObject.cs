@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
 using MyTownProject.Events;
-using UnityEngine.SceneManagement;
 
 namespace MyTownProject.NPC
 {
@@ -13,7 +12,7 @@ namespace MyTownProject.NPC
         public int currentScene;
         public Vector3[] significantLocation;
 
-        public bool runDestination = false;
+        public bool moveTowardsDestination = false; // need to set based on save data when game starts.
         public bool atDestination = true;
         public Transform[] destinations;
 
@@ -23,7 +22,7 @@ namespace MyTownProject.NPC
         public int[] distance;
 
         // paths 
-        public int currentDestinationIndex;
+        public int currentDestinationIndex; // need to set to 0 when time resets.
         public DestinationPathsSO[] destinationPaths;
 
 

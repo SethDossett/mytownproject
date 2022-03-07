@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5baf88f9eb0fd42a3997cf17da0291, type: 3}
   m_Name: Hospital Scene
   m_EditorClassIdentifier: 
-  playerLocation: {x: 0, y: 0, z: 0}
-  playerRotation: {x: 0, y: 0, z: 0, w: 0}
+  playerLocation: {x: 0, y: 0, z: -7.3}
+  playerRotation: {x: 0, y: 0, z: 0, w: 1}

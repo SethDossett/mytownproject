@@ -22,7 +22,6 @@ namespace MyTownProject.Interaction
         [SerializeField] StateChangerEventSO stateChangerEvent;
 
         [Header("References")]
-        private TextMeshProUGUI interactionText;
         string _npcTag = "NPC";
 
         [Header("Values")]
@@ -62,23 +61,16 @@ namespace MyTownProject.Interaction
         {
             if (!_canInteract)
             {
-                interactionText.text = "";
+                uIEventChannel.HideTextInteract();
                 return;
             }
             interactionName = "Open";
-            interactionText.text = interactionName;
-        
+            uIEventChannel.ShowTextInteract(interactionName);
         }
 
         public void OnLoseFocus()
         {
-            interactionText.text = "";
-        }
-    
-        private void Start()
-        {
-            
-            interactionText = GameObject.Find("InteractionText").GetComponent<TextMeshProUGUI>();
+            uIEventChannel.HideTextInteract();
         }
     
         public void OpenDoor()
@@ -94,12 +86,12 @@ namespace MyTownProject.Interaction
         
         IEnumerator Teleport()
         {
-            stateChangerEvent.RaiseEvent(GameStateManager.GameState.CUTSCENE);
+            stateChangerEvent.RaiseEventGame(GameStateManager.GameState.CUTSCENE);
 
             uIEventChannel.RaiseBarsOn();
             yield return new WaitForSecondsRealtime(1f);
-            _animatorRight.Play("Door_Open_Crack_01");
-            _animatorLeft.Play("Door_Open_Crack_02");
+            _animatorRight.Play(crackdoorR);
+            _animatorLeft.Play(crackdoorL);
             uIEventChannel.RaiseFadeOut(Color.black, 1f);
             yield return new WaitForSecondsRealtime(1f);
             

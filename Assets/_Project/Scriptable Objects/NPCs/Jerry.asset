@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 1
   currentPosition: {x: 98, y: 2, z: 94}
+  currentScene: 0
   significantLocation: []
-  runDestination: 0
-  atDestination: 1
+  moveTowardsDestination: 0
+  atDestination: 0
   destinations:
   - {fileID: 2135613231336341715, guid: 88f5c0fa4a3a2f246a7d63b3f8af2bb9, type: 3}
   - {fileID: 906247134492879977, guid: 5201169036174b34282c7281aa95e6da, type: 3}
@@ -26,5 +27,5 @@ MonoBehaviour:
   currentIndex: 0
   direction: []
   distance: 
-  currentDestinationIndex: 3
+  currentDestinationIndex: 0
   destinationPaths: []

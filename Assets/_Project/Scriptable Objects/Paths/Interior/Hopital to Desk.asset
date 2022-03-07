@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7543907da2c960a4584bb9c485ede902, type: 3}
   m_Name: Hopital to Desk
   m_EditorClassIdentifier: 
-  index: 2
+  index: 0
+  startPosition: {x: 0, y: 0, z: -10}
   path:
-  - {x: 240.6, y: 0, z: 91.5}
-  - {x: 240.6, y: 0, z: 94}
-  - {x: 244, y: 0, z: 97}
-  - {x: 249, y: 0, z: 97}
-  - {x: 249, y: 0, z: 102}
+  - {x: 0, y: 0, z: -6}
+  - {x: 2.74, y: 0, z: -4.22}
+  - {x: 8, y: 0, z: -4.22}
+  - {x: 8, y: 0, z: 1}
   hasDoor: 0
   continueMoving: 0
   needToTeleport: 0

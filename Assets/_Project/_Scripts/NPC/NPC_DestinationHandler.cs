@@ -13,8 +13,9 @@ namespace MyTownProject.NPC
         [SerializeField] NPC_ScriptableObject NPC;
         private DestinationPathsSO Path;
         [SerializeField] NPC_StateHandler _stateHandler;
-        private Pathfinding.AILerp AILerp;
-        private Pathfinding.AIDestinationSetter AIDestinationSetter;
+        [SerializeField] StateChangerEventSO _stateChanger;
+        //private Pathfinding.AILerp AILerp;
+        //private Pathfinding.AIDestinationSetter AIDestinationSetter;
         Transform _transform;
         Rigidbody rb;
 
@@ -26,29 +27,6 @@ namespace MyTownProject.NPC
         Transform _nextDestination;
         int currentDestination;
         bool _shouldMove;
-
-        private void OnEnable()
-        {
-            NPC.move += SetPath;
-        }
-        private void OnDisable()
-        {
-            NPC.move -= SetPath;
-        }
-        private void Awake()
-        {
-            _transform = transform;
-            rb = GetComponent<Rigidbody>();
-            AILerp = GetComponent<Pathfinding.AILerp>();
-            AIDestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
-        }
-        private void Start()
-        {
-            _currentPosition = _transform.position;
-            NPC.currentScene = Path.thisPathScene;
-            NPC.runDestination = false;
-            NPC.atDestination = true;
-        }
 
         /*private void Update()
         {
@@ -116,40 +94,73 @@ namespace MyTownProject.NPC
             return;
         }*/ //old method for moving using A*. keeping just in case.
 
+        void ChangeState() => _stateChanger.RaiseNPCStateVoid();
+
+        private void OnEnable()
+        {
+            NPC.move += MoveTowardDestination;
+            // put event for when talking is done to change state again.
+        }
+        private void OnDisable()
+        {
+            NPC.move -= MoveTowardDestination;
+        }
+        private void Awake()
+        {
+            _transform = transform;
+            rb = GetComponent<Rigidbody>();
+            //AILerp = GetComponent<Pathfinding.AILerp>();
+            //AIDestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
+        }
+        private void Start()
+        {
+            SetUp();
+            _currentPosition = NPC.currentPosition; // may need rotation as well for after loading game after save.
+            _transform.position = _currentPosition;
+        }
+
+        private void SetUp()
+        {
+            if (NPC.destinationPaths == null || NPC.destinationPaths.Length == 0)
+                return;
+
+            Path = NPC.destinationPaths[NPC.currentDestinationIndex];
+            NPC.currentScene = Path.thisPathScene;
+            ChangeState();
+        }
+        private void MoveTowardDestination()
+        {
+            if(!NPC.moveTowardsDestination)
+                NPC.moveTowardsDestination = true;
+
+            SetPath();
+        }
         private void FixedUpdate()
         {
             if (!_shouldMove)
                 return;
 
             DoMove();
-
-
         }
         private void Update()
         {
+            _shouldMove = NPC.moveTowardsDestination;
             NPC.currentPosition = _currentPosition;
             
             if (!_shouldMove)
-            {
-                if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.STANDING)
-                    _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.STANDING);
-                
                 return;
-            }
 
             CheckDistance(Path.path[Path.index]);
-
-            if (_stateHandler.npcState != NPC_StateHandler.NPCSTATE.WALKING && _stateHandler.npcState != NPC_StateHandler.NPCSTATE.TALKING)
-                _stateHandler.UpdateNPCState(NPC_StateHandler.NPCSTATE.WALKING);
-
         }
         private void SetPath()
         {
             Path = NPC.destinationPaths[NPC.currentDestinationIndex];
             NPC.currentScene = Path.thisPathScene;
+            _currentPosition = Path.startPosition;
+            _transform.position = _currentPosition;
             Path.index = 0;
-            _shouldMove = true;
-            _atDestination = false;
+            _atDestination = false; // just for debug
+            ChangeState();
         }
         private void DoMove()
         {
@@ -174,8 +185,8 @@ namespace MyTownProject.NPC
         {
             if (Path.index >= Path.path.Length - 1) //at end of array
             {
-                _shouldMove = false;
-                _atDestination = true;
+                NPC.moveTowardsDestination = false;
+                _atDestination = true; // just for debug
                 StartCoroutine(DestinationReached());
                 return;
             }
@@ -185,7 +196,6 @@ namespace MyTownProject.NPC
         
         IEnumerator DestinationReached()
         {
-            // start player in other scene
             if (Path.continueMoving)
             {
                 if (NPC.currentDestinationIndex < NPC.destinationPaths.Length - 1)
@@ -196,14 +206,27 @@ namespace MyTownProject.NPC
                         NPC.currentScene = Path.nextSceneAfterDestination;
                         //UpdateScene?.Invoke(Path);
                         yield return new WaitForSecondsRealtime(0.1f);
-                        _currentPosition = Path.newSceneLocation;
                     }
-                    
-                    SetPath();
-                } 
-            }
 
+                    SetPath();
+                    NPC.moveTowardsDestination = true;
+                    ChangeState();
+                }
+                else
+                {
+                    NPC.moveTowardsDestination = false;
+                    ChangeState();
+                }
+            }
+            else
+            {
+                NPC.moveTowardsDestination = false;
+                ChangeState();
+            }
+            yield break;
         }
+
+        
 
     }
 }
