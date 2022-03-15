@@ -34,6 +34,7 @@ namespace MyTownProject.NPC
             }
 
             OnNPCStateChange?.Invoke(newState);
+            NPC.currentState = newState;
         }
 
         public enum NPCSTATE
@@ -62,6 +63,7 @@ namespace MyTownProject.NPC
         private void HandleTalking()
         {
             _animator.SetBool(_isWalking, false);
+            NPC.RaiseChangedState(npcState);
             Debug.Log("Talking to Player");
         }
 

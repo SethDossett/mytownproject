@@ -8,6 +8,7 @@ namespace MyTownProject.NPC
     public class NPC_ScriptableObject : ScriptableObject
     {
         public float MoveSpeed = 1f;
+        public NPC_StateHandler.NPCSTATE currentState;
         public Vector3 currentPosition;
         public int currentScene;
         public Vector3[] significantLocation;
@@ -27,13 +28,11 @@ namespace MyTownProject.NPC
 
 
         #region Events
-        public UnityAction move;
+        public UnityAction OnMove;
+        public UnityAction<NPC_StateHandler.NPCSTATE> OnChangedState;
 
-
-        public void RaiseEventMove()
-        {
-            move?.Invoke();
-        }
+        public void RaiseEventMove() => OnMove?.Invoke();
+        public void RaiseChangedState(NPC_StateHandler.NPCSTATE state) => OnChangedState?.Invoke(state);
         #endregion
     }
 }

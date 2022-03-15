@@ -38,7 +38,7 @@ namespace MyTownProject.NPC
 
         }
 
-        private void CheckScene()
+        private void CheckScene()//set ScriptExecutuonOrder  hide npc to before player is teleported.
         {
             if (NPC.currentScene != currentScene.buildIndex)
             {

@@ -67,7 +67,7 @@ namespace MyTownProject.Interaction
             Debug.DrawRay(ray.origin, ray.direction * 2f, Color.green);
             if (Physics.Raycast(ray, out _hitinfo, _interactRayLength))
             {
-                ;
+                
                 IInteractable interactable = _hitinfo.collider.GetComponent<IInteractable>();
                 if (interactable == null)
                 {

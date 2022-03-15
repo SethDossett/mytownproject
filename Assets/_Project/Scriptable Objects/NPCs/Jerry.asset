@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Jerry
   m_EditorClassIdentifier: 
   MoveSpeed: 1
+  currentState: 0
   currentPosition: {x: 98, y: 2, z: 94}
   currentScene: 0
   significantLocation: []

@@ -405,6 +405,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2652450169595896443, guid: 2647ee2da2c79d3419f4e0cd8032e236,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2652450169595896443, guid: 2647ee2da2c79d3419f4e0cd8032e236,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2652450169595896443, guid: 2647ee2da2c79d3419f4e0cd8032e236,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.15
+      objectReference: {fileID: 0}
     - target: {fileID: 2652450169680293963, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
       propertyPath: m_CustomBlends
@@ -510,6 +525,11 @@ PrefabInstance:
       propertyPath: m_LookAt
       value: 
       objectReference: {fileID: 419846352}
+    - target: {fileID: 2652450170589013960, guid: 2647ee2da2c79d3419f4e0cd8032e236,
+        type: 3}
+      propertyPath: m_ChildCameras.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2647ee2da2c79d3419f4e0cd8032e236, type: 3}
 --- !u!1001 &1160628456
@@ -749,11 +769,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 286366667}
     m_Modifications:
-    - target: {fileID: 908625630, guid: 322ba6500f7523e46b42d283eab68ea5, type: 3}
-      propertyPath: _targetGroup
-      value: 
-      objectReference: {fileID: 9023857825524559349, guid: 0d13ee0734c47b34c953150823892e87,
-        type: 3}
     - target: {fileID: 7179472169136125997, guid: 322ba6500f7523e46b42d283eab68ea5,
         type: 3}
       propertyPath: m_Name
@@ -767,7 +782,7 @@ PrefabInstance:
     - target: {fileID: 7559656233512805015, guid: 322ba6500f7523e46b42d283eab68ea5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.06
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7559656233512805015, guid: 322ba6500f7523e46b42d283eab68ea5,
         type: 3}
@@ -777,7 +792,7 @@ PrefabInstance:
     - target: {fileID: 7559656233512805015, guid: 322ba6500f7523e46b42d283eab68ea5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.329
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7559656233512805015, guid: 322ba6500f7523e46b42d283eab68ea5,
         type: 3}

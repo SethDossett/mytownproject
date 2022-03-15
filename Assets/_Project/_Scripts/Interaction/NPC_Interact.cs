@@ -17,7 +17,7 @@ namespace MyTownProject.Interaction
 
 
         [Header("References")]
-        [SerializeField] private CinemachineTargetGroup _targetGroup;
+        //[SerializeField] private CinemachineTargetGroup _targetGroup;
         [SerializeField] private NPC_ScriptableObject npc;
         [SerializeField] DialogueEventsSO dialogueEvents;
         [SerializeField] UIEventChannelSO uIEventChannel;
@@ -41,7 +41,7 @@ namespace MyTownProject.Interaction
         public void OnInteract()
         {
             Debug.Log($"Interacting with {gameObject.name}");
-            _targetGroup.m_Targets[1].target = transform;
+            //_targetGroup.m_Targets[1].target = transform;
             stateChanger.RaiseEventGame(GameStateManager.GameState.CUTSCENE);
             uIEventChannel.HideTextInteract();
             Speak();

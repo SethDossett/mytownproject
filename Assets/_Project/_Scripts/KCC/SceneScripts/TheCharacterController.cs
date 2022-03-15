@@ -118,6 +118,7 @@ namespace KinematicCharacterController.Examples
                 else
                     TransitionToState(CharacterState.Default);
             }
+
         }
         /// <summary>
         /// Handles movement state transitions and enter/exit callbacks

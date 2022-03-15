@@ -35,7 +35,6 @@ namespace MyTownProject.Events
             if (hour == 6 && minute == 60)
             {
                 sevenEvent?.Invoke();
-                //GameManager.instance.UpdateState(GameManager.GameState.CUTSCENE);
                 Debug.Log("700");
             }
             if (hour == 7 && minute == 30)

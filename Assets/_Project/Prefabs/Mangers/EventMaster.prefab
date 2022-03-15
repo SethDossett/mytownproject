@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6028795603844143497}
   - component: {fileID: 6028795603844143503}
-  - component: {fileID: 6028795603844143500}
   - component: {fileID: 6028795603844143501}
+  - component: {fileID: 4745328269703861714}
   m_Layer: 0
   m_Name: EventMaster
   m_TagString: Untagged
@@ -45,18 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd1ceae6f5402774c838754b20d0c890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6028795603844143500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6028795603844143496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c418a61dac7f042a5d219aeb93257f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6028795603844143501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,3 +61,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
   - {fileID: 11400000, guid: 0faadd275f34a1a49b90187f66236527, type: 2}
   - {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
+--- !u!114 &4745328269703861714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6028795603844143496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae3fd8f8f6d45f04798d4bda96b4221c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToTick: 0.5

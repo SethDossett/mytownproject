@@ -98,12 +98,11 @@ namespace MyTownProject.NPC
 
         private void OnEnable()
         {
-            NPC.move += MoveTowardDestination;
-            // put event for when talking is done to change state again.
+            NPC.OnMove += MoveTowardDestination;
         }
         private void OnDisable()
         {
-            NPC.move -= MoveTowardDestination;
+            NPC.OnMove -= MoveTowardDestination;
         }
         private void Awake()
         {
@@ -158,6 +157,7 @@ namespace MyTownProject.NPC
             NPC.currentScene = Path.thisPathScene;
             _currentPosition = Path.startPosition;
             _transform.position = _currentPosition;
+            //unhide npc ChangeVisibility
             Path.index = 0;
             _atDestination = false; // just for debug
             ChangeState();
@@ -165,14 +165,14 @@ namespace MyTownProject.NPC
         private void DoMove()
         {
             //_moveTowards = _currentPosition;
-            Quaternion _rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
-            _rotation.x = 0;
-            _rotation.z = 0;
+            //Quaternion _rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
+            //_rotation.x = 0;
+            //_rotation.z = 0;
             _currentPosition = Vector3.MoveTowards(_currentPosition, Path.path[Path.index], NPC.MoveSpeed * Time.fixedDeltaTime);
 
             //rb.position = _currentPosition;
-            rb.MovePosition(_currentPosition);
-            rb.rotation = Quaternion.RotateTowards(rb.rotation, _rotation, 200 * Time.fixedDeltaTime);
+           //rb.MovePosition(_currentPosition);
+           //rb.rotation = Quaternion.RotateTowards(rb.rotation, _rotation, 200 * Time.fixedDeltaTime);
         }
         private void CheckDistance(Vector3 destination)
         {
@@ -203,9 +203,10 @@ namespace MyTownProject.NPC
                     NPC.currentDestinationIndex++;
                     if (Path.needToTeleport)
                     {
+                        //hide npc
                         NPC.currentScene = Path.nextSceneAfterDestination;
                         //UpdateScene?.Invoke(Path);
-                        yield return new WaitForSecondsRealtime(0.1f);
+                        yield return new WaitForEndOfFrame();
                     }
 
                     SetPath();
