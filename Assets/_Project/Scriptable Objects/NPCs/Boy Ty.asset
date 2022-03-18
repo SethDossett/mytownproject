@@ -13,24 +13,13 @@ MonoBehaviour:
   m_Name: Boy Ty
   m_EditorClassIdentifier: 
   MoveSpeed: 2
-  currentPosition: {x: 114.084404, y: 1.0002689, z: 93.977646}
-  currentScene: 0
-  significantLocation:
-  - {x: 123, y: 1.5, z: 97.25}
-  moveTowardsDestination: 1
-  atDestination: 1
-  destinations:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  lastDestinationPosition: {x: 101, y: 2, z: 96}
-  currentIndex: 1
-  direction:
-  - {x: 0, y: 0, z: 1}
-  - {x: -1, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
-  distance: 0a0000000500000005000000
-  currentDestinationIndex: 0
+  currentState: 0
+  currentPosition: {x: 7.999686, y: 0, z: 0.9792096}
+  currentRotation: {x: 0, y: 0, z: 0, w: 0}
+  currentScene: 1
+  moveTowardsDestination: 0
+  atDestination: 0
+  currentDestinationIndex: 1
   destinationPaths:
   - {fileID: 11400000, guid: b160e1fc4b61aa347a7a80244288de0d, type: 2}
   - {fileID: 11400000, guid: f4734ffe29c198a44b346232e69d951e, type: 2}

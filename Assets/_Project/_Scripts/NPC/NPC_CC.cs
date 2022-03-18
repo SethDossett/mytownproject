@@ -11,7 +11,7 @@ namespace MyTownProject.NPC
         public Vector3 LookVector;
     }
 
-    public class NPC_Controller : MonoBehaviour, ICharacterController
+    public class NPC_CC : MonoBehaviour, ICharacterController
     {
         public enum NPCCharacterState
         {

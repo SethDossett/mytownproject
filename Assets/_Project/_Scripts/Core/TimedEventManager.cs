@@ -13,6 +13,7 @@ namespace MyTownProject.Core
         void OnEnable()
         {
             _master = GameObject.Find("EventMaster").GetComponent<TimedEventMaster>();
+            _master.sixEvent += SixEvent;
             _master.sixThirtyEvent += SixThirtyEvent;
             _master.sevenEvent += SevenEvent;
             _master.sevenThirtyEvent += SevenThirtyEvent;
@@ -20,13 +21,20 @@ namespace MyTownProject.Core
         }
         void OnDisable()
         {
+            _master.sixEvent -= SixEvent;
             _master.sixThirtyEvent -= SixThirtyEvent;
+            _master.sevenEvent -= SevenEvent;
+            _master.sevenThirtyEvent -= SevenThirtyEvent;
+            _master.eightEvent -= EightEvent;
         }
-
-        private void SixThirtyEvent()
+        private void SixEvent() 
         {
             NPC[boyty].currentDestinationIndex = 0;
             NPC[boyty].RaiseEventMove(); // can use NPC.canMove, but leaving it just in case I want event fired.
+        }
+        private void SixThirtyEvent()
+        {
+            
 
 
             //NPC[jerry].currentDestinationIndex = 3;

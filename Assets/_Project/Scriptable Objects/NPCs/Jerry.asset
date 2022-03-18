@@ -15,18 +15,9 @@ MonoBehaviour:
   MoveSpeed: 1
   currentState: 0
   currentPosition: {x: 98, y: 2, z: 94}
+  currentRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   currentScene: 0
-  significantLocation: []
   moveTowardsDestination: 0
   atDestination: 0
-  destinations:
-  - {fileID: 2135613231336341715, guid: 88f5c0fa4a3a2f246a7d63b3f8af2bb9, type: 3}
-  - {fileID: 906247134492879977, guid: 5201169036174b34282c7281aa95e6da, type: 3}
-  - {fileID: 2135613231336341715, guid: 88f5c0fa4a3a2f246a7d63b3f8af2bb9, type: 3}
-  - {fileID: 906247134492879977, guid: 5201169036174b34282c7281aa95e6da, type: 3}
-  lastDestinationPosition: {x: 0, y: 0, z: 0}
-  currentIndex: 0
-  direction: []
-  distance: 
   currentDestinationIndex: 0
   destinationPaths: []

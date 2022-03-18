@@ -10,6 +10,7 @@ namespace MyTownProject.NPC
         [SerializeField] DialogueEventsSO dialogueEvents;
         [SerializeField] Transform _player;
         Rigidbody rb;
+        [Range(20f, 300f)][SerializeField] float _rotSpeed = 100f;
         bool _talking = false;
 
 
@@ -25,6 +26,8 @@ namespace MyTownProject.NPC
         private void Start()
         {
             rb = GetComponent<Rigidbody>();
+            rb.position = NPC.currentPosition;
+            rb.rotation = NPC.currentRotation;
         }
         
         private void Update()
@@ -59,7 +62,8 @@ namespace MyTownProject.NPC
                 rotation.x = 0;
                 rotation.z = 0;
                 //rb.MoveRotation(rotation);
-                rb.rotation = Quaternion.RotateTowards(rb.rotation, rotation, 200 * Time.fixedDeltaTime);
+                NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, rotation, _rotSpeed * Time.fixedDeltaTime);
+                rb.rotation = NPC.currentRotation;
             }
             
         }
@@ -89,11 +93,11 @@ namespace MyTownProject.NPC
 
             Quaternion rotation = Quaternion.LookRotation(delta);*/
 
-
+            
             Quaternion rotation = Quaternion.LookRotation(_player.position - transform.position);
 
             rb.rotation = Quaternion.RotateTowards(rb.rotation, rotation, 200 * Time.unscaledDeltaTime);
-            
+
 
         }
     }
