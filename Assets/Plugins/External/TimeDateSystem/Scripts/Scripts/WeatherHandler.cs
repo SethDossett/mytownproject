@@ -1,9 +1,9 @@
 using UnityEngine;
 using DPUtils.Systems.DateTime;
 
-public class WeatherManager : MonoBehaviour
+public class WeatherHandler : MonoBehaviour
 {
-    public static Weather currentWeather = Weather.Sunny;
+    public static WeatherDanPos currentWeather = WeatherDanPos.Sunny;
 
     public ParticleSystem rainParticles;
 
@@ -14,21 +14,21 @@ public class WeatherManager : MonoBehaviour
 
     private void OnEnable()
     {
-        TimeManager.OnDateTimeChanged += GetRandomWeather;
+        DanPosTimeManager.OnDateTimeChanged += GetRandomWeather;
     }
 
     private void OnDisable()
     {
-        TimeManager.OnDateTimeChanged -= GetRandomWeather;
+        DanPosTimeManager.OnDateTimeChanged -= GetRandomWeather;
     }
 
-    private void GetRandomWeather(DateTime dateTime)
+    private void GetRandomWeather(DateTimeDanPos dateTime)
     {
         if (dateTime.Hour == 0 && dateTime.Minutes == 0)
         {
-            currentWeather = (Weather)Random.Range(0, (int)Weather.MAX_WEATHER_AMOUNT + 1);
+            currentWeather = (WeatherDanPos)Random.Range(0, (int)WeatherDanPos.MAX_WEATHER_AMOUNT + 1);
 
-            if (currentWeather == Weather.Raining)
+            if (currentWeather == WeatherDanPos.Raining)
             {
                 rainParticles.Play();
             }
@@ -40,7 +40,7 @@ public class WeatherManager : MonoBehaviour
     }
 }
 
-public enum Weather
+public enum WeatherDanPos
 {
     Sunny = 0,
     Raining = 1,

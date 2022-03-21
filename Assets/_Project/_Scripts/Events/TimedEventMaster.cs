@@ -15,18 +15,18 @@ namespace MyTownProject.Events
 
         void OnEnable()
         {
-            TimeManager.OnMinuteChanged += CheckTimeForEvent;
+            TimeManager.OnDateTimeChanged += CheckTimeForEvent;
         }
         void OnDisable()
         {
-            TimeManager.OnMinuteChanged -= CheckTimeForEvent;
+            TimeManager.OnDateTimeChanged -= CheckTimeForEvent;
         }
 
-        private void CheckTimeForEvent()
+        private void CheckTimeForEvent(DateTime dateTime)
         {
-            int hour = TimeManager.Hour;
-            int minute = TimeManager.Minute;
-            int day = TimeManager.Day;
+            int hour = dateTime.Hour;
+            int minute = dateTime.Minutes;
+            Days day = dateTime.Day;
 
 
             if(hour == 6 && minute == 0)

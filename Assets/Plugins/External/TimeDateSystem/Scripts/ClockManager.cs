@@ -34,21 +34,21 @@ public class ClockManager : MonoBehaviour
 
     private void OnEnable()
     {
-        TimeManager.OnDateTimeChanged += UpdateDateTime;
+        DanPosTimeManager.OnDateTimeChanged += UpdateDateTime;
     }
 
     private void OnDisable()
     {
-        TimeManager.OnDateTimeChanged -= UpdateDateTime;
+        DanPosTimeManager.OnDateTimeChanged -= UpdateDateTime;
     }
 
-    private void UpdateDateTime(DateTime dateTime)
+    private void UpdateDateTime(DateTimeDanPos dateTime)
     {
         Date.text = dateTime.DateToString();
         Time.text = dateTime.TimeToString();
         Season.text = dateTime.Season.ToString();
         Week.text = $"WK: {dateTime.CurrentWeek}";
-        weatherSprite.sprite = weatherSprites[(int)WeatherManager.currentWeather];
+        weatherSprite.sprite = weatherSprites[(int)WeatherHandler.currentWeather];
 
         float t = (float)dateTime.Hour / 24f;
 
@@ -59,7 +59,7 @@ public class ClockManager : MonoBehaviour
 
         sunlight.intensity = Mathf.Lerp(dayIntensity, nightIntensity, dayNightT);
 
-        if(WeatherManager.currentWeather == Weather.Sunny)
+        if(WeatherHandler.currentWeather == WeatherDanPos.Sunny)
             sunlight.color = Color.Lerp(dayColor, nightColor, dayNightT);
         else sunlight.color = Color.Lerp(rainyDayColor, nightColor, dayNightT);
 

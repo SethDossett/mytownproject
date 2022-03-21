@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6122740616570091013}
   - component: {fileID: 6122740616570091010}
   - component: {fileID: 6122740616570091011}
-  - component: {fileID: 6122740616570091008}
+  - component: {fileID: 1002595506563856116}
   - component: {fileID: 6122740616570091015}
   m_Layer: 0
   m_Name: KCC_CAM
@@ -28,7 +28,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6122740616570091009}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -59,7 +59,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 5000
+  far clip plane: 500
   field of view: 40
   orthographic: 0
   orthographic size: 5
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!114 &6122740616570091008
+--- !u!114 &1002595506563856116
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,19 +132,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 6122740616570091013}
-  FollowPointFraming: {x: 0, y: 1}
+  FollowPointFraming: {x: 0, y: 0}
   FollowingSharpness: 10000
   DefaultDistance: 6
-  MinDistance: 6
-  MaxDistance: 6
+  MinDistance: 0
+  MaxDistance: 10
   DistanceMovementSpeed: 5
   DistanceMovementSharpness: 10
   InvertX: 0
   InvertY: 0
   DefaultVerticalAngle: 20
-  MinVerticalAngle: -80
+  MinVerticalAngle: -90
   MaxVerticalAngle: 90
-  RotationSpeed: 1.25
+  RotationSpeed: 1
   RotationSharpness: 10000
   RotateWithPhysicsMover: 0
   ObstructionCheckRadius: 0.2
@@ -152,8 +152,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   ObstructionSharpness: 10000
-  IgnoredColliders:
-  - {fileID: 0}
+  IgnoredColliders: []
 --- !u!114 &6122740616570091015
 MonoBehaviour:
   m_ObjectHideFlags: 0

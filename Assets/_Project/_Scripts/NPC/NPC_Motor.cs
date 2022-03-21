@@ -27,7 +27,7 @@ namespace MyTownProject.NPC
         {
             rb = GetComponent<Rigidbody>();
             rb.position = NPC.currentPosition;
-            rb.rotation = NPC.currentRotation;
+            rb.rotation = NPC.currentRotation.normalized;
         }
         
         private void Update()
@@ -96,7 +96,7 @@ namespace MyTownProject.NPC
             
             Quaternion rotation = Quaternion.LookRotation(_player.position - transform.position);
 
-            rb.rotation = Quaternion.RotateTowards(rb.rotation, rotation, 200 * Time.unscaledDeltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, 200 * Time.unscaledDeltaTime);
 
 
         }

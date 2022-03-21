@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace DPUtils.Systems.DateTime
 {
-    public class TimeManager : MonoBehaviour
+    public class DanPosTimeManager : MonoBehaviour
     {
         [Header("Date & Time Settings")]
         [Range(1, 28)]
@@ -17,24 +17,24 @@ namespace DPUtils.Systems.DateTime
         [Range(0, 6)]
         public int minutes;
 
-        public static DateTime DateTime;
+        public static DateTimeDanPos DateTimeDanPos;
 
         [Header("Tick Settings")]
         public int TickMinutesIncreased = 10;
         public float TimeBetweenTicks = 1;
         private float currentTimeBetweenTicks = 0;
 
-        public static UnityAction<DateTime> OnDateTimeChanged;
-        public static UnityAction<DateTime> OnNewDay;
+        public static UnityAction<DateTimeDanPos> OnDateTimeChanged;
+        public static UnityAction<DateTimeDanPos> OnNewDay;
 
         private void Awake()
         {
-            DateTime = new DateTime(dateInMonth, season - 1, year, hour, minutes * 10);
+            DateTimeDanPos = new DateTimeDanPos(dateInMonth, season - 1, year, hour, minutes * 10);
         }
 
         private void Start()
         {
-            OnDateTimeChanged?.Invoke(DateTime);
+            OnDateTimeChanged?.Invoke(DateTimeDanPos);
         }
         private void FixedUpdate()
         {
@@ -57,18 +57,18 @@ namespace DPUtils.Systems.DateTime
 
         void AdvanceTime()
         {
-            DateTime.AdvanceMinutes(TickMinutesIncreased);
+            DateTimeDanPos.AdvanceMinutesDanPos(TickMinutesIncreased);
 
-            OnDateTimeChanged?.Invoke(DateTime);
+            OnDateTimeChanged?.Invoke(DateTimeDanPos);
             
         }
     }
 
     [System.Serializable]
-    public struct DateTime
+    public struct DateTimeDanPos
     {
         #region Fields
-        private Days day;
+        private DaysDanPos day;
         [SerializeField] private int date;
         [SerializeField] private int year;
 
@@ -82,7 +82,7 @@ namespace DPUtils.Systems.DateTime
         #endregion
 
         #region Properties
-        public Days Day => day;
+        public DaysDanPos Day => day;
         public int Date => date;
         public int Hour => hour;
         public int Minutes => minutes;
@@ -95,10 +95,10 @@ namespace DPUtils.Systems.DateTime
 
         #region Constructors
 
-        public DateTime(int date, int season, int year, int hour, int minutes)
+        public DateTimeDanPos(int date, int season, int year, int hour, int minutes)
         {
-            this.day = (Days)(date % 7);
-            if (day == 0) day = (Days)7;
+            this.day = (DaysDanPos)(date % 7);
+            if (day == 0) day = (DaysDanPos)7;
             this.date = date;
             this.season = (Season)season;
             this.year = year;
@@ -116,7 +116,7 @@ namespace DPUtils.Systems.DateTime
 
         #region Time Advancement
 
-        public void AdvanceMinutes(int SecondsToAdvanceBy)
+        public void AdvanceMinutesDanPos(int SecondsToAdvanceBy)
         {
             if (minutes + SecondsToAdvanceBy >= 60)
             {
@@ -146,9 +146,9 @@ namespace DPUtils.Systems.DateTime
         {
             day++;
 
-            if (day > (Days)7)
+            if (day > (DaysDanPos)7)
             {
-                day = (Days)1;
+                day = (DaysDanPos)1;
                 totalNumWeeks++;
             }
 
@@ -200,10 +200,10 @@ namespace DPUtils.Systems.DateTime
 
         public bool IsWeekend()
         {
-            return day > Days.Fri ? true : false;
+            return day > DaysDanPos.Fri ? true : false;
         }
 
-        public bool IsParticularDay(Days _day)
+        public bool IsParticularDay(DaysDanPos _day)
         {
             return day == _day;
         }
@@ -211,51 +211,51 @@ namespace DPUtils.Systems.DateTime
 
         #region Key Dates
 
-        public DateTime NewYearsDay(int year)
+        public DateTimeDanPos NewYearsDay(int year)
         {
             if (year == 0) year = 1;
-            return new DateTime(1, 0, year, 6, 0);
+            return new DateTimeDanPos(1, 0, year, 6, 0);
         }
 
-        public DateTime SummerSolstice(int year)
+        public DateTimeDanPos SummerSolstice(int year)
         {
             if (year == 0) year = 1;
-            return new DateTime(28, 1, year, 6, 0);
+            return new DateTimeDanPos(28, 1, year, 6, 0);
         }
-        public DateTime PumpkinHarvest(int year)
+        public DateTimeDanPos PumpkinHarvest(int year)
         {
             if (year == 0) year = 1;
-            return new DateTime(28, 2, year, 6, 0);
+            return new DateTimeDanPos(28, 2, year, 6, 0);
         }
 
         #endregion
 
         #region Start Of Season
 
-        public DateTime StartOfSeason(int season, int year)
+        public DateTimeDanPos StartOfSeason(int season, int year)
         {
             season = Mathf.Clamp(season, 0, 3);
             if (year == 0) year = 1;
 
-            return new DateTime(1, season, year, 6, 0);
+            return new DateTimeDanPos(1, season, year, 6, 0);
         }
 
-        public DateTime StartOfSpring(int year)
+        public DateTimeDanPos StartOfSpring(int year)
         {
             return StartOfSeason(0, year);
         }
 
-        public DateTime StartOfSummer(int year)
+        public DateTimeDanPos StartOfSummer(int year)
         {
             return StartOfSeason(1, year);
         }
 
-        public DateTime StartOfAutumn(int year)
+        public DateTimeDanPos StartOfAutumn(int year)
         {
             return StartOfSeason(2, year);
         }
 
-        public DateTime StartOfWinter(int year)
+        public DateTimeDanPos StartOfWinter(int year)
         {
             return StartOfSeason(3, year);
         }
@@ -301,7 +301,7 @@ namespace DPUtils.Systems.DateTime
     }
 
     [System.Serializable]
-    public enum Days
+    public enum DaysDanPos
     {
         NULL = 0,
         Mon = 1,

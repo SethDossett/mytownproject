@@ -579,7 +579,7 @@ Animator:
   m_Controller: {fileID: 22100000, guid: 90f15d474b32b1442970dc870f453b52, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 2
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -696,6 +696,7 @@ MonoBehaviour:
   NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _player: {fileID: 0}
+  _rotSpeed: 100
 --- !u!1 &4020160337252914402
 GameObject:
   m_ObjectHideFlags: 0

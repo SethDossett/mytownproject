@@ -14,28 +14,28 @@ namespace DPUtils.Systems.DateTime
         public static TextMeshProUGUI DescriptionText;
 
         private int currentSeasonView = 0;
-        private DateTime previousDateTime;
+        private DateTimeDanPos previousDateTime;
 
         private void Awake()
         {
-            TimeManager.OnDateTimeChanged += DateTimeChanged;
+            DanPosTimeManager.OnDateTimeChanged += DateTimeChanged;
         }
 
         private void OnDisable()
         {
-            TimeManager.OnDateTimeChanged -= DateTimeChanged;
+            DanPosTimeManager.OnDateTimeChanged -= DateTimeChanged;
         }
 
         private void Start()
         {
             DescriptionText = setDescriptionText;
             DescriptionText.text = "";
-            previousDateTime = TimeManager.DateTime;
+            previousDateTime = DanPosTimeManager.DateTimeDanPos;
             SortDates();
             FillPanels((Season)0);
         }
 
-        void DateTimeChanged(DateTime _date)
+        void DateTimeChanged(DateTimeDanPos _date)
         {
             if (currentSeasonView == (int)_date.Season)
             {
@@ -66,7 +66,7 @@ namespace DPUtils.Systems.DateTime
             {
                 calendarPanels[i].SetUpDate((i + 1).ToString());
 
-                if (currentSeasonView == (int)TimeManager.DateTime.Season && (i + 1) == TimeManager.DateTime.Date)
+                if (currentSeasonView == (int)DanPosTimeManager.DateTimeDanPos.Season && (i + 1) == DanPosTimeManager.DateTimeDanPos.Date)
                 {
                     calendarPanels[i].ShowHighlight();
                 }
