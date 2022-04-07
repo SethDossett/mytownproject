@@ -543,6 +543,7 @@ GameObject:
   - component: {fileID: 1004980797275598656}
   - component: {fileID: 1004980797275598657}
   - component: {fileID: 302200774757386140}
+  - component: {fileID: 883617143}
   m_Layer: 8
   m_Name: Jerry
   m_TagString: NPC
@@ -697,6 +698,19 @@ MonoBehaviour:
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _player: {fileID: 0}
   _rotSpeed: 100
+--- !u!114 &883617143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3861824587936572688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 670b66ae2d266f3468e6644b79a1b162, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
 --- !u!1 &4020160337252914402
 GameObject:
   m_ObjectHideFlags: 0

@@ -58,7 +58,7 @@ namespace MyTownProject.NPC
             if (rb.velocity.magnitude > float.Epsilon)
             {
                 Quaternion rotation = Quaternion.LookRotation(rb.velocity, Vector3.up);
-
+                rotation.Normalize();
                 rotation.x = 0;
                 rotation.z = 0;
                 //rb.MoveRotation(rotation);

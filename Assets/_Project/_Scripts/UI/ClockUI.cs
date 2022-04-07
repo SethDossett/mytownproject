@@ -81,7 +81,7 @@ namespace MyTownProject.UI
 
         private void UpdateDateTime(DateTime dateTime)
         {
-            //Date.text = dateTime.DateToString();
+            Date.text = dateTime.DateToString();
             Time.text = dateTime.TimeToString();
             //Season.text = dateTime.Season.ToString();
             //Week.text = $"WK: {dateTime.CurrentWeek}";

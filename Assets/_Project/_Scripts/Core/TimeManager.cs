@@ -56,7 +56,7 @@ namespace MyTownProject.Core
         
         [Header("Date & Time Settings")]
         [Range(1, 3)]
-        public Days currentDay;
+        public int currentDay;
         [Range(1, 4)]
         public int season;
         [Range(1, 99)]
@@ -120,6 +120,7 @@ namespace MyTownProject.Core
         {
             #region Fields
             private Days day;
+            [SerializeField] private int date;
             [SerializeField] private int hour;
             [SerializeField] private int minutes;
 
@@ -127,17 +128,18 @@ namespace MyTownProject.Core
 
             #region Properties
             public Days Day => day;
+            public int Date => date;
             public int Hour => hour;
             public int Minutes => minutes;
             #endregion
 
             #region Constructors
 
-            public DateTime(Days day, int hour, int minutes)
+            public DateTime(int date, int hour, int minutes)
             {
-                //this.day = (Days)(day % 3);
-                //if (this.day == 0) this.day = (Days)3;
-                this.day = day;
+                this.day = (Days)(date % 3);
+                if (this.day == 0) day = (Days)3;
+                this.date = date;
                 this.hour = hour;
                 this.minutes = minutes;
 
@@ -268,6 +270,12 @@ namespace MyTownProject.Core
             public override string ToString()
             {
                 return $"Date: {day} Time: {TimeToString()} ";
+            }
+
+            public string DateToString()
+            {
+                var Day = day;
+                return $"{Day}";
             }
 
             public string TimeToString()
