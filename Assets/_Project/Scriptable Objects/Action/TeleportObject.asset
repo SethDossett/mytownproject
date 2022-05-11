@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e5baf88f9eb0fd42a3997cf17da0291, type: 3}
-  m_Name: Hospital Scene
+  m_Script: {fileID: 11500000, guid: 82e6de4196758d640a643c30d82c78a4, type: 3}
+  m_Name: TeleportObject
   m_EditorClassIdentifier: 
-  playerLocation: {x: 0, y: 0, z: -7.3}
-  playerRotation: {x: 0, y: 0, z: 0, w: 1}
-  sceneIndex: 1

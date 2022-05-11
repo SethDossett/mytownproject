@@ -86,11 +86,13 @@ namespace MyTownProject.UI
         #region Control Individual UI Elements
         private void ShowInteractionText(string interactionName)
         {
-            _interactionText.text = interactionName;
+            if (_interactionText.text != interactionName)
+                _interactionText.text = interactionName;
         }
         private void HideInteractionText()
         {
-            _interactionText.text = "";
+            if(_interactionText.text != "")
+                _interactionText.text = "";
         }
         #endregion
 

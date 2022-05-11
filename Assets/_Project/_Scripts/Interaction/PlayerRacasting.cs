@@ -1,23 +1,31 @@
 using UnityEngine.InputSystem;
 using UnityEngine;
 using MyTownProject.Core;
+using MyTownProject.Events;
 
 namespace MyTownProject.Interaction
 {
     public class PlayerRacasting : MonoBehaviour
     {
         [Header("References")]
-        private IInteractable currentTarget;
+        [SerializeField] UIEventChannelSO uiEventChannel;
+        private IInteractable _interactable;
         private NewControls _inputActions;
         private InputAction _interact;
         private GameStateManager.GameState _game_Playing_State;
         private RaycastHit _hitinfo;
         private Transform _transform;
+        [SerializeField] Transform _interactionPoint;
+        
 
         [Header("Values")]
+        [SerializeField] float _interactionPointRadius;
+        [SerializeField] LayerMask _interactableMask;
         [SerializeField] private float _interactRayLength = 5f;
         [SerializeField] private Vector3 _offset;
         private bool canRaycast = false;
+        private readonly Collider[] _colliders = new Collider[3];
+        [SerializeField] private int _numFound;
 
 
 
@@ -50,15 +58,9 @@ namespace MyTownProject.Interaction
             if (!canRaycast)
                 return;
 
-            CheckForInteractable();
-
-            if (_interact.WasPerformedThisFrame())
-            {
-                if (currentTarget != null)
-                {
-                    currentTarget.OnInteract();
-                }
-            }
+            //CheckForInteractable();
+            Interactor();
+            
         }
         private void CheckForInteractable()
         {
@@ -68,73 +70,70 @@ namespace MyTownProject.Interaction
             if (Physics.Raycast(ray, out _hitinfo, _interactRayLength))
             {
                 
-                IInteractable interactable = _hitinfo.collider.GetComponent<IInteractable>();
-                if (interactable == null)
+                _interactable = _hitinfo.collider.GetComponent<IInteractable>();
+                if(_interactable == null)
                 {
-                    if (currentTarget != null)
+                    if (_interactable != null)
                     {
-                        currentTarget.OnLoseFocus();
-                        currentTarget = null;
+                        _interactable.OnLoseFocus();
+                        uiEventChannel.HideTextInteract();
+                        _interactable = null;
                         return;
                     }
                     return;
                 }
 
-                if (!interactable.CanBeInteractedWith)
+                if (!_interactable.CanBeInteractedWith || _hitinfo.distance > _interactable.MaxRange)
                 {
-                    if (currentTarget != null)
+                    if (_interactable != null)
                     {
-                        currentTarget.OnLoseFocus();
-                        currentTarget = null;
+                        _interactable.OnLoseFocus();
+                        uiEventChannel.HideTextInteract();
+                        _interactable = null;
                         return;
                     }
                     return;
                 }
-                if (_hitinfo.distance <= interactable.MaxRange)
-                {
-                    if (interactable == currentTarget)
-                    {
-                        return;
-                    }
-                    else if (currentTarget != null)
-                    {
-                        currentTarget.OnLoseFocus();
-                        currentTarget = interactable;
-                        currentTarget.OnFocus(_hitinfo.collider.gameObject.name);
-                        return;
-                    }
-                    else
-                    {
-                        currentTarget = interactable;
-                        currentTarget.OnFocus(_hitinfo.collider.gameObject.name);
-                        return;
-                    }
-                }
-                else
-                {
-                    if (currentTarget != null)
-                    {
-                        currentTarget.OnLoseFocus();
-                        currentTarget = null;
-                        return;
-                    }
-                }
+
+                uiEventChannel.ShowTextInteract(_interactable.Prompt);
+                //currentTarget.OnFocus(_hitinfo.collider.gameObject.name);
+
+                if (_interact.WasPerformedThisFrame()) _interactable.OnInteract(this);
 
             }
             else
             {
-                if (currentTarget != null)
-                {
-                    currentTarget.OnLoseFocus();
-                    currentTarget = null;
-                    return;
-                }
+                if (_interactable != null) _interactable = null;
+                
+                uiEventChannel.HideTextInteract();
+            }
+        }
+
+        private void Interactor()
+        {
+            _numFound = Physics.OverlapSphereNonAlloc(_interactionPoint.position, _interactionPointRadius, _colliders, _interactableMask);
+
+            
+            if (_numFound > 0)
+            {
+                _interactable = _colliders[0].GetComponentInParent<IInteractable>();
+
+                uiEventChannel.ShowTextInteract(_interactable.Prompt);
+
+                if (_interact.WasPerformedThisFrame()) _interactable.OnInteract(this);
+            }
+            else
+            {
+                if (_interactable != null) _interactable = null;
+
+                uiEventChannel.HideTextInteract();
             }
         }
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position + _offset + transform.forward * _hitinfo.distance, 1.5f);
+            Gizmos.color = Color.blue;
+            //Gizmos.DrawWireSphere(transform.position + _offset + transform.forward * _hitinfo.distance, 1.5f);
+            Gizmos.DrawWireSphere(_interactionPoint.position, _interactionPointRadius);
 
         }
 

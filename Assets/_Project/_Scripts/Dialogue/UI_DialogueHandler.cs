@@ -51,6 +51,7 @@ namespace MyTownProject.Dialogue
         private void Start()
         {
             SetUpReferences();
+
         }
         private void SetUpReferences()
         {

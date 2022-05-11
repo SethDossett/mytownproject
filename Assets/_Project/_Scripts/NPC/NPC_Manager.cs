@@ -12,6 +12,7 @@ namespace MyTownProject.NPC
         Scene currentScene;
         [SerializeField] GameObject _meshes;
         CapsuleCollider _collider;
+        public LayerMask _playerLayer;
 
         private void OnEnable()
         {
@@ -23,6 +24,7 @@ namespace MyTownProject.NPC
         }
         private void Awake()
         {
+
             _collider = GetComponent<CapsuleCollider>();
         }
 
@@ -37,7 +39,19 @@ namespace MyTownProject.NPC
             CheckScene();
 
         }
+        void DetectForPlayer()
+        {
+            //float rad = 2f;
+            //Collider[] cols = new Collider[3];
+            //int numFound;
+            //numFound = Physics.OverlapSphereNonAlloc(transform.position, rad, cols, _playerLayer);
+            //
+            //if(numFound > 0)
+            //{
+            //    Transform player = cols[0].GetComponent<Transform>();
+            //}
 
+        }
         private void CheckScene()//set ScriptExecutuonOrder  hide npc to before player is teleported.
         {
             if (NPC.currentScene != currentScene.buildIndex)

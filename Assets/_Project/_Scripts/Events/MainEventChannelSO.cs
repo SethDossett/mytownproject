@@ -10,7 +10,7 @@ namespace MyTownProject.Events
         public UnityAction OnGamePaused;
         public UnityAction OnGameUnPaused;
         public UnityAction OnSubmit;
-        public UnityAction<int, SceneSO> OnChangeScene;
+        public UnityAction<SceneSO> OnChangeScene;
 
         public void RaiseEventPaused() => OnGamePaused?.Invoke();
         
@@ -18,7 +18,7 @@ namespace MyTownProject.Events
         
         public void RaiseEventSubmit() => OnSubmit?.Invoke();
 
-        public void RaiseEventChangeScene(int index, SceneSO sceneSO) => OnChangeScene?.Invoke(index, sceneSO);
+        public void RaiseEventChangeScene(SceneSO sceneSO) => OnChangeScene?.Invoke(sceneSO);
         
     }
 

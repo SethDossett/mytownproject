@@ -4,10 +4,11 @@ namespace MyTownProject.Interaction
     {
         float MaxRange { get; }
         bool CanBeInteractedWith { get; }
+        string Prompt { get; }
 
 
         void OnFocus(string _string);
-        void OnInteract();
+        void OnInteract(PlayerRacasting playerRacasting);
         void OnLoseFocus();
     }
 }

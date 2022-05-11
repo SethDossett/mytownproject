@@ -7,5 +7,6 @@ namespace MyTownProject.SO
     {
         public Vector3 playerLocation;
         public Quaternion playerRotation;
+        public int sceneIndex;
     }
 }

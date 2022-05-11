@@ -13,24 +13,23 @@ namespace MyTownProject.Interaction
     {
         [field: SerializeField] public float MaxRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
+        [field: SerializeField] public string Prompt { get; private set; }
 
         [Header("ScriptableObjects")]
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] InteractionEventSO _interactionDoor;
         [SerializeField] UIEventChannelSO uIEventChannel;
-        [SerializeField] SceneSO sceneSO;
+        [SerializeField] SceneSO nextScene;
         [SerializeField] StateChangerEventSO stateChangerEvent;
 
         [Header("References")]
         string _npcTag = "NPC";
 
         [Header("Values")]
-        [SerializeField] private bool _isLocked = false;
-        [SerializeField] private bool _canInteract = true;
+        bool _isLocked = false;
+        bool _hasInteracted = false;
+        bool _isFocusing = false;
         private bool _needToTeleport;
-        
-        [SerializeField] int _nextSceneIndex;
-
 
         [Header("Animations")]
         [SerializeField] private Animator _animatorRight;
@@ -50,27 +49,26 @@ namespace MyTownProject.Interaction
         {
         
         }
-        public void OnInteract()
-        {
-            OpenDoor();
-            _canInteract = false;
-            return;
-        }
 
         public void OnFocus(string interactionName)
         {
-            if (!_canInteract)
-            {
-                uIEventChannel.HideTextInteract();
-                return;
-            }
-            interactionName = "Open";
-            uIEventChannel.ShowTextInteract(interactionName);
+            if (_isFocusing) return;
+            
+            _isFocusing = true;
+        }
+
+        public void OnInteract(PlayerRacasting player)
+        {
+            if (_hasInteracted) return;
+            OpenDoor();
+            _hasInteracted = true;
+            return;
         }
 
         public void OnLoseFocus()
         {
-            uIEventChannel.HideTextInteract();
+            _isFocusing = false;
+            _hasInteracted = false;
         }
     
         public void OpenDoor()
@@ -95,13 +93,13 @@ namespace MyTownProject.Interaction
             uIEventChannel.RaiseFadeOut(Color.black, 1f);
             yield return new WaitForSecondsRealtime(1f);
             
-            _canInteract = true;
-            mainEventChannel.RaiseEventChangeScene(_nextSceneIndex, sceneSO);
+            _hasInteracted = true;
+            mainEventChannel.RaiseEventChangeScene(nextScene);
         
         }
         private void DoLockedDoor()
         {
-            _canInteract = true;
+            _hasInteracted = true;
             Debug.Log("locked");
         
         }

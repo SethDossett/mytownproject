@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e5baf88f9eb0fd42a3997cf17da0291, type: 3}
-  m_Name: Hospital Scene
+  m_Script: {fileID: 11500000, guid: 59e4549447b18244386e19ccc1b2487b, type: 3}
+  m_Name: PlayerReference
   m_EditorClassIdentifier: 
-  playerLocation: {x: 0, y: 0, z: -7.3}
-  playerRotation: {x: 0, y: 0, z: 0, w: 1}
-  sceneIndex: 1

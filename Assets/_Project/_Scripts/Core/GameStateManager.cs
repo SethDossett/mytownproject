@@ -85,14 +85,35 @@ namespace MyTownProject.Core
         #region Changing State
 
         [SerializeField] StateChangerEventSO stateChanger;
+        [SerializeField] DialogueEventsSO dialogueEvents;
         void OnEnable()
         {
             stateChanger.OnGameState += UpdateState;
+            dialogueEvents.onEnter += EnteringDialogue;
         }
         void OnDisable()
         {
             stateChanger.OnGameState -= UpdateState;
+            dialogueEvents.onEnter += EnteringDialogue;
         }
+
+        void EnteringDialogue(GameObject obj, TextAsset json)
+        {
+            EnterCutsceneState();
+        }
+        void EnterGamePlayingState()
+        {
+            if (gameState != GameState.GAME_PLAYING) UpdateState(GameState.GAME_PLAYING);
+        }
+        void EnterGamePausedState()
+        {
+            if (gameState != GameState.GAME_PAUSED) UpdateState(GameState.GAME_PAUSED);
+        }
+        void EnterCutsceneState()
+        {
+            if(gameState != GameState.CUTSCENE) UpdateState(GameState.CUTSCENE);
+        }
+
 
 
         #endregion

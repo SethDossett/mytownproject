@@ -14,12 +14,8 @@ namespace MyTownProject.Core
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] UIEventChannelSO uIEventChannel;
         [SerializeField] StateChangerEventSO stateChangerEvent;
+        [SerializeField] ActionSO teleportPlayer;
 
-        [Header("MovePlayer")]
-        [SerializeField] GameObject _player;
-        TheCharacterController cc;
-        public UnityAction<TheCharacterController> OnCharacterTeleport;
-        public bool isBeingTeleportedTo { get; set; }
 
         private void OnEnable()
         {
@@ -32,39 +28,16 @@ namespace MyTownProject.Core
 
         private void Start()
         {
-            cc = _player.GetComponent<TheCharacterController>();
             
         }
-        void SwitchScene(int index, SceneSO sceneSO)
+        void SwitchScene(SceneSO sceneSO)
         {
-            MovePlayerToScene(sceneSO);
+            teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
 
-
-            var progress = SceneManager.LoadSceneAsync(index, LoadSceneMode.Single);
+            var progress = SceneManager.LoadSceneAsync(sceneSO.sceneIndex, LoadSceneMode.Single);
             
             progress.completed += op => StartCoroutine(EnterScene());
 
-
-
-        }
-
-        private void MovePlayerToScene(SceneSO sceneSO)
-        {
-            if (!isBeingTeleportedTo)
-            {
-                if (cc)
-                {
-                    cc.Motor.SetPositionAndRotation(sceneSO.playerLocation, sceneSO.playerRotation);
-
-                    if (OnCharacterTeleport != null)
-                    {
-                        OnCharacterTeleport(cc);
-                    }
-                    this.isBeingTeleportedTo = true;
-                }
-            }
-
-            isBeingTeleportedTo = false;
         }
 
         IEnumerator EnterScene()
