@@ -16,7 +16,7 @@ namespace MyTownProject.Interaction
         [SerializeField] float _fofVRadius;
         [SerializeField] LayerMask _playerLayer;
         [SerializeField] int _numsFound = 0;
-        Collider[] _colliders = new Collider[3];
+        private readonly Collider[] _colliders = new Collider[3];
 
         [Header("Rig Values")]
         [SerializeField] RigBuilder _rigBuilder;
@@ -51,7 +51,7 @@ namespace MyTownProject.Interaction
             if(_numsFound > 0)
             {
                 if (!_targetSet)
-                    LookAtPlayer(_colliders[0].GetComponent<Transform>());
+                    LookAtPlayer(_colliders[0].transform);
                 else return;
             }
             else

@@ -22,8 +22,6 @@ namespace MyTownProject.Interaction
         //[SerializeField] private CinemachineTargetGroup _targetGroup;
         [SerializeField] private NPC_ScriptableObject npc;
         [SerializeField] DialogueEventsSO dialogueEvents;
-        [SerializeField] GeneralEventSO findPlayerRef;
-        Transform _playerReference;
 
         private void OnEnable()
         {

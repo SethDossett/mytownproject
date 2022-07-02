@@ -117,6 +117,8 @@ namespace MyTownProject.Interaction
             if (_numFound > 0)
             {
                 _interactable = _colliders[0].GetComponentInParent<IInteractable>();
+                
+                if (_interactable == null) return;
 
                 uiEventChannel.ShowTextInteract(_interactable.Prompt);
 

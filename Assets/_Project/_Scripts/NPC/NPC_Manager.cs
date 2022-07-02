@@ -12,7 +12,7 @@ namespace MyTownProject.NPC
         Scene currentScene;
         [SerializeField] GameObject _meshes;
         CapsuleCollider _collider;
-        public LayerMask _playerLayer;
+        public GameObject _head;
 
         private void OnEnable()
         {
@@ -24,7 +24,6 @@ namespace MyTownProject.NPC
         }
         private void Awake()
         {
-
             _collider = GetComponent<CapsuleCollider>();
         }
 

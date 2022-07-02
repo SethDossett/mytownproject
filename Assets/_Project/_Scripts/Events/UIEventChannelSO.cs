@@ -31,5 +31,13 @@ namespace MyTownProject.Events
         public void ShowTextInteract(string text) => OnShowTextInteract?.Invoke(text);
         public void HideTextInteract() => OnHideTextInteract?.Invoke();
         #endregion
+
+        #region Interact Prompt
+        public UnityAction<Transform> OnShowPrompt;
+        public UnityAction OnHidePrompt;
+
+        public void ShowPromptInteract(Transform pos) => OnShowPrompt?.Invoke(pos);
+        public void HidePromptInteract() => OnHidePrompt?.Invoke();
+        #endregion
     }
 }
