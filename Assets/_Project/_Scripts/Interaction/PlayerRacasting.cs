@@ -341,18 +341,18 @@ namespace MyTownProject.Interaction
         {
             print("Found");
             CC.TransitionToState(CharacterState.Targeting);
-            currentTarget.GetComponent<NPCManager>().Targeted(); //Make Events that fire for UI Targeted
+            currentTarget.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
             anim.SetLayerWeight(1, 1);
             cinemachineAnimator.Play("TargetingCamera01");
             enemyLocked = true;
-            _closestTarget.GetComponent<NPCManager>().SetTargeted(); //Set NPC as been targeted.
+            _closestTarget.GetComponent<NPC_Interact>().SetTargeted(); //Set NPC as been targeted.
 
             for (int i = 0; i < nearbyTargets.Length; i++)
             {
                 Transform t = nearbyTargets[i].transform;
                 remainingTargets.Add(t);
-                if (t.gameObject.GetComponent<NPCManager>().beenTargeted == true)
+                if (t.gameObject.GetComponent<NPC_Interact>().beenTargeted == true)
                 {
                     remainingTargets.Remove(t);
                 }
@@ -378,7 +378,7 @@ namespace MyTownProject.Interaction
                 float closestDis = 10f; // change to max range
                 Transform closetT = null;
                 foreach(var target in nearbyTargets){
-                    if(target.gameObject.GetComponent<NPCManager>().beenTargeted == false){
+                    if(target.gameObject.GetComponent<NPC_Interact>().beenTargeted == false){
                         float disP = GetDistance(transform, target.transform);
                         if(disP <= target.transform.GetComponent<NPC_Interact>().MaxRange){
                             float disN = GetDistance(currentTarget, target.transform);
@@ -394,7 +394,7 @@ namespace MyTownProject.Interaction
                 if (!closetT) ResetTarget();
 
                 currentTarget = closetT;
-                closetT.gameObject.GetComponent<NPCManager>().beenTargeted = true;
+                closetT.gameObject.GetComponent<NPC_Interact>().beenTargeted = true;
             }
 
             yield return null;
@@ -406,7 +406,7 @@ namespace MyTownProject.Interaction
             CC.TransitionToState(CharacterState.Default);
             _startTimer = false;
             _timer = 0;
-            //nearbyTargets[i].GetComponent<NPCManager>().Hovered();
+            //nearbyTargets[i].GetComponent<NPC_Interact>().Hovered();
             lockOnCanvas.gameObject.SetActive(false);
             currentTarget = null;
             _closestTarget = null;
@@ -421,7 +421,7 @@ namespace MyTownProject.Interaction
         {
             foreach (var npc in nearbyTargets)
             {
-                NPCManager m = npc.GetComponent<NPCManager>(); // set npc back to not being targeted
+                NPC_Interact m = npc.GetComponent<NPC_Interact>(); // set npc back to not being targeted
                 m.UnsetTargeted();
                 m.UnTargeted();
                 m.HideHover();
@@ -435,7 +435,7 @@ namespace MyTownProject.Interaction
                 ResetTarget();
                 return;
             }
-            //currentTarget.GetComponent<NPCManager>().Targeted();
+            //currentTarget.GetComponent<NPC_Interact>().Targeted();
             pos = currentTarget.position + new Vector3(0, currentYOffset, 0);
            
             enemyTarget_Locator.position = pos;
@@ -450,14 +450,14 @@ namespace MyTownProject.Interaction
             if(_closestTarget != null){
                 foreach(var npc in nearbyTargets){
                 if(npc.gameObject.transform == _closestTarget && tarr != true){
-                    npc.gameObject.GetComponent<NPCManager>().Hovered();
+                    npc.gameObject.GetComponent<NPC_Interact>().Hovered();
                 }
-                else npc.gameObject.GetComponent<NPCManager>().HideHover();
+                else npc.gameObject.GetComponent<NPC_Interact>().HideHover();
                 }   
             }
             else{
                 foreach(var npc in nearbyTargets){
-                    npc.gameObject.GetComponent<NPCManager>().HideHover();
+                    npc.gameObject.GetComponent<NPC_Interact>().HideHover();
                 } 
 
             }
@@ -465,11 +465,11 @@ namespace MyTownProject.Interaction
             if(currentTarget != null){
                 foreach(var npc in nearbyTargets){
                     if(npc.gameObject.transform == currentTarget && tarr == false){
-                        npc.gameObject.GetComponent<NPCManager>().Targeted();
+                        npc.gameObject.GetComponent<NPC_Interact>().Targeted();
                         tarr = true;
                     }
                     else {
-                        npc.gameObject.GetComponent<NPCManager>().HideHover();
+                        npc.gameObject.GetComponent<NPC_Interact>().HideHover();
                         tarr = false;
                     }   
                 }

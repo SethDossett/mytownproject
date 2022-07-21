@@ -60,5 +60,78 @@ namespace MyTownProject.Interaction
         {
             dialogueEvents.Enter(gameObject, inkJSON);
         }
+
+        public void Hovered(){
+
+        if(!_interactionUI.activeInHierarchy){
+            _interactionUI.SetActive(true);
+
+        }
+        else{
+            ShowIcon(hshow);
+
+            if(ShowName){
+                if(!_titlName.activeInHierarchy)
+                    _titlName.SetActive(true);
+
+                   
+            }
+            else{
+                if(_titlName.activeInHierarchy)
+                _titlName.SetActive(false);  
+            } 
+        }
+
+            _NPCName.text = _name; 
+        }
+        public void HideHover(){
+            if(_interactionUI.activeInHierarchy){
+                _interactionUI.SetActive(false);
+            }
+        }
+        public void Targeted(){
+            if(!_interactionUI.activeInHierarchy){
+                _interactionUI.SetActive(true);
+            }
+
+            if(_titlName.activeInHierarchy)
+                _titlName.SetActive(false);    
+            ShowIcon(tshow);
+        }
+        public void UnTargeted(){
+            if(!_interactionUI.activeInHierarchy)
+                _interactionUI.SetActive(true);
+
+            ShowIcon(hshow);
+        }
+
+
+        public void SetTargeted(){
+            if(!beenTargeted)
+                beenTargeted = true;
+            
+        }
+
+        public void UnsetTargeted(){
+            if(beenTargeted)
+                beenTargeted = false;
+        }
+
+
+
+        private void ShowIcon(int i){
+            if(i == hshow){
+                if(_targetIcon.activeInHierarchy)
+                    _targetIcon.SetActive(false);
+                if(!_hoverIcon.activeInHierarchy)
+                    _hoverIcon.SetActive(true);
+            }
+            else{
+                if(_hoverIcon.activeInHierarchy)
+                    _hoverIcon.SetActive(false);
+                if(!_targetIcon.activeInHierarchy)
+                    _targetIcon.SetActive(true);
+            }
+        }
     }
 }
