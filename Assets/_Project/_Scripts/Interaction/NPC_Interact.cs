@@ -4,6 +4,7 @@ using MyTownProject.Events;
 using MyTownProject.NPC;
 using MyTownProject.UI;
 using MyTownProject.Core;
+using TMPro;
 
 namespace MyTownProject.Interaction
 {
@@ -23,6 +24,20 @@ namespace MyTownProject.Interaction
         //[SerializeField] private CinemachineTargetGroup _targetGroup;
         [SerializeField] private NPC_ScriptableObject npc;
         [SerializeField] DialogueEventsSO dialogueEvents;
+
+    #region new variables
+        [SerializeField] GameObject _hoverIcon;
+        [SerializeField] GameObject _targetIcon;
+        [SerializeField] GameObject _interactionUI;
+        [SerializeField] TextMeshProUGUI _NPCName;
+        [SerializeField] GameObject _titlName;
+        [SerializeField] string _name;
+        [SerializeField] bool ShowName = false;
+        int hshow = 0;
+        int tshow = 1;
+    #endregion
+
+    public bool beenTargeted;
 
         private void OnEnable()
         {
