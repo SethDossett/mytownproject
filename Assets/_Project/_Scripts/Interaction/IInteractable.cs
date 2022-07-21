@@ -4,6 +4,7 @@ namespace MyTownProject.Interaction
     {
         float MaxRange { get; }
         bool CanBeInteractedWith { get; }
+        bool CanBeTargeted { get; }
         string Prompt { get; }
 
 

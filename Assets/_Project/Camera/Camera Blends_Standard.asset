@@ -35,3 +35,36 @@ MonoBehaviour:
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 0
+  - m_From: PlayerFreeLook01
+    m_To: TargetingCamera
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.1
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: TargetingCamera
+    m_To: PlayerFreeLook01
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.1
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: TargetingCamera
+    m_To: DialogueVCam01
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.1
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0

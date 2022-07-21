@@ -15,32 +15,36 @@ namespace MyTownProject.Core
         [SerializeField] private CinemachineTargetGroup _targetGroup_01;
         private Animator _animator;
 
-        [Header("Animation")]
+        #region Animations
         int playerFreeLook01 = Animator.StringToHash("PlayerFreeLook01");
+        int targetCamera = Animator.StringToHash("TargetingCamera");
         int dialogueVCam01 = Animator.StringToHash("DialogueVirtalCamera01");
+        #endregion
+
+        #region Cameras
+        private void SwitchToFreeLook() => _animator.Play(playerFreeLook01);
+        private void SwitchToTargeting() => _animator.Play(targetCamera);
+        private void SwitchToDialogue() => _animator.Play(dialogueVCam01);
+        #endregion
+
 
         private void OnEnable()
         {
-            dialogueEvents.onEnter += SwitchToDialogue;
+            dialogueEvents.onEnter += EnterDialogue;
             GameStateManager.OnGameStateChanged += CheckGameState;
         }
         private void OnDisable()
         {
-            dialogueEvents.onEnter -= SwitchToDialogue;
+            dialogueEvents.onEnter -= EnterDialogue;
             GameStateManager.OnGameStateChanged -= CheckGameState;
         }
         private void Start()
         {
             _animator = GetComponent<Animator>();
         }
-        private void SwitchToDialogue(GameObject npc, TextAsset inkJSON)
-        {
-            _animator.Play(dialogueVCam01);
-        }
-        private void SwitchToFreeLook()
-        {
-            _animator.Play(playerFreeLook01);
-        }
+
+        private void EnterDialogue(GameObject npc, TextAsset inkJSON) => SwitchToDialogue(); 
+
 
         void CheckGameState(GameStateManager.GameState state)
         {

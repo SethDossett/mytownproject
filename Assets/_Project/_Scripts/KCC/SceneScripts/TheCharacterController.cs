@@ -9,7 +9,7 @@ namespace KinematicCharacterController.Examples
 {
     public enum CharacterState
     {
-        Default, Talking, Climbing
+        Default, Talking, Climbing, Targeting
     }
 
     public enum OrientationMethod
@@ -76,10 +76,13 @@ namespace KinematicCharacterController.Examples
 
         [Header("Animation")]
         Animator animator;
-        int isCrouched = Animator.StringToHash("isCrouched");
-        int jumpTrigger = Animator.StringToHash("hasJumped");
-        int landTrigger = Animator.StringToHash("hasLanded");
-        int moving = Animator.StringToHash("Moving");
+        int anim_isCrouched = Animator.StringToHash("isCrouched");
+        int anim_jumpTrigger = Animator.StringToHash("hasJumped");
+        int anim_landTrigger = Animator.StringToHash("hasLanded");
+        int anim_moving = Animator.StringToHash("Moving");
+        int anim_horizontal = Animator.StringToHash("Horizontal");
+        int anim_vertical = Animator.StringToHash("Vertical");
+
 
         public CharacterState CurrentCharacterState { get; private set; }
 
@@ -146,6 +149,11 @@ namespace KinematicCharacterController.Examples
                     {
                         break;
                     }
+                case CharacterState.Targeting:
+                    {
+                        break;
+                    }
+
             }
         }
 
@@ -161,6 +169,10 @@ namespace KinematicCharacterController.Examples
                         break;
                     }
                 case CharacterState.Climbing:
+                    {
+                        break;
+                    }
+                case CharacterState.Targeting:
                     {
                         break;
                     }
@@ -224,8 +236,8 @@ namespace KinematicCharacterController.Examples
                                 _isCrouching = true;
                                 Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
                                 //MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
-                                if (animator.GetBool(isCrouched) != true)
-                                    animator.SetBool(isCrouched, true);
+                                if (animator.GetBool(anim_isCrouched) != true)
+                                    animator.SetBool(anim_isCrouched, true);
                                 Debug.Log("Crouch");
                             }
                         }
@@ -251,6 +263,23 @@ namespace KinematicCharacterController.Examples
                                 _lookInputVector = _moveInputVector.normalized;
                                 break;
                         }
+                        break;
+                    }
+                case CharacterState.Targeting:
+                    {
+                        // Move and look inputs
+                        _moveInputVector = cameraPlanarRotation * moveInputVector;
+
+                        switch (OrientationMethod)
+                        {
+                            case OrientationMethod.TowardsCamera:
+                                _lookInputVector = cameraPlanarDirection;
+                                break;
+                            case OrientationMethod.TowardsMovement:
+                                _lookInputVector = _moveInputVector.normalized;
+                                break;
+                        }
+
                         break;
                     }
             }
@@ -334,6 +363,10 @@ namespace KinematicCharacterController.Examples
 
                         break;
                     }
+                case CharacterState.Targeting:
+                    {
+                        break;
+                    }
             }
         }
 
@@ -378,7 +411,9 @@ namespace KinematicCharacterController.Examples
 
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-                            animator.SetFloat(moving, currentVelocityMagnitude);
+                            animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
+                            animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
+                            animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                         }
                         // Air movement
                         else
@@ -453,7 +488,7 @@ namespace KinematicCharacterController.Examples
                                 _jumpRequested = false;
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
-                                animator.SetBool(jumpTrigger, true);
+                                animator.SetBool(anim_jumpTrigger, true);
                             }
                         }
 
@@ -482,6 +517,51 @@ namespace KinematicCharacterController.Examples
                        //currentVelocity *= (1f / (1f + (Drag * deltaTime)));
                        //currentVelocity += Gravity * deltaTime;
                        ////currentVelocity += (Motor.CharacterUp * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                        break;
+                    }
+                case CharacterState.Targeting:
+                    {
+                        // Ground movement
+                        if (Motor.GroundingStatus.IsStableOnGround)
+                        {
+                            float currentVelocityMagnitude = currentVelocity.magnitude;
+
+                            Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
+                            if (currentVelocityMagnitude > 0f && Motor.GroundingStatus.SnappingPrevented)
+                            {
+                                // Take the normal from where we're coming from
+                                Vector3 groundPointToCharacter = Motor.TransientPosition - Motor.GroundingStatus.GroundPoint;
+                                if (Vector3.Dot(currentVelocity, groundPointToCharacter) >= 0f)
+                                {
+                                    effectiveGroundNormal = Motor.GroundingStatus.OuterGroundNormal;
+                                }
+                                else
+                                {
+                                    effectiveGroundNormal = Motor.GroundingStatus.InnerGroundNormal;
+                                }
+                            }
+
+                            // Reorient velocity on slope
+                            currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
+
+                            // Calculate target velocity
+                            Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
+                            Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+                            Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
+
+                            // Smooth movement Velocity
+                            currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                            animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
+                            animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
+                            animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
+                        }
+                        // Take into account additive velocity
+                        if (_internalVelocityAdd.sqrMagnitude > 0f)
+                        {
+                            currentVelocity += _internalVelocityAdd;
+                            _internalVelocityAdd = Vector3.zero;
+                        }
+
                         break;
                     }
             }
@@ -541,8 +621,8 @@ namespace KinematicCharacterController.Examples
                                 // If no obstructions, uncrouch
                                 //MeshRoot.localScale = new Vector3(1f, 1f, 1f);
                                 _isCrouching = false;
-                                if (animator.GetBool(isCrouched) != false)
-                                    animator.SetBool(isCrouched, false);
+                                if (animator.GetBool(anim_isCrouched) != false)
+                                    animator.SetBool(anim_isCrouched, false);
                                 Debug.Log("Uncrouched");
                             }
                         }
@@ -597,6 +677,11 @@ namespace KinematicCharacterController.Examples
                         _internalVelocityAdd += velocity;
                         break;
                     }
+                case CharacterState.Targeting:
+                    {
+                        _internalVelocityAdd += velocity;
+                        break;
+                    }
             }
         }
 
@@ -606,8 +691,8 @@ namespace KinematicCharacterController.Examples
 
         protected void OnLanded()
         {
-            animator.SetBool(jumpTrigger, false);
-            animator.SetBool(landTrigger, true);
+            animator.SetBool(anim_jumpTrigger, false);
+            animator.SetBool(anim_landTrigger, true);
         }
 
         protected void OnLeaveStableGround()

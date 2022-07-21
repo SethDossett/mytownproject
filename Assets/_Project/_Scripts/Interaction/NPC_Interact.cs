@@ -11,6 +11,7 @@ namespace MyTownProject.Interaction
     {
         [field: SerializeField] public float MaxRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
+        [field: SerializeField] public bool CanBeTargeted { get; private set; }
         [field: SerializeField] public string Prompt { get; private set; }
 
         [SerializeField] private TextAsset inkJSON;

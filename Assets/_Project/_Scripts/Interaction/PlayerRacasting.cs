@@ -2,6 +2,9 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using MyTownProject.Core;
 using MyTownProject.Events;
+using KinematicCharacterController.Examples;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace MyTownProject.Interaction
 {
@@ -9,6 +12,7 @@ namespace MyTownProject.Interaction
     {
         [Header("References")]
         [SerializeField] UIEventChannelSO uiEventChannel;
+        [SerializeField] TheCharacterController CC;
         private IInteractable _interactable;
         private NewControls _inputActions;
         private InputAction _interact;
@@ -23,12 +27,53 @@ namespace MyTownProject.Interaction
         [SerializeField] LayerMask _interactableMask;
         [SerializeField] private float _interactRayLength = 5f;
         [SerializeField] private Vector3 _offset;
-        private bool canRaycast = false;
+        [SerializeField] bool canRaycast = false;
         private readonly Collider[] _colliders = new Collider[3];
         [SerializeField] private int _numFound;
 
+        #region New Lock On
+        [Header("References")]
+        [SerializeField] Transform currentTarget;
+        [SerializeField] Transform _closestTarget = null;
+        [SerializeField] CameraFollow camFollow;
+        [SerializeField] Transform lockOnCanvas;
+        Animator anim;
+        Transform cam;
+        //DefMovement defMovement;
+        [SerializeField] Transform enemyTarget_Locator;
 
 
+        [Tooltip("StateDrivenMethod for Switching Cameras")]
+        [SerializeField] Animator cinemachineAnimator;
+
+        [Header("Settings")]
+        [SerializeField] bool zeroVert_Look;
+        [SerializeField] float noticeZone = 10;
+        [SerializeField] float lookAtSmoothing = 2;
+        [Tooltip("Angle_Degree")][SerializeField] float maxNoticeAngle = 60;
+        [SerializeField] float crossHair_Scale = 0.1f;
+        float maxDistance = 25f;
+        
+
+
+        [Header("Values")]
+        [SerializeField] bool findByAngle;
+        [SerializeField] LayerMask targetLayers;
+        [SerializeField] int _NPCIndex;
+        bool enemyLocked;
+        float currentYOffset;
+        Vector3 pos;
+        
+        float _timer = 0;
+        bool _startTimer;
+        float _nextTargetWindow;
+        [SerializeField] float dis;
+
+        [Header("Targets")]
+        [SerializeField] Collider[] nearbyTargets;
+        [SerializeField] List<Transform> remainingTargets = new List<Transform>();
+
+        #endregion
         private void OnEnable()
         {
             GameStateManager.OnGameStateChanged += CheckState;
@@ -43,8 +88,13 @@ namespace MyTownProject.Interaction
         }
         private void Start()
         {
+            CC = GetComponent<TheCharacterController>();
             _game_Playing_State = GameStateManager.GameState.GAME_PLAYING;
             _transform = transform;
+            anim = GetComponent<Animator>();
+            cam = Camera.main.transform;
+            lockOnCanvas.gameObject.SetActive(false);
+            _startTimer = false;
         }
         void CheckState(GameStateManager.GameState state)
         {
@@ -58,9 +108,53 @@ namespace MyTownProject.Interaction
             if (!canRaycast)
                 return;
 
-            //CheckForInteractable();
-            Interactor();
-            
+            //CheckForInteractable();//old version
+            //Interactor();//old version
+
+            camFollow.lockedTarget = enemyLocked;
+            //defMovement.lockMovement = enemyLocked;
+
+
+            IconControl();
+            CheckTimer();
+
+            if (Keyboard.current.shiftKey.wasPressedThisFrame)
+            {
+                print("Fire");
+                if (_startTimer == true && remainingTargets.Count > 0)
+                {
+                    if (_timer <= _nextTargetWindow)
+                        StartCoroutine(FindNextTarget());
+                    return;
+                }
+
+                currentTarget = _closestTarget;
+                if (currentTarget)
+                {
+                    //If there is already a target, Reset.
+                    ResetTarget();
+                    return;
+                }
+
+                if (enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
+            }
+
+            if (Keyboard.current.shiftKey.wasReleasedThisFrame)
+            {
+                if (currentTarget != null)
+                    _startTimer = true;
+            }
+
+            if (!enemyLocked)
+            {
+                CheckForNPCS();
+            }
+            if (enemyLocked)
+            {
+                if (!TargetOnRange()) ResetTarget();
+                LookAtTarget();
+            }
+
         }
         private void CheckForInteractable()
         {
@@ -131,12 +225,250 @@ namespace MyTownProject.Interaction
                 uiEventChannel.HideTextInteract();
             }
         }
+
+        void CheckTimer()
+        {
+            if (_startTimer)
+            {
+                _timer += Time.deltaTime;
+            }
+
+
+            if (_timer > _nextTargetWindow)
+            {
+                ResetTarget();
+            }
+        }
+        private void CheckForNPCS()
+        {
+            nearbyTargets = Physics.OverlapSphere(transform.position, noticeZone, targetLayers);
+            float closestAngle = maxNoticeAngle;
+            float closestDis = maxDistance;
+            Transform closestTarget = null;
+            if (findByAngle)
+            {
+                if (nearbyTargets.Length <= 0) return;
+                for (int i = 0; i < nearbyTargets.Length; i++)
+                {
+
+                    Vector3 dir = nearbyTargets[i].transform.position - cam.position;
+                    dir.y = 0;
+                    float _angle = Vector3.Angle(cam.forward, dir);
+
+                    if (_angle < closestAngle)
+                    {
+                        closestTarget = nearbyTargets[i].transform;
+                        closestAngle = _angle;
+                        _NPCIndex = i;
+                    }
+
+                }
+            }
+            else
+            {
+                if (nearbyTargets.Length <= 0) return;
+                for (int i = 0; i < nearbyTargets.Length; i++)
+                {
+                    float dis = GetDistance(transform, nearbyTargets[i].transform);
+                    if (dis < closestDis)
+                    {
+                        closestTarget = nearbyTargets[i].transform;
+                        closestDis = dis;
+                        _NPCIndex = i;
+                    }
+
+                }
+
+            }
+
+            if (!closestTarget) return;
+            float h1 = closestTarget.GetComponent<CapsuleCollider>().height;
+            float h2 = closestTarget.localScale.y;
+            float h = h1 * h2;
+            float half_h = (h / 2) / 2;
+            currentYOffset = h - half_h;
+            if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
+            Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
+            if (Blocked(tarPos)) return;
+            if (GetDistance(transform, closestTarget) > closestTarget.GetComponent<NPC_Interact>().MaxRange)
+            {
+                print("OutOfRange " + closestTarget.gameObject.name);
+                return;
+            }
+            _closestTarget = closestTarget;
+
+        }
+
+        bool Blocked(Vector3 t)
+        {
+            RaycastHit hit;
+            if (Physics.Linecast(transform.position + Vector3.up * 0.5f, t, out hit))
+            {
+                if (!hit.transform.CompareTag("NPC")) return true;
+            }
+            return false;
+        }
+        
+        bool TargetOnRange()
+        {
+            dis = (transform.position - pos).magnitude;
+            if (dis > noticeZone) return false; else return true;
+        }
+        float GetDistance(Transform from, Transform to)
+        {
+            float distance = (from.position - to.position).magnitude;
+
+            return distance;
+        }
+
+        void FoundTarget()
+        {
+            print("Found");
+            CC.TransitionToState(CharacterState.Targeting);
+            currentTarget.GetComponent<NPCManager>().Targeted(); //Make Events that fire for UI Targeted
+            lockOnCanvas.gameObject.SetActive(true);
+            anim.SetLayerWeight(1, 1);
+            cinemachineAnimator.Play("TargetingCamera01");
+            enemyLocked = true;
+            _closestTarget.GetComponent<NPCManager>().SetTargeted(); //Set NPC as been targeted.
+
+            for (int i = 0; i < nearbyTargets.Length; i++)
+            {
+                Transform t = nearbyTargets[i].transform;
+                remainingTargets.Add(t);
+                if (t.gameObject.GetComponent<NPCManager>().beenTargeted == true)
+                {
+                    remainingTargets.Remove(t);
+                }
+                if (GetDistance(transform, t) > t.GetComponent<NPCManager>().maxDistance)
+                {
+                    remainingTargets.Remove(t);
+                }
+
+            }
+        }
+        IEnumerator FindNextTarget()
+        {
+            print("FindNext");
+            _startTimer = false;
+            _timer = 0;
+
+            if (remainingTargets.Count <= 0) ResetTarget();
+            else
+            {
+                // MAKE IT FIND NEXT CLOSEST
+                // AND NOT BE OUT OF MAXDISTANCE
+                //Need To Check if New TArgets have come in or Out!!!!!!!!!!!!!!!!!!!!!!!!!!
+                float closestDis = 50f;
+                Transform closetT = null;
+                foreach (var target in remainingTargets)
+                {
+                    float dis = GetDistance(currentTarget, target);
+                    if (dis < closestDis)
+                    {
+                        closetT = target;
+                        closestDis = dis;
+                    }
+                }
+                if (!closetT) ResetTarget();
+
+                currentTarget = closetT;
+                remainingTargets.Remove(closetT);
+            }
+
+            yield return null;
+
+        }
+        void ResetTarget()
+        {
+            print("reset");
+            CC.TransitionToState(CharacterState.Default);
+            _startTimer = false;
+            _timer = 0;
+            //nearbyTargets[i].GetComponent<NPCManager>().Hovered();
+            lockOnCanvas.gameObject.SetActive(false);
+            currentTarget = null;
+            _closestTarget = null;
+            enemyLocked = false;
+            anim.SetLayerWeight(1, 0);
+            cinemachineAnimator.Play("PlayerFreeLook01");
+            _NPCIndex = 0;
+            BeenTargetedReset();
+        }
+
+        void BeenTargetedReset()
+        {
+            foreach (var npc in nearbyTargets)
+            {
+                NPCManager m = npc.GetComponent<NPCManager>(); // set npc back to not being targeted
+                m.UnsetTargeted();
+                m.UnTargeted();
+                m.HideHover();
+            }
+            remainingTargets.Clear();
+        }
+        private void LookAtTarget()
+        {
+            if (currentTarget == null)
+            {
+                ResetTarget();
+                return;
+            }
+            //currentTarget.GetComponent<NPCManager>().Targeted();
+            pos = currentTarget.position + new Vector3(0, currentYOffset, 0);
+           
+            enemyTarget_Locator.position = pos;
+            Vector3 dir = currentTarget.position - transform.position;
+            dir.y = 0;
+            Quaternion rot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * lookAtSmoothing);
+        }
+        private void IconControl()
+        {
+
+
+            if (_closestTarget != null)
+            {
+                foreach (var npc in nearbyTargets)
+                {
+                    if (npc.gameObject.transform == _closestTarget)
+                    {
+                        npc.gameObject.GetComponent<NPCManager>().Hovered(); // Make Event for Npc UI to be turned on
+                    }
+                    else npc.gameObject.GetComponent<NPCManager>().HideHover(); // Make Event for Npc UI to be turned off
+                }
+            }
+            // NOT WORKING RIGHT ?
+            if (currentTarget != null)
+            {
+                foreach (var npc in nearbyTargets)
+                {
+                    if (npc.gameObject.transform == currentTarget)
+                    {
+                        npc.gameObject.GetComponent<NPCManager>().Targeted(); // Make Event to target
+                    }
+                    else npc.gameObject.GetComponent<NPCManager>().HideHover(); // Make Event for Npc UI to be turned off
+                }
+            }
+
+
+
+        }
+        private void LockOnCanvas()
+        {
+            lockOnCanvas.position = pos;
+            lockOnCanvas.localScale = Vector3.one * ((cam.position - pos).magnitude * crossHair_Scale);
+        }
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
             //Gizmos.DrawWireSphere(transform.position + _offset + transform.forward * _hitinfo.distance, 1.5f);
             Gizmos.DrawWireSphere(_interactionPoint.position, _interactionPointRadius);
-
+            
+            Gizmos.DrawWireSphere(transform.position, noticeZone);
+            
+            
         }
 
     }

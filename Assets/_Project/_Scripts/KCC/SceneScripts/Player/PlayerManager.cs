@@ -46,5 +46,7 @@ namespace KinematicCharacterController.Examples
 
             isBeingTeleportedTo = false;
         }
+
+       
     }
 }

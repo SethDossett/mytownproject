@@ -46,7 +46,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7064102661389197869
 Transform:
   m_ObjectHideFlags: 0
@@ -151,8 +151,8 @@ MonoBehaviour:
         transform: {fileID: 0}
         weight: 0
     m_Offset: {x: 0, y: 0, z: 0}
-    m_MinLimit: -80
-    m_MaxLimit: 80
+    m_MinLimit: -70
+    m_MaxLimit: 70
     m_AimAxis: 4
     m_UpAxis: 2
     m_WorldUpType: 0
@@ -182,6 +182,9 @@ MonoBehaviour:
   _interactableLayer:
     serializedVersion: 2
     m_Bits: 256
+  _colliders: []
+  _closestCol: {fileID: 0}
+  _numFound: 0
   _rigBuilder: {fileID: 8436165082441742949}
 --- !u!1 &6281621537424013997
 GameObject:
@@ -821,6 +824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  CC: {fileID: 0}
   _interactionPoint: {fileID: 3742338039152190084}
   _interactionPointRadius: 0.35
   _interactableMask:
@@ -828,7 +832,27 @@ MonoBehaviour:
     m_Bits: 256
   _interactRayLength: 5
   _offset: {x: 0, y: 1.2, z: 0}
+  canRaycast: 0
   _numFound: 0
+  currentTarget: {fileID: 0}
+  _closestTarget: {fileID: 0}
+  camFollow: {fileID: 0}
+  lockOnCanvas: {fileID: 0}
+  enemyTarget_Locator: {fileID: 0}
+  cinemachineAnimator: {fileID: 0}
+  zeroVert_Look: 0
+  noticeZone: 10
+  lookAtSmoothing: 2
+  maxNoticeAngle: 60
+  crossHair_Scale: 0.1
+  findByAngle: 0
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  _NPCIndex: 0
+  dis: 0
+  nearbyTargets: []
+  remainingTargets: []
 --- !u!114 &8436165082441742949
 MonoBehaviour:
   m_ObjectHideFlags: 0
