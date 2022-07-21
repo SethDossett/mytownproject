@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -419,11 +419,6 @@ PrefabInstance:
       propertyPath: cinemachineAnimator
       value: 
       objectReference: {fileID: 1989784163}
-    - target: {fileID: 7468897045282317995, guid: 17b7b62671fd4ee42bc8a637739f2fa8,
-        type: 3}
-      propertyPath: enemyTarget_Locator
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 17b7b62671fd4ee42bc8a637739f2fa8, type: 3}
 --- !u!1 &773243316
@@ -920,31 +915,31 @@ PrefabInstance:
       objectReference: {fileID: 1413191734}
     - target: {fileID: 403724487, guid: 2647ee2da2c79d3419f4e0cd8032e236, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 100.62302
+      value: 100.610954
       objectReference: {fileID: 0}
     - target: {fileID: 403724487, guid: 2647ee2da2c79d3419f4e0cd8032e236, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.1942391
+      value: 2.1490946
       objectReference: {fileID: 0}
     - target: {fileID: 403724487, guid: 2647ee2da2c79d3419f4e0cd8032e236, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 103.18673
+      value: 103.19954
       objectReference: {fileID: 0}
     - target: {fileID: 403724487, guid: 2647ee2da2c79d3419f4e0cd8032e236, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.37760574
+      value: -0.37679854
       objectReference: {fileID: 0}
     - target: {fileID: 403724487, guid: 2647ee2da2c79d3419f4e0cd8032e236, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0036676188
+      value: -0.0028090796
       objectReference: {fileID: 0}
     - target: {fileID: 403724487, guid: 2647ee2da2c79d3419f4e0cd8032e236, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9259155
+      value: 0.9262653
       objectReference: {fileID: 0}
     - target: {fileID: 403724487, guid: 2647ee2da2c79d3419f4e0cd8032e236, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.008993257
+      value: -0.006905421
       objectReference: {fileID: 0}
     - target: {fileID: 2652450169145678352, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}

@@ -128,15 +128,15 @@ namespace MyTownProject.Interaction
                     return;
                 }
 
-                currentTarget = _closestTarget;
+                if(_closestTarget != null)
+                    currentTarget = _closestTarget;
                 if (currentTarget)
                 {
                     //If there is already a target, Reset.
-                    ResetTarget();
-                    return;
+                    print("eNTER Talk mode");
+                    if(enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
                 }
 
-                if (enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
             }
 
             if (Keyboard.current.shiftKey.wasReleasedThisFrame)
@@ -156,7 +156,9 @@ namespace MyTownProject.Interaction
             }
 
         }
+        #region Old Raycast Method
         private void CheckForInteractable()
+
         {
             Ray ray = new Ray(_transform.position + _offset, _transform.forward);
             Debug.DrawRay(ray.origin, ray.direction * _interactRayLength);
@@ -202,7 +204,8 @@ namespace MyTownProject.Interaction
                 uiEventChannel.HideTextInteract();
             }
         }
-
+        #endregion
+        #region Old Overlap Sphere Method
         private void Interactor()
         {
             _numFound = Physics.OverlapSphereNonAlloc(_interactionPoint.position, _interactionPointRadius, _colliders, _interactableMask);
@@ -225,7 +228,7 @@ namespace MyTownProject.Interaction
                 uiEventChannel.HideTextInteract();
             }
         }
-
+        #endregion
         void CheckTimer()
         {
             if (_startTimer)
@@ -270,12 +273,14 @@ namespace MyTownProject.Interaction
                 for (int i = 0; i < nearbyTargets.Length; i++)
                 {
                     float dis = GetDistance(transform, nearbyTargets[i].transform);
-                    if (dis < closestDis)
-                    {
+                    float ang = GetAngle(nearbyTargets[i].transform.position, transform.position,transform.forward, 1);
+                    if(ang <= maxNoticeAngle){
+                        if (dis < closestDis){
                         closestTarget = nearbyTargets[i].transform;
-                        closestDis = dis;
+                        closestDis = dis; 
                         _NPCIndex = i;
-                    }
+                        }
+                }
 
                 }
 
@@ -289,11 +294,16 @@ namespace MyTownProject.Interaction
             currentYOffset = h - half_h;
             if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
             Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
-            if (Blocked(tarPos)) return;
-            if (GetDistance(transform, closestTarget) > closestTarget.GetComponent<NPC_Interact>().MaxRange)
-            {
-                print("OutOfRange " + closestTarget.gameObject.name);
+            if(Blocked(tarPos)){
+                if(_closestTarget){
+                    _closestTarget = null;
+                    ResetTarget();
+                }
                 return;
+            } 
+            if(GetDistance(transform, closestTarget) > closestTarget.GetComponent<NPC_Interact>().MaxRange){
+                    print(GetDistance(transform, closestTarget));
+                    return; // not working right with findByAngle
             }
             _closestTarget = closestTarget;
 
@@ -320,6 +330,12 @@ namespace MyTownProject.Interaction
 
             return distance;
         }
+        float GetAngle(Vector3 loc1, Vector3 loc2, Vector3 forwardDir, int lockYAxis){
+            Vector3 dir = loc1 - loc2;
+            if(lockYAxis == 1) dir.y = 0;
+            float angle = Vector3.Angle(forwardDir, dir);
+            return angle;
+        }
 
         void FoundTarget()
         {
@@ -340,7 +356,7 @@ namespace MyTownProject.Interaction
                 {
                     remainingTargets.Remove(t);
                 }
-                if (GetDistance(transform, t) > t.GetComponent<NPCManager>().maxDistance)
+                if (GetDistance(transform, t) > t.GetComponent<NPC_Interact>().MaxRange)
                 {
                     remainingTargets.Remove(t);
                 }
@@ -359,21 +375,26 @@ namespace MyTownProject.Interaction
                 // MAKE IT FIND NEXT CLOSEST
                 // AND NOT BE OUT OF MAXDISTANCE
                 //Need To Check if New TArgets have come in or Out!!!!!!!!!!!!!!!!!!!!!!!!!!
-                float closestDis = 50f;
+                float closestDis = 10f; // change to max range
                 Transform closetT = null;
-                foreach (var target in remainingTargets)
-                {
-                    float dis = GetDistance(currentTarget, target);
-                    if (dis < closestDis)
-                    {
-                        closetT = target;
-                        closestDis = dis;
+                foreach(var target in nearbyTargets){
+                    if(target.gameObject.GetComponent<NPCManager>().beenTargeted == false){
+                        float disP = GetDistance(transform, target.transform);
+                        if(disP <= target.transform.GetComponent<NPC_Interact>().MaxRange){
+                            float disN = GetDistance(currentTarget, target.transform);
+                            if(disN < closestDis){
+                                closetT = target.transform;
+                                closestDis = disN;
+                            }
+                        }
+                        
                     }
+                
                 }
                 if (!closetT) ResetTarget();
 
                 currentTarget = closetT;
-                remainingTargets.Remove(closetT);
+                closetT.gameObject.GetComponent<NPCManager>().beenTargeted = true;
             }
 
             yield return null;
@@ -423,37 +444,39 @@ namespace MyTownProject.Interaction
             Quaternion rot = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * lookAtSmoothing);
         }
-        private void IconControl()
-        {
+        private void IconControl(){
+        
 
-
-            if (_closestTarget != null)
-            {
-                foreach (var npc in nearbyTargets)
-                {
-                    if (npc.gameObject.transform == _closestTarget)
-                    {
-                        npc.gameObject.GetComponent<NPCManager>().Hovered(); // Make Event for Npc UI to be turned on
-                    }
-                    else npc.gameObject.GetComponent<NPCManager>().HideHover(); // Make Event for Npc UI to be turned off
+            if(_closestTarget != null){
+                foreach(var npc in nearbyTargets){
+                if(npc.gameObject.transform == _closestTarget && tarr != true){
+                    npc.gameObject.GetComponent<NPCManager>().Hovered();
                 }
+                else npc.gameObject.GetComponent<NPCManager>().HideHover();
+                }   
+            }
+            else{
+                foreach(var npc in nearbyTargets){
+                    npc.gameObject.GetComponent<NPCManager>().HideHover();
+                } 
+
             }
             // NOT WORKING RIGHT ?
-            if (currentTarget != null)
-            {
-                foreach (var npc in nearbyTargets)
-                {
-                    if (npc.gameObject.transform == currentTarget)
-                    {
-                        npc.gameObject.GetComponent<NPCManager>().Targeted(); // Make Event to target
+            if(currentTarget != null){
+                foreach(var npc in nearbyTargets){
+                    if(npc.gameObject.transform == currentTarget && tarr == false){
+                        npc.gameObject.GetComponent<NPCManager>().Targeted();
+                        tarr = true;
                     }
-                    else npc.gameObject.GetComponent<NPCManager>().HideHover(); // Make Event for Npc UI to be turned off
+                    else {
+                        npc.gameObject.GetComponent<NPCManager>().HideHover();
+                        tarr = false;
+                    }   
                 }
             }
-
-
-
         }
+    bool tarr;
+
         private void LockOnCanvas()
         {
             lockOnCanvas.position = pos;

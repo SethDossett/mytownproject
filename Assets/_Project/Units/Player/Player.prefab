@@ -836,9 +836,12 @@ MonoBehaviour:
   _numFound: 0
   currentTarget: {fileID: 0}
   _closestTarget: {fileID: 0}
-  camFollow: {fileID: 0}
-  lockOnCanvas: {fileID: 0}
-  enemyTarget_Locator: {fileID: 0}
+  camFollow: {fileID: 4865366147799491415, guid: 7a78d83c03eadf241b5ccd3972da8108,
+    type: 3}
+  lockOnCanvas: {fileID: 3705501887761280296, guid: c8bd0e03a72a99942906d9471c5c4f6f,
+    type: 3}
+  enemyTarget_Locator: {fileID: 7605786663176252342, guid: 9f05942bb6229b646910358906b12fab,
+    type: 3}
   cinemachineAnimator: {fileID: 0}
   zeroVert_Look: 0
   noticeZone: 10
