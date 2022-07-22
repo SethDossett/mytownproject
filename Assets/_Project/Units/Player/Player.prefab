@@ -824,7 +824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
-  CC: {fileID: 0}
+  CC: {fileID: 3156670061489872913}
   _interactionPoint: {fileID: 3742338039152190084}
   _interactionPointRadius: 0.35
   _interactableMask:

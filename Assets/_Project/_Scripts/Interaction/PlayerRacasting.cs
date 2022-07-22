@@ -62,7 +62,7 @@ namespace MyTownProject.Interaction
         [SerializeField] int _NPCIndex;
         bool enemyLocked;
         float currentYOffset;
-        Vector3 pos;
+        [SerializeField] Vector3 pos;
         
         float _timer = 0;
         bool _startTimer;
@@ -128,8 +128,10 @@ namespace MyTownProject.Interaction
                     return;
                 }
 
-                if(_closestTarget != null)
+                if(_closestTarget != null){
+                    pos = _closestTarget.position;
                     currentTarget = _closestTarget;
+                }
                 if (currentTarget)
                 {
                     //If there is already a target, Reset.
@@ -272,15 +274,18 @@ namespace MyTownProject.Interaction
                 if (nearbyTargets.Length <= 0) return;
                 for (int i = 0; i < nearbyTargets.Length; i++)
                 {
-                    float dis = GetDistance(transform, nearbyTargets[i].transform);
-                    float ang = GetAngle(nearbyTargets[i].transform.position, transform.position,transform.forward, 1);
-                    if(ang <= maxNoticeAngle){
-                        if (dis < closestDis){
-                        closestTarget = nearbyTargets[i].transform;
-                        closestDis = dis; 
-                        _NPCIndex = i;
+                    Transform t = nearbyTargets[i].transform;
+                    float dis = GetDistance(transform, t);
+                    float ang = GetAngle(t.position, transform.position, transform.forward, 1);
+                    if(t.gameObject.GetComponent<NPC_Interact>().CanBeTargeted){
+                        if(ang <= maxNoticeAngle){
+                            if (dis < closestDis){
+                            closestTarget = t;
+                            closestDis = dis; 
+                            _NPCIndex = i;
+                            }
                         }
-                }
+                    }
 
                 }
 
@@ -446,7 +451,7 @@ namespace MyTownProject.Interaction
         }
         private void IconControl(){
         
-
+            // needs to lose hover if goes out of range, or lose closest target
             if(_closestTarget != null){
                 foreach(var npc in nearbyTargets){
                 if(npc.gameObject.transform == _closestTarget && tarr != true){
