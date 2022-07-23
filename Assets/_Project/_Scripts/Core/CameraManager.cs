@@ -25,6 +25,7 @@ namespace MyTownProject.Core
         private void SwitchToFreeLook() => _animator.Play(playerFreeLook01);
         private void SwitchToTargeting() => _animator.Play(targetCamera);
         private void SwitchToDialogue() => _animator.Play(dialogueVCam01);
+
         #endregion
 
 
@@ -43,13 +44,17 @@ namespace MyTownProject.Core
             _animator = GetComponent<Animator>();
         }
 
-        private void EnterDialogue(GameObject npc, TextAsset inkJSON) => SwitchToDialogue(); 
+        private void EnterDialogue(GameObject npc, TextAsset inkJSON) {
+            print("dialogue camera");
+            //SwitchToDialogue();
+        }  
 
 
-        void CheckGameState(GameStateManager.GameState state)
+        private void CheckGameState(GameStateManager.GameState state)
         {
             if (state == GameStateManager.GameState.GAME_PLAYING)
             {
+                print("freelook");
                 SwitchToFreeLook();
             }
         }

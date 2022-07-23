@@ -59,7 +59,7 @@ namespace MyTownProject.Core
         private void HandleCutscene()
         {
             Debug.Log($"State = {gameState}");
-            Time.timeScale = 0f;
+            Time.timeScale = 1f;
             InputManager.ToggleActionMap(InputManager.inputActions.UI);
             myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }

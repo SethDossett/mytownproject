@@ -109,7 +109,7 @@ namespace MyTownProject.Interaction
                 return;
 
             //CheckForInteractable();//old version
-            //Interactor();//old version
+            Interactor();//old version
 
             camFollow.lockedTarget = enemyLocked;
             //defMovement.lockMovement = enemyLocked;
