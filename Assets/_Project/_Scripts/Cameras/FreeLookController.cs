@@ -10,6 +10,7 @@ namespace MyTownProject.Cameras{
     {
         [SerializeField] DialogueEventsSO DialogueEvents;
         CinemachineFreeLook cam;
+        [SerializeField] CinemachineTargetGroup _targetGroup;
 
         [Range(0.1f, 2f)][SerializeField] float _lensZoomSpeed = 0.5f;
 
@@ -25,6 +26,7 @@ namespace MyTownProject.Cameras{
 
         void TalkingToNPC(GameObject go, TextAsset text){
             StartCoroutine(ChangeLens(25));
+            
         }
         void BackToPlayerView(){
             StartCoroutine(ChangeLens(40));

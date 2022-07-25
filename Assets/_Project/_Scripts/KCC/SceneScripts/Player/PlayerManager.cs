@@ -11,6 +11,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] TransformEventSO PlayerRef;
         [SerializeField] ActionSO teleportPlayer;
         TheCharacterController cc;
+        public Transform _LookAtPoint;
         public UnityAction<TheCharacterController> OnCharacterTeleport;
         public bool isBeingTeleportedTo { get; set; }
 

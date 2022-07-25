@@ -41,6 +41,8 @@ namespace MyTownProject.Interaction
         Transform cam;
         //DefMovement defMovement;
         [SerializeField] Transform enemyTarget_Locator;
+        [SerializeField] TransformEventSO _targetingEvent;
+        [SerializeField] GeneralEventSO _unTargetingEvent;
 
 
         [Tooltip("StateDrivenMethod for Switching Cameras")]
@@ -345,6 +347,7 @@ namespace MyTownProject.Interaction
         void FoundTarget()
         {
             print("Found");
+            _targetingEvent.RaiseEvent(currentTarget);
             CC.TransitionToState(CharacterState.Targeting);
             currentTarget.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
@@ -408,6 +411,7 @@ namespace MyTownProject.Interaction
         void ResetTarget()
         {
             print("reset");
+            _unTargetingEvent.RaiseEvent();
             CC.TransitionToState(CharacterState.Default);
             _startTimer = false;
             _timer = 0;

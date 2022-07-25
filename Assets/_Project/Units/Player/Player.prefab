@@ -737,6 +737,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
+  _LookAtPoint: {fileID: 6875040720797426742}
 --- !u!114 &4936703484560184526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -826,7 +827,7 @@ MonoBehaviour:
   uiEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
   CC: {fileID: 3156670061489872913}
   _interactionPoint: {fileID: 3742338039152190084}
-  _interactionPointRadius: 0.35
+  _interactionPointRadius: 1
   _interactableMask:
     serializedVersion: 2
     m_Bits: 256
@@ -836,15 +837,13 @@ MonoBehaviour:
   _numFound: 0
   currentTarget: {fileID: 0}
   _closestTarget: {fileID: 0}
-  camFollow: {fileID: 4865366147799491415, guid: 7a78d83c03eadf241b5ccd3972da8108,
-    type: 3}
-  lockOnCanvas: {fileID: 3705501887761280296, guid: c8bd0e03a72a99942906d9471c5c4f6f,
-    type: 3}
+  camFollow: {fileID: 0}
+  lockOnCanvas: {fileID: 0}
   enemyTarget_Locator: {fileID: 7605786663176252342, guid: 9f05942bb6229b646910358906b12fab,
     type: 3}
   cinemachineAnimator: {fileID: 0}
   zeroVert_Look: 0
-  noticeZone: 10
+  noticeZone: 5
   lookAtSmoothing: 2
   maxNoticeAngle: 60
   crossHair_Scale: 0.1
@@ -853,6 +852,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _NPCIndex: 0
+  pos: {x: 0, y: 0, z: 0}
   dis: 0
   nearbyTargets: []
   remainingTargets: []
@@ -1884,7 +1884,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9139564883578328897}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.914, z: 0.537}
+  m_LocalPosition: {x: 0, y: 0.914, z: 1.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6875040722021663315}
