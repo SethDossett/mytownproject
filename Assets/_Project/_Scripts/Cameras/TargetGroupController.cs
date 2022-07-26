@@ -66,8 +66,7 @@ public class TargetGroupController : MonoBehaviour
         targetGroup.AddMember(t, weight, radius);
     }
 
-
-
+    
         
     
 

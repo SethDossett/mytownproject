@@ -9,6 +9,8 @@ namespace MyTownProject.Core
     {
         [Header("References")]
         [SerializeField] DialogueEventsSO dialogueEvents;
+        [SerializeField] TransformEventSO _targetingEvent;
+        [SerializeField] GeneralEventSO _unTargetingEvent;
         private NPC_StateHandler npcStateHandler;
         private CinemachineFreeLook _freeLookCamera_01;
         private CinemachineVirtualCamera _virtualCamera_01;
@@ -33,11 +35,15 @@ namespace MyTownProject.Core
         {
             dialogueEvents.onEnter += EnterDialogue;
             GameStateManager.OnGameStateChanged += CheckGameState;
+            _targetingEvent.OnRaiseEvent += EnterTargeting;
+            _unTargetingEvent.OnRaiseEvent += SwitchToFreeLook;
         }
         private void OnDisable()
         {
             dialogueEvents.onEnter -= EnterDialogue;
             GameStateManager.OnGameStateChanged -= CheckGameState;
+            _targetingEvent.OnRaiseEvent -= EnterTargeting;
+            _unTargetingEvent.OnRaiseEvent -= SwitchToFreeLook;
         }
         private void Start()
         {
@@ -57,6 +63,10 @@ namespace MyTownProject.Core
                 print("freelook");
                 SwitchToFreeLook();
             }
+        }
+
+        void EnterTargeting(Transform t){
+            SwitchToTargeting();
         }
     }
 }

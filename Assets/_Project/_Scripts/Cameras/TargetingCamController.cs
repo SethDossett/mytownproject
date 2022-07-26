@@ -5,16 +5,20 @@ using Cinemachine;
 
 public class TargetingCamController : MonoBehaviour
 {
-    CinemachineVirtualCamera cam;
-    CinemachineOrbitalTransposer transposer; 
+    CinemachineFreeLook cam;
+    CinemachineTransposer transposer; 
+    Camera mainCam;
     [SerializeField] Transform player;
 
     void Start()
     {
-        cam = GetComponent<CinemachineVirtualCamera>();
-        transposer = cam.GetCinemachineComponent<CinemachineOrbitalTransposer>();
-    
+        mainCam = Camera.main;
+        //cam = GetComponent<CinemachineFreeLook>();
+        //transposer = cam.GetCinemachineComponent<CinemachineTransposer>();
+        
     }
 
-    // Update is called once per frame
+    private void LateUpdate() {
+       //mainCam.transform.position = player.position;
+    }
 }

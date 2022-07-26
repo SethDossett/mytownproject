@@ -102,6 +102,8 @@ namespace KinematicCharacterController.Examples
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
 
+        Camera cam;
+
         private void Awake()
         {
             // Handle initial state
@@ -186,6 +188,7 @@ namespace KinematicCharacterController.Examples
         private void SetInitialReferences()
         {
             animator = GetComponent<Animator>();
+            cam = Camera.main;
 
         }
         public void SetInputs(ref PlayerCharacterInputs inputs)
@@ -365,6 +368,9 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Targeting:
                     {
+
+                        float yawCamera = cam.transform.rotation.eulerAngles.y;
+                        currentRotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera,0), 15 * deltaTime);
                         break;
                     }
             }
