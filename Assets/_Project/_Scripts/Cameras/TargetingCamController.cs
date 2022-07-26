@@ -20,5 +20,6 @@ public class TargetingCamController : MonoBehaviour
 
     private void LateUpdate() {
        //mainCam.transform.position = player.position;
+       transform.position = new Vector3(player.position.x, 1, player.position.z);
     }
 }
