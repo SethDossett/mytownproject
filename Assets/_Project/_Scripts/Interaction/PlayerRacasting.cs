@@ -352,7 +352,9 @@ namespace MyTownProject.Interaction
             currentTarget.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
             anim.SetLayerWeight(1, 1);
-            cinemachineAnimator.Play("TargetingCamera01");
+            //cinemachineAnimator.Play("TargetingCamera01");
+            cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false;
+            cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
             enemyLocked = true;
             _closestTarget.GetComponent<NPC_Interact>().SetTargeted(); //Set NPC as been targeted.
 

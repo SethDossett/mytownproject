@@ -841,6 +841,8 @@ MonoBehaviour:
   lockOnCanvas: {fileID: 0}
   enemyTarget_Locator: {fileID: 7605786663176252342, guid: 9f05942bb6229b646910358906b12fab,
     type: 3}
+  _targetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}
+  _unTargetingEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
   cinemachineAnimator: {fileID: 0}
   zeroVert_Look: 0
   noticeZone: 5

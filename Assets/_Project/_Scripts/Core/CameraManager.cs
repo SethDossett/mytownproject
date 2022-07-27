@@ -66,7 +66,7 @@ namespace MyTownProject.Core
         }
 
         void EnterTargeting(Transform t){
-            SwitchToTargeting();
+            //SwitchToTargeting();
         }
     }
 }
