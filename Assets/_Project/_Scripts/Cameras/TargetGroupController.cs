@@ -12,6 +12,7 @@ public class TargetGroupController : MonoBehaviour
     [SerializeField] DialogueEventsSO DialogueEvents;
     [SerializeField] TransformEventSO playerRef;
     [SerializeField] TransformEventSO _targetingEvent;
+    [SerializeField] TransformEventSO _changeToNextTarget;
     [SerializeField] GeneralEventSO _unTargetingEvent;
     CinemachineTargetGroup targetGroup;
     Transform _player;
@@ -21,6 +22,7 @@ public class TargetGroupController : MonoBehaviour
         DialogueEvents.onEnter += TalkingToNPC;
         DialogueEvents.onExit += BackToPlayerView;
         _targetingEvent.OnRaiseEvent += Targeting;
+        _changeToNextTarget.OnRaiseEvent += ChangeTarget;
         _unTargetingEvent.OnRaiseEvent += BackToPlayerView;
     }
     void OnDisable(){
@@ -28,6 +30,7 @@ public class TargetGroupController : MonoBehaviour
         DialogueEvents.onEnter -= TalkingToNPC;
         DialogueEvents.onExit -= BackToPlayerView;
         _targetingEvent.OnRaiseEvent -= Targeting;
+        _changeToNextTarget.OnRaiseEvent = ChangeTarget;
         _unTargetingEvent.OnRaiseEvent -= BackToPlayerView;
     }
     void Start(){
@@ -49,6 +52,12 @@ public class TargetGroupController : MonoBehaviour
     void Targeting(Transform t){
         Transform toTarget = t.gameObject.GetComponent<NPC_Manager>()._head.transform;
         AddingMember(toTarget, 1, 1);
+    }
+    void ChangeTarget(Transform newtarget){
+        RemoveTargets();
+        Transform toTarget = newtarget.gameObject.GetComponent<NPC_Manager>()._head.transform;
+        AddingMember(toTarget, 1, 1);
+        AddPlayer();
     }
 
     void BackToPlayerView(){

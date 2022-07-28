@@ -101,7 +101,6 @@ namespace KinematicCharacterController.Examples
 
             switch(currentCharacterState){
                 case CharacterState.Default:{
-                    print("Character state is Default");
                     if (FollowTransform)
                     {
                         if (InvertX)
@@ -207,7 +206,6 @@ namespace KinematicCharacterController.Examples
                     break;
                 }
                 case CharacterState.Targeting:{
-                    print("Character state is Targeting");
 
                         Vector3 dir = target.position - Transform.position;
                         dir.y = 0;

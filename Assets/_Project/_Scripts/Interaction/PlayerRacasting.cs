@@ -42,6 +42,7 @@ namespace MyTownProject.Interaction
         //DefMovement defMovement;
         [SerializeField] Transform enemyTarget_Locator;
         [SerializeField] TransformEventSO _targetingEvent;
+        [SerializeField] TransformEventSO _changeTargetEvent;
         [SerializeField] GeneralEventSO _unTargetingEvent;
 
 
@@ -68,7 +69,7 @@ namespace MyTownProject.Interaction
         
         float _timer = 0;
         bool _startTimer;
-        float _nextTargetWindow;
+        [Range(0, 0.5f)][SerializeField] float _nextTargetWindow = 0.25f;
         [SerializeField] float dis;
 
         [Header("Targets")]
@@ -119,7 +120,10 @@ namespace MyTownProject.Interaction
 
             IconControl();
             CheckTimer();
-
+            if(_closestTarget != null){
+               
+                //StillClosestTarget(_closestTarget);
+            }
             if (Keyboard.current.shiftKey.wasPressedThisFrame)
             {
                 print("Fire");
@@ -312,8 +316,28 @@ namespace MyTownProject.Interaction
                     print(GetDistance(transform, closestTarget));
                     return; // not working right with findByAngle
             }
+            if(GetAngle(closestTarget.position,transform.position,transform.forward, 1) > maxNoticeAngle){
+                print(GetAngle(closestTarget.position,transform.position,transform.forward, 1));
+                _closestTarget = null;
+                return;
+            }
             _closestTarget = closestTarget;
 
+        }
+
+        void StillClosestTarget(Transform t){
+             if(Blocked(t.position)){
+                    _closestTarget = null;
+                    return;
+                }
+                if(GetAngle(t.position,transform.position,transform.forward, 1) > maxNoticeAngle){
+                    _closestTarget = null;
+                    return;
+                }
+                if(GetDistance(transform, t) > t.gameObject.GetComponent<NPC_Interact>().MaxRange){
+                    _closestTarget = null;
+                    return;
+                }
         }
 
         bool Blocked(Vector3 t)
@@ -405,6 +429,7 @@ namespace MyTownProject.Interaction
 
                 currentTarget = closetT;
                 closetT.gameObject.GetComponent<NPC_Interact>().beenTargeted = true;
+                _changeTargetEvent.RaiseEvent(currentTarget);
             }
 
             yield return null;
@@ -414,10 +439,10 @@ namespace MyTownProject.Interaction
         {
             print("reset");
             _unTargetingEvent.RaiseEvent();
-            CC.TransitionToState(CharacterState.Default);
             _startTimer = false;
             _timer = 0;
             //nearbyTargets[i].GetComponent<NPC_Interact>().Hovered();
+            cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
             lockOnCanvas.gameObject.SetActive(false);
             currentTarget = null;
             _closestTarget = null;

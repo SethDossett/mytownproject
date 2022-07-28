@@ -737,6 +737,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
+  UntargetEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
   _LookAtPoint: {fileID: 6875040720797426742}
 --- !u!114 &4936703484560184526
 MonoBehaviour:
@@ -842,6 +843,7 @@ MonoBehaviour:
   enemyTarget_Locator: {fileID: 7605786663176252342, guid: 9f05942bb6229b646910358906b12fab,
     type: 3}
   _targetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}
+  _changeTargetEvent: {fileID: 11400000, guid: 9923ca68d96e1c94cab833e062b6b065, type: 2}
   _unTargetingEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
   cinemachineAnimator: {fileID: 0}
   zeroVert_Look: 0
@@ -855,6 +857,7 @@ MonoBehaviour:
     m_Bits: 256
   _NPCIndex: 0
   pos: {x: 0, y: 0, z: 0}
+  _nextTargetWindow: 0.25
   dis: 0
   nearbyTargets: []
   remainingTargets: []

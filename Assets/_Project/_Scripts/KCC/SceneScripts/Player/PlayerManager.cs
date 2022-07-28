@@ -10,19 +10,21 @@ namespace KinematicCharacterController.Examples
     {
         [SerializeField] TransformEventSO PlayerRef;
         [SerializeField] ActionSO teleportPlayer;
+        [SerializeField] GeneralEventSO UntargetEvent;
         TheCharacterController cc;
         public Transform _LookAtPoint;
         public UnityAction<TheCharacterController> OnCharacterTeleport;
         public bool isBeingTeleportedTo { get; set; }
 
-
         private void OnEnable()
         {
             teleportPlayer.OnTeleport += TeleportPlayer;
+            UntargetEvent.OnRaiseEvent += Untargeting;
         }
         private void OnDisable()
         {
             teleportPlayer.OnTeleport -= TeleportPlayer;
+            UntargetEvent.OnRaiseEvent -= Untargeting;
         }
         private void Awake()
         {
@@ -46,6 +48,9 @@ namespace KinematicCharacterController.Examples
             }
 
             isBeingTeleportedTo = false;
+        }
+        private void Untargeting(){
+            cc.TransitionToState(CharacterState.Default);
         }
 
        

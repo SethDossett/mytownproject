@@ -9,6 +9,7 @@ namespace MyTownProject.Cameras{
     public class FreeLookController : MonoBehaviour
     {
         [SerializeField] DialogueEventsSO DialogueEvents;
+        [SerializeField] GeneralEventSO UntargetEvent;
         CinemachineFreeLook cam;
         [SerializeField] CinemachineTargetGroup _targetGroup;
 
@@ -18,10 +19,12 @@ namespace MyTownProject.Cameras{
             cam = GetComponent<CinemachineFreeLook>();
             DialogueEvents.onEnter += TalkingToNPC;
             DialogueEvents.onExit += BackToPlayerView;
+            UntargetEvent.OnRaiseEvent += Untarget;
         }
         void OnDisable(){
             DialogueEvents.onEnter -= TalkingToNPC;
             DialogueEvents.onExit -= BackToPlayerView;
+            UntargetEvent.OnRaiseEvent -= Untarget;
         }
 
         void TalkingToNPC(GameObject go, TextAsset text){
@@ -30,6 +33,11 @@ namespace MyTownProject.Cameras{
         }
         void BackToPlayerView(){
             StartCoroutine(ChangeLens(40));
+        }
+        void Untarget(){
+            print("jay");
+            StartCoroutine(RecenterYAxis(0,0));
+            StartCoroutine(RecenterXAxis(0,0));
         }
 
         IEnumerator ChangeLens(float value){
@@ -45,6 +53,25 @@ namespace MyTownProject.Cameras{
             }
             cam.m_Lens.FieldOfView = endValue;
             
+        }
+
+        IEnumerator RecenterXAxis(float waitTime, float recenteringTime){
+            cam.m_RecenterToTargetHeading.m_WaitTime = waitTime;
+            cam.m_RecenterToTargetHeading.m_RecenteringTime = recenteringTime;
+            cam.m_RecenterToTargetHeading.m_enabled = true;
+            yield return new WaitForSecondsRealtime(waitTime + recenteringTime);
+            yield return new WaitForEndOfFrame();
+            cam.m_RecenterToTargetHeading.m_enabled = false;
+            yield break;
+        }
+        IEnumerator RecenterYAxis(float waitTime, float recenteringTime){
+            cam.m_YAxisRecentering.m_WaitTime = waitTime;
+            cam.m_YAxisRecentering.m_RecenteringTime = recenteringTime;
+            cam.m_YAxisRecentering.m_enabled = true;
+            yield return new WaitForSecondsRealtime(waitTime + recenteringTime);
+            yield return new WaitForEndOfFrame();
+            cam.m_YAxisRecentering.m_enabled = false;
+            yield break;
         }
 
     }
