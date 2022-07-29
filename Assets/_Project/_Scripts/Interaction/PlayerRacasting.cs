@@ -63,7 +63,8 @@ namespace MyTownProject.Interaction
         [SerializeField] bool findByAngle;
         [SerializeField] LayerMask targetLayers;
         [SerializeField] int _NPCIndex;
-        bool enemyLocked;
+        bool _enemyLocked;
+        bool _isTalking;
         float currentYOffset;
         [SerializeField] Vector3 pos;
         
@@ -112,18 +113,22 @@ namespace MyTownProject.Interaction
                 return;
 
             //CheckForInteractable();//old version
-            Interactor();//old version
+            //Interactor();//old version
 
-            camFollow.lockedTarget = enemyLocked;
+            camFollow.lockedTarget = _enemyLocked;
             //defMovement.lockMovement = enemyLocked;
 
 
             IconControl();
             CheckTimer();
+            CheckForIInteractable();
+
             if(_closestTarget != null){
-               
-                //StillClosestTarget(_closestTarget);
+                if(!StillClosestTarget(_closestTarget)){
+                    _closestTarget = null;
+                }
             }
+            
             if (Keyboard.current.shiftKey.wasPressedThisFrame)
             {
                 print("Fire");
@@ -140,9 +145,10 @@ namespace MyTownProject.Interaction
                 }
                 if (currentTarget)
                 {
-                    //If there is already a target, Reset.
+                    
                     print("eNTER Talk mode");
-                    if(enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
+                     // so we dont lose closest target when switching
+                    if(_enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
                 }
 
             }
@@ -153,11 +159,11 @@ namespace MyTownProject.Interaction
                     _startTimer = true;
             }
 
-            if (!enemyLocked)
+            if (!_enemyLocked)
             {
                 CheckForNPCS();
             }
-            if (enemyLocked)
+            if (_enemyLocked)
             {
                 if (!TargetOnRange()) ResetTarget();
                 LookAtTarget();
@@ -214,28 +220,28 @@ namespace MyTownProject.Interaction
         }
         #endregion
         #region Old Overlap Sphere Method
-        private void Interactor()
-        {
-            _numFound = Physics.OverlapSphereNonAlloc(_interactionPoint.position, _interactionPointRadius, _colliders, _interactableMask);
-
-            
-            if (_numFound > 0)
-            {
-                _interactable = _colliders[0].GetComponentInParent<IInteractable>();
-                
-                if (_interactable == null) return;
-
-                uiEventChannel.ShowTextInteract(_interactable.Prompt);
-
-                if (_interact.WasPerformedThisFrame()) _interactable.OnInteract(this);
-            }
-            else
-            {
-                if (_interactable != null) _interactable = null;
-
-                uiEventChannel.HideTextInteract();
-            }
-        }
+        //private void Interactor()
+        //{
+        //    _numFound = Physics.OverlapSphereNonAlloc(_interactionPoint.position, _interactionPointRadius, _colliders, _interactableMask);
+//
+        //    
+        //    if (_numFound > 0)
+        //    {
+        //        _interactable = _colliders[0].GetComponentInParent<IInteractable>();
+        //        
+        //        if (_interactable == null) return;
+//
+        //        uiEventChannel.ShowTextInteract(_interactable.Prompt);
+//
+        //        if (_interact.WasPerformedThisFrame()) _interactable.OnInteract(this);
+        //    }
+        //    else
+        //    {
+        //        if (_interactable != null) _interactable = null;
+//
+        //        uiEventChannel.HideTextInteract();
+        //    }
+        //}
         #endregion
         void CheckTimer()
         {
@@ -283,7 +289,7 @@ namespace MyTownProject.Interaction
                     Transform t = nearbyTargets[i].transform;
                     float dis = GetDistance(transform, t);
                     float ang = GetAngle(t.position, transform.position, transform.forward, 1);
-                    if(t.gameObject.GetComponent<NPC_Interact>().CanBeTargeted){
+                    if(t.gameObject.GetComponent<IInteractable>().CanBeTargeted){
                         if(ang <= maxNoticeAngle){
                             if (dis < closestDis){
                             closestTarget = t;
@@ -312,8 +318,9 @@ namespace MyTownProject.Interaction
                 }
                 return;
             } 
-            if(GetDistance(transform, closestTarget) > closestTarget.GetComponent<NPC_Interact>().MaxRange){
+            if(GetDistance(transform, closestTarget) > closestTarget.GetComponent<IInteractable>().MaxRange){
                     print(GetDistance(transform, closestTarget));
+                    _closestTarget = null;
                     return; // not working right with findByAngle
             }
             if(GetAngle(closestTarget.position,transform.position,transform.forward, 1) > maxNoticeAngle){
@@ -325,19 +332,14 @@ namespace MyTownProject.Interaction
 
         }
 
-        void StillClosestTarget(Transform t){
-             if(Blocked(t.position)){
-                    _closestTarget = null;
-                    return;
-                }
-                if(GetAngle(t.position,transform.position,transform.forward, 1) > maxNoticeAngle){
-                    _closestTarget = null;
-                    return;
-                }
-                if(GetDistance(transform, t) > t.gameObject.GetComponent<NPC_Interact>().MaxRange){
-                    _closestTarget = null;
-                    return;
-                }
+        bool StillClosestTarget(Transform t){
+            if(Blocked(t.position)) return false;
+            
+            if(GetAngle(t.position,transform.position,transform.forward, 1) > maxNoticeAngle) return false;
+            
+            if(GetDistance(transform, t) > t.gameObject.GetComponent<IInteractable>().MaxRange) return false;
+
+            return true;
         }
 
         bool Blocked(Vector3 t)
@@ -379,7 +381,7 @@ namespace MyTownProject.Interaction
             //cinemachineAnimator.Play("TargetingCamera01");
             cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false;
             cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
-            enemyLocked = true;
+            _enemyLocked = true;
             _closestTarget.GetComponent<NPC_Interact>().SetTargeted(); //Set NPC as been targeted.
 
             for (int i = 0; i < nearbyTargets.Length; i++)
@@ -390,7 +392,7 @@ namespace MyTownProject.Interaction
                 {
                     remainingTargets.Remove(t);
                 }
-                if (GetDistance(transform, t) > t.GetComponent<NPC_Interact>().MaxRange)
+                if (GetDistance(transform, t) > t.GetComponent<IInteractable>().MaxRange)
                 {
                     remainingTargets.Remove(t);
                 }
@@ -446,7 +448,7 @@ namespace MyTownProject.Interaction
             lockOnCanvas.gameObject.SetActive(false);
             currentTarget = null;
             _closestTarget = null;
-            enemyLocked = false;
+            _enemyLocked = false;
             anim.SetLayerWeight(1, 0);
             cinemachineAnimator.Play("PlayerFreeLook01");
             _NPCIndex = 0;
@@ -511,12 +513,69 @@ namespace MyTownProject.Interaction
                 }
             }
         }
-    bool tarr;
+        bool tarr;
 
         private void LockOnCanvas()
         {
             lockOnCanvas.position = pos;
             lockOnCanvas.localScale = Vector3.one * ((cam.position - pos).magnitude * crossHair_Scale);
+        }
+
+        void CheckForIInteractable(){
+            
+            if(currentTarget == null){
+                if(_closestTarget == null){
+                    ClearIInteractable();
+                    return;
+                }
+                else{
+                    _interactable = _closestTarget.gameObject.GetComponent<IInteractable>();
+                    if (_interactable == null){
+                        ClearIInteractable();
+                        return;
+                    } 
+                    if(!_interactable.CanBeInteractedWith){
+                        ClearIInteractable();
+                        return;
+                    }
+
+                    uiEventChannel.ShowTextInteract(_interactable.Prompt);
+
+                    if (_interact.WasPerformedThisFrame()){
+                        _interactable.OnInteract(this);
+                        _isTalking = true;
+                        print("interacted with ClosestTarget");
+                        return;
+                    }  
+                     
+                }
+            }
+            else{
+                _interactable = currentTarget.gameObject.GetComponent<IInteractable>();
+                if (_interactable == null){
+                    ClearIInteractable();
+                    return;
+                }
+                if(!_interactable.CanBeInteractedWith){
+                    ClearIInteractable();
+                    return;
+                }
+
+                uiEventChannel.ShowTextInteract(_interactable.Prompt);
+
+                if (_interact.WasPerformedThisFrame()){
+                    _interactable.OnInteract(this);
+                    _isTalking = true;
+                    print("interacted with CurrentTarget");
+                    return;
+                } 
+            }
+
+
+        }
+        void ClearIInteractable(){
+            if (_interactable != null) _interactable = null;
+            uiEventChannel.HideTextInteract();
         }
 
         private void OnDrawGizmos()
