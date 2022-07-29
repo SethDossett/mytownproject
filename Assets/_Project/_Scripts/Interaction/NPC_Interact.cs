@@ -100,9 +100,12 @@ namespace MyTownProject.Interaction
             _NPCName.text = _name; 
         }
         public void HideHover(){
-            if(_interactionUI.activeInHierarchy){
-                _interactionUI.SetActive(false);
+            if(!_interactionUI.activeInHierarchy){
+                _interactionUI.SetActive(true);
             }
+
+            if(_hoverIcon.activeInHierarchy)
+                _hoverIcon.SetActive(false);
         }
         public void Targeted(){
             if(!_interactionUI.activeInHierarchy){

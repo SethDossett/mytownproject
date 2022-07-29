@@ -119,7 +119,7 @@ namespace MyTownProject.Interaction
             //defMovement.lockMovement = enemyLocked;
 
 
-            IconControl();
+            //IconControl();
             CheckTimer();
             CheckForIInteractable();
 
@@ -165,7 +165,7 @@ namespace MyTownProject.Interaction
             }
             if (_enemyLocked)
             {
-                if (!TargetOnRange()) ResetTarget();
+                if (!TargetOnRange()) StartCoroutine(FindNextTarget());
                 LookAtTarget();
             }
 
@@ -328,6 +328,7 @@ namespace MyTownProject.Interaction
                 _closestTarget = null;
                 return;
             }
+            closestTarget.gameObject.GetComponent<NPC_Interact>().Hovered();
             _closestTarget = closestTarget;
 
         }
@@ -375,7 +376,8 @@ namespace MyTownProject.Interaction
             print("Found");
             _targetingEvent.RaiseEvent(currentTarget);
             CC.TransitionToState(CharacterState.Targeting);
-            currentTarget.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
+            currentTarget.gameObject.GetComponent<NPC_Interact>().HideHover();
+            currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
             anim.SetLayerWeight(1, 1);
             //cinemachineAnimator.Play("TargetingCamera01");
@@ -404,13 +406,10 @@ namespace MyTownProject.Interaction
             print("FindNext");
             _startTimer = false;
             _timer = 0;
-
+            currentTarget.gameObject.GetComponent<NPC_Interact>().HideHover();
             if (remainingTargets.Count <= 0) ResetTarget();
             else
             {
-                // MAKE IT FIND NEXT CLOSEST
-                // AND NOT BE OUT OF MAXDISTANCE
-                //Need To Check if New TArgets have come in or Out!!!!!!!!!!!!!!!!!!!!!!!!!!
                 float closestDis = 10f; // change to max range
                 Transform closetT = null;
                 foreach(var target in nearbyTargets){
@@ -430,6 +429,7 @@ namespace MyTownProject.Interaction
                 if (!closetT) ResetTarget();
 
                 currentTarget = closetT;
+                currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted();
                 closetT.gameObject.GetComponent<NPC_Interact>().beenTargeted = true;
                 _changeTargetEvent.RaiseEvent(currentTarget);
             }
@@ -440,10 +440,10 @@ namespace MyTownProject.Interaction
         void ResetTarget()
         {
             print("reset");
+            currentTarget.gameObject.GetComponent<NPC_Interact>().UnTargeted();
             _unTargetingEvent.RaiseEvent();
             _startTimer = false;
             _timer = 0;
-            //nearbyTargets[i].GetComponent<NPC_Interact>().Hovered();
             cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
             lockOnCanvas.gameObject.SetActive(false);
             currentTarget = null;
@@ -484,7 +484,6 @@ namespace MyTownProject.Interaction
         }
         private void IconControl(){
         
-            // needs to lose hover if goes out of range, or lose closest target
             if(_closestTarget != null){
                 foreach(var npc in nearbyTargets){
                 if(npc.gameObject.transform == _closestTarget && tarr != true){
@@ -585,8 +584,6 @@ namespace MyTownProject.Interaction
             Gizmos.DrawWireSphere(_interactionPoint.position, _interactionPointRadius);
             
             Gizmos.DrawWireSphere(transform.position, noticeZone);
-            
-            
         }
 
     }
