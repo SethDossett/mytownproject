@@ -122,11 +122,12 @@ namespace MyTownProject.Interaction
             //IconControl();
             CheckTimer();
             CheckForIInteractable();
+            
 
             if(_closestTarget != null){
-                if(!StillClosestTarget(_closestTarget)){
+
+                if(!StillClosestTarget(_closestTarget))
                     _closestTarget = null;
-                }
             }
             
             if (Keyboard.current.shiftKey.wasPressedThisFrame)
@@ -296,8 +297,11 @@ namespace MyTownProject.Interaction
                             closestDis = dis; 
                             _NPCIndex = i;
                             }
+                            
                         }
+                        
                     }
+                    
 
                 }
 
@@ -332,7 +336,6 @@ namespace MyTownProject.Interaction
             _closestTarget = closestTarget;
 
         }
-
         bool StillClosestTarget(Transform t){
             if(Blocked(t.position)) return false;
             
@@ -390,6 +393,7 @@ namespace MyTownProject.Interaction
             {
                 Transform t = nearbyTargets[i].transform;
                 remainingTargets.Add(t);
+                print(GetDistance(transform,t) + t.gameObject.name);
                 if (t.gameObject.GetComponent<NPC_Interact>().beenTargeted == true)
                 {
                     remainingTargets.Remove(t);
@@ -413,6 +417,7 @@ namespace MyTownProject.Interaction
                 float closestDis = 10f; // change to max range
                 Transform closetT = null;
                 foreach(var target in nearbyTargets){
+                    print(GetAngle(transform.position, target.transform.position, transform.forward, 1));
                     if(target.gameObject.GetComponent<NPC_Interact>().beenTargeted == false){
                         float disP = GetDistance(transform, target.transform);
                         if(disP <= target.transform.GetComponent<NPC_Interact>().MaxRange){
@@ -484,6 +489,8 @@ namespace MyTownProject.Interaction
         }
         private void IconControl(){
         
+
+
             if(_closestTarget != null){
                 foreach(var npc in nearbyTargets){
                 if(npc.gameObject.transform == _closestTarget && tarr != true){
@@ -513,7 +520,12 @@ namespace MyTownProject.Interaction
             }
         }
         bool tarr;
-
+        bool _hovering;
+        bool _targeting;
+        void HideHover(Transform t){
+            if(t != _closestTarget)
+                t.gameObject.GetComponent<NPC_Interact>().HideHover();
+         }
         private void LockOnCanvas()
         {
             lockOnCanvas.position = pos;

@@ -756,7 +756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f527eed4d979fc4bbff60dff5493f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <MaxRange>k__BackingField: 5
+  <MaxRange>k__BackingField: 6.5
   <CanBeInteractedWith>k__BackingField: 1
   <CanBeTargeted>k__BackingField: 1
   <Prompt>k__BackingField: Talk

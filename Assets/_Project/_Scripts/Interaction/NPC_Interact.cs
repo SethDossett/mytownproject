@@ -18,6 +18,8 @@ namespace MyTownProject.Interaction
         [SerializeField] private TextAsset inkJSON;
         bool _hasInteracted = false;
         bool _isFocusing = false;
+        bool _hovered;
+        bool _targeted;
 
 
         [Header("References")]
@@ -77,35 +79,37 @@ namespace MyTownProject.Interaction
         }
 
         public void Hovered(){
+            if(_hovered) return;
 
-        if(!_interactionUI.activeInHierarchy){
-            _interactionUI.SetActive(true);
-
-        }
-        else{
+            if(!_interactionUI.activeInHierarchy){
+                _interactionUI.SetActive(true);
+            }
             ShowIcon(hshow);
 
             if(ShowName){
                 if(!_titlName.activeInHierarchy)
                     _titlName.SetActive(true);
-
-                   
+                
             }
             else{
                 if(_titlName.activeInHierarchy)
                 _titlName.SetActive(false);  
             } 
-        }
-
-            _NPCName.text = _name; 
+            _NPCName.text = _name;
+            _hovered = true;
+             
         }
         public void HideHover(){
+            _hovered = false;
             if(!_interactionUI.activeInHierarchy){
                 _interactionUI.SetActive(true);
             }
 
             if(_hoverIcon.activeInHierarchy)
                 _hoverIcon.SetActive(false);
+
+            if(_titlName.activeInHierarchy)
+                _titlName.SetActive(false);    
         }
         public void Targeted(){
             if(!_interactionUI.activeInHierarchy){
