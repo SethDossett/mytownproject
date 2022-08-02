@@ -10,7 +10,8 @@ namespace MyTownProject.Interaction
 {
     public class NPC_Interact : MonoBehaviour, IInteractable
     {
-        [field: SerializeField] public float MaxRange { get; private set; }
+        [field: SerializeField] public float MaxNoticeRange { get; private set; }
+        [field: SerializeField] public float MaxInteractRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
         [field: SerializeField] public bool CanBeTargeted { get; private set; }
         [field: SerializeField] public string Prompt { get; private set; }
@@ -18,7 +19,7 @@ namespace MyTownProject.Interaction
         [SerializeField] private TextAsset inkJSON;
         bool _hasInteracted = false;
         bool _isFocusing = false;
-        bool _hovered;
+        public bool _hovered; // if hovered false then dont hide hover
         bool _targeted;
 
 
@@ -119,6 +120,15 @@ namespace MyTownProject.Interaction
             if(_titlName.activeInHierarchy)
                 _titlName.SetActive(false);    
             ShowIcon(tshow);
+        }
+        public void HideTargeted(){
+            if(!_interactionUI.activeInHierarchy)
+                _interactionUI.SetActive(true);
+
+            if(_targetIcon.activeInHierarchy)
+                _targetIcon.SetActive(false);    
+
+
         }
         public void UnTargeted(){
             if(!_interactionUI.activeInHierarchy)

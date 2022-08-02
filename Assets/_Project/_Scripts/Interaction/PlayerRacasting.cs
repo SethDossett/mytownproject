@@ -119,15 +119,17 @@ namespace MyTownProject.Interaction
             //defMovement.lockMovement = enemyLocked;
 
 
-            //IconControl();
+            IconControl();
             CheckTimer();
             CheckForIInteractable();
             
 
             if(_closestTarget != null){
 
-                if(!StillClosestTarget(_closestTarget))
+                if(!StillClosestTarget(_closestTarget)){
+                    HideHover(_closestTarget);
                     _closestTarget = null;
+                }
             }
             
             if (Keyboard.current.shiftKey.wasPressedThisFrame)
@@ -194,7 +196,7 @@ namespace MyTownProject.Interaction
                     return;
                 }
 
-                if (!_interactable.CanBeInteractedWith || _hitinfo.distance > _interactable.MaxRange)
+                if (!_interactable.CanBeInteractedWith || _hitinfo.distance > _interactable.MaxNoticeRange)
                 {
                     if (_interactable != null)
                     {
@@ -293,18 +295,13 @@ namespace MyTownProject.Interaction
                     if(t.gameObject.GetComponent<IInteractable>().CanBeTargeted){
                         if(ang <= maxNoticeAngle){
                             if (dis < closestDis){
-                            closestTarget = t;
-                            closestDis = dis; 
-                            _NPCIndex = i;
+                                closestTarget = t;
+                                closestDis = dis; 
+                                _NPCIndex = i;
                             }
-                            
                         }
-                        
                     }
-                    
-
                 }
-
             }
 
             if (!closestTarget) return;
@@ -322,26 +319,33 @@ namespace MyTownProject.Interaction
                 }
                 return;
             } 
-            if(GetDistance(transform, closestTarget) > closestTarget.GetComponent<IInteractable>().MaxRange){
-                    print(GetDistance(transform, closestTarget));
-                    _closestTarget = null;
-                    return; // not working right with findByAngle
+            if(GetDistance(transform, closestTarget) > closestTarget.GetComponent<IInteractable>().MaxNoticeRange){
+                print(GetDistance(transform, closestTarget));
+                _closestTarget = null;
+                return; // not working right with findByAngle
             }
             if(GetAngle(closestTarget.position,transform.position,transform.forward, 1) > maxNoticeAngle){
                 print(GetAngle(closestTarget.position,transform.position,transform.forward, 1));
                 _closestTarget = null;
                 return;
             }
-            closestTarget.gameObject.GetComponent<NPC_Interact>().Hovered();
+            //closestTarget.gameObject.GetComponent<NPC_Interact>().Hovered(); // being called over and over, or 
             _closestTarget = closestTarget;
 
         }
         bool StillClosestTarget(Transform t){
-            if(Blocked(t.position)) return false;
-            
-            if(GetAngle(t.position,transform.position,transform.forward, 1) > maxNoticeAngle) return false;
-            
-            if(GetDistance(transform, t) > t.gameObject.GetComponent<IInteractable>().MaxRange) return false;
+            if(Blocked(t.position)){
+                HideHover(t);
+                 return false;
+            }
+            if(GetAngle(t.position,transform.position,transform.forward, 1) > maxNoticeAngle){
+                HideHover(t);
+                 return false;
+            }
+            if(GetDistance(transform, t) > t.gameObject.GetComponent<IInteractable>().MaxNoticeRange){
+                HideHover(t);
+                return false;
+            } 
 
             return true;
         }
@@ -379,7 +383,7 @@ namespace MyTownProject.Interaction
             print("Found");
             _targetingEvent.RaiseEvent(currentTarget);
             CC.TransitionToState(CharacterState.Targeting);
-            currentTarget.gameObject.GetComponent<NPC_Interact>().HideHover();
+            HideHover(currentTarget);
             currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
             anim.SetLayerWeight(1, 1);
@@ -398,7 +402,7 @@ namespace MyTownProject.Interaction
                 {
                     remainingTargets.Remove(t);
                 }
-                if (GetDistance(transform, t) > t.GetComponent<IInteractable>().MaxRange)
+                if (GetDistance(transform, t) > t.GetComponent<IInteractable>().MaxNoticeRange)
                 {
                     remainingTargets.Remove(t);
                 }
@@ -410,7 +414,7 @@ namespace MyTownProject.Interaction
             print("FindNext");
             _startTimer = false;
             _timer = 0;
-            currentTarget.gameObject.GetComponent<NPC_Interact>().HideHover();
+            HideHover(currentTarget);
             if (remainingTargets.Count <= 0) ResetTarget();
             else
             {
@@ -420,7 +424,7 @@ namespace MyTownProject.Interaction
                     print(GetAngle(transform.position, target.transform.position, transform.forward, 1));
                     if(target.gameObject.GetComponent<NPC_Interact>().beenTargeted == false){
                         float disP = GetDistance(transform, target.transform);
-                        if(disP <= target.transform.GetComponent<NPC_Interact>().MaxRange){
+                        if(disP <= target.transform.GetComponent<IInteractable>().MaxNoticeRange){
                             float disN = GetDistance(currentTarget, target.transform);
                             if(disN < closestDis){
                                 closetT = target.transform;
@@ -445,7 +449,7 @@ namespace MyTownProject.Interaction
         void ResetTarget()
         {
             print("reset");
-            currentTarget.gameObject.GetComponent<NPC_Interact>().UnTargeted();
+            currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
             _unTargetingEvent.RaiseEvent();
             _startTimer = false;
             _timer = 0;
@@ -467,7 +471,7 @@ namespace MyTownProject.Interaction
                 NPC_Interact m = npc.GetComponent<NPC_Interact>(); // set npc back to not being targeted
                 m.UnsetTargeted();
                 m.UnTargeted();
-                m.HideHover();
+                HideHover(m.gameObject.transform);
             }
             remainingTargets.Clear();
         }
@@ -488,43 +492,38 @@ namespace MyTownProject.Interaction
             transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * lookAtSmoothing);
         }
         private void IconControl(){
-        
-
 
             if(_closestTarget != null){
                 foreach(var npc in nearbyTargets){
-                if(npc.gameObject.transform == _closestTarget && tarr != true){
-                    npc.gameObject.GetComponent<NPC_Interact>().Hovered();
-                }
-                else npc.gameObject.GetComponent<NPC_Interact>().HideHover();
-                }   
-            }
-            else{
-                foreach(var npc in nearbyTargets){
-                    npc.gameObject.GetComponent<NPC_Interact>().HideHover();
+                    if(npc.gameObject.transform != _closestTarget){
+                        HideHover(npc.gameObject.transform);
+                    }
+                    else{
+                        npc.gameObject.GetComponent<NPC_Interact>()._hovered = false;
+                        npc.gameObject.GetComponent<NPC_Interact>().Hovered();
+                    } 
                 } 
-
             }
-            // NOT WORKING RIGHT ?
+
             if(currentTarget != null){
                 foreach(var npc in nearbyTargets){
-                    if(npc.gameObject.transform == currentTarget && tarr == false){
-                        npc.gameObject.GetComponent<NPC_Interact>().Targeted();
-                        tarr = true;
+                    if(npc.gameObject.transform != currentTarget){
+                        npc.gameObject.GetComponent<NPC_Interact>().HideTargeted();
                     }
-                    else {
-                        npc.gameObject.GetComponent<NPC_Interact>().HideHover();
-                        tarr = false;
-                    }   
-                }
+                } 
             }
+            
         }
         bool tarr;
         bool _hovering;
         bool _targeting;
         void HideHover(Transform t){
-            if(t != _closestTarget)
-                t.gameObject.GetComponent<NPC_Interact>().HideHover();
+            if(!t.gameObject.GetComponent<NPC_Interact>()._hovered) return;
+            
+            t.gameObject.GetComponent<NPC_Interact>().HideHover();
+            t.gameObject.GetComponent<NPC_Interact>()._hovered = true;
+
+            print($"Hide Hover" + t.gameObject.name);
          }
         private void LockOnCanvas()
         {
@@ -539,30 +538,13 @@ namespace MyTownProject.Interaction
                     ClearIInteractable();
                     return;
                 }
-                else{
-                    _interactable = _closestTarget.gameObject.GetComponent<IInteractable>();
-                    if (_interactable == null){
-                        ClearIInteractable();
-                        return;
-                    } 
-                    if(!_interactable.CanBeInteractedWith){
-                        ClearIInteractable();
-                        return;
-                    }
-
-                    uiEventChannel.ShowTextInteract(_interactable.Prompt);
-
-                    if (_interact.WasPerformedThisFrame()){
-                        _interactable.OnInteract(this);
-                        _isTalking = true;
-                        print("interacted with ClosestTarget");
-                        return;
-                    }  
-                     
-                }
+                else TestForInteraction(_closestTarget);
             }
-            else{
-                _interactable = currentTarget.gameObject.GetComponent<IInteractable>();
+            else TestForInteraction(currentTarget);
+        }
+
+        void TestForInteraction(Transform t){
+            _interactable = t.gameObject.GetComponent<IInteractable>();
                 if (_interactable == null){
                     ClearIInteractable();
                     return;
@@ -571,17 +553,19 @@ namespace MyTownProject.Interaction
                     ClearIInteractable();
                     return;
                 }
-
+                if(GetDistance(transform, t) > _interactable.MaxInteractRange){
+                    ClearIInteractable();
+                    return;
+                } 
+                
                 uiEventChannel.ShowTextInteract(_interactable.Prompt);
 
                 if (_interact.WasPerformedThisFrame()){
                     _interactable.OnInteract(this);
                     _isTalking = true;
-                    print("interacted with CurrentTarget");
+                    Debug.Log($"interacted with {t.gameObject.name}");
                     return;
                 } 
-            }
-
 
         }
         void ClearIInteractable(){

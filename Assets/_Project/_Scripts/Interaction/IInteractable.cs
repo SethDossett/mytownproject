@@ -2,7 +2,8 @@ namespace MyTownProject.Interaction
 {
     public interface IInteractable
     {
-        float MaxRange { get; }
+        float MaxNoticeRange { get; }
+        float MaxInteractRange { get; }
         bool CanBeInteractedWith { get; }
         bool CanBeTargeted { get; }
         string Prompt { get; }
