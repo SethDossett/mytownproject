@@ -20,6 +20,7 @@ namespace KinematicCharacterController.Examples
         {
             teleportPlayer.OnTeleport += TeleportPlayer;
             UntargetEvent.OnRaiseEvent += Untargeting;
+            
         }
         private void OnDisable()
         {

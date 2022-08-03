@@ -65,6 +65,10 @@ namespace KinematicCharacterController.Examples
         public float JumpPreGroundingGraceTime = 0f;
         public float JumpPostGroundingGraceTime = 0f;
 
+        [Header("Jumping")]
+        public float _climbSpeedY = 2f;
+        public float _climbSpeedX = 2f;
+
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
         public BonusOrientationMethod BonusOrientationMethod = BonusOrientationMethod.None;
@@ -409,12 +413,12 @@ namespace KinematicCharacterController.Examples
 
                             // Reorient velocity on slope
                             currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
-
+                            
                             // Calculate target velocity
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
                             Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
-
+                            
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
@@ -508,21 +512,36 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Climbing:
                     {
-                        transform.Translate(_moveInputVector * 5f* deltaTime);
-
                         float currentVelocityMagnitude = currentVelocity.magnitude;
 
-                       //Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
-                       //// Calculate target velocity
-                       //Vector3 inputRight = Motor.CharacterUp;
-                       //Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
-                       //Vector3 targetMovementVelocity = inputRight * MaxStableMoveSpeed;
-                       ////Motor.ForceUnground();
-                       //// Smooth movement Velocity
-                       //currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-                       //currentVelocity *= (1f / (1f + (Drag * deltaTime)));
-                       //currentVelocity += Gravity * deltaTime;
-                       ////currentVelocity += (Motor.CharacterUp * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                        Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
+                        if (currentVelocityMagnitude > 0f && Motor.GroundingStatus.SnappingPrevented)
+                        {
+                            // Take the normal from where we're coming from
+                            Vector3 groundPointToCharacter = Motor.TransientPosition - Motor.GroundingStatus.GroundPoint;
+                            if (Vector3.Dot(currentVelocity, groundPointToCharacter) >= 0f)
+                            {
+                                effectiveGroundNormal = Motor.GroundingStatus.OuterGroundNormal;
+                            }
+                            else
+                            {
+                                effectiveGroundNormal = Motor.GroundingStatus.InnerGroundNormal;
+                            }
+                        }
+                        Motor.ForceUnground();
+                        currentVelocity.y = _moveInputVector.y * _climbSpeedY;
+                        currentVelocity.z = -_moveInputVector.x * _climbSpeedX;
+                        currentVelocity.x = 0;
+                        animator.SetLayerWeight(2, 1);
+
+                        // Reorient velocity on slope
+                        //currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
+                        //// Calculate target velocity
+                        //Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
+                        //Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+                        //Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
+                        //// Smooth movement Velocity
+                        //currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));;
                         break;
                     }
                 case CharacterState.Targeting:

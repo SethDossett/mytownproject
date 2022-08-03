@@ -199,7 +199,7 @@ namespace KinematicCharacterController
         /// <summary>
         /// Maximum slope angle on which the character can be stable
         /// </summary>    
-        [Range(0f, 89f)]
+        [Range(0f, 180f)]
         [Tooltip("Maximum slope angle on which the character can be stable")]
         public float MaxStableSlopeAngle = 60f;
         /// <summary>
