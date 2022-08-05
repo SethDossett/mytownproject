@@ -127,7 +127,7 @@ namespace MyTownProject.Interaction
             if(_closestTarget != null){
 
                 if(!StillClosestTarget(_closestTarget)){
-                    HideHover(_closestTarget);
+                    //_closestTarget.gameObject.GetComponent<NPC_Interact>()._hovered = false;
                     _closestTarget = null;
                 }
             }
@@ -330,20 +330,25 @@ namespace MyTownProject.Interaction
                 return;
             }
             //closestTarget.gameObject.GetComponent<NPC_Interact>().Hovered(); // being called over and over, or 
+            if (_closestTarget != null) {
+                //_closestTarget.gameObject.GetComponent<NPC_Interact>()._hovered = false;
+            }
+
             _closestTarget = closestTarget;
+            _closestTarget.gameObject.GetComponent<NPC_Interact>()._hovered = true;
 
         }
         bool StillClosestTarget(Transform t){
             if(Blocked(t.position)){
-                HideHover(t);
+                //HideHover(t);
                  return false;
             }
             if(GetAngle(t.position,transform.position,transform.forward, 1) > maxNoticeAngle){
-                HideHover(t);
+                //HideHover(t);
                  return false;
             }
             if(GetDistance(transform, t) > t.gameObject.GetComponent<IInteractable>().MaxNoticeRange){
-                HideHover(t);
+                //HideHover(t);
                 return false;
             } 
 
@@ -383,8 +388,9 @@ namespace MyTownProject.Interaction
             print("Found");
             _targetingEvent.RaiseEvent(currentTarget);
             CC.TransitionToState(CharacterState.Targeting);
-            HideHover(currentTarget);
-            currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
+            currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = true;
+            //HideHover(currentTarget);
+            //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
             anim.SetLayerWeight(1, 1);
             //cinemachineAnimator.Play("TargetingCamera01");
@@ -414,7 +420,8 @@ namespace MyTownProject.Interaction
             print("FindNext");
             _startTimer = false;
             _timer = 0;
-            HideHover(currentTarget);
+            //HideHover(currentTarget);
+            currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
             if (remainingTargets.Count <= 0) ResetTarget();
             else
             {
@@ -438,7 +445,8 @@ namespace MyTownProject.Interaction
                 if (!closetT) ResetTarget();
 
                 currentTarget = closetT;
-                currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted();
+                currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = true;
+                //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted();
                 closetT.gameObject.GetComponent<NPC_Interact>().beenTargeted = true;
                 _changeTargetEvent.RaiseEvent(currentTarget);
             }
@@ -449,7 +457,8 @@ namespace MyTownProject.Interaction
         void ResetTarget()
         {
             print("reset");
-            currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
+            //currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
+            currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
             _unTargetingEvent.RaiseEvent();
             _startTimer = false;
             _timer = 0;
@@ -470,8 +479,8 @@ namespace MyTownProject.Interaction
             {
                 NPC_Interact m = npc.GetComponent<NPC_Interact>(); // set npc back to not being targeted
                 m.UnsetTargeted();
-                m.UnTargeted();
-                HideHover(m.gameObject.transform);
+                //m.UnTargeted();
+                //HideHover(m.gameObject.transform);
             }
             remainingTargets.Clear();
         }
@@ -496,19 +505,30 @@ namespace MyTownProject.Interaction
             if(_closestTarget != null){
                 foreach(var npc in nearbyTargets){
                     if(npc.gameObject.transform != _closestTarget){
-                        HideHover(npc.gameObject.transform);
+                        //HideHover(npc.gameObject.transform);
+                        npc.gameObject.GetComponent<NPC_Interact>()._hovered = false;
                     }
                     else{
-                        npc.gameObject.GetComponent<NPC_Interact>()._hovered = false;
-                        npc.gameObject.GetComponent<NPC_Interact>().Hovered();
+                        //npc.gameObject.GetComponent<NPC_Interact>()._hovered = false;
+                        //npc.gameObject.GetComponent<NPC_Interact>().Hovered();
                     } 
                 } 
+            }
+            else
+            {
+                foreach (var npc in nearbyTargets)
+                {
+                    
+                    npc.gameObject.GetComponent<NPC_Interact>()._hovered = false;
+                    
+                }
+                
             }
 
             if(currentTarget != null){
                 foreach(var npc in nearbyTargets){
                     if(npc.gameObject.transform != currentTarget){
-                        npc.gameObject.GetComponent<NPC_Interact>().HideTargeted();
+                        //npc.gameObject.GetComponent<NPC_Interact>().HideTargeted();
                     }
                 } 
             }
@@ -520,7 +540,7 @@ namespace MyTownProject.Interaction
         void HideHover(Transform t){
             if(!t.gameObject.GetComponent<NPC_Interact>()._hovered) return;
             
-            t.gameObject.GetComponent<NPC_Interact>().HideHover();
+            //t.gameObject.GetComponent<NPC_Interact>().HideHover();
             t.gameObject.GetComponent<NPC_Interact>()._hovered = true;
 
             print($"Hide Hover" + t.gameObject.name);

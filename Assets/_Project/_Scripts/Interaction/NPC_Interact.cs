@@ -20,7 +20,7 @@ namespace MyTownProject.Interaction
         bool _hasInteracted = false;
         bool _isFocusing = false;
         public bool _hovered; // if hovered false then dont hide hover
-        bool _targeted;
+        public bool _targeted;
 
 
         [Header("References")]
@@ -40,7 +40,7 @@ namespace MyTownProject.Interaction
         int tshow = 1;
     #endregion
 
-    public bool beenTargeted;
+        public bool beenTargeted;
 
         private void OnEnable()
         {
@@ -79,63 +79,64 @@ namespace MyTownProject.Interaction
             dialogueEvents.Enter(gameObject, inkJSON);
         }
 
-        public void Hovered(){
-            if(_hovered) return;
-
-            if(!_interactionUI.activeInHierarchy){
+        void Start()
+        {
+            if (!_interactionUI.activeInHierarchy)
                 _interactionUI.SetActive(true);
-            }
-            ShowIcon(hshow);
 
-            if(ShowName){
-                if(!_titlName.activeInHierarchy)
-                    _titlName.SetActive(true);
+        }
+        void Update()
+        {
+            if (_targeted)
+            {
+                _hovered = false;
+                if (_hoverIcon.activeInHierarchy)
+                    _hoverIcon.SetActive(false);
+                if (_titlName.activeInHierarchy)
+                    _titlName.SetActive(false);
+                if (!_targetIcon.activeInHierarchy)
+                    _targetIcon.SetActive(true);
                 
             }
-            else{
-                if(_titlName.activeInHierarchy)
-                _titlName.SetActive(false);  
-            } 
-            _NPCName.text = _name;
-            _hovered = true;
-             
-        }
-        public void HideHover(){
-            _hovered = false;
-            if(!_interactionUI.activeInHierarchy){
-                _interactionUI.SetActive(true);
+            else
+            {
+                if (_targetIcon.activeInHierarchy)
+                    _targetIcon.SetActive(false);
+
+                if (_hovered)
+                {
+                    if (!_hoverIcon.activeInHierarchy)
+                    {
+                        print("HoverTurnedOn " + gameObject.name);
+                        _hoverIcon.SetActive(true);
+                    }
+
+                    if (ShowName)
+                    {
+                        if (!_titlName.activeInHierarchy)
+                            _titlName.SetActive(true);
+                        _NPCName.text = _name;
+                    }
+                }
+                else
+                {
+                    
+                    if (_hoverIcon.activeInHierarchy)
+                    {
+                        print("HoverTurnedOff " + gameObject.name);
+                        _hoverIcon.SetActive(false);
+                    }
+                    if (_titlName.activeInHierarchy)
+                        _titlName.SetActive(false);
+                }
             }
-
-            if(_hoverIcon.activeInHierarchy)
-                _hoverIcon.SetActive(false);
-
-            if(_titlName.activeInHierarchy)
-                _titlName.SetActive(false);    
         }
-        public void Targeted(){
-            if(!_interactionUI.activeInHierarchy){
-                _interactionUI.SetActive(true);
-            }
-
-            if(_titlName.activeInHierarchy)
-                _titlName.SetActive(false);    
-            ShowIcon(tshow);
-        }
-        public void HideTargeted(){
-            if(!_interactionUI.activeInHierarchy)
-                _interactionUI.SetActive(true);
-
-            if(_targetIcon.activeInHierarchy)
-                _targetIcon.SetActive(false);    
-
-
-        }
-        public void UnTargeted(){
-            if(!_interactionUI.activeInHierarchy)
-                _interactionUI.SetActive(true);
-
-            ShowIcon(hshow);
-        }
+            
+        
+        
+        
+        
+        
 
 
         public void SetTargeted(){
@@ -151,19 +152,6 @@ namespace MyTownProject.Interaction
 
 
 
-        private void ShowIcon(int i){
-            if(i == hshow){
-                if(_targetIcon.activeInHierarchy)
-                    _targetIcon.SetActive(false);
-                if(!_hoverIcon.activeInHierarchy)
-                    _hoverIcon.SetActive(true);
-            }
-            else{
-                if(_hoverIcon.activeInHierarchy)
-                    _hoverIcon.SetActive(false);
-                if(!_targetIcon.activeInHierarchy)
-                    _targetIcon.SetActive(true);
-            }
-        }
+        
     }
 }
