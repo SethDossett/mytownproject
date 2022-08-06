@@ -89,6 +89,7 @@ namespace KinematicCharacterController.Examples
 
 
         public CharacterState CurrentCharacterState { get; private set; }
+        public static event Action<CharacterState> OnPlayerStateChanged;
 
         private Collider[] _probedColliders = new Collider[8];
         private RaycastHit[] _probedHits = new RaycastHit[8];
@@ -159,8 +160,10 @@ namespace KinematicCharacterController.Examples
                     {
                         break;
                     }
-
+                
             }
+            OnPlayerStateChanged?.Invoke(state);
+
         }
 
         /// <summary>
@@ -183,6 +186,8 @@ namespace KinematicCharacterController.Examples
                         break;
                     }
             }
+
+
         }
 
         /// <summary>
@@ -533,6 +538,16 @@ namespace KinematicCharacterController.Examples
                         currentVelocity.z = -_moveInputVector.x * _climbSpeedX;
                         currentVelocity.x = 0;
                         animator.SetLayerWeight(2, 1);
+                        if(currentVelocity.y == 0f)
+                        {
+                            if(animator.speed != 0f)
+                                animator.speed = 0f;
+                        }
+                        else
+                        {
+                            if (animator.speed != 1f)
+                                animator.speed = 1f;
+                        }
 
                         // Reorient velocity on slope
                         //currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;

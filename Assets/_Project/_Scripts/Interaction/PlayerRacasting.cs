@@ -80,14 +80,16 @@ namespace MyTownProject.Interaction
         #endregion
         private void OnEnable()
         {
-            GameStateManager.OnGameStateChanged += CheckState;
+            GameStateManager.OnGameStateChanged += CheckGameState;
+            TheCharacterController.OnPlayerStateChanged += CheckPlayerState;
             _inputActions = new NewControls();
             _interact = _inputActions.GamePlay.Interact;
             _interact.Enable();
         }
         private void OnDisable()
         {
-            GameStateManager.OnGameStateChanged -= CheckState;
+            GameStateManager.OnGameStateChanged -= CheckGameState;
+            TheCharacterController.OnPlayerStateChanged -= CheckPlayerState;
             _interact.Disable();
         }
         private void Start()
@@ -100,17 +102,28 @@ namespace MyTownProject.Interaction
             lockOnCanvas.gameObject.SetActive(false);
             _startTimer = false;
         }
-        void CheckState(GameStateManager.GameState state)
+        void CheckGameState(GameStateManager.GameState state)
         {
             if(state == _game_Playing_State)
                 canRaycast = true;
             else
                 canRaycast = false;
         }
+        void CheckPlayerState(CharacterState state)
+        {
+            if (state == CharacterState.Climbing)
+                canRaycast = false;
+            else if (state == CharacterState.Default)
+                canRaycast = true;
+            else
+                canRaycast= true;
+
+        }
         private void Update()
         {
             if (!canRaycast)
                 return;
+            
 
             //CheckForInteractable();//old version
             //Interactor();//old version
