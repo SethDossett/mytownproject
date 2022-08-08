@@ -547,7 +547,7 @@ namespace KinematicCharacterController.Examples
                         Motor.SetPosition(new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z));
                         currentVelocity.x = 0;
                         currentVelocity.z = 0;
-                        animator.SetLayerWeight(2, 1);
+                        
                         if(currentVelocity.y == 0f)
                         {
                             if(animator.speed != 0f)
@@ -748,7 +748,7 @@ namespace KinematicCharacterController.Examples
         protected void OnLeaveStableGround()
         {
             Debug.Log("jump");
-            _jumpRequested = true;
+            //_jumpRequested = true;
         }
 
         public void OnDiscreteCollisionDetected(Collider hitCollider)

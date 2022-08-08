@@ -16,20 +16,25 @@ namespace KinematicCharacterController.Examples
         public UnityAction<TheCharacterController> OnCharacterTeleport;
         public bool isBeingTeleportedTo { get; set; }
 
+        Animator _animator;
+
         private void OnEnable()
         {
             teleportPlayer.OnTeleport += TeleportPlayer;
             UntargetEvent.OnRaiseEvent += Untargeting;
-            
+            TheCharacterController.OnPlayerStateChanged += StateChange;
         }
         private void OnDisable()
         {
             teleportPlayer.OnTeleport -= TeleportPlayer;
             UntargetEvent.OnRaiseEvent -= Untargeting;
+            TheCharacterController.OnPlayerStateChanged -= StateChange;
         }
         private void Awake()
         {
             cc = GetComponent<TheCharacterController>();
+            _animator = GetComponent<Animator>();
+            
             PlayerRef.RaiseEvent(transform);
         }
         private void TeleportPlayer(Vector3 location, Quaternion rotation)
@@ -53,7 +58,32 @@ namespace KinematicCharacterController.Examples
         private void Untargeting(){
             cc.TransitionToState(CharacterState.Default);
         }
-
+        void StateChange(CharacterState state){
+            if(state == CharacterState.Default){
+                DefaultState();
+            }
+            if(state == CharacterState.Climbing){
+                ClimbingState();
+            }
+            if(state == CharacterState.Targeting){
+                TargetingState();
+            }
+        }
+        void DefaultState(){
+            _animator.SetLayerWeight(0, 1);
+            _animator.SetLayerWeight(1, 0);
+            _animator.SetLayerWeight(2, 0);
+        }
+        void ClimbingState(){
+            _animator.SetLayerWeight(2, 1);
+            _animator.SetLayerWeight(0, 0);
+            _animator.SetLayerWeight(1, 0);
+        }
+        void TargetingState(){
+            _animator.SetLayerWeight(1, 1);
+            _animator.SetLayerWeight(0, 0);
+            _animator.SetLayerWeight(2, 0);
+        }
        
     }
 }

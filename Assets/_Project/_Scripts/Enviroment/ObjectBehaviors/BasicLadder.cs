@@ -9,6 +9,9 @@ namespace MyTownProject.Enviroment{
     {   
         [SerializeField] float _minClimbAngle;
         [SerializeField] float _ladderHeight;
+        [SerializeField] float _heightOnLadder;
+        float _startHeight;
+        float _dot;
         int _numFound;
         [SerializeField] float _enterLadderRadius;
         [SerializeField] Vector3 _SphereCastOffset;
@@ -25,6 +28,7 @@ namespace MyTownProject.Enviroment{
         bool _onLadder;
 
        GameObject _player;
+       TheCharacterController CC;
 
         private void OnEnable() {
             inputActions.GamePlay.Enable();
@@ -40,7 +44,10 @@ namespace MyTownProject.Enviroment{
         private void Update() {
             if(!_checkForPlayer) return;
 
-            EnterLadder();
+            if(!_onLadder)
+                EnterLadder();
+            else 
+                ExitLadder();    
             
             
             
@@ -49,10 +56,9 @@ namespace MyTownProject.Enviroment{
             _numFound = Physics.OverlapSphereNonAlloc(transform.position + _SphereCastOffset, _enterLadderRadius, cols, _playerLayer); 
 
             if(_numFound > 0){
-                float dot = Vector3.Dot(transform.forward, cols[0].transform.forward);
-                if(dot <= _minClimbAngle){
+                _dot = Vector3.Dot(transform.forward, cols[0].transform.forward);
+                if(_dot <= _minClimbAngle && _dot >= -_minClimbAngle){
                     float value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
-                    print(value);
                     if(value >= 0.8f){
                         _timer += Time.unscaledDeltaTime;
 
@@ -68,11 +74,26 @@ namespace MyTownProject.Enviroment{
             }
         }
         void ExitLadder(){
-            
+            _heightOnLadder = _player.transform.position.y - _startHeight;
+
+            if(_heightOnLadder <= 0.1f){
+                float value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
+                if(value >= 0.5f){
+                    _timer += Time.unscaledDeltaTime;
+
+                    if(_timer >= _timeBuffer){
+                        SwitchToDefaltState();
+                        _timer = 0;
+                        return;
+                    }
+                }
+                else _timer = 0;
+            }
         }
         void SwitchToClimbingState(GameObject player){
+            _startHeight = player.transform.position.y;
             _player = player;
-           TheCharacterController CC = player.GetComponent<TheCharacterController>();
+           CC = player.GetComponent<TheCharacterController>();
            //_checkForPlayer = false;
            _onLadder = true;
            CC.TransitionToState(CharacterState.Climbing);
@@ -80,6 +101,12 @@ namespace MyTownProject.Enviroment{
            //play ladder jump into anim
            CC._newCenteredPosition = transform.position + _ladderPosOffset;
            print("SwitchedToClimbing");
+        }
+        void SwitchToDefaltState(){
+            CC.TransitionToState(CharacterState.Default);
+            _onLadder = false;
+            _ladderCollider.enabled = true;
+            print("SwitchedToDefault");
         }
 
         private void OnDrawGizmos()

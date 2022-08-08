@@ -405,7 +405,7 @@ namespace MyTownProject.Interaction
             //HideHover(currentTarget);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
-            anim.SetLayerWeight(1, 1);
+            //anim.SetLayerWeight(1, 1);
             //cinemachineAnimator.Play("TargetingCamera01");
             cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false;
             cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
@@ -480,7 +480,7 @@ namespace MyTownProject.Interaction
             currentTarget = null;
             _closestTarget = null;
             _enemyLocked = false;
-            anim.SetLayerWeight(1, 0);
+            //anim.SetLayerWeight(1, 0);
             cinemachineAnimator.Play("PlayerFreeLook01");
             _NPCIndex = 0;
             BeenTargetedReset();
