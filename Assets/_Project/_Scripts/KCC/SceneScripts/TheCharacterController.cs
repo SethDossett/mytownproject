@@ -69,6 +69,9 @@ namespace KinematicCharacterController.Examples
         public float _climbSpeedY = 2f;
         public float _climbSpeedX = 2f;
 
+        [Header("Climbing")]
+        public Vector3 _newCenteredPosition;
+
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
         public BonusOrientationMethod BonusOrientationMethod = BonusOrientationMethod.None;
@@ -108,6 +111,8 @@ namespace KinematicCharacterController.Examples
         private Vector3 lastOuterNormal = Vector3.zero;
 
         Camera cam;
+
+
 
         private void Awake()
         {
@@ -371,7 +376,8 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Climbing:
                     {
-
+                        Quaternion lookRot = Quaternion.LookRotation(_newCenteredPosition, Vector3.up);
+                        currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, Time.deltaTime);   
 
                         break;
                     }
@@ -517,6 +523,8 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Climbing:
                     {
+                        Vector3 newCenteredPosition = _newCenteredPosition;    
+
                         float currentVelocityMagnitude = currentVelocity.magnitude;
 
                         Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
@@ -535,8 +543,10 @@ namespace KinematicCharacterController.Examples
                         }
                         Motor.ForceUnground();
                         currentVelocity.y = _moveInputVector.y * _climbSpeedY;
-                        currentVelocity.z = -_moveInputVector.x * _climbSpeedX;
+                        //currentVelocity.z = -_moveInputVector.x * _climbSpeedX;
+                        Motor.SetPosition(new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z));
                         currentVelocity.x = 0;
+                        currentVelocity.z = 0;
                         animator.SetLayerWeight(2, 1);
                         if(currentVelocity.y == 0f)
                         {

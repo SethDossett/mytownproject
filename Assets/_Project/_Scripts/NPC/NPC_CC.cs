@@ -13,6 +13,7 @@ namespace MyTownProject.NPC
 
     public class NPC_CC : MonoBehaviour, ICharacterController
     {
+
         public enum NPCCharacterState
         {
             Default, Talking
@@ -49,7 +50,6 @@ namespace MyTownProject.NPC
 
     
 
-
         private void Awake()
         {
             // Handle initial state
@@ -60,6 +60,10 @@ namespace MyTownProject.NPC
 
             SetInitialReferences();
         }
+
+        
+
+
         private void Update()
         {
 

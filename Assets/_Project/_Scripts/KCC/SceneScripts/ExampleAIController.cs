@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace KinematicCharacterController.Examples
 {
     public class ExampleAIController : MonoBehaviour

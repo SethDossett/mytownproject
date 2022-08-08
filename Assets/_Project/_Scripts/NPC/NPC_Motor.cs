@@ -10,7 +10,7 @@ namespace MyTownProject.NPC
         [SerializeField] TransformEventSO playerRef;
         [SerializeField] DialogueEventsSO dialogueEvents;
         Transform _player;
-        Transform _npcTransform;
+        Transform _npcTransform = null;
         Rigidbody rb;
         [Range(20f, 300f)][SerializeField] float _rotSpeed = 100f;
         bool _talking = false;
@@ -54,6 +54,7 @@ namespace MyTownProject.NPC
 
         private void HandleMove()
         {
+
             if (!NPC.moveTowardsDestination)
                 return;
 
@@ -130,7 +131,7 @@ namespace MyTownProject.NPC
                 yield return null;
             }
 
-             yield return new WaitForSecondsRealtime(5f);
+            yield return new WaitForSecondsRealtime(5f);
 
             Debug.Log(Vector3.Dot(_player.forward, _npcTransform.forward));
         }
