@@ -48,7 +48,7 @@ namespace KinematicCharacterController.Examples
         public KinematicCharacterMotor Motor;
 
         [Header("Stable Movement")]
-        public float MaxStableMoveSpeed = 10f;
+        public float MaxStableMoveSpeed = 0f;
         public float StableMovementSharpness = 15f;
         public float OrientationSharpness = 10f;
         public OrientationMethod OrientationMethod = OrientationMethod.TowardsCamera;
@@ -112,7 +112,12 @@ namespace KinematicCharacterController.Examples
 
         Camera cam;
 
+        float MaxSpeed = 6f;
+        float accelTime = 2.5f;
+        float RatePerSecond;
+        float turnAroundBuffer;
 
+        
 
         private void Awake()
         {
@@ -203,6 +208,8 @@ namespace KinematicCharacterController.Examples
         {
             animator = GetComponent<Animator>();
             cam = Camera.main;
+            RatePerSecond = MaxSpeed / accelTime;
+            MaxStableMoveSpeed = 2;
 
         }
         public void SetInputs(ref PlayerCharacterInputs inputs)
@@ -405,6 +412,8 @@ namespace KinematicCharacterController.Examples
                         // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
+                            Vector3 prevInput = _moveInputVector;
+
                             float currentVelocityMagnitude = currentVelocity.magnitude;
 
                             Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
@@ -425,6 +434,32 @@ namespace KinematicCharacterController.Examples
                             // Reorient velocity on slope
                             currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
                             
+                            // Accelerate MaxSpeed
+                            if(_moveInputVector.magnitude != 0){
+                                turnAroundBuffer = 0;
+                                MaxStableMoveSpeed += RatePerSecond * deltaTime;
+                                MaxStableMoveSpeed = Mathf.Min(MaxStableMoveSpeed, MaxSpeed);
+                            }
+                            else {
+                                turnAroundBuffer += deltaTime;
+
+                                if(turnAroundBuffer > 0.2f){
+                                    MaxStableMoveSpeed = 2f;
+                                    turnAroundBuffer = 0;
+                                }
+                            }
+                            
+                            //Determine if change in other direction
+                            float dot = Vector3.Dot(prevInput, transform.forward);
+                            if(MaxStableMoveSpeed == MaxSpeed){
+                                if(dot < -0.9f){
+                                    print("Change Direction");
+                                }
+                            }
+                            
+                            
+                            
+                            
                             // Calculate target velocity
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
@@ -435,6 +470,7 @@ namespace KinematicCharacterController.Examples
                             animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
                             animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
                             animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
+                            
                         }
                         // Air movement
                         else
@@ -544,7 +580,10 @@ namespace KinematicCharacterController.Examples
                         Motor.ForceUnground();
                         currentVelocity.y = _moveInputVector.y * _climbSpeedY;
                         //currentVelocity.z = -_moveInputVector.x * _climbSpeedX;
-                        Motor.SetPosition(new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z));
+
+                        Vector3 ladderStartPos = new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z);
+                        Vector3 newPlayerPos = Vector3.Lerp(Motor.TransientPosition, ladderStartPos, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                        Motor.SetPosition(newPlayerPos);
                         currentVelocity.x = 0;
                         currentVelocity.z = 0;
                         

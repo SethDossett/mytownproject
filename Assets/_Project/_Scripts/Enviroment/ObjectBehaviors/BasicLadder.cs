@@ -8,10 +8,12 @@ namespace MyTownProject.Enviroment{
     public class BasicLadder : MonoBehaviour
     {   
         [SerializeField] float _minClimbAngle;
+        [SerializeField] float _maxDistance;
         [SerializeField] float _ladderHeight;
         [SerializeField] float _heightOnLadder;
         float _startHeight;
         float _dot;
+        float _dis;
         int _numFound;
         [SerializeField] float _enterLadderRadius;
         [SerializeField] Vector3 _SphereCastOffset;
@@ -50,35 +52,37 @@ namespace MyTownProject.Enviroment{
                 ExitLadder();    
             
             
-            
+            //print(inputActions.GamePlay.Move.ReadValue<Vector2>());
         }
         void EnterLadder(){
             _numFound = Physics.OverlapSphereNonAlloc(transform.position + _SphereCastOffset, _enterLadderRadius, cols, _playerLayer); 
 
             if(_numFound > 0){
+                _dis = Vector3.Distance(transform.position, cols[0].transform.position);
+                if(_dis > _maxDistance) return;
+
                 _dot = Vector3.Dot(transform.forward, cols[0].transform.forward);
-                if(_dot <= _minClimbAngle && _dot >= -_minClimbAngle){
-                    float value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
-                    if(value >= 0.8f){
-                        _timer += Time.unscaledDeltaTime;
+                if(_dot > _minClimbAngle || _dot < -_minClimbAngle) return;
+                
+                float value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
+                if(value >= 0.8f){
+                    _timer += Time.unscaledDeltaTime;
 
-                        if(_timer >= _timeBuffer){
-                            SwitchToClimbingState(cols[0].transform.gameObject);
-                            _timer = 0;
-                            return;
-                        }
+                    if(_timer >= _timeBuffer){
+                        SwitchToClimbingState(cols[0].transform.gameObject);
+                        _timer = 0;
+                        return;
                     }
-                    else _timer = 0;
                 }
-
+                else _timer = 0;
             }
         }
         void ExitLadder(){
             _heightOnLadder = _player.transform.position.y - _startHeight;
 
             if(_heightOnLadder <= 0.1f){
-                float value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
-                if(value >= 0.5f){
+                Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>();
+                if(value == Vector2.down){
                     _timer += Time.unscaledDeltaTime;
 
                     if(_timer >= _timeBuffer){
@@ -89,6 +93,9 @@ namespace MyTownProject.Enviroment{
                 }
                 else _timer = 0;
             }
+
+
+            
         }
         void SwitchToClimbingState(GameObject player){
             _startHeight = player.transform.position.y;

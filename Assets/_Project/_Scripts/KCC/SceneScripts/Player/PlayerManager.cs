@@ -78,6 +78,7 @@ namespace KinematicCharacterController.Examples
             _animator.SetLayerWeight(2, 1);
             _animator.SetLayerWeight(0, 0);
             _animator.SetLayerWeight(1, 0);
+            _animator.Play("Idle");
         }
         void TargetingState(){
             _animator.SetLayerWeight(1, 1);
