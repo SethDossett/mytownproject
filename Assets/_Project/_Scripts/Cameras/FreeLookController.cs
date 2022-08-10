@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,10 @@ namespace MyTownProject.Cameras{
         CinemachineFreeLook cam;
         [SerializeField] CinemachineTargetGroup _targetGroup;
 
-        [Range(0.1f, 2f)][SerializeField] float _lensZoomSpeed = 0.5f;
+        [Range(0.1f, 2f)][SerializeField] float _lensZoomInSpeed = 0.2f;
+        [Range(0.1f, 5f)][SerializeField] float _lensZoomOutSpeed = 0.6f;
+        [SerializeField] AnimationCurve _ZoomIncurve;
+        [SerializeField] AnimationCurve _ZoomOutcurve;
 
         void OnEnable(){
             cam = GetComponent<CinemachineFreeLook>();
@@ -28,11 +32,11 @@ namespace MyTownProject.Cameras{
         }
 
         void TalkingToNPC(GameObject go, TextAsset text){
-            StartCoroutine(ChangeLens(25));
+            StartCoroutine(ChangeLens(25, _lensZoomInSpeed, _ZoomIncurve));
             
         }
         void BackToPlayerView(){
-            StartCoroutine(ChangeLens(40));
+            StartCoroutine(ChangeLens(40, _lensZoomOutSpeed, _ZoomOutcurve));
         }
         void Untarget(){
             print("jay");
@@ -40,14 +44,13 @@ namespace MyTownProject.Cameras{
             StartCoroutine(RecenterXAxis(0,0));
         }
 
-        IEnumerator ChangeLens(float value){
-            float lerpDuration = _lensZoomSpeed;
+        IEnumerator ChangeLens(float value, float lerpDuration, AnimationCurve curve){
             float startValue = cam.m_Lens.FieldOfView;
             float endValue = value;
 
             float timeElapsed = 0;
             while(timeElapsed < lerpDuration){
-                cam.m_Lens.FieldOfView = Mathf.Lerp(startValue, endValue, timeElapsed/ lerpDuration);
+                cam.m_Lens.FieldOfView = Mathf.Lerp(startValue, endValue, curve.Evaluate(timeElapsed/ lerpDuration));
                 timeElapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
