@@ -113,10 +113,11 @@ namespace KinematicCharacterController.Examples
         Camera cam;
 
         float MaxSpeed = 6f;
-        float accelTime = 2.5f;
+        [SerializeField] float accelTime = 3f;
         float RatePerSecond;
         float turnAroundBuffer;
-
+        [Range(0f,0.7f)][SerializeField] float _slideDuration = 0.15f;
+        bool changingDirection = false;
         
 
         private void Awake()
@@ -412,7 +413,10 @@ namespace KinematicCharacterController.Examples
                         // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
+                            
                             Vector3 prevInput = _moveInputVector;
+
+                            float dot = Vector3.Dot(prevInput, transform.forward);
 
                             float currentVelocityMagnitude = currentVelocity.magnitude;
 
@@ -435,30 +439,54 @@ namespace KinematicCharacterController.Examples
                             currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
                             
                             // Accelerate MaxSpeed
-                            if(_moveInputVector.magnitude != 0){
-                                turnAroundBuffer = 0;
-                                MaxStableMoveSpeed += RatePerSecond * deltaTime;
-                                MaxStableMoveSpeed = Mathf.Min(MaxStableMoveSpeed, MaxSpeed);
-                            }
-                            else {
-                                turnAroundBuffer += deltaTime;
-
-                                if(turnAroundBuffer > 0.2f){
-                                    MaxStableMoveSpeed = 2f;
-                                    turnAroundBuffer = 0;
-                                }
-                            }
                             
                             //Determine if change in other direction
-                            float dot = Vector3.Dot(prevInput, transform.forward);
-                            if(MaxStableMoveSpeed == MaxSpeed){
-                                if(dot < -0.9f){
-                                    print("Change Direction");
+                            if(currentVelocity.magnitude < 0.1f && changingDirection == false){
+                                if(dot < 0.95f){
+                                    MaxStableMoveSpeed = 0;
+                                }
+                                else{
+                                    if(MaxStableMoveSpeed < 4) MaxStableMoveSpeed = 4;
+                                    if(MaxStableMoveSpeed != MaxSpeed){
+                                        MaxStableMoveSpeed += RatePerSecond * deltaTime;
+                                        MaxStableMoveSpeed = Mathf.Min(MaxStableMoveSpeed, MaxSpeed);
+                                    }
+                                
                                 }
                             }
-                            
-                            
-                            
+                            else{
+                                if(MaxStableMoveSpeed >= MaxSpeed){
+                                    if(dot < -0.95f){
+                                        changingDirection = true;
+                                        MaxStableMoveSpeed = 0;
+                                        animator.CrossFade("ChangeDirection", 0, 0);
+                                    }
+                                }
+                                else{
+                                    if(changingDirection){
+                                        turnAroundBuffer += deltaTime;
+
+                                        if(turnAroundBuffer > _slideDuration){
+                                            //MaxStableMoveSpeed = 2f;
+                                            changingDirection = false;
+                                            turnAroundBuffer = 0;
+                                        }
+                                    }
+                                    else{
+                                        if(_moveInputVector.magnitude < 0.2f){
+                                            MaxStableMoveSpeed = 0; //might need to change so movement is not odd with thumbstick.
+                                        }
+                                        else{
+                                            if(MaxStableMoveSpeed < 4) MaxStableMoveSpeed = 4;
+                                            if(MaxStableMoveSpeed != MaxSpeed){
+                                                MaxStableMoveSpeed += RatePerSecond * deltaTime;
+                                                MaxStableMoveSpeed = Mathf.Min(MaxStableMoveSpeed, MaxSpeed);
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                            }
                             
                             // Calculate target velocity
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
@@ -470,7 +498,7 @@ namespace KinematicCharacterController.Examples
                             animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
                             animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
                             animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
-                            
+
                         }
                         // Air movement
                         else
@@ -613,6 +641,7 @@ namespace KinematicCharacterController.Examples
                         // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
+                            MaxStableMoveSpeed = 4;
                             float currentVelocityMagnitude = currentVelocity.magnitude;
 
                             Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
