@@ -1054,7 +1054,7 @@ PrefabInstance:
     - target: {fileID: 8823890528155865268, guid: 33f8410d96164d7408c237ffe2c06c3b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.018088495
+      value: 0.018088493
       objectReference: {fileID: 0}
     - target: {fileID: 8823890528155865268, guid: 33f8410d96164d7408c237ffe2c06c3b,
         type: 3}
@@ -1064,7 +1064,7 @@ PrefabInstance:
     - target: {fileID: 8823890528155865268, guid: 33f8410d96164d7408c237ffe2c06c3b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.010811252
+      value: -0.010811251
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3346707116063283262, guid: 33f8410d96164d7408c237ffe2c06c3b, type: 3}
@@ -2732,6 +2732,146 @@ PrefabInstance:
       propertyPath: _lensZoomSpeed
       value: 0.15
       objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _lensZoomOutSpeed
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomIncurve.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomIncurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomIncurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[1].time
+      value: 0.05925078
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[2].time
+      value: 0.5443613
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[3].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[0].value
+      value: 0.0065307617
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[1].value
+      value: 0.24536869
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[2].value
+      value: 0.7671723
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[3].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomIncurve.m_Curve.Array.data[1].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomIncurve.m_Curve.Array.data[1].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[0].inSlope
+      value: 2.336879
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[1].inSlope
+      value: 1.1736939
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[2].inSlope
+      value: 0.6070821
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[3].inSlope
+      value: -0.007852286
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[0].outSlope
+      value: 2.336879
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[1].inWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[1].outSlope
+      value: 1.1736939
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[2].inWeight
+      value: 0.49128821
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[2].outSlope
+      value: 0.6070821
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[3].inWeight
+      value: 0.41618496
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[3].outSlope
+      value: -0.007852286
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[0].outWeight
+      value: 0.0867052
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[1].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 45481149535586946, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: _ZoomOutcurve.m_Curve.Array.data[2].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
     - target: {fileID: 965238674440835577, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -2740,17 +2880,17 @@ PrefabInstance:
     - target: {fileID: 965238674440835577, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.051409718
+      value: 0.051409714
       objectReference: {fileID: 0}
     - target: {fileID: 965238674440835577, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.116422586
+      value: -0.11642262
       objectReference: {fileID: 0}
     - target: {fileID: 965238674440835577, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0060344324
+      value: 0.0060344343
       objectReference: {fileID: 0}
     - target: {fileID: 1800418745964170103, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
@@ -3027,12 +3167,12 @@ PrefabInstance:
     - target: {fileID: 4358296403043275955, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.091960706
+      value: -0.09196071
       objectReference: {fileID: 0}
     - target: {fileID: 4358296403043275955, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.016674789
+      value: 0.01667479
       objectReference: {fileID: 0}
     - target: {fileID: 4668670240595197075, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}

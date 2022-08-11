@@ -49,4 +49,5 @@ MonoBehaviour:
   follow_smoothing: 5
   rotate_Smoothing: 5
   senstivity: 180
+  HardFollow: 1
   lockedTarget: 0

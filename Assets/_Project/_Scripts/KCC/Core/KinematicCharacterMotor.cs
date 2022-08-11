@@ -1644,9 +1644,12 @@ namespace KinematicCharacterController
             }
         }
 
-        public void SetTransientPosition(Vector3 newPos)
+        public void SetTransientPosition(Vector3 newPos, bool lerpPos)
         {
-            _transientPosition = newPos;
+            if(lerpPos){
+                _transientPosition = Vector3.MoveTowards(_transientPosition, newPos, 5 * Time.deltaTime);
+            }
+            else _transientPosition = newPos;
         }
 
         /// <summary>

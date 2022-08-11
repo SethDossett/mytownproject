@@ -71,6 +71,9 @@ namespace KinematicCharacterController.Examples
 
         [Header("Climbing")]
         public Vector3 _newCenteredPosition;
+        public Quaternion _newLadderRotation;
+        bool _onLadder = false;
+        [SerializeField] float _jumpOnLadderSpeed = 5f; 
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -96,7 +99,7 @@ namespace KinematicCharacterController.Examples
 
         private Collider[] _probedColliders = new Collider[8];
         private RaycastHit[] _probedHits = new RaycastHit[8];
-        private Vector3 _moveInputVector;
+        public Vector3 _moveInputVector;
         private Vector3 _lookInputVector;
         private bool _jumpRequested = false;
         private bool _jumpConsumed = false;
@@ -112,6 +115,7 @@ namespace KinematicCharacterController.Examples
 
         Camera cam;
 
+        [Header("Acceleration")]
         float MaxSpeed = 6f;
         [SerializeField] float accelTime = 3f;
         float RatePerSecond;
@@ -190,6 +194,8 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Climbing:
                     {
+                        _onLadder = false;
+                        print("EXIT CLIMB");
                         break;
                     }
                 case CharacterState.Targeting:
@@ -367,7 +373,7 @@ namespace KinematicCharacterController.Examples
                                 currentRotation = Quaternion.FromToRotation(currentUp, smoothedGroundNormal) * currentRotation;
 
                                 // Move the position to create a rotation around the bottom hemi center instead of around the pivot
-                                Motor.SetTransientPosition(initialCharacterBottomHemiCenter + (currentRotation * Vector3.down * Motor.Capsule.radius));
+                                Motor.SetTransientPosition(initialCharacterBottomHemiCenter + (currentRotation * Vector3.down * Motor.Capsule.radius), false);
                             }
                             else
                             {
@@ -385,7 +391,7 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Climbing:
                     {
                         Quaternion lookRot = Quaternion.LookRotation(_newCenteredPosition, Vector3.up);
-                        currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, Time.deltaTime);   
+                        currentRotation = Quaternion.RotateTowards(transform.rotation, _newLadderRotation, 500 * Time.deltaTime);   
 
                         break;
                     }
@@ -587,44 +593,42 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Climbing:
                     {
+                        if(Motor.GroundingStatus.IsStableOnGround) Motor.ForceUnground();
+
                         Vector3 newCenteredPosition = _newCenteredPosition;    
 
                         float currentVelocityMagnitude = currentVelocity.magnitude;
+                        
+                        if(!_onLadder){
+                            //Vector3 ladderStartPos = new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z);
+                            //Vector3 newPlayerPos = Vector3.Lerp(Motor.TransientPosition, newCenteredPosition, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                            //Vector3 newPlayerPos = Vector3.MoveTowards(Motor.TransientPosition, newCenteredPosition, _jumpOnLadderSpeed * deltaTime);
+                            Motor.SetTransientPosition(newCenteredPosition, true);
+                            if(Vector3.Distance(Motor.TransientPosition, newCenteredPosition) <= float.Epsilon){
+                                _onLadder = true;
+                                print("ladder is true");
+                            } 
+                        }
+                        else{
+                            currentVelocity.y = _moveInputVector.y * _climbSpeedY;
+                            //currentVelocity.z = -_moveInputVector.x * _climbSpeedX;
+                            currentVelocity.x = 0;
+                            currentVelocity.z = 0;
 
-                        Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
-                        if (currentVelocityMagnitude > 0f && Motor.GroundingStatus.SnappingPrevented)
-                        {
-                            // Take the normal from where we're coming from
-                            Vector3 groundPointToCharacter = Motor.TransientPosition - Motor.GroundingStatus.GroundPoint;
-                            if (Vector3.Dot(currentVelocity, groundPointToCharacter) >= 0f)
+                            if(currentVelocity.y == 0f)
                             {
-                                effectiveGroundNormal = Motor.GroundingStatus.OuterGroundNormal;
+                                if(currentVelocity != Vector3.zero) currentVelocity = Vector3.zero;
+                                if(animator.speed != 0f)
+                                    animator.speed = 0f;
                             }
                             else
                             {
-                                effectiveGroundNormal = Motor.GroundingStatus.InnerGroundNormal;
+                                if (animator.speed != 1f)
+                                    animator.speed = 1f;
                             }
                         }
-                        Motor.ForceUnground();
-                        currentVelocity.y = _moveInputVector.y * _climbSpeedY;
-                        //currentVelocity.z = -_moveInputVector.x * _climbSpeedX;
-
-                        Vector3 ladderStartPos = new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z);
-                        Vector3 newPlayerPos = Vector3.Lerp(Motor.TransientPosition, ladderStartPos, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-                        Motor.SetPosition(newPlayerPos);
-                        currentVelocity.x = 0;
-                        currentVelocity.z = 0;
                         
-                        if(currentVelocity.y == 0f)
-                        {
-                            if(animator.speed != 0f)
-                                animator.speed = 0f;
-                        }
-                        else
-                        {
-                            if (animator.speed != 1f)
-                                animator.speed = 1f;
-                        }
+                        
 
                         // Reorient velocity on slope
                         //currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;

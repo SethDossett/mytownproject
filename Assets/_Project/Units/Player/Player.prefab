@@ -796,7 +796,7 @@ MonoBehaviour:
   Motor: {fileID: 4936703484560184526}
   MaxStableMoveSpeed: 6
   StableMovementSharpness: 12
-  OrientationSharpness: 10
+  OrientationSharpness: 20
   OrientationMethod: 1
   MaxAirMoveSpeed: 4
   AirAccelerationSpeed: 10
@@ -809,6 +809,8 @@ MonoBehaviour:
   _climbSpeedY: 2
   _climbSpeedX: 2
   _newCenteredPosition: {x: 0, y: 0, z: 0}
+  _newLadderRotation: {x: 0, y: 0, z: 0, w: 0}
+  _jumpOnLadderSpeed: 3
   IgnoredColliders: []
   BonusOrientationMethod: 0
   BonusOrientationSharpness: 10
@@ -816,6 +818,9 @@ MonoBehaviour:
   MeshRoot: {fileID: 6875040722021663315}
   CameraFollowPoint: {fileID: 6875040720797426742}
   CrouchedCapsuleHeight: 1
+  _moveInputVector: {x: 0, y: 0, z: 0}
+  accelTime: 3
+  _slideDuration: 0.15
 --- !u!114 &7468897045282317995
 MonoBehaviour:
   m_ObjectHideFlags: 0

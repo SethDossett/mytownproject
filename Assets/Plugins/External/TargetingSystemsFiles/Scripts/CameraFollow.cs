@@ -15,6 +15,7 @@ public class CameraFollow : MonoBehaviour
 
     float rotX, rotY;
     bool cursorLocked = false;
+    [SerializeField] bool HardFollow;
     Transform cam;
 
     public bool lockedTarget;
@@ -28,8 +29,10 @@ public class CameraFollow : MonoBehaviour
     {
         
         Vector3 target_P= target.position + offset;
-        transform.position = Vector3.Lerp(transform.position, target_P, follow_smoothing * Time.deltaTime);
-
+        if(HardFollow)
+            transform.position = target_P;
+        else    
+            transform.position = Vector3.Lerp(transform.position, target_P, follow_smoothing * Time.deltaTime);
         
         if(!lockedTarget) CameraTargetRotation(); else LookAtTarget();
         
