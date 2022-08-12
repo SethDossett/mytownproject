@@ -73,8 +73,8 @@ namespace MyTownProject.Enviroment{
                 _dis = Vector3.Distance(transform.position, cols[0].transform.position);
                 if(_dis > _maxDistance) return;
 
-                //_dot = Vector3.Dot(_ladderForward, cols[0].transform.forward);
-                
+                _dot = Vector3.Dot(_ladderForward, cols[0].transform.forward);
+                if(_dot > _minClimbAngle) return;
                 
                 Vector3 value = CC._moveInputVector;
                 inputDot = Vector3.Dot(value, _ladderForward);
@@ -89,6 +89,23 @@ namespace MyTownProject.Enviroment{
                     }
                 }
                 else _timer = 0;
+            }
+            if(_numFoundTop > 0){
+                if(_player == null) _player = cols[0].transform.gameObject;
+                if(CC == null) CC = _player.GetComponent<TheCharacterController>();
+                _dis = Vector3.Distance(transform.position + _SphereCastOffsetTop, cols[0].transform.position);
+                if(_dis > _maxDistance) return;
+
+                _dot = Vector3.Dot(_ladderForward, cols[0].transform.forward);
+                if(_dot < -_minClimbAngle) return;
+                
+                
+                Vector3 value = CC._moveInputVector;
+                inputDot = Vector3.Dot(value, -_ladderForward);
+
+                if(inputDot <= _minClimbAngle){
+                    StartCoroutine(GetOnLadderTop());
+                }
             }
         }
         void ExitLadder(){
@@ -143,6 +160,10 @@ namespace MyTownProject.Enviroment{
             _exitLadderCalled = false;
             print("SwitchedToDefault");
         }
+
+        IEnumerator GetOnLadderTop(){
+            yield return new WaitForSecondsRealtime(1.15f);
+        }
         IEnumerator GetOffLadderTop(){
             CC._gettingOnOffLadder = true;
             _player.GetComponent<Animator>().CrossFade("GetOffTop", 0, 2);
@@ -158,9 +179,9 @@ namespace MyTownProject.Enviroment{
         {
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireSphere(transform.position + _SphereCastOffsetBottom, _BottomLadderRadius);
-            Gizmos.DrawWireSphere(transform.position + _SphereCastOffsetTop, _BottomLadderRadius);
-            Gizmos.DrawRay(transform.position,_ladderForward * 5f);
-            Gizmos.DrawRay(transform.position,Vector3.up * _ladderHeight);
+            Gizmos.DrawWireSphere(transform.position + _SphereCastOffsetTop, _TopLadderRadius);
+            //Gizmos.DrawRay(transform.position,_ladderForward * 5f);
+            //Gizmos.DrawRay(transform.position,Vector3.up * _ladderHeight);
 
         }
     }
