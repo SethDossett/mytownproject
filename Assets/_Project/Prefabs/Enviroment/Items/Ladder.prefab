@@ -114,10 +114,10 @@ MonoBehaviour:
   _maxDistance: 0.7
   _ladderHeight: 3.5
   _heightOnLadder: 0
-  _BottomLadderRadius: 0
-  _TopLadderRadius: 0
+  _BottomLadderRadius: 0.45
+  _TopLadderRadius: 0.45
   _SphereCastOffsetBottom: {x: 0.33, y: 0.42, z: 0}
-  _SphereCastOffsetTop: {x: -0.25, y: 3.5, z: 0}
+  _SphereCastOffsetTop: {x: -0.6, y: 3.5, z: 0}
   _ladderPosOffset: {x: 0.25, y: 0.3, z: 0}
   _playerLayer:
     serializedVersion: 2
