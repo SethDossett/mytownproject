@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using MyTownProject.Events;
 using KinematicCharacterController.Examples;
 
 namespace MyTownProject.Enviroment{
     public class BasicLadder : MonoBehaviour
     {   
+        [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] float _minClimbAngle = -0.95f;
         [SerializeField] float _maxDistance;
         [SerializeField] float _ladderHeight;
@@ -18,7 +20,8 @@ namespace MyTownProject.Enviroment{
         float _dis;
         int _numFoundBottom;
         int _numFoundTop;
-        [SerializeField] float _enterLadderRadius;
+        [SerializeField] float _BottomLadderRadius;
+        [SerializeField] float _TopLadderRadius;
         [SerializeField] Vector3 _SphereCastOffsetBottom;
         [SerializeField] Vector3 _SphereCastOffsetTop;
         [SerializeField] Vector3 _ladderPosOffset;
@@ -31,10 +34,11 @@ namespace MyTownProject.Enviroment{
         float _timer = 0;
         float _timeBuffer = 0.1f;
         bool _checkForPlayer;
-        bool _onLadder;
+        [SerializeField] bool _onLadder;
 
        GameObject _player;
        TheCharacterController CC;
+       bool _exitLadderCalled;
 
         private void OnEnable() {
             inputActions.GamePlay.Enable();
@@ -60,8 +64,8 @@ namespace MyTownProject.Enviroment{
             //print(inputActions.GamePlay.Move.ReadValue<Vector2>());
         }
         void EnterLadder(){
-            _numFoundBottom = Physics.OverlapSphereNonAlloc(transform.position + _SphereCastOffsetBottom, _enterLadderRadius, cols, _playerLayer); 
-            _numFoundTop = Physics.OverlapSphereNonAlloc(transform.position + _SphereCastOffsetTop, _enterLadderRadius, cols, _playerLayer);
+            _numFoundBottom = Physics.OverlapSphereNonAlloc(transform.position + _SphereCastOffsetBottom, _BottomLadderRadius, cols, _playerLayer); 
+            _numFoundTop = Physics.OverlapSphereNonAlloc(transform.position + _SphereCastOffsetTop, _TopLadderRadius, cols, _playerLayer);
 
             if(_numFoundBottom > 0){
                 if(_player == null) _player = cols[0].transform.gameObject;
@@ -79,7 +83,7 @@ namespace MyTownProject.Enviroment{
                     _timer += Time.unscaledDeltaTime;
 
                     if(_timer >= _timeBuffer){
-                        SwitchToClimbingState(cols[0].transform.gameObject);
+                        SwitchToClimbingState();
                         _timer = 0;
                         return;
                     }
@@ -88,6 +92,8 @@ namespace MyTownProject.Enviroment{
             }
         }
         void ExitLadder(){
+            if(!_onLadder) return;
+            if(_exitLadderCalled) return;
             _heightOnLadder = _player.transform.position.y - _startHeight;
 
             if(_heightOnLadder <= 0.1f){
@@ -107,21 +113,17 @@ namespace MyTownProject.Enviroment{
             if(_heightOnLadder >= _ladderHeight-1){
                 Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>();
                 if(value == Vector2.up){
-                    _timer += Time.unscaledDeltaTime;
-
-                    if(_timer >= _timeBuffer){
-                        print("GetOFFTopOfLadder");
-                        _timer = 0;
-                        return;
-                    }
+                    
+                    StartCoroutine(GetOffLadderTop());
+                    _exitLadderCalled = true;
                 }
-                else _timer = 0;
             }
 
 
             
         }
-        void SwitchToClimbingState(GameObject player){
+        void SwitchToClimbingState(){
+            RecenterCamX.OnRaiseEvent2(0,0.7f);
             _startHeight = _player.transform.position.y;
            //_checkForPlayer = false;
            _onLadder = true;
@@ -136,24 +138,31 @@ namespace MyTownProject.Enviroment{
         void SwitchToDefaltState(){
             CC.TransitionToState(CharacterState.Default);
             _onLadder = false;
+            _heightOnLadder = 0;
             _ladderCollider.enabled = true;
+            _exitLadderCalled = false;
             print("SwitchedToDefault");
+        }
+        IEnumerator GetOffLadderTop(){
+            CC._gettingOnOffLadder = true;
+            _player.GetComponent<Animator>().CrossFade("GetOffTop", 0, 2);
+
+            yield return new WaitForSecondsRealtime(1.15f);
+            SwitchToDefaltState();
+            CC.Motor.SetPosition(transform.position + _SphereCastOffsetTop);
+            CC._gettingOnOffLadder = false;
+            print("GetOFFTopOfLadder");
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.magenta;
-            Gizmos.DrawWireSphere(transform.position + _SphereCastOffsetBottom, _enterLadderRadius);
-            Gizmos.DrawWireSphere(transform.position + _SphereCastOffsetTop, _enterLadderRadius);
+            Gizmos.DrawWireSphere(transform.position + _SphereCastOffsetBottom, _BottomLadderRadius);
+            Gizmos.DrawWireSphere(transform.position + _SphereCastOffsetTop, _BottomLadderRadius);
             Gizmos.DrawRay(transform.position,_ladderForward * 5f);
+            Gizmos.DrawRay(transform.position,Vector3.up * _ladderHeight);
+
         }
-
-
-
-
-
-
-
     }
 }
 

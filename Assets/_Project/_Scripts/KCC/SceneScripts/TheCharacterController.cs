@@ -65,14 +65,13 @@ namespace KinematicCharacterController.Examples
         public float JumpPreGroundingGraceTime = 0f;
         public float JumpPostGroundingGraceTime = 0f;
 
-        [Header("Jumping")]
-        public float _climbSpeedY = 2f;
-        public float _climbSpeedX = 2f;
-
         [Header("Climbing")]
         public Vector3 _newCenteredPosition;
         public Quaternion _newLadderRotation;
+        public float _climbSpeedY = 2f;
+        public float _climbSpeedX = 2f;
         bool _onLadder = false;
+        public bool _gettingOnOffLadder;
         [SerializeField] float _jumpOnLadderSpeed = 5f; 
 
         [Header("Misc")]
@@ -165,6 +164,7 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
+                        //MaxStableMoveSpeed = 0; // think it might look better to be able to run out of climbing.
                         break;
                     }
                 case CharacterState.Climbing:
@@ -419,7 +419,6 @@ namespace KinematicCharacterController.Examples
                         // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
-                            
                             Vector3 prevInput = _moveInputVector;
 
                             float dot = Vector3.Dot(prevInput, transform.forward);
@@ -593,6 +592,12 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Climbing:
                     {
+                        if(_gettingOnOffLadder){
+                            currentVelocity.y = 0f;
+                            if (animator.speed != 1f)
+                                animator.speed = 1f;
+                                return;
+                        } 
                         if(Motor.GroundingStatus.IsStableOnGround) Motor.ForceUnground();
 
                         Vector3 newCenteredPosition = _newCenteredPosition;    
