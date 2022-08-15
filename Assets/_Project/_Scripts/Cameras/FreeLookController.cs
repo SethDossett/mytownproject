@@ -22,6 +22,7 @@ namespace MyTownProject.Cameras{
         [SerializeField] AnimationCurve _ZoomIncurve;
         [SerializeField] AnimationCurve _ZoomOutcurve;
 
+        
         void OnEnable(){
             cam = GetComponent<CinemachineFreeLook>();
             DialogueEvents.onEnter += TalkingToNPC;
@@ -68,10 +69,13 @@ namespace MyTownProject.Cameras{
             cam.m_RecenterToTargetHeading.m_WaitTime = waitTime;
             cam.m_RecenterToTargetHeading.m_RecenteringTime = recenteringTime;
             cam.m_RecenterToTargetHeading.m_enabled = true;
-            yield return new WaitForSecondsRealtime(waitTime + recenteringTime);
+            yield return new WaitForSeconds(waitTime + recenteringTime * 2);
             yield return new WaitForEndOfFrame();
+            //yield return new WaitUntil(()=> Mathf.Abs(cam.m_XAxis.Value) < 0.1f);  
             cam.m_RecenterToTargetHeading.m_enabled = false;
             yield break;
+               
+            
         }
         void RY(float f1, float f2) => StartCoroutine(RecenterYAxis(f1,f2));
         IEnumerator RecenterYAxis(float waitTime, float recenteringTime){
@@ -87,6 +91,8 @@ namespace MyTownProject.Cameras{
             // see what world angle camera is facing
             // what is angle of player
             //cam.m_XAxis.Value = 5f;
+            print(Mathf.Abs(cam.m_XAxis.Value));
+            
             if(UnityEngine.InputSystem.Keyboard.current.rKey.wasPressedThisFrame){
                 RX(0,0.7f);
             }

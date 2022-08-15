@@ -29,8 +29,10 @@ public class CameraFollow : MonoBehaviour
     {
         
         Vector3 target_P= target.position + offset;
-        if(HardFollow)
+        if(HardFollow){
             transform.position = target_P;
+            transform.rotation = target.rotation;
+        }
         else    
             transform.position = Vector3.Lerp(transform.position, target_P, follow_smoothing * Time.deltaTime);
         

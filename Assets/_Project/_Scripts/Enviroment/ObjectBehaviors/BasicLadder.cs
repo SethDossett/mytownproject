@@ -101,9 +101,9 @@ namespace MyTownProject.Enviroment{
                 
                 
                 Vector3 value = CC._moveInputVector;
-                inputDot = Vector3.Dot(value, -_ladderForward);
-
-                if(inputDot <= _minClimbAngle){
+                inputDot = Vector3.Dot(value, _ladderForward);
+                print(-_minClimbAngle);
+                if(inputDot >= -_minClimbAngle){
                     StartCoroutine(GetOnLadderTop());
                 }
             }
@@ -140,7 +140,7 @@ namespace MyTownProject.Enviroment{
             
         }
         void SwitchToClimbingState(){
-            RecenterCamX.OnRaiseEvent2(0,0.7f);
+            RecenterCamX.OnRaiseEvent2(0,0.35f);
             _startHeight = _player.transform.position.y;
            //_checkForPlayer = false;
            _onLadder = true;
@@ -162,6 +162,7 @@ namespace MyTownProject.Enviroment{
         }
 
         IEnumerator GetOnLadderTop(){
+            print("geton ladder top");
             yield return new WaitForSecondsRealtime(1.15f);
         }
         IEnumerator GetOffLadderTop(){
