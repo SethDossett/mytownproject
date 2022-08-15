@@ -9,6 +9,8 @@ namespace MyTownProject.Enviroment{
     public class BasicLadder : MonoBehaviour
     {   
         [SerializeField] FloatEventSO RecenterCamX;
+        [SerializeField] FloatEventSO RecenterCamY;
+        [SerializeField] GeneralEventSO DisableCamRecter;
         [SerializeField] float _minClimbAngle = -0.95f;
         [SerializeField] float _maxDistance;
         [SerializeField] float _ladderHeight;
@@ -58,7 +60,10 @@ namespace MyTownProject.Enviroment{
             if(!_onLadder)
                 EnterLadder();
             else 
-                ExitLadder();    
+                ExitLadder();
+                if(inputActions.GamePlay.Camera.ReadValue<Vector2>() != Vector2.zero){
+                    DisableCamRecter.RaiseEvent();
+                }    
             
             
             //print(inputActions.GamePlay.Move.ReadValue<Vector2>());
@@ -141,6 +146,7 @@ namespace MyTownProject.Enviroment{
         }
         void SwitchToClimbingState(){
             RecenterCamX.OnRaiseEvent2(0,0.35f);
+            RecenterCamY.OnRaiseEvent2(0,0.35f);
             _startHeight = _player.transform.position.y;
            //_checkForPlayer = false;
            _onLadder = true;

@@ -12,6 +12,7 @@ namespace MyTownProject.Cameras{
         public Transform _player;
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
+        [SerializeField] GeneralEventSO DisableRecenterCam;
         [SerializeField] DialogueEventsSO DialogueEvents;
         [SerializeField] GeneralEventSO UntargetEvent;
         CinemachineFreeLook cam;
@@ -30,6 +31,7 @@ namespace MyTownProject.Cameras{
             UntargetEvent.OnRaiseEvent += Untarget;
             RecenterCamX.OnRaiseEvent2 += RX;
             RecenterCamY.OnRaiseEvent2 += RY;
+            DisableRecenterCam.OnRaiseEvent += DisableRecenter;
         }
         void OnDisable(){
             DialogueEvents.onEnter -= TalkingToNPC;
@@ -37,6 +39,7 @@ namespace MyTownProject.Cameras{
             UntargetEvent.OnRaiseEvent -= Untarget;
             RecenterCamX.OnRaiseEvent2 -= RX;
             RecenterCamY.OnRaiseEvent2 -= RY;
+            DisableRecenterCam.OnRaiseEvent += DisableRecenter;
         }
 
         void TalkingToNPC(GameObject go, TextAsset text){
@@ -72,7 +75,7 @@ namespace MyTownProject.Cameras{
             yield return new WaitForSeconds(waitTime + recenteringTime * 2);
             yield return new WaitForEndOfFrame();
             //yield return new WaitUntil(()=> Mathf.Abs(cam.m_XAxis.Value) < 0.1f);  
-            cam.m_RecenterToTargetHeading.m_enabled = false;
+            DisableRecenter();
             yield break;
                
             
@@ -82,10 +85,15 @@ namespace MyTownProject.Cameras{
             cam.m_YAxisRecentering.m_WaitTime = waitTime;
             cam.m_YAxisRecentering.m_RecenteringTime = recenteringTime;
             cam.m_YAxisRecentering.m_enabled = true;
-            yield return new WaitForSecondsRealtime(waitTime + recenteringTime);
+            yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 2);
             yield return new WaitForEndOfFrame();
-            cam.m_YAxisRecentering.m_enabled = false;
+            DisableRecenter();
             yield break;
+        }
+
+        void DisableRecenter(){
+            cam.m_RecenterToTargetHeading.m_enabled = false;
+            cam.m_YAxisRecentering.m_enabled = false;
         }
         void Update(){
             // see what world angle camera is facing
