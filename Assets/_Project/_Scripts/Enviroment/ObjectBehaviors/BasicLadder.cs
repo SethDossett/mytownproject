@@ -24,6 +24,8 @@ namespace MyTownProject.Enviroment{
         int _numFoundTop;
         [SerializeField] float _BottomLadderRadius;
         [SerializeField] float _TopLadderRadius;
+        [SerializeField] Vector3 _StartPosBottom;
+        [SerializeField] Vector3 _StartPosTop = new Vector3(0.25f, 2.5f, 0f);
         [SerializeField] Vector3 _SphereCastOffsetBottom;
         [SerializeField] Vector3 _SphereCastOffsetTop;
         [SerializeField] Vector3 _ladderPosOffset;
@@ -88,7 +90,7 @@ namespace MyTownProject.Enviroment{
                     _timer += Time.unscaledDeltaTime;
 
                     if(_timer >= _timeBuffer){
-                        SwitchToClimbingState();
+                        SwitchToClimbingState(true);
                         _timer = 0;
                         return;
                     }
@@ -144,19 +146,36 @@ namespace MyTownProject.Enviroment{
 
             
         }
-        void SwitchToClimbingState(){
-            RecenterCamX.OnRaiseEvent2(0,0.35f);
-            RecenterCamY.OnRaiseEvent2(0,0.35f);
-            _startHeight = _player.transform.position.y;
-           //_checkForPlayer = false;
-           _onLadder = true;
-           CC.TransitionToState(CharacterState.Climbing);
-           _ladderCollider.enabled = false;
-           //play ladder jump into anim
-           Vector3 startLadderPos = transform.position + _ladderPosOffset;
-           CC._newCenteredPosition = startLadderPos;
-           CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
-           print("SwitchedToClimbing");
+        void SwitchToClimbingState(bool onBottom){
+            if(onBottom){
+                RecenterCamX.OnRaiseEvent2(0,0.35f);
+                RecenterCamY.OnRaiseEvent2(0,0.35f);
+                _startHeight = transform.position.y;
+                //_checkForPlayer = false;
+                _onLadder = true;
+                CC.TransitionToState(CharacterState.Climbing);
+                _ladderCollider.enabled = false;
+                Vector3 startLadderPos = transform.position + _ladderPosOffset;
+                CC._newCenteredPosition = startLadderPos;
+                
+                print("SwitchedToClimbing");
+            }
+            else{
+                
+                //RecenterCamX.OnRaiseEvent2(0,0.35f);
+                //RecenterCamY.OnRaiseEvent2(0,0.35f);
+                _startHeight = transform.position.y;
+                //_checkForPlayer = false;
+                //_onLadder = true;
+                CC.TransitionToState(CharacterState.Climbing);
+                Vector3 startLadderPos = transform.position + _StartPosTop;
+                CC._newCenteredPosition = startLadderPos;
+                CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
+                _ladderCollider.enabled = false;
+                _exitLadderCalled = false;
+                print("SwitchedToClimbing");
+            }
+
         }
         void SwitchToDefaltState(){
             CC.TransitionToState(CharacterState.Default);
@@ -169,13 +188,26 @@ namespace MyTownProject.Enviroment{
 
         IEnumerator GetOnLadderTop(){
             print("geton ladder top");
+            _exitLadderCalled = true;
+            float dis = Vector3.Distance(CC.Motor.TransientPosition, transform.position + Vector3.up * _ladderHeight);
+            print(dis);
+            if(dis != 0f){
+                CC.Motor.SetPosition(transform.position + Vector3.up * _ladderHeight);
+            }
+            CC._gettingOnOffLadder = true;
+            SwitchToClimbingState(false);
+            _player.GetComponent<Animator>().CrossFade("GetOnLadderTop", 0, 2);
+            CC._gettingOnOffLadder = false;
             yield return new WaitForSecondsRealtime(1.15f);
+            
+            _onLadder = true;
+
         }
         IEnumerator GetOffLadderTop(){
             CC._gettingOnOffLadder = true;
             _player.GetComponent<Animator>().CrossFade("GetOffTop", 0, 2);
 
-            yield return new WaitForSecondsRealtime(1.15f);
+            yield return new WaitForSecondsRealtime(0.75f);
             SwitchToDefaltState();
             CC.Motor.SetPosition(transform.position + _SphereCastOffsetTop);
             CC._gettingOnOffLadder = false;

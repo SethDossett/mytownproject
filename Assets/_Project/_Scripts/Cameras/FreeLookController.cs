@@ -99,7 +99,6 @@ namespace MyTownProject.Cameras{
             // see what world angle camera is facing
             // what is angle of player
             //cam.m_XAxis.Value = 5f;
-            print(Mathf.Abs(cam.m_XAxis.Value));
             
             if(UnityEngine.InputSystem.Keyboard.current.rKey.wasPressedThisFrame){
                 RX(0,0.7f);

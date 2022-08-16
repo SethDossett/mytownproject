@@ -594,6 +594,8 @@ namespace KinematicCharacterController.Examples
                     {
                         if(_gettingOnOffLadder){
                             currentVelocity.y = 0f;
+                            currentVelocity.x = 0f;
+                            currentVelocity.z = 0f;
                             if (animator.speed != 1f)
                                 animator.speed = 1f;
                                 return;
