@@ -8,43 +8,55 @@ using KinematicCharacterController.Examples;
 namespace MyTownProject.Enviroment{
     public class BasicLadder : MonoBehaviour
     {   
+        [Header("References")]
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
         [SerializeField] GeneralEventSO DisableCamRecter;
         [SerializeField] GeneralEventSO EnableControls;
         [SerializeField] GeneralEventSO DisableControls;
-        [SerializeField] float _minClimbAngle = -0.95f;
-        [SerializeField] float _maxDistance;
+        private NewControls inputActions;
+        GameObject _player;
+        TheCharacterController CC;
+
+        [Header("Values")]
         [SerializeField] float _ladderHeight;
         [SerializeField] float _heightOnLadder;
+        [SerializeField] float _minClimbAngle = -0.95f;
+        [SerializeField] float _maxDistance;
+        [SerializeField] Vector3 _ladderPosOffset;
         Vector3 _ladderForward;
         float _startHeight;
+        MeshCollider _ladderCollider;
+
+        [Header("TopOfLadder")]
+        [SerializeField] float _TopLadderRadius;
+        [SerializeField] Vector3 _SphereCastOffsetTop;
+        [SerializeField] Vector3 _StartPosTop = new Vector3(0.25f, 2.5f, 0f);
+
+        [Header("BottomOfLadder")]
+        [SerializeField] float _BottomLadderRadius;
+        [SerializeField] Vector3 _StartPosBottom;
+        [SerializeField] Vector3 _SphereCastOffsetBottom;
+
+
+
+        [Header("Overlap Sphere")]
+        [SerializeField] LayerMask _playerLayer;
+        Collider[] cols = new Collider[3];
+        float _timer = 0;
+        float _timeBuffer = 0.1f;
         float _dot;
         float inputDot;
         float _dis;
         int _numFoundBottom;
         int _numFoundTop;
-        [SerializeField] float _BottomLadderRadius;
-        [SerializeField] float _TopLadderRadius;
-        [SerializeField] Vector3 _StartPosBottom;
-        [SerializeField] Vector3 _StartPosTop = new Vector3(0.25f, 2.5f, 0f);
-        [SerializeField] Vector3 _SphereCastOffsetBottom;
-        [SerializeField] Vector3 _SphereCastOffsetTop;
-        [SerializeField] Vector3 _ladderPosOffset;
-        Collider[] cols = new Collider[3];
 
-        MeshCollider _ladderCollider;
-
-        private NewControls inputActions;
-        [SerializeField] LayerMask _playerLayer;
-        float _timer = 0;
-        float _timeBuffer = 0.1f;
-        bool _checkForPlayer;
+        [Header("Checks")]
         [SerializeField] bool _onLadder;
+        bool _checkForPlayer;
+        bool _exitLadderCalled;
 
-       GameObject _player;
-       TheCharacterController CC;
-       bool _exitLadderCalled;
+       
 
         private void OnEnable() {
             inputActions.GamePlay.Enable();
