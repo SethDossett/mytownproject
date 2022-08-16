@@ -598,7 +598,7 @@ namespace KinematicCharacterController.Examples
                             currentVelocity.z = 0f;
                             if (animator.speed != 1f)
                                 animator.speed = 1f;
-                                return;
+                            return;
                         } 
                         if(Motor.GroundingStatus.IsStableOnGround) Motor.ForceUnground();
 

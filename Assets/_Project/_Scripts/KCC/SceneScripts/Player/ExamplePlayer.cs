@@ -10,6 +10,9 @@ namespace KinematicCharacterController.Examples
         public ExampleCharacterCamera CharacterCamera;
         public MainEventChannelSO MainEventChannelSO;
 
+        [SerializeField] GeneralEventSO _enableControls;
+        [SerializeField] GeneralEventSO _disableControls;
+
         private const string MouseXInput = "Mouse X";
         private const string MouseYInput = "Mouse Y";
         private const string MouseScrollInput = "Mouse ScrollWheel";
@@ -32,6 +35,8 @@ namespace KinematicCharacterController.Examples
         private void OnEnable()
         {
             inputActions.GamePlay.Enable();
+            _disableControls.OnRaiseEvent += DisableControls;
+            _enableControls.OnRaiseEvent += EnableControls;
             //move = InputManager.inputActions.GamePlay.Move;
            //cameraMove = inputActions.GamePlay.Camera;
            //interact = inputActions.GamePlay.Interact;
@@ -49,6 +54,8 @@ namespace KinematicCharacterController.Examples
         private void OnDisable()
         {
             inputActions.GamePlay.Disable();
+            _disableControls.OnRaiseEvent -= DisableControls;
+            _enableControls.OnRaiseEvent -= EnableControls;
            /* move.Disable();
             cameraMove.Disable();
             //jump.Disable();
@@ -145,6 +152,11 @@ namespace KinematicCharacterController.Examples
             // Apply inputs to character
             Character.SetInputs(ref characterInputs);
         }
-        
+        void EnableControls(){
+            inputActions.Enable();
+        }
+        void DisableControls(){
+            inputActions.Disable();
+        }
     }
 }

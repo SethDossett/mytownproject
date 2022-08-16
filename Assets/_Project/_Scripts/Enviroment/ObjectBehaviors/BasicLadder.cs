@@ -11,6 +11,8 @@ namespace MyTownProject.Enviroment{
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
         [SerializeField] GeneralEventSO DisableCamRecter;
+        [SerializeField] GeneralEventSO EnableControls;
+        [SerializeField] GeneralEventSO DisableControls;
         [SerializeField] float _minClimbAngle = -0.95f;
         [SerializeField] float _maxDistance;
         [SerializeField] float _ladderHeight;
@@ -71,6 +73,7 @@ namespace MyTownProject.Enviroment{
             //print(inputActions.GamePlay.Move.ReadValue<Vector2>());
         }
         void EnterLadder(){
+            if(_exitLadderCalled) return;
             _numFoundBottom = Physics.OverlapSphereNonAlloc(transform.position + _SphereCastOffsetBottom, _BottomLadderRadius, cols, _playerLayer); 
             _numFoundTop = Physics.OverlapSphereNonAlloc(transform.position + _SphereCastOffsetTop, _TopLadderRadius, cols, _playerLayer);
 
@@ -111,6 +114,7 @@ namespace MyTownProject.Enviroment{
                 inputDot = Vector3.Dot(value, _ladderForward);
                 print(-_minClimbAngle);
                 if(inputDot >= -_minClimbAngle){
+                    _exitLadderCalled = true;
                     StartCoroutine(GetOnLadderTop());
                 }
             }
@@ -138,8 +142,8 @@ namespace MyTownProject.Enviroment{
                 Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>();
                 if(value == Vector2.up){
                     
-                    StartCoroutine(GetOffLadderTop());
                     _exitLadderCalled = true;
+                    StartCoroutine(GetOffLadderTop());
                 }
             }
 
@@ -172,7 +176,7 @@ namespace MyTownProject.Enviroment{
                 CC._newCenteredPosition = startLadderPos;
                 CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
                 _ladderCollider.enabled = false;
-                _exitLadderCalled = false;
+                //_exitLadderCalled = false;
                 print("SwitchedToClimbing");
             }
 
@@ -188,19 +192,24 @@ namespace MyTownProject.Enviroment{
 
         IEnumerator GetOnLadderTop(){
             print("geton ladder top");
-            _exitLadderCalled = true;
+            DisableControls.RaiseEvent();
+            yield return new WaitForEndOfFrame();
             float dis = Vector3.Distance(CC.Motor.TransientPosition, transform.position + Vector3.up * _ladderHeight);
             print(dis);
             if(dis != 0f){
                 CC.Motor.SetPosition(transform.position + Vector3.up * _ladderHeight);
             }
+            yield return new WaitForEndOfFrame();
             CC._gettingOnOffLadder = true;
             SwitchToClimbingState(false);
             _player.GetComponent<Animator>().CrossFade("GetOnLadderTop", 0, 2);
+            yield return new WaitForEndOfFrame();
             CC._gettingOnOffLadder = false;
-            yield return new WaitForSecondsRealtime(1.15f);
-            
             _onLadder = true;
+            yield return new WaitForSecondsRealtime(0.4f);
+            _exitLadderCalled = false;
+            EnableControls.RaiseEvent();
+            yield return null;
 
         }
         IEnumerator GetOffLadderTop(){
