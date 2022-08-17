@@ -6,7 +6,7 @@ using MyTownProject.Events;
 using KinematicCharacterController.Examples;
 using MyTownProject.NPC;
 
-
+namespace MyTownProject.Cameras{
 public class TargetGroupController : MonoBehaviour
 {
     [SerializeField] DialogueEventsSO DialogueEvents;
@@ -79,4 +79,5 @@ public class TargetGroupController : MonoBehaviour
         
     
 
+}
 }

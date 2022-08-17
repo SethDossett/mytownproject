@@ -72,7 +72,7 @@ namespace MyTownProject.Cameras{
             cam.m_RecenterToTargetHeading.m_WaitTime = waitTime;
             cam.m_RecenterToTargetHeading.m_RecenteringTime = recenteringTime;
             cam.m_RecenterToTargetHeading.m_enabled = true;
-            yield return new WaitForSeconds(waitTime + recenteringTime * 2);
+            yield return new WaitForSeconds(waitTime + recenteringTime * 3);
             yield return new WaitForEndOfFrame();
             //yield return new WaitUntil(()=> Mathf.Abs(cam.m_XAxis.Value) < 0.1f);  
             DisableRecenter();
@@ -85,7 +85,7 @@ namespace MyTownProject.Cameras{
             cam.m_YAxisRecentering.m_WaitTime = waitTime;
             cam.m_YAxisRecentering.m_RecenteringTime = recenteringTime;
             cam.m_YAxisRecentering.m_enabled = true;
-            yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 2);
+            yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 3);
             yield return new WaitForEndOfFrame();
             DisableRecenter();
             yield break;

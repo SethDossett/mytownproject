@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6287939851415830443}
   - component: {fileID: 6287939851415830487}
   - component: {fileID: 6287939851415830440}
-  - component: {fileID: 6287939851415830441}
+  - component: {fileID: 5977975845743303834}
   - component: {fileID: 6287939851415830486}
   m_Layer: 0
   m_Name: Ladder
@@ -83,8 +83,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6287939851415830441
-MeshCollider:
+--- !u!65 &5977975845743303834
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -93,10 +93,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -395681959919807709, guid: 52ea066b361d84515abdff5764144cec, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.056444943, y: 3.720897, z: 0.57122767}
+  m_Center: {x: 0.000000002623444, y: 1.8604485, z: 0}
 --- !u!114 &6287939851415830486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,15 +109,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
-  _minClimbAngle: -0.8
-  _maxDistance: 0.7
+  RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
+  DisableCamRecter: {fileID: 11400000, guid: d33e28778e67ee948876888558d888ff, type: 2}
+  EnableControls: {fileID: 11400000, guid: e0d754fc0fbdb564d9a419d976d7238c, type: 2}
+  DisableControls: {fileID: 11400000, guid: 1f9619156896d6a468b85690b3ab4d6d, type: 2}
   _ladderHeight: 3.5
   _heightOnLadder: 0
-  _BottomLadderRadius: 0.45
+  _minClimbAngle: -0.8
+  _maxDistance: 0.7
+  _ladderPosOffset: {x: 0, y: 0, z: 0}
   _TopLadderRadius: 0.45
-  _SphereCastOffsetBottom: {x: 0.33, y: 0.42, z: 0}
   _SphereCastOffsetTop: {x: -0.6, y: 3.5, z: 0}
-  _ladderPosOffset: {x: 0.25, y: 0.3, z: 0}
+  _StartPosTop: {x: 0.18, y: 2.4, z: 0}
+  _BottomLadderRadius: 0.45
+  _StartPosBottom: {x: 0, y: 0, z: 0}
+  _SphereCastOffsetBottom: {x: 0.33, y: 0.42, z: 0}
   _playerLayer:
     serializedVersion: 2
     m_Bits: 128

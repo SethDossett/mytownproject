@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+namespace MyTownProject.Cameras{
 public class TargetingCamController : MonoBehaviour
 {
     CinemachineVirtualCamera cam;
@@ -41,4 +42,5 @@ public class TargetingCamController : MonoBehaviour
         mainCam.transform.localEulerAngles = eulerAngle;
 
     }
+}
 }

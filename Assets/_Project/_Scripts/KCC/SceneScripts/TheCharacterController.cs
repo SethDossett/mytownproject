@@ -390,7 +390,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Climbing:
                     {
-                        Quaternion lookRot = Quaternion.LookRotation(_newCenteredPosition, Vector3.up);
+                        //Quaternion lookRot = Quaternion.LookRotation(_newCenteredPosition, Vector3.up);
                         currentRotation = Quaternion.RotateTowards(transform.rotation, _newLadderRotation, 500 * Time.deltaTime);   
 
                         break;

@@ -26,7 +26,7 @@ namespace MyTownProject.Enviroment{
         [SerializeField] Vector3 _ladderPosOffset;
         Vector3 _ladderForward;
         float _startHeight;
-        MeshCollider _ladderCollider;
+        BoxCollider _ladderCollider;
 
         [Header("TopOfLadder")]
         [SerializeField] float _TopLadderRadius;
@@ -66,11 +66,25 @@ namespace MyTownProject.Enviroment{
         }
         private void Awake() {
             inputActions = new NewControls();
-            _ladderCollider = GetComponent<MeshCollider>();
+            _ladderCollider = GetComponent<BoxCollider>();
+            
+        }
+        private void Start() {
             _checkForPlayer = true;
-            _ladderForward = transform.right;
+            _ladderPosOffset = new Vector3(0, 0.3f,0);
+            _ladderPosOffset = _ladderPosOffset + (transform.right * 0.25f);
+            _StartPosBottom =  _ladderPosOffset;
+            _StartPosTop = _StartPosBottom + new Vector3(0, _ladderHeight - 1.4f, 0);
+            
+            _SphereCastOffsetBottom = _StartPosBottom;
+            print(_SphereCastOffsetBottom);
+            _SphereCastOffsetTop =  new Vector3(0, _ladderHeight, 0);
+            _SphereCastOffsetTop = _SphereCastOffsetTop + (-transform.right * 0.5f);
+            print(_SphereCastOffsetTop);
+            
         }
         private void Update() {
+            
             if(!_checkForPlayer) return;
 
             if(!_onLadder)
@@ -92,6 +106,7 @@ namespace MyTownProject.Enviroment{
             if(_numFoundBottom > 0){
                 if(_player == null) _player = cols[0].transform.gameObject;
                 if(CC == null) CC = _player.GetComponent<TheCharacterController>();
+                _ladderForward = transform.right;
                 _dis = Vector3.Distance(transform.position, cols[0].transform.position);
                 if(_dis > _maxDistance) return;
 
@@ -115,6 +130,7 @@ namespace MyTownProject.Enviroment{
             if(_numFoundTop > 0){
                 if(_player == null) _player = cols[0].transform.gameObject;
                 if(CC == null) CC = _player.GetComponent<TheCharacterController>();
+                _ladderForward = transform.right;
                 _dis = Vector3.Distance(transform.position + _SphereCastOffsetTop, cols[0].transform.position);
                 if(_dis > _maxDistance) return;
 
@@ -164,30 +180,27 @@ namespace MyTownProject.Enviroment{
         }
         void SwitchToClimbingState(bool onBottom){
             if(onBottom){
-                RecenterCamX.OnRaiseEvent2(0,0.35f);
-                RecenterCamY.OnRaiseEvent2(0,0.35f);
                 _startHeight = transform.position.y;
                 //_checkForPlayer = false;
                 _onLadder = true;
                 CC.TransitionToState(CharacterState.Climbing);
                 _ladderCollider.enabled = false;
-                Vector3 startLadderPos = transform.position + _ladderPosOffset;
-                CC._newCenteredPosition = startLadderPos;
-                
+                CC._newCenteredPosition = transform.position + _StartPosBottom;
+                CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
+                RecenterCamX.OnRaiseEvent2(0,0.35f);
+                RecenterCamY.OnRaiseEvent2(0,0.35f);
                 print("SwitchedToClimbing");
             }
             else{
-                
-                //RecenterCamX.OnRaiseEvent2(0,0.35f);
-                //RecenterCamY.OnRaiseEvent2(0,0.35f);
+                _ladderForward = transform.right;
                 _startHeight = transform.position.y;
                 //_checkForPlayer = false;
                 //_onLadder = true;
                 CC.TransitionToState(CharacterState.Climbing);
-                Vector3 startLadderPos = transform.position + _StartPosTop;
-                CC._newCenteredPosition = startLadderPos;
+                CC._newCenteredPosition =  transform.position + _StartPosTop;
                 CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
                 _ladderCollider.enabled = false;
+                
                 //_exitLadderCalled = false;
                 print("SwitchedToClimbing");
             }
@@ -204,8 +217,8 @@ namespace MyTownProject.Enviroment{
 
         IEnumerator GetOnLadderTop(){
             print("geton ladder top");
+            inputActions.Disable();
             DisableControls.RaiseEvent();
-            yield return new WaitForEndOfFrame();
             float dis = Vector3.Distance(CC.Motor.TransientPosition, transform.position + Vector3.up * _ladderHeight);
             print(dis);
             if(dis != 0f){
@@ -218,8 +231,12 @@ namespace MyTownProject.Enviroment{
             yield return new WaitForEndOfFrame();
             CC._gettingOnOffLadder = false;
             _onLadder = true;
+            yield return new WaitForEndOfFrame();
+            RecenterCamX.OnRaiseEvent2(0,0.35f);
+            RecenterCamY.OnRaiseEvent2(0,0.35f);
             yield return new WaitForSecondsRealtime(0.4f);
             _exitLadderCalled = false;
+            inputActions.Enable();
             EnableControls.RaiseEvent();
             yield return null;
 
@@ -240,8 +257,8 @@ namespace MyTownProject.Enviroment{
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireSphere(transform.position + _SphereCastOffsetBottom, _BottomLadderRadius);
             Gizmos.DrawWireSphere(transform.position + _SphereCastOffsetTop, _TopLadderRadius);
-            //Gizmos.DrawRay(transform.position,_ladderForward * 5f);
-            //Gizmos.DrawRay(transform.position,Vector3.up * _ladderHeight);
+            Gizmos.DrawRay(transform.position,_ladderForward * 5f);
+            Gizmos.DrawRay(transform.position,Vector3.up * _ladderHeight);
 
         }
     }

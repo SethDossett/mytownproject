@@ -2,6 +2,7 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using MyTownProject.Core;
 using MyTownProject.Events;
+using MyTownProject.Cameras;
 using KinematicCharacterController.Examples;
 using System.Collections;
 using System.Collections.Generic;
@@ -407,7 +408,7 @@ namespace MyTownProject.Interaction
             lockOnCanvas.gameObject.SetActive(true);
             //anim.SetLayerWeight(1, 1);
             //cinemachineAnimator.Play("TargetingCamera01");
-            cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false;
+            cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false; // needs to be event fired
             cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
             _enemyLocked = true;
             _closestTarget.GetComponent<NPC_Interact>().SetTargeted(); //Set NPC as been targeted.
@@ -578,27 +579,29 @@ namespace MyTownProject.Interaction
 
         void TestForInteraction(Transform t){
             _interactable = t.gameObject.GetComponent<IInteractable>();
-                if (_interactable == null){
-                    ClearIInteractable();
-                    return;
-                }
-                if(!_interactable.CanBeInteractedWith){
-                    ClearIInteractable();
-                    return;
-                }
-                if(GetDistance(transform, t) > _interactable.MaxInteractRange){
-                    ClearIInteractable();
-                    return;
-                } 
-                
-                uiEventChannel.ShowTextInteract(_interactable.Prompt);
-
-                if (_interact.WasPerformedThisFrame()){
-                    _interactable.OnInteract(this);
-                    _isTalking = true;
-                    Debug.Log($"interacted with {t.gameObject.name}");
-                    return;
-                } 
+            if (_interactable == null){
+                ClearIInteractable();
+                return;
+            }
+            if(!_interactable.CanBeInteractedWith){
+                ClearIInteractable();
+                return;
+            }
+            if(GetDistance(transform, t) > _interactable.MaxInteractRange){
+                ClearIInteractable();
+                return;
+            } 
+            
+            uiEventChannel.ShowTextInteract(_interactable.Prompt);
+            if (_interact.WasPerformedThisFrame()){
+                Debug.Log($"interacted with {t.gameObject.name}");
+                if(currentTarget) ResetTarget();
+                cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
+                cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
+                _interactable.OnInteract(this);
+                _isTalking = true;
+                return;
+            } 
 
         }
         void ClearIInteractable(){
