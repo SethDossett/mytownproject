@@ -317,7 +317,7 @@ namespace MyTownProject.Interaction
                 {
                     Transform t = nearbyTargets[i].transform;
                     float dis = GetDistance(transform, t);
-                    float ang = GetAngle(t.position, transform.position, transform.forward, 1);
+                    float ang = GetAngle(t.position, transform.position, transform.forward, 0);
                     if(t.gameObject.GetComponent<IInteractable>().CanBeTargeted){
                         if(ang <= maxNoticeAngle){
                             if (dis < closestDis){
@@ -338,11 +338,12 @@ namespace MyTownProject.Interaction
             currentYOffset = h - half_h;
             if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
             Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
-            if(Blocked(tarPos)){
+            if(Blocked(closestTarget.position + Vector3.up * 1.2f)){
                 if(_closestTarget){
                     _closestTarget = null;
                     ResetTarget();
                 }
+                print("Blocked");
                 return;
             } 
             if(GetDistance(transform, closestTarget) > closestTarget.GetComponent<IInteractable>().MaxNoticeRange){
@@ -350,8 +351,8 @@ namespace MyTownProject.Interaction
                 _closestTarget = null;
                 return; // not working right with findByAngle
             }
-            if(GetAngle(closestTarget.position,transform.position,transform.forward, 1) > maxNoticeAngle){
-                print(GetAngle(closestTarget.position,transform.position,transform.forward, 1));
+            if(GetAngle(closestTarget.position,transform.position,transform.forward, 0) > maxNoticeAngle){
+                print(GetAngle(closestTarget.position,transform.position,transform.forward, 0));
                 _closestTarget = null;
                 return;
             }
@@ -367,9 +368,10 @@ namespace MyTownProject.Interaction
         bool StillClosestTarget(Transform t){
             if(Blocked(t.position)){
                 //HideHover(t);
+                print("Blocked");
                  return false;
             }
-            if(GetAngle(t.position,transform.position,transform.forward, 1) > maxNoticeAngle){
+            if(GetAngle(t.position,transform.position,transform.forward, 0) > maxNoticeAngle){
                 //HideHover(t);
                  return false;
             }
@@ -384,7 +386,7 @@ namespace MyTownProject.Interaction
         bool Blocked(Vector3 t)
         {
             RaycastHit hit;
-            if (Physics.Linecast(transform.position + Vector3.up * 0.5f, t, out hit))
+            if (Physics.Linecast(transform.position + Vector3.up * 1.5f, t, out hit))
             {
                 if (!hit.transform.CompareTag("NPC")) return true;
             }
@@ -454,7 +456,7 @@ namespace MyTownProject.Interaction
                 float closestDis = 10f; // change to max range
                 Transform closetT = null;
                 foreach(var target in nearbyTargets){
-                    print(GetAngle(transform.position, target.transform.position, transform.forward, 1));
+                    print(GetAngle(transform.position, target.transform.position, transform.forward, 0));
                     if(target.gameObject.GetComponent<NPC_Interact>().beenTargeted == false){
                         float disP = GetDistance(transform, target.transform);
                         if(disP <= target.transform.GetComponent<IInteractable>().MaxNoticeRange){
@@ -631,6 +633,8 @@ namespace MyTownProject.Interaction
             Gizmos.DrawWireSphere(_interactionPoint.position, _interactionPointRadius);
             
             Gizmos.DrawWireSphere(transform.position, noticeZone);
+
+            
         }
 
     }

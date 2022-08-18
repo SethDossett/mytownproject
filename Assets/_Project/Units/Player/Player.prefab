@@ -738,7 +738,7 @@ MonoBehaviour:
   PlayerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
   UntargetEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
-  DialogueEvent: {fileID: 0}
+  DialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _LookAtPoint: {fileID: 6875040720797426742}
 --- !u!114 &4936703484560184526
 MonoBehaviour:
@@ -824,6 +824,7 @@ MonoBehaviour:
   _moveInputVector: {x: 0, y: 0, z: 0}
   accelTime: 3
   _slideDuration: 0.15
+  dialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
 --- !u!114 &7468897045282317995
 MonoBehaviour:
   m_ObjectHideFlags: 0
