@@ -13,10 +13,13 @@ namespace MyTownProject.Interaction
     {
         [Header("References")]
         [SerializeField] UIEventChannelSO uiEventChannel;
+        [SerializeField] FloatEventSO RecenterCamX;
+        [SerializeField] FloatEventSO RecenterCamY;
         [SerializeField] TheCharacterController CC;
         private IInteractable _interactable;
         private NewControls _inputActions;
         private InputAction _interact;
+        private InputAction _cameraInput;
         private GameStateManager.GameState _game_Playing_State;
         private RaycastHit _hitinfo;
         private Transform _transform;
@@ -85,13 +88,16 @@ namespace MyTownProject.Interaction
             TheCharacterController.OnPlayerStateChanged += CheckPlayerState;
             _inputActions = new NewControls();
             _interact = _inputActions.GamePlay.Interact;
+            _cameraInput = _inputActions.GamePlay.Camera;
             _interact.Enable();
+            _cameraInput.Enable();
         }
         private void OnDisable()
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             TheCharacterController.OnPlayerStateChanged -= CheckPlayerState;
             _interact.Disable();
+            _cameraInput.Disable();
         }
         private void Start()
         {
@@ -131,8 +137,14 @@ namespace MyTownProject.Interaction
 
             camFollow.lockedTarget = _enemyLocked;
             //defMovement.lockMovement = enemyLocked;
-
-
+            if(currentTarget){
+                if(_cameraInput.ReadValue<Vector2>().magnitude > 0){
+                    cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
+                    RecenterCamX.RaiseEvent2(0,0.5f);
+                    RecenterCamY.RaiseEvent2(0, 0.5f);
+                }
+            }
+            
             IconControl();
             CheckTimer();
             CheckForIInteractable();
@@ -163,7 +175,7 @@ namespace MyTownProject.Interaction
                 if (currentTarget)
                 {
                     
-                    print("eNTER Talk mode");
+                    CC._target = currentTarget;
                      // so we dont lose closest target when switching
                     if(_enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
                 }
@@ -460,6 +472,7 @@ namespace MyTownProject.Interaction
 
                 currentTarget = closetT;
                 currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = true;
+                CC._target = currentTarget;
                 //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted();
                 closetT.gameObject.GetComponent<NPC_Interact>().beenTargeted = true;
                 _changeTargetEvent.RaiseEvent(currentTarget);
@@ -474,6 +487,7 @@ namespace MyTownProject.Interaction
             //currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
             currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
             _unTargetingEvent.RaiseEvent();
+            if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
             _startTimer = false;
             _timer = 0;
             cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
@@ -595,6 +609,7 @@ namespace MyTownProject.Interaction
             uiEventChannel.ShowTextInteract(_interactable.Prompt);
             if (_interact.WasPerformedThisFrame()){
                 Debug.Log($"interacted with {t.gameObject.name}");
+                CC.TransitionToState(CharacterState.Talking);
                 if(currentTarget) ResetTarget();
                 cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
                 cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;

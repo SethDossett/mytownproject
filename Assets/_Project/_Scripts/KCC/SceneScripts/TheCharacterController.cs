@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyTownProject.Events;
 using KinematicCharacterController;
 using System;
 using UnityEngine.InputSystem;
@@ -74,6 +75,9 @@ namespace KinematicCharacterController.Examples
         public bool _gettingOnOffLadder;
         [SerializeField] float _jumpOnLadderSpeed = 5f; 
 
+        [Header("Targeting")]
+        public Transform _target;
+
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
         public BonusOrientationMethod BonusOrientationMethod = BonusOrientationMethod.None;
@@ -122,7 +126,15 @@ namespace KinematicCharacterController.Examples
         [Range(0f,0.7f)][SerializeField] float _slideDuration = 0.15f;
         bool changingDirection = false;
         
+        [SerializeField] DialogueEventsSO dialogueEvent;
 
+
+        private void OnEnable() {
+            dialogueEvent.onEnter += (GameObject npc, TextAsset inkFile) => _target = npc.transform;
+        }
+        private void OnDisable() {
+            dialogueEvent.onEnter -= (GameObject npc, TextAsset inkFile) => _target = npc.transform;
+        }
         private void Awake()
         {
             // Handle initial state
@@ -135,13 +147,6 @@ namespace KinematicCharacterController.Examples
         }
         private void Update()
         {
-            if (Keyboard.current.lKey.wasPressedThisFrame)
-            {
-                if (CurrentCharacterState == CharacterState.Default)
-                    TransitionToState(CharacterState.Climbing);
-                else
-                    TransitionToState(CharacterState.Default);
-            }
 
         }
         /// <summary>
@@ -175,6 +180,10 @@ namespace KinematicCharacterController.Examples
                     {
                         break;
                     }
+                case CharacterState.Talking:
+                    {
+                        break;
+                    }    
                 
             }
             OnPlayerStateChanged?.Invoke(state);
@@ -202,6 +211,10 @@ namespace KinematicCharacterController.Examples
                     {
                         break;
                     }
+                case CharacterState.Talking:
+                    {
+                        break;
+                    }     
             }
 
 
@@ -313,6 +326,10 @@ namespace KinematicCharacterController.Examples
 
                         break;
                     }
+                case CharacterState.Talking:
+                    {
+                        break;
+                    }         
             }
         }
 
@@ -397,11 +414,18 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Targeting:
                     {
-
-                        float yawCamera = cam.transform.rotation.eulerAngles.y;
-                        currentRotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera,0), 15 * deltaTime);
+                        Quaternion lookRot = Quaternion.LookRotation(_target.position- transform.position, Vector3.up);
+                        currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, 500 * Time.deltaTime);
+                        //float yawCamera = cam.transform.rotation.eulerAngles.y;
+                        //currentRotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera,0), 15 * deltaTime);
                         break;
                     }
+                case CharacterState.Talking:
+                    {
+                        Quaternion lookRot = Quaternion.LookRotation(_target.position- transform.position, Vector3.up);
+                        currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, 500 * Time.unscaledDeltaTime);
+                        break;
+                    }         
             }
         }
 
@@ -607,6 +631,11 @@ namespace KinematicCharacterController.Examples
                         float currentVelocityMagnitude = currentVelocity.magnitude;
                         
                         if(!_onLadder){
+                            currentVelocity.y = 0f;
+                            currentVelocity.x = 0f;
+                            currentVelocity.z = 0f;
+                            if (animator.speed != 1f)
+                                animator.speed = 1f;
                             //Vector3 ladderStartPos = new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z);
                             //Vector3 newPlayerPos = Vector3.Lerp(Motor.TransientPosition, newCenteredPosition, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             //Vector3 newPlayerPos = Vector3.MoveTowards(Motor.TransientPosition, newCenteredPosition, _jumpOnLadderSpeed * deltaTime);
@@ -614,7 +643,8 @@ namespace KinematicCharacterController.Examples
                             if(Vector3.Distance(Motor.TransientPosition, newCenteredPosition) <= float.Epsilon){
                                 _onLadder = true;
                                 print("ladder is true");
-                            } 
+                            }
+                            else _onLadder = false; 
                         }
                         else{
                             currentVelocity.y = _moveInputVector.y * _climbSpeedY;
@@ -693,6 +723,15 @@ namespace KinematicCharacterController.Examples
 
                         break;
                     }
+                case CharacterState.Talking:
+                    {
+                        float currentVelocityMagnitude = currentVelocity.magnitude;
+                        currentVelocity = Vector3.zero;
+                        animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
+                        animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
+                        animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
+                        break;
+                    }         
             }
         }
 

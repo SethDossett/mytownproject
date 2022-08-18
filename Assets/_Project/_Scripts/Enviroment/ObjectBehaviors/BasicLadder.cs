@@ -225,16 +225,15 @@ namespace MyTownProject.Enviroment{
                 CC.Motor.SetPosition(transform.position + Vector3.up * _ladderHeight);
             }
             yield return new WaitForEndOfFrame();
-            CC._gettingOnOffLadder = true;
             SwitchToClimbingState(false);
             _player.GetComponent<Animator>().CrossFade("GetOnLadderTop", 0, 2);
             yield return new WaitForEndOfFrame();
-            CC._gettingOnOffLadder = false;
+            
             _onLadder = true;
             yield return new WaitForEndOfFrame();
             RecenterCamX.OnRaiseEvent2(0,0.35f);
             RecenterCamY.OnRaiseEvent2(0,0.35f);
-            yield return new WaitForSecondsRealtime(0.4f);
+            yield return new WaitForSecondsRealtime(0.45f);
             _exitLadderCalled = false;
             inputActions.Enable();
             EnableControls.RaiseEvent();

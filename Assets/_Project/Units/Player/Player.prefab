@@ -738,6 +738,7 @@ MonoBehaviour:
   PlayerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
   UntargetEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
+  DialogueEvent: {fileID: 0}
   _LookAtPoint: {fileID: 6875040720797426742}
 --- !u!114 &4936703484560184526
 MonoBehaviour:
@@ -812,6 +813,7 @@ MonoBehaviour:
   _climbSpeedX: 2
   _gettingOnOffLadder: 0
   _jumpOnLadderSpeed: 3
+  _target: {fileID: 0}
   IgnoredColliders: []
   BonusOrientationMethod: 0
   BonusOrientationSharpness: 10
@@ -835,6 +837,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
+  RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
   CC: {fileID: 3156670061489872913}
   _interactionPoint: {fileID: 3742338039152190084}
   _interactionPointRadius: 1

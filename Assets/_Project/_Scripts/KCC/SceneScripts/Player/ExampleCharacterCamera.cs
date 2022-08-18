@@ -286,8 +286,9 @@ namespace KinematicCharacterController.Examples
                         targetPosition += Transform.up * FollowPointFraming.y;
 
                         // Apply position
-                        Transform.position = targetPosition;
-
+                        //Transform.position = targetPosition;
+                        float t = Mathf.MoveTowards(0, 1, 1000 * Time.deltaTime);
+                        Transform.position = Vector3.Slerp(Transform.position, targetPosition, t);
 
                     break;
                 }

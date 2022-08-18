@@ -44,10 +44,11 @@ namespace MyTownProject.Interaction
 
         private void OnEnable()
         {
+            GameStateManager.OnGameStateChanged += ChangedGameState;
         }
         private void OnDisable()
         {
-
+            GameStateManager.OnGameStateChanged -= ChangedGameState;
         }
         public void OnFocus(string interactionName)
         {
@@ -85,8 +86,20 @@ namespace MyTownProject.Interaction
                 _interactionUI.SetActive(true);
 
         }
+
+        void ChangedGameState(GameStateManager.GameState state){
+            if(state != GameStateManager.GameState.GAME_PLAYING){
+                TurnOffAllIcons();
+            }
+            else{
+                if (!_interactionUI.activeInHierarchy)
+                _interactionUI.SetActive(true);
+            }
+        }
         void Update()
         {
+            if(!_interactionUI.activeInHierarchy) return;
+
             if (_targeted)
             {
                 _hovered = false;
@@ -131,13 +144,6 @@ namespace MyTownProject.Interaction
                 }
             }
         }
-            
-        
-        
-        
-        
-        
-
 
         public void SetTargeted(){
             if(!beenTargeted)
@@ -150,7 +156,16 @@ namespace MyTownProject.Interaction
                 beenTargeted = false;
         }
 
-
+        void TurnOffAllIcons(){
+            if (_hoverIcon.activeInHierarchy)
+                _hoverIcon.SetActive(false);
+            if (_titlName.activeInHierarchy)
+                _titlName.SetActive(false);
+            if (_targetIcon.activeInHierarchy)
+                _targetIcon.SetActive(false);
+            if (_interactionUI.activeInHierarchy)
+                _interactionUI.SetActive(false);
+        }
 
         
     }
