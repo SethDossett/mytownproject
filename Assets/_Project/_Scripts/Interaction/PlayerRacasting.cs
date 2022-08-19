@@ -339,6 +339,7 @@ namespace MyTownProject.Interaction
             if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
             Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
             if(Blocked(closestTarget.position + Vector3.up * 1.2f)){
+                closestTarget.gameObject.GetComponent<NPC_Interact>()._hovered = false;
                 if(_closestTarget){
                     _closestTarget = null;
                     ResetTarget();
@@ -366,8 +367,8 @@ namespace MyTownProject.Interaction
 
         }
         bool StillClosestTarget(Transform t){
-            if(Blocked(t.position)){
-                //HideHover(t);
+            if(Blocked(t.position + Vector3.up * 1.2f)){ //
+                t.gameObject.GetComponent<NPC_Interact>()._hovered = false;
                 print("Blocked");
                  return false;
             }
@@ -633,7 +634,6 @@ namespace MyTownProject.Interaction
             Gizmos.DrawWireSphere(_interactionPoint.position, _interactionPointRadius);
             
             Gizmos.DrawWireSphere(transform.position, noticeZone);
-
             
         }
 
