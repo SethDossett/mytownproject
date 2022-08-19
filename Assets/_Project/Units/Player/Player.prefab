@@ -765,7 +765,7 @@ MonoBehaviour:
     m_Bits: 64
   DiscreteCollisionEvents: 0
   StepHandling: 1
-  MaxStepHeight: 0.5
+  MaxStepHeight: 0.4
   AllowSteppingWithoutStableGrounding: 0
   MinRequiredStepDepth: 0.1
   LedgeAndDenivelationHandling: 1
@@ -888,6 +888,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b62ca4b66b0062143810d15ef47f2408, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _downCastOffset: {x: 0, y: 3, z: 0.75}
+  _forwardCastOffset: {x: 0, y: 0, z: 0}
+  _overPassCastOffset: {x: 0, y: 0, z: 0}
+  _overPassHeight: 1.8
+  _endOffset: {x: 0, y: 0, z: 0.2}
+  _groudAngleMax: 0
+  _wallAngleMax: 0
 --- !u!114 &8436165082441742949
 MonoBehaviour:
   m_ObjectHideFlags: 0
