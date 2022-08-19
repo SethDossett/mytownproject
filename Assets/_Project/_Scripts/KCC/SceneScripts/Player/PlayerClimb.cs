@@ -7,6 +7,7 @@ namespace KinematicCharacterController.Examples{
     public class PlayerClimb : MonoBehaviour
     {
         TheCharacterController CC;
+        CapsuleCollider _capsule;
 
         [Header("Raycast Checks")]
         [SerializeField] LayerMask _groundLayer;
@@ -53,7 +54,16 @@ namespace KinematicCharacterController.Examples{
                 Vector3 vectSurface = Vector3.ProjectOnPlane(_forwardDirectionXZ, _downHitInfo.normal);
                 _endPosition = _downHitInfo.point + Quaternion.LookRotation(vectSurface, Vector3.up) * _endOffset;
 
-                CC.Motor.SetPosition(_endPosition);
+                //De-Penetration
+                Collider colliderB = _downHitInfo.collider;
+                bool _penetrationOverlap = Physics.ComputePenetration(
+                    _capsule, _endPosition, transform.rotation, colliderB, colliderB.transform.position,
+                    colliderB.transform.rotation, out Vector3 penetrationDir, out float penetrationDis);
+                if(_penetrationOverlap)
+                    _endPosition += penetrationDir * penetrationDis;
+
+                //Up Sweep
+
                 
             }
             
@@ -67,6 +77,10 @@ namespace KinematicCharacterController.Examples{
         }
         bool OverPassCast(){
              return Physics.Raycast(transform.position + _overPassCastOffset, transform.forward, out _overPassHitInfo, 5f, _groundLayer);
+        }
+
+        bool CharacterSweep(Vector3 pos, Quaternion rot, Vector3 dir, float dis, LayerMask layerMask, float inflate){
+            return false;
         }
     }
 
