@@ -20,6 +20,7 @@ namespace MyTownProject.Interaction
         private NewControls _inputActions;
         private InputAction _interact;
         private InputAction _cameraInput;
+        private InputAction _crouchInput;
         private GameStateManager.GameState _game_Playing_State;
         private RaycastHit _hitinfo;
         private Transform _transform;
@@ -89,8 +90,10 @@ namespace MyTownProject.Interaction
             _inputActions = new NewControls();
             _interact = _inputActions.GamePlay.Interact;
             _cameraInput = _inputActions.GamePlay.Camera;
+            _crouchInput = _inputActions.GamePlay.Crouch;
             _interact.Enable();
             _cameraInput.Enable();
+            _crouchInput.Enable();
         }
         private void OnDisable()
         {
@@ -98,6 +101,7 @@ namespace MyTownProject.Interaction
             TheCharacterController.OnPlayerStateChanged -= CheckPlayerState;
             _interact.Disable();
             _cameraInput.Disable();
+            _crouchInput.Disable();
         }
         private void Start()
         {
@@ -157,8 +161,8 @@ namespace MyTownProject.Interaction
                     _closestTarget = null;
                 }
             }
-            
-            if (Keyboard.current.shiftKey.wasPressedThisFrame)
+            //Keyboard.current.shiftKey.wasPressedThisFrame
+            if (_crouchInput.WasPressedThisFrame())
             {
                 print("Fire");
                 if (_startTimer == true && remainingTargets.Count > 0)
@@ -167,23 +171,24 @@ namespace MyTownProject.Interaction
                         StartCoroutine(FindNextTarget());
                     return;
                 }
-
                 if(_closestTarget != null){
                     pos = _closestTarget.position;
                     currentTarget = _closestTarget;
                 }
                 if (currentTarget)
                 {
-                    
                     CC._target = currentTarget;
                      // so we dont lose closest target when switching
                     if(_enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
                 }
+                if (currentTarget == null && _closestTarget == null) CC._canCrouch = true;
+
 
             }
-
-            if (Keyboard.current.shiftKey.wasReleasedThisFrame)
+            //Keyboard.current.shiftKey.wasReleasedThisFrame
+            if (_crouchInput.WasReleasedThisFrame())
             {
+                CC._canCrouch = false;
                 if (currentTarget != null)
                     _startTimer = true;
             }
@@ -348,12 +353,12 @@ namespace MyTownProject.Interaction
                 return;
             } 
             if(GetDistance(transform, closestTarget) > closestTarget.GetComponent<IInteractable>().MaxNoticeRange){
-                print(GetDistance(transform, closestTarget));
+                //print(GetDistance(transform, closestTarget));
                 _closestTarget = null;
                 return; // not working right with findByAngle
             }
             if(GetAngle(closestTarget.position,transform.position,transform.forward, 0) > maxNoticeAngle){
-                print(GetAngle(closestTarget.position,transform.position,transform.forward, 0));
+                //print(GetAngle(closestTarget.position,transform.position,transform.forward, 0));
                 _closestTarget = null;
                 return;
             }

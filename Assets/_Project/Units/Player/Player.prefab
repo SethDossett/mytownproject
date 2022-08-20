@@ -823,6 +823,7 @@ MonoBehaviour:
   CameraFollowPoint: {fileID: 6875040720797426742}
   CrouchedCapsuleHeight: 1
   _moveInputVector: {x: 0, y: 0, z: 0}
+  _canCrouch: 0
   accelTime: 3
   _slideDuration: 0.15
   dialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}

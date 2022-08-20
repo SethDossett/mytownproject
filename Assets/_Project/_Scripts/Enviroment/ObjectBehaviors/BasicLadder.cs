@@ -56,7 +56,7 @@ namespace MyTownProject.Enviroment{
         bool _checkForPlayer;
         bool _exitLadderCalled;
 
-       
+        [SerializeField] float inputMag;
 
         private void OnEnable() {
             inputActions.GamePlay.Enable();
@@ -84,8 +84,8 @@ namespace MyTownProject.Enviroment{
             
         }
         private void Update() {
-            
-            if(!_checkForPlayer) return;
+            inputMag = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
+            if (!_checkForPlayer) return;
 
             if(!_onLadder)
                 EnterLadder();
@@ -153,8 +153,9 @@ namespace MyTownProject.Enviroment{
             _heightOnLadder = _player.transform.position.y - _startHeight;
 
             if(_heightOnLadder <= 0.1f){
-                Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>();
-                if(value == Vector2.down){
+                Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>().normalized;
+                if(value.y < -0.95f)
+                {
                     _timer += Time.unscaledDeltaTime;
 
                     if(_timer >= _timeBuffer){
@@ -167,8 +168,8 @@ namespace MyTownProject.Enviroment{
             }
 
             if(_heightOnLadder >= _ladderHeight-1){
-                Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>();
-                if(value == Vector2.up){
+                Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>().normalized;
+                if(value.y > 0.95f){
                     
                     _exitLadderCalled = true;
                     StartCoroutine(GetOffLadderTop());

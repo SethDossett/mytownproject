@@ -110,6 +110,7 @@ namespace KinematicCharacterController.Examples
         private float _timeSinceJumpRequested = Mathf.Infinity;
         private float _timeSinceLastAbleToJump = 0f;
         private Vector3 _internalVelocityAdd = Vector3.zero;
+        public bool _canCrouch = false;
         private bool _shouldBeCrouching = false;
         private bool _isCrouching = false;
 
@@ -271,7 +272,7 @@ namespace KinematicCharacterController.Examples
                         }
 
                         // Crouching input
-                        if (inputs.CrouchDown)
+                        if (inputs.CrouchDown && _canCrouch)
                         {
                             _shouldBeCrouching = true;
 
@@ -443,7 +444,7 @@ namespace KinematicCharacterController.Examples
                         // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
-                            Vector3 prevInput = _moveInputVector;
+                            Vector3 prevInput = _moveInputVector.normalized;
 
                             float dot = Vector3.Dot(prevInput, transform.forward);
 
@@ -485,7 +486,7 @@ namespace KinematicCharacterController.Examples
                             }
                             else{
                                 if(MaxStableMoveSpeed >= MaxSpeed){
-                                    if(dot < -0.95f){
+                                    if(dot < -0.92f){
                                         changingDirection = true;
                                         MaxStableMoveSpeed = 0;
                                         animator.CrossFade("ChangeDirection", 0, 0);
@@ -502,14 +503,21 @@ namespace KinematicCharacterController.Examples
                                         }
                                     }
                                     else{
-                                        if(_moveInputVector.magnitude < 0.2f){
+                                        if(_moveInputVector.magnitude < 0.1f){
                                             MaxStableMoveSpeed = 0; //might need to change so movement is not odd with thumbstick.
                                         }
                                         else{
-                                            if(MaxStableMoveSpeed < 4) MaxStableMoveSpeed = 4;
-                                            if(MaxStableMoveSpeed != MaxSpeed){
-                                                MaxStableMoveSpeed += RatePerSecond * deltaTime;
-                                                MaxStableMoveSpeed = Mathf.Min(MaxStableMoveSpeed, MaxSpeed);
+                                            //Walk
+                                            if (_moveInputVector.magnitude < 0.3f) MaxStableMoveSpeed = 1f;
+                                            else
+                                            {
+                                                //Run
+                                                if (MaxStableMoveSpeed < 4) MaxStableMoveSpeed = 4;
+                                                if (MaxStableMoveSpeed != MaxSpeed)
+                                                {
+                                                    MaxStableMoveSpeed += RatePerSecond * deltaTime;
+                                                    MaxStableMoveSpeed = Mathf.Min(MaxStableMoveSpeed, MaxSpeed);
+                                                }
                                             }
                                         }
                                         

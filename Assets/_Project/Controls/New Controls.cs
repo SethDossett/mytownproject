@@ -249,7 +249,7 @@ public partial class @NewControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""50f2f121-2be5-4123-b714-b15f0c9d5e62"",
-                    ""path"": ""<Keyboard>/c"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
