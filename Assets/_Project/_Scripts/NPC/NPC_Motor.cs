@@ -15,7 +15,7 @@ namespace MyTownProject.NPC
         [Range(20f, 300f)][SerializeField] float _rotSpeed = 100f;
         bool _talking = false;
 
-
+        Quaternion _prevRotation;
         
         private void OnEnable()
         {
@@ -98,6 +98,7 @@ namespace MyTownProject.NPC
         }
         private void RotateToPlayer()
         {
+            _prevRotation = transform.rotation;
             //Lets put in coroutine to move player until dot product in 1.
 
             //can set to only rotate body if angle is outside set amount.
