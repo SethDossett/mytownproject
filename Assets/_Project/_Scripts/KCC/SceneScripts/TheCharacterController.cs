@@ -10,7 +10,7 @@ namespace KinematicCharacterController.Examples
 {
     public enum CharacterState
     {
-        Default, Talking, Climbing, Targeting
+        Default, Talking, Climbing, Targeting, Crawling
     }
 
     public enum OrientationMethod
@@ -184,7 +184,11 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Talking:
                     {
                         break;
-                    }    
+                    } 
+                case CharacterState.Crawling:
+                    {
+                        break;
+                    }        
                 
             }
             OnPlayerStateChanged?.Invoke(state);
@@ -215,7 +219,11 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Talking:
                     {
                         break;
-                    }     
+                    } 
+                case CharacterState.Crawling:
+                    {
+                        break;
+                    }          
             }
 
 
@@ -283,13 +291,14 @@ namespace KinematicCharacterController.Examples
                                 //MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
                                 if (animator.GetBool(anim_isCrouched) != true)
                                     animator.SetBool(anim_isCrouched, true);
+
+
+
+                                TransitionToState(CharacterState.Crawling);    
                                 Debug.Log("Crouch");
                             }
                         }
-                        else if (inputs.CrouchUp)
-                        {
-                            _shouldBeCrouching = false;
-                        }
+                        
                         break;
                     }
                 case CharacterState.Climbing:
@@ -330,7 +339,15 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Talking:
                     {
                         break;
-                    }         
+                    }
+                case CharacterState.Crawling:
+                    {
+                        if (inputs.CrouchUp)
+                        {
+                            _shouldBeCrouching = false;
+                        }
+                        break;
+                    }               
             }
         }
 
@@ -426,7 +443,11 @@ namespace KinematicCharacterController.Examples
                         Quaternion lookRot = Quaternion.LookRotation(_target.position- transform.position, Vector3.up);
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, 500 * Time.unscaledDeltaTime);
                         break;
-                    }         
+                    } 
+                case CharacterState.Crawling:
+                    {
+                        break;
+                    }              
             }
         }
 
@@ -739,7 +760,11 @@ namespace KinematicCharacterController.Examples
                         animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
                         animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                         break;
-                    }         
+                    }
+                case CharacterState.Crawling:
+                    {
+                        break;
+                    }               
             }
         }
 
@@ -777,6 +802,10 @@ namespace KinematicCharacterController.Examples
                             }
                         }
 
+                        break;
+                    }
+                    case CharacterState.Crawling:
+                    {
                         // Handle uncrouching
                         if (_isCrouching && !_shouldBeCrouching)
                         {
@@ -799,12 +828,14 @@ namespace KinematicCharacterController.Examples
                                 _isCrouching = false;
                                 if (animator.GetBool(anim_isCrouched) != false)
                                     animator.SetBool(anim_isCrouched, false);
+
+                                TransitionToState(CharacterState.Default);    
                                 Debug.Log("Uncrouched");
                             }
                         }
 
                         break;
-                    }
+                    } 
             }
         }
 
