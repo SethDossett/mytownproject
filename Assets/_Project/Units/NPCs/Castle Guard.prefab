@@ -1067,7 +1067,7 @@ MonoBehaviour:
   NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
   playerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
-  _rotSpeed: 100
+  _rotSpeed: 300
 --- !u!114 &5108103891202545039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1682,7 +1682,7 @@ PrefabInstance:
     - target: {fileID: 1620545339832543974, guid: 5111ea7abe859f542904a1dc35e87c7c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.007
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1620545339832543975, guid: 5111ea7abe859f542904a1dc35e87c7c,
         type: 3}
@@ -1804,6 +1804,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1620545341014246032, guid: 5111ea7abe859f542904a1dc35e87c7c,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.13
+      objectReference: {fileID: 0}
     - target: {fileID: 1620545341014246033, guid: 5111ea7abe859f542904a1dc35e87c7c,
         type: 3}
       propertyPath: m_IsActive
@@ -1813,6 +1818,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9154568046319591638, guid: 5111ea7abe859f542904a1dc35e87c7c,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5111ea7abe859f542904a1dc35e87c7c, type: 3}
