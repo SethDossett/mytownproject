@@ -29,8 +29,8 @@ namespace MyTownProject.Core
         }
         private void SixEvent() 
         {
-            NPC[boyty].currentDestinationIndex = 0;
-            NPC[boyty].RaiseEventMove(); // can use NPC.canMove, but leaving it just in case I want event fired.
+            //NPC[boyty].currentDestinationIndex = 0;
+            //NPC[boyty].RaiseEventMove(); // can use NPC.canMove, but leaving it just in case I want event fired.
         }
         private void SixThirtyEvent()
         {

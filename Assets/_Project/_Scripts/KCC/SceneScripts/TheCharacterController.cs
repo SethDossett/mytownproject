@@ -720,7 +720,7 @@ namespace KinematicCharacterController.Examples
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
                             animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                            animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
+                            animator.SetFloat(anim_vertical, currentVelocity.z, 0.1f, Time.deltaTime);
                         }
                         // Take into account additive velocity
                         if (_internalVelocityAdd.sqrMagnitude > 0f)

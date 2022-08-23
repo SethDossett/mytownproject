@@ -86,6 +86,10 @@ namespace MyTownProject.NPC
             Debug.Log(_npcTransform.forward);
             Debug.Log(_player.forward);
             Debug.Log(Vector3.Dot(_player.forward, _npcTransform.forward));
+            if(state == NPC_StateHandler.NPCSTATE.STANDING){
+                //rotate to prevposition
+                
+            }
 
             if (RotatedToTarget()) return;
 
@@ -126,7 +130,7 @@ namespace MyTownProject.NPC
 
             while (Vector3.Dot(_player.forward, _npcTransform.forward) >= -0.98f)
             {
-                NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, rotation, 200 * Time.unscaledDeltaTime);
+                NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, rotation, _rotSpeed * Time.unscaledDeltaTime);
                 
                 
                 yield return null;
