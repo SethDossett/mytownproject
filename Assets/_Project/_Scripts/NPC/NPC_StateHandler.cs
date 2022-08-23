@@ -116,6 +116,8 @@ namespace MyTownProject.NPC
         }
         void EnterTalkingState(GameObject npc, TextAsset inkJSON)
         {
+            if(NPC.currentState != NPCSTATE.TALKING) return;
+
             if (npcState != NPCSTATE.TALKING)
                 UpdateNPCState(NPCSTATE.TALKING);
         }

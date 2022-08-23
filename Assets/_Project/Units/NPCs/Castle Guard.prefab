@@ -1679,6 +1679,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4713324949655920514}
     m_Modifications:
+    - target: {fileID: 1620545339832543974, guid: 5111ea7abe859f542904a1dc35e87c7c,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.007
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620545339832543975, guid: 5111ea7abe859f542904a1dc35e87c7c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1620545339893473385, guid: 5111ea7abe859f542904a1dc35e87c7c,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1767,7 +1777,7 @@ PrefabInstance:
     - target: {fileID: 1620545339893473385, guid: 5111ea7abe859f542904a1dc35e87c7c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.91
+      value: 2.21
       objectReference: {fileID: 0}
     - target: {fileID: 1620545339893473385, guid: 5111ea7abe859f542904a1dc35e87c7c,
         type: 3}
@@ -1788,6 +1798,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InteractionUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620545339893473389, guid: 5111ea7abe859f542904a1dc35e87c7c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620545341014246033, guid: 5111ea7abe859f542904a1dc35e87c7c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6974004951601366842, guid: 5111ea7abe859f542904a1dc35e87c7c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5111ea7abe859f542904a1dc35e87c7c, type: 3}
