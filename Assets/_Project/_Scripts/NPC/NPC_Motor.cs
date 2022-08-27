@@ -15,7 +15,7 @@ namespace MyTownProject.NPC
         [Range(20f, 300f)][SerializeField] float _rotSpeed = 100f;
         bool _talking = false;
 
-
+        Quaternion _prevRotation;
         
         private void OnEnable()
         {
@@ -45,6 +45,13 @@ namespace MyTownProject.NPC
 
         private void DoMove(NPC_StateHandler.NPCSTATE state)
         {
+            if(state == NPC_StateHandler.NPCSTATE.STANDING && _talking){
+                    NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, _prevRotation, (_rotSpeed * 2)  * Time.unscaledDeltaTime);
+                    if(NPC.currentRotation == _prevRotation){
+                        _talking = false;
+                    }    
+            }
+                
             
             if (state != NPC_StateHandler.NPCSTATE.WALKING)
                 return;
@@ -86,6 +93,10 @@ namespace MyTownProject.NPC
             Debug.Log(_npcTransform.forward);
             Debug.Log(_player.forward);
             Debug.Log(Vector3.Dot(_player.forward, _npcTransform.forward));
+            if(state == NPC_StateHandler.NPCSTATE.STANDING){
+                //StartCoroutine(RotateToStartPosition());
+                
+            }
 
             if (RotatedToTarget()) return;
 
@@ -98,6 +109,8 @@ namespace MyTownProject.NPC
         }
         private void RotateToPlayer()
         {
+            _talking = true;
+            _prevRotation = transform.rotation;
             //Lets put in coroutine to move player until dot product in 1.
 
             //can set to only rotate body if angle is outside set amount.
@@ -118,6 +131,7 @@ namespace MyTownProject.NPC
         }
         IEnumerator Rotate()
         {
+            
             Quaternion rotation = Quaternion.LookRotation(_player.position - _npcTransform.position, Vector3.up);
             rotation.Normalize();
             rotation.x = 0;
@@ -125,15 +139,29 @@ namespace MyTownProject.NPC
 
             while (Vector3.Dot(_player.forward, _npcTransform.forward) >= -0.98f)
             {
-                NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, rotation, 200 * Time.unscaledDeltaTime);
+                NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, rotation, _rotSpeed * Time.unscaledDeltaTime);
                 
                 
                 yield return null;
             }
+            yield break;
+        }
 
-            yield return new WaitForSecondsRealtime(5f);
+        IEnumerator RotateToStartPosition()
+        {
+            Quaternion rotation = _prevRotation;
+            rotation.Normalize();
+            rotation.x = 0;
+            rotation.z = 0;
 
-            Debug.Log(Vector3.Dot(_player.forward, _npcTransform.forward));
+            while (Quaternion.Angle(NPC.currentRotation, _prevRotation) >= -0.98f)
+            {
+                NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, _prevRotation, _rotSpeed * Time.unscaledDeltaTime);
+                
+                
+                yield return null;
+            }
+            yield break;
         }
     }
 }
