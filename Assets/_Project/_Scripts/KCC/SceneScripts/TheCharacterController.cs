@@ -73,10 +73,14 @@ namespace KinematicCharacterController.Examples
         public float _climbSpeedX = 2f;
         bool _onLadder = false;
         public bool _gettingOnOffLadder;
-        [SerializeField] float _jumpOnLadderSpeed = 5f; 
+        [SerializeField] float _jumpOnLadderSpeed = 5f;
 
         [Header("Targeting")]
         public Transform _target;
+
+        [Header("Crawling")]
+        [SerializeField] float _crawlSpeed = 2f;
+        bool _hasFinishedCrouch;
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -128,6 +132,8 @@ namespace KinematicCharacterController.Examples
         bool changingDirection = false;
         
         [SerializeField] DialogueEventsSO dialogueEvent;
+        [SerializeField] FloatEventSO RecenterCamX;
+        [SerializeField] FloatEventSO RecenterCamY;
 
 
         private void OnEnable() {
@@ -222,6 +228,9 @@ namespace KinematicCharacterController.Examples
                     } 
                 case CharacterState.Crawling:
                     {
+                        _hasFinishedCrouch = false;
+                        if (animator.speed != 1f)
+                            animator.speed = 1f;
                         break;
                     }          
             }
@@ -293,6 +302,8 @@ namespace KinematicCharacterController.Examples
                                     animator.SetBool(anim_isCrouched, true);
 
 
+                                RecenterCamX.RaiseEvent2(0, 0.1f);
+                                RecenterCamY.RaiseEvent2(0, 0.1f);
 
                                 TransitionToState(CharacterState.Crawling);    
                                 Debug.Log("Crouch");
@@ -342,6 +353,19 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Crawling:
                     {
+                        // Move and look inputs
+                        _moveInputVector = cameraPlanarRotation * moveInputVector;
+
+                        switch (OrientationMethod)
+                        {
+                            case OrientationMethod.TowardsCamera:
+                                _lookInputVector = cameraPlanarDirection;
+                                break;
+                            case OrientationMethod.TowardsMovement:
+                                _lookInputVector = _moveInputVector.normalized;
+                                break;
+                        }
+
                         if (inputs.CrouchUp)
                         {
                             _shouldBeCrouching = false;
@@ -446,6 +470,45 @@ namespace KinematicCharacterController.Examples
                     } 
                 case CharacterState.Crawling:
                     {
+                        if (_lookInputVector.sqrMagnitude > 0f && OrientationSharpness > 0f)
+                        {
+                            // Smoothly interpolate from current to target look direction
+                            Vector3 smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector, 1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
+
+                            // Set the current rotation (which will be used by the KinematicCharacterMotor)
+                            currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, Motor.CharacterUp);
+                        }
+
+                        Vector3 currentUp = (currentRotation * Vector3.up);
+                        if (BonusOrientationMethod == BonusOrientationMethod.TowardsGravity)
+                        {
+                            // Rotate from current up to invert gravity
+                            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
+                            currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
+                        }
+                        else if (BonusOrientationMethod == BonusOrientationMethod.TowardsGroundSlopeAndGravity)
+                        {
+                            if (Motor.GroundingStatus.IsStableOnGround)
+                            {
+                                Vector3 initialCharacterBottomHemiCenter = Motor.TransientPosition + (currentUp * Motor.Capsule.radius);
+
+                                Vector3 smoothedGroundNormal = Vector3.Slerp(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
+                                currentRotation = Quaternion.FromToRotation(currentUp, smoothedGroundNormal) * currentRotation;
+
+                                // Move the position to create a rotation around the bottom hemi center instead of around the pivot
+                                Motor.SetTransientPosition(initialCharacterBottomHemiCenter + (currentRotation * Vector3.down * Motor.Capsule.radius), false);
+                            }
+                            else
+                            {
+                                Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
+                                currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
+                            }
+                        }
+                        else
+                        {
+                            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
+                            currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
+                        }
                         break;
                     }              
             }
@@ -553,7 +616,7 @@ namespace KinematicCharacterController.Examples
                             
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-                            animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
+                            animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
                             animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
                             animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
 
@@ -684,7 +747,7 @@ namespace KinematicCharacterController.Examples
                             if(currentVelocity.y == 0f)
                             {
                                 if(currentVelocity != Vector3.zero) currentVelocity = Vector3.zero;
-                                if(animator.speed != 0f)
+                                if (animator.speed != 0f)
                                     animator.speed = 0f;
                             }
                             else
@@ -739,7 +802,7 @@ namespace KinematicCharacterController.Examples
 
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-                            animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
+                            animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
                             animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
                             animator.SetFloat(anim_vertical, currentVelocity.z, 0.1f, Time.deltaTime);
                         }
@@ -756,13 +819,71 @@ namespace KinematicCharacterController.Examples
                     {
                         float currentVelocityMagnitude = currentVelocity.magnitude;
                         currentVelocity = Vector3.zero;
-                        animator.SetFloat(anim_moving, currentVelocityMagnitude, 0.1f, Time.deltaTime);
+                        animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
                         animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
                         animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                         break;
                     }
                 case CharacterState.Crawling:
                     {
+                        //if (!Motor.GroundingStatus.IsStableOnGround) return;
+                        if (!_hasFinishedCrouch)
+                        {
+                            if (currentVelocity != Vector3.zero) currentVelocity = Vector3.zero;
+
+                            if (animator.speed != 1f)
+                                animator.speed = 1f;
+
+                            if(_moveInputVector.magnitude > 0f)
+                            {
+                                _hasFinishedCrouch = true;
+                            }
+                            return;
+                        }
+
+                        float currentVelocityMagnitude = currentVelocity.magnitude;
+
+                        Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
+                        if (currentVelocityMagnitude > 0f && Motor.GroundingStatus.SnappingPrevented)
+                        {
+                            // Take the normal from where we're coming from
+                            Vector3 groundPointToCharacter = Motor.TransientPosition - Motor.GroundingStatus.GroundPoint;
+                            if (Vector3.Dot(currentVelocity, groundPointToCharacter) >= 0f)
+                            {
+                                effectiveGroundNormal = Motor.GroundingStatus.OuterGroundNormal;
+                            }
+                            else
+                            {
+                                effectiveGroundNormal = Motor.GroundingStatus.InnerGroundNormal;
+                            }
+                        }
+
+                        MaxStableMoveSpeed = 2f;
+                        if(_moveInputVector.magnitude == 0)
+                        {
+                            if (animator.speed != 0f)
+                                animator.speed = 0f;
+                        }
+                        else
+                        {
+                            if (animator.speed != 1f)
+                                animator.speed = 1f;
+                        }
+
+
+                        // Reorient velocity on slope
+                        currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
+
+                        // Calculate target velocity
+                        Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
+                        Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+                        Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
+
+                        // Smooth movement Velocity
+                        currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                        animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
+                        animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
+                        animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                         break;
                     }               
             }

@@ -63,8 +63,23 @@ namespace KinematicCharacterController.Examples{
                     _endPosition += penetrationDir * penetrationDis;
 
                 //Up Sweep
+                float inflate = -0.05f;
+                float upSweepDistance = _downHitInfo.point.y - transform.position.y;
+                Vector3 upSweepDirection = transform.up;
+                Vector3 upSweepOrigin = transform.position; // this may not be right spot
+                bool upSweepHit = CharacterSweep(upSweepOrigin, transform.rotation, upSweepDirection, upSweepDistance, _groundLayer, inflate);
 
-                
+                //Forward Sweep
+                Vector3 forwardSweepOrigin = transform.position + upSweepDirection * upSweepDistance;
+                Vector3 forwardSweepVector = _endPosition - forwardSweepOrigin;
+                bool forwardSweepHit = CharacterSweep(forwardSweepOrigin, transform.rotation, forwardSweepVector.normalized, forwardSweepVector.magnitude, _groundLayer, inflate);
+
+                if(!upSweepHit && !forwardSweepHit)
+                {
+                    // Can Climb
+                    print("CanClimb");
+                }
+
             }
             
         }
@@ -80,7 +95,25 @@ namespace KinematicCharacterController.Examples{
         }
 
         bool CharacterSweep(Vector3 pos, Quaternion rot, Vector3 dir, float dis, LayerMask layerMask, float inflate){
-            return false;
+            float heightScale = Mathf.Abs(transform.lossyScale.y);
+            float radiusScale = Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.z));
+
+            float radius = _capsule.radius * radiusScale;
+            float totalHeight = Mathf.Max(_capsule.height * heightScale, radius * 2);
+
+            Vector3 capsuleUp = rot * Vector3.up;
+            Vector3 center = pos + rot * _capsule.center;
+            Vector3 top = center + capsuleUp * (totalHeight / 2 - radius);
+            Vector3 bottom = center - capsuleUp * (totalHeight / 2 - radius);
+
+            bool sweepHit = Physics.CapsuleCast(bottom, top, radius, dir, dis, layerMask);
+
+            return sweepHit;
+        }
+
+        private void OnDrawGizmos()
+        {
+            
         }
     }
 
