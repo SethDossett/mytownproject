@@ -20,7 +20,7 @@ namespace MyTownProject.Interaction
         private NewControls _inputActions;
         private InputAction _interact;
         private InputAction _cameraInput;
-        private InputAction _crouchInput;
+        private InputAction _LeftTriggerInput;
         private GameStateManager.GameState _game_Playing_State;
         private RaycastHit _hitinfo;
         private Transform _transform;
@@ -90,10 +90,10 @@ namespace MyTownProject.Interaction
             _inputActions = new NewControls();
             _interact = _inputActions.GamePlay.Interact;
             _cameraInput = _inputActions.GamePlay.Camera;
-            _crouchInput = _inputActions.GamePlay.Crouch;
+            _LeftTriggerInput = _inputActions.GamePlay.LeftTrigger;
             _interact.Enable();
             _cameraInput.Enable();
-            _crouchInput.Enable();
+            _LeftTriggerInput.Enable();
         }
         private void OnDisable()
         {
@@ -101,7 +101,7 @@ namespace MyTownProject.Interaction
             TheCharacterController.OnPlayerStateChanged -= CheckPlayerState;
             _interact.Disable();
             _cameraInput.Disable();
-            _crouchInput.Disable();
+            _LeftTriggerInput.Disable();
         }
         private void Start()
         {
@@ -144,7 +144,7 @@ namespace MyTownProject.Interaction
             if(currentTarget){
                 if(_cameraInput.ReadValue<Vector2>().magnitude > 0){
                     cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
-                    RecenterCamX.RaiseEvent2(0,0.5f);
+                    RecenterCamX.RaiseEvent2(0, 0.5f);
                     RecenterCamY.RaiseEvent2(0, 0.5f);
                 }
             }
@@ -162,7 +162,7 @@ namespace MyTownProject.Interaction
                 }
             }
             //Keyboard.current.shiftKey.wasPressedThisFrame
-            if (_crouchInput.WasPressedThisFrame())
+            if (_LeftTriggerInput.WasPressedThisFrame())
             {
                 print("Fire");
                 if (_startTimer == true && remainingTargets.Count > 0)
@@ -181,14 +181,17 @@ namespace MyTownProject.Interaction
                      // so we dont lose closest target when switching
                     if(_enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
                 }
-                if (currentTarget == null && _closestTarget == null) CC._canCrouch = true;
+                if (currentTarget == null && _closestTarget == null) {
+                    RecenterCamX.RaiseEvent2(0, 0.1f);
+                    RecenterCamY.RaiseEvent2(0, 0.1f);
+                } 
 
 
             }
             //Keyboard.current.shiftKey.wasReleasedThisFrame
-            if (_crouchInput.WasReleasedThisFrame())
+            if (_LeftTriggerInput.WasReleasedThisFrame())
             {
-                CC._canCrouch = false;
+                
                 if (currentTarget != null)
                     _startTimer = true;
             }

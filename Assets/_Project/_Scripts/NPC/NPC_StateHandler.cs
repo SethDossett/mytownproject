@@ -58,6 +58,7 @@ namespace MyTownProject.NPC
         private void HandleWorking()
         {
             _animator.SetBool(_isWalking, false);
+            NPC.RaiseChangedState(npcState);
         }
 
         private void HandleTalking()
@@ -71,6 +72,7 @@ namespace MyTownProject.NPC
         {
             _animator.SetTrigger(_isStanding);
             _animator.SetBool(_isWalking, true);
+            NPC.RaiseChangedState(npcState);
             Debug.Log("Walking");
         }
 
@@ -78,6 +80,7 @@ namespace MyTownProject.NPC
         {
             _animator.SetBool(_isWalking, false);
             _animator.SetTrigger(_isStanding);
+            NPC.RaiseChangedState(npcState);
         }
 
 
@@ -116,7 +119,9 @@ namespace MyTownProject.NPC
         }
         void EnterTalkingState(GameObject npc, TextAsset inkJSON)
         {
-            if(NPC.currentState != NPCSTATE.TALKING) return;
+            if (this.gameObject != npc) return;
+
+            //if(NPC.currentState != NPCSTATE.TALKING) return;
 
             if (npcState != NPCSTATE.TALKING)
                 UpdateNPCState(NPCSTATE.TALKING);

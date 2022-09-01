@@ -815,6 +815,7 @@ MonoBehaviour:
   _gettingOnOffLadder: 0
   _jumpOnLadderSpeed: 3
   _target: {fileID: 0}
+  _crawlSpeed: 2
   IgnoredColliders: []
   BonusOrientationMethod: 0
   BonusOrientationSharpness: 10
@@ -823,10 +824,12 @@ MonoBehaviour:
   CameraFollowPoint: {fileID: 6875040720797426742}
   CrouchedCapsuleHeight: 1
   _moveInputVector: {x: 0, y: 0, z: 0}
-  _canCrouch: 0
+  _cannotTarget: 0
   accelTime: 3
   _slideDuration: 0.15
   dialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
+  RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
 --- !u!114 &7468897045282317995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -891,7 +894,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   _downCastOffset: {x: 0, y: 3, z: 0.75}
   _forwardCastOffset: {x: 0, y: 0, z: 0}
   _overPassCastOffset: {x: 0, y: 0, z: 0}

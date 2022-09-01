@@ -1,6 +1,7 @@
 using MyTownProject.Events;
 using UnityEngine;
 using System.Collections;
+using System;
 
 namespace MyTownProject.NPC
 {
@@ -20,12 +21,12 @@ namespace MyTownProject.NPC
         private void OnEnable()
         {
             playerRef.OnRaiseEvent += SetPlayerReference;
-            NPC.OnChangedState += HandleTalkingRotation;
+            NPC.OnChangedState += CheckNPCState;
         }
         private void OnDisable()
         {
             playerRef.OnRaiseEvent -= SetPlayerReference;
-            NPC.OnChangedState -= HandleTalkingRotation;
+            NPC.OnChangedState -= CheckNPCState;
         }
         void SetPlayerReference(Transform player) => _player = player;
         private void Start()
@@ -33,35 +34,42 @@ namespace MyTownProject.NPC
             rb = GetComponent<Rigidbody>();
             rb.position = NPC.currentPosition;
             rb.rotation = NPC.currentRotation.normalized;
-            _npcTransform = transform;
+            _npcTransform = transform; // doesnt need to be cashed
         }
         
         private void Update()
         {
-            DoMove(NPC.currentState);
+            if (_talking) RotateToFacePlayer(); else CheckToMove(NPC.currentState);
 
+            //transform.rotation = NPC.currentRotation;
+        }
+
+        private void RotateToFacePlayer()
+        {
+            Quaternion rotation = Quaternion.LookRotation(_player.position - _npcTransform.position, Vector3.up);
+            rotation.Normalize();
+            rotation.x = 0;
+            rotation.z = 0;
+
+            NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, rotation, _rotSpeed * Time.unscaledDeltaTime);
             transform.rotation = NPC.currentRotation;
         }
 
-        private void DoMove(NPC_StateHandler.NPCSTATE state)
+        private void CheckToMove(NPC_StateHandler.NPCSTATE state)
         {
-            if(state == NPC_StateHandler.NPCSTATE.STANDING && _talking){
-                    NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, _prevRotation, (_rotSpeed * 2)  * Time.unscaledDeltaTime);
-                    if(NPC.currentRotation == _prevRotation){
-                        _talking = false;
-                    }    
+            if (state == NPC_StateHandler.NPCSTATE.TALKING || state == NPC_StateHandler.NPCSTATE.WORKING) return;
+            else if(state == NPC_StateHandler.NPCSTATE.STANDING){
+                if (!NPC.returnToStandingRotation) return;
+                if (NPC.currentRotation == NPC.shouldBeStandingRotation) return;
+                NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, NPC.shouldBeStandingRotation, (_rotSpeed)  * Time.unscaledDeltaTime);
+                transform.rotation = NPC.currentRotation;
             }
-                
-            
-            if (state != NPC_StateHandler.NPCSTATE.WALKING)
-                return;
-                
-            HandleMove();
+            else if (state == NPC_StateHandler.NPCSTATE.WALKING)
+                DoMove();
         }
 
-        private void HandleMove()
+        private void DoMove()
         {
-
             if (!NPC.moveTowardsDestination)
                 return;
 
@@ -88,24 +96,34 @@ namespace MyTownProject.NPC
             }
             else return false;
         }
-        private void HandleTalkingRotation(NPC_StateHandler.NPCSTATE state)
+        private void CheckNPCState(NPC_StateHandler.NPCSTATE state)
         {
-            Debug.Log(_npcTransform.forward);
-            Debug.Log(_player.forward);
-            Debug.Log(Vector3.Dot(_player.forward, _npcTransform.forward));
-            if(state == NPC_StateHandler.NPCSTATE.STANDING){
-                //StartCoroutine(RotateToStartPosition());
-                
-            }
-
-            if (RotatedToTarget()) return;
-
-            if (state == NPC_StateHandler.NPCSTATE.TALKING)
+            if(state != NPC_StateHandler.NPCSTATE.TALKING)
+                _talking = false;
+            else
             {
-                RotateToPlayer();
+                NPC.shouldBeStandingRotation = transform.rotation;
+                _talking = true;
             }
             
             
+
+            //Debug.Log(_npcTransform.forward);
+            //Debug.Log(_player.forward);
+            //Debug.Log(Vector3.Dot(_player.forward, _npcTransform.forward));
+            //if(state == NPC_StateHandler.NPCSTATE.STANDING){
+            //    //StartCoroutine(RotateToStartPosition());
+            //    
+            //}
+            //
+            //if (RotatedToTarget()) return;
+            //
+            //if (state == NPC_StateHandler.NPCSTATE.TALKING)
+            //{
+            //    RotateToPlayer();
+            //}
+
+
         }
         private void RotateToPlayer()
         {

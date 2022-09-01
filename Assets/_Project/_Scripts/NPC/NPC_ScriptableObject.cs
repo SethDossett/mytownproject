@@ -13,10 +13,16 @@ namespace MyTownProject.NPC
         public Vector3 currentPosition;
         public Quaternion currentRotation;
         public int currentScene;
+        
 
         [Header("Bool Checks")]
         public bool moveTowardsDestination = false; // need to set based on save data when game starts.
         public bool atDestination = true;
+        
+
+        [Header("Talking")]
+        public bool returnToStandingRotation = true;
+        public Quaternion shouldBeStandingRotation;
 
         [Header("Paths")]
         public int currentDestinationIndex; // need to set to 0 when time resets.

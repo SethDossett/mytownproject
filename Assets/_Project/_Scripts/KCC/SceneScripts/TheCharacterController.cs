@@ -29,6 +29,8 @@ namespace KinematicCharacterController.Examples
         public bool CrouchDown;
         public bool CrouchUp;
         public bool Interact;
+        public bool LeftTriggerDown;
+        public bool LeftTriggerUp;
     }
 
     public struct AICharacterInputs
@@ -114,9 +116,10 @@ namespace KinematicCharacterController.Examples
         private float _timeSinceJumpRequested = Mathf.Infinity;
         private float _timeSinceLastAbleToJump = 0f;
         private Vector3 _internalVelocityAdd = Vector3.zero;
-        public bool _canCrouch = false;
+        private bool _canCrouch = false;
         private bool _shouldBeCrouching = false;
         private bool _isCrouching = false;
+        public bool _cannotTarget = false;
 
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
@@ -620,10 +623,17 @@ namespace KinematicCharacterController.Examples
                             animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
                             animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
 
+                            if (currentVelocityMagnitude <= 0f)
+                            {
+                                _canCrouch = true;
+                            }
+
+                            else _canCrouch = false;
                         }
                         // Air movement
                         else
                         {
+                            _canCrouch = false;
                             // Add move input
                             if (_moveInputVector.sqrMagnitude > 0f)
                             {
@@ -830,6 +840,7 @@ namespace KinematicCharacterController.Examples
                         if (!_hasFinishedCrouch)
                         {
                             if (currentVelocity != Vector3.zero) currentVelocity = Vector3.zero;
+                            animator.SetFloat(anim_moving, 0f, 0f, Time.deltaTime);
 
                             if (animator.speed != 1f)
                                 animator.speed = 1f;

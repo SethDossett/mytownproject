@@ -15,9 +15,11 @@ MonoBehaviour:
   MoveSpeed: 1
   currentState: 0
   currentPosition: {x: 108, y: 2, z: 87.1}
-  currentRotation: {x: 0, y: 0.995493, z: 0, w: 0.094834626}
+  currentRotation: {x: 0, y: -0.4935143, z: 0, w: 0.86973774}
   currentScene: 2
   moveTowardsDestination: 0
   atDestination: 0
+  returnToStandingRotation: 0
+  shouldBeStandingRotation: {x: -0, y: 0.78580636, z: -0, w: 0.61847264}
   currentDestinationIndex: 0
   destinationPaths: []
