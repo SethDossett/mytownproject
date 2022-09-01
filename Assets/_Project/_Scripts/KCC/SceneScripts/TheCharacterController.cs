@@ -79,6 +79,7 @@ namespace KinematicCharacterController.Examples
 
         [Header("Targeting")]
         public Transform _target;
+        [SerializeField] float _targetingRotSpeed = 500f;
 
         [Header("Crawling")]
         [SerializeField] float _crawlSpeed = 2f;
@@ -92,6 +93,7 @@ namespace KinematicCharacterController.Examples
         public Transform MeshRoot;
         public Transform CameraFollowPoint;
         public float CrouchedCapsuleHeight = 1f;
+        [SerializeField] float _talkingRotSpeed = 500f;
 
         [Header("Animation")]
         Animator animator;
@@ -460,15 +462,15 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Targeting:
                     {
                         Quaternion lookRot = Quaternion.LookRotation(_target.position- transform.position, Vector3.up);
-                        currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, 500 * Time.deltaTime);
+                        currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _targetingRotSpeed * Time.deltaTime);
                         //float yawCamera = cam.transform.rotation.eulerAngles.y;
                         //currentRotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera,0), 15 * deltaTime);
                         break;
                     }
                 case CharacterState.Talking:
                     {
-                        Quaternion lookRot = Quaternion.LookRotation(_target.position- transform.position, Vector3.up);
-                        currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, 500 * Time.unscaledDeltaTime);
+                        Quaternion lookRot = Quaternion.LookRotation(_target.position - transform.position, Vector3.up);
+                        currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _talkingRotSpeed * Time.unscaledDeltaTime);
                         break;
                     } 
                 case CharacterState.Crawling:

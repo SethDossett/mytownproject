@@ -72,6 +72,7 @@ namespace MyTownProject.Interaction
         bool _isTalking;
         float currentYOffset;
         [SerializeField] Vector3 pos;
+        bool _freeLookCameraOff;
         
         float _timer = 0;
         bool _startTimer;
@@ -141,8 +142,9 @@ namespace MyTownProject.Interaction
 
             camFollow.lockedTarget = _enemyLocked;
             //defMovement.lockMovement = enemyLocked;
-            if(currentTarget){
+            if(currentTarget && _freeLookCameraOff){ // might not want, it is janky, transitioning from kcc to freelook cam.
                 if(_cameraInput.ReadValue<Vector2>().magnitude > 0){
+                    _freeLookCameraOff = false;
                     cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
                     RecenterCamX.RaiseEvent2(0, 0.5f);
                     RecenterCamY.RaiseEvent2(0, 0.5f);
@@ -433,6 +435,7 @@ namespace MyTownProject.Interaction
             //cinemachineAnimator.Play("TargetingCamera01");
             cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false; // needs to be event fired
             cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
+            _freeLookCameraOff = true;
             _enemyLocked = true;
             _closestTarget.GetComponent<NPC_Interact>().SetTargeted(); //Set NPC as been targeted.
 
@@ -502,6 +505,7 @@ namespace MyTownProject.Interaction
             _startTimer = false;
             _timer = 0;
             cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
+            _freeLookCameraOff = false;
             lockOnCanvas.gameObject.SetActive(false);
             currentTarget = null;
             _closestTarget = null;
@@ -624,6 +628,7 @@ namespace MyTownProject.Interaction
                 if(currentTarget) ResetTarget();
                 cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
                 cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
+                _freeLookCameraOff = false;
                 _interactable.OnInteract(this);
                 _isTalking = true;
                 return;

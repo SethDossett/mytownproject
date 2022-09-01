@@ -821,7 +821,7 @@ MonoBehaviour:
   NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
   playerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
-  _rotSpeed: 100
+  _rotSpeed: 200
 --- !u!114 &883617143
 MonoBehaviour:
   m_ObjectHideFlags: 0

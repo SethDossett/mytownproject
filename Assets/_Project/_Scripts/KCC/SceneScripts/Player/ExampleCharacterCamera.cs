@@ -220,7 +220,9 @@ namespace KinematicCharacterController.Examples
                         eulerAngle.y = 0;
                         //Transform.localEulerAngles = eulerAngle;
                         //Transform.rotation = Quaternion.Slerp(Transform.rotation, targetRotation, _rotateToTargetSpeed * Time.deltaTime);
-                        Transform.LookAt(target);
+                        float r = Mathf.MoveTowards(0, 1, 100 * Time.deltaTime);
+                        Transform.rotation = Quaternion.Slerp(Transform.rotation, targetRotation, r);
+                        //Transform.LookAt(target);
 
 
                         // Process distance input

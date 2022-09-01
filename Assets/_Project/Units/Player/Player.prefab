@@ -815,6 +815,7 @@ MonoBehaviour:
   _gettingOnOffLadder: 0
   _jumpOnLadderSpeed: 3
   _target: {fileID: 0}
+  _targetingRotSpeed: 500
   _crawlSpeed: 2
   IgnoredColliders: []
   BonusOrientationMethod: 0
@@ -823,6 +824,7 @@ MonoBehaviour:
   MeshRoot: {fileID: 6875040722021663315}
   CameraFollowPoint: {fileID: 6875040720797426742}
   CrouchedCapsuleHeight: 1
+  _talkingRotSpeed: 500
   _moveInputVector: {x: 0, y: 0, z: 0}
   _cannotTarget: 0
   accelTime: 3
