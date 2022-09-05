@@ -49,6 +49,7 @@ namespace MyTownProject.Interaction
         [SerializeField] TransformEventSO _targetingEvent;
         [SerializeField] TransformEventSO _changeTargetEvent;
         [SerializeField] GeneralEventSO _unTargetingEvent;
+        [SerializeField] AudioEventSO _audioEvent;
 
 
         [Tooltip("StateDrivenMethod for Switching Cameras")]

@@ -1,9 +1,8 @@
 {
     "name": "FMODUnity",
+    "rootNamespace": "",
     "references": [
-        "Unity.Timeline",
-        "Unity.Addressables",
-        "Unity.ResourceManager"
+        "Unity.Timeline"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

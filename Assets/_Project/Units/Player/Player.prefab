@@ -866,6 +866,7 @@ MonoBehaviour:
   _targetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}
   _changeTargetEvent: {fileID: 11400000, guid: 9923ca68d96e1c94cab833e062b6b065, type: 2}
   _unTargetingEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
+  _audioEvent: {fileID: 0}
   cinemachineAnimator: {fileID: 0}
   zeroVert_Look: 0
   noticeZone: 7

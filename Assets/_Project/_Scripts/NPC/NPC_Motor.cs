@@ -52,7 +52,7 @@ namespace MyTownProject.NPC
             rotation.z = 0;
             //if angle is less than certain amount then just turn head, then rotate rest of body. also set up bool check for just eyes, eyes range, head, range, rotation range.
             NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, rotation, _rotSpeed * Time.unscaledDeltaTime);
-            rb.rotation = NPC.currentRotation;
+            rb.rotation = NPC.currentRotation.normalized;
         }
 
         private void CheckToMove(NPC_StateHandler.NPCSTATE state)
@@ -62,7 +62,7 @@ namespace MyTownProject.NPC
                 if (!NPC.returnToStandingRotation) return;
                 if (NPC.currentRotation == NPC.shouldBeStandingRotation) return;
                 NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, NPC.shouldBeStandingRotation, (_rotSpeed)  * Time.unscaledDeltaTime);
-                rb.rotation = NPC.currentRotation;
+                rb.rotation = NPC.currentRotation.normalized;
             }
             else if (state == NPC_StateHandler.NPCSTATE.WALKING)
                 DoMove();
@@ -84,7 +84,7 @@ namespace MyTownProject.NPC
                 rotation.z = 0;
                 //rb.MoveRotation(rotation);
                 NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, rotation, _rotSpeed * Time.fixedDeltaTime);
-                rb.rotation = NPC.currentRotation;
+                rb.rotation = NPC.currentRotation.normalized;
             }
             
         }

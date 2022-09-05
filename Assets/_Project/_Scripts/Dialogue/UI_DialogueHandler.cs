@@ -6,6 +6,7 @@ using Ink.Runtime;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using MyTownProject.Events;
+using FMODUnity;
 
 namespace MyTownProject.Dialogue
 {
@@ -14,6 +15,7 @@ namespace MyTownProject.Dialogue
         [Header("References")]
         [SerializeField] MainEventChannelSO evnt;
         [SerializeField] DialogueEventsSO DialogueEvents;
+        [SerializeField] AudioEventSO _oneShot;
         [SerializeField] TextMeshProUGUI _dialogueText;
         [SerializeField] TextMeshProUGUI _speakerText;
         [SerializeField] GameObject continueIcon;
@@ -36,6 +38,10 @@ namespace MyTownProject.Dialogue
 
         [Header("Anim")]
         int idle = Animator.StringToHash("Idle");
+
+        [Header("Audio")]
+        [SerializeField] EventReference SelectGeneric;
+        [SerializeField] EventReference skipToEndOfLine;
 
         private void OnEnable()
         {
@@ -94,7 +100,9 @@ namespace MyTownProject.Dialogue
             else
             {
                 if (currentStory.currentChoices.Count == 0)
+                {
                     ContinueStory();
+                }
                 else return;
             }
 
@@ -104,7 +112,7 @@ namespace MyTownProject.Dialogue
             if (currentStory.canContinue)
             {
                 StartCoroutine(DisplayLine(currentStory.Continue()));
-
+                _oneShot.RaiseEvent(SelectGeneric);
                 HandleTags(currentStory.currentTags);
 
             }
@@ -127,6 +135,7 @@ namespace MyTownProject.Dialogue
                 if (_skipToEndOfLine)
                 {
                     _dialogueText.maxVisibleCharacters = line.Length;
+                    _oneShot.RaiseEvent(skipToEndOfLine);
                     _skipToEndOfLine = false;
 
                     break;
