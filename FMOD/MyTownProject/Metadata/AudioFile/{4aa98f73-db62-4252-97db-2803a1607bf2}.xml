@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{4aa98f73-db62-4252-97db-2803a1607bf2}">
+		<property name="assetPath">
+			<value>FX Click Glitch.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>1.0208163265306123</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{936dc49d-2b59-4bd4-8f84-dd7777f0d247}</destination>
+		</relationship>
+	</object>
+</objects>
