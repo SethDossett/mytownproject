@@ -20,7 +20,7 @@ namespace KinematicCharacterController.Examples
         public Transform _LookAtPoint;
         public UnityAction<TheCharacterController> OnCharacterTeleport;
         public bool isBeingTeleportedTo { get; set; }
-
+        
         Animator _animator;
 
         private void OnEnable()
@@ -40,7 +40,6 @@ namespace KinematicCharacterController.Examples
         {
             cc = GetComponent<TheCharacterController>();
             _animator = GetComponent<Animator>();
-            
             PlayerRef.RaiseEvent(transform);
         }
         private void TeleportPlayer(Vector3 location, Quaternion rotation)

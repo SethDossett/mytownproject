@@ -38,8 +38,6 @@ namespace MyTownProject.Enviroment{
         [SerializeField] Vector3 _StartPosBottom;
         [SerializeField] Vector3 _SphereCastOffsetBottom;
 
-
-
         [Header("Overlap Sphere")]
         [SerializeField] LayerMask _playerLayer;
         Collider[] cols = new Collider[3];
