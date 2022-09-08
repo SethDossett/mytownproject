@@ -987,7 +987,7 @@ namespace KinematicCharacterController.Examples
             }
             else if (!Motor.GroundingStatus.IsStableOnGround && Motor.LastGroundingStatus.IsStableOnGround)
             {
-                OnLeaveStableGround();
+                OnLeaveStableGround();        
             }
         }
 
@@ -1079,8 +1079,18 @@ namespace KinematicCharacterController.Examples
 
         protected void OnLeaveStableGround()
         {
-            Debug.Log("jump");
-            //_jumpRequested = true;
+            switch(CurrentCharacterState){
+                case CharacterState.Default:
+                    {
+                        Debug.Log("jump");
+                        animator.SetBool(anim_landTrigger, false);
+                        animator.SetBool(anim_jumpTrigger, true);
+                        //_jumpRequested = true;
+                        break;
+                    }
+
+            }            
+            
         }
 
         public void OnDiscreteCollisionDetected(Collider hitCollider)
