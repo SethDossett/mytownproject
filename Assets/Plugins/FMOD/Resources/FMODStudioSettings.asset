@@ -424,12 +424,12 @@ MonoBehaviour:
   m_Name: FMODStudioSettings
   m_EditorClassIdentifier: 
   SwitchSettingsMigration: 1
-  HasSourceProject: 0
-  HasPlatforms: 0
-  sourceProjectPath: 
-  sourceBankPath: Assets/_Project/FMODBanks/Desktop
+  HasSourceProject: 1
+  HasPlatforms: 1
+  sourceProjectPath: ../../FMOD/MyTownProject/MyTownProject.fspro
+  sourceBankPath: ../../FMOD/MyTownProject/Build
   SourceBankPathUnformatted: 
-  BankRefreshCooldown: 5
+  BankRefreshCooldown: -2
   ShowBankRefreshWindow: 1
   AutomaticEventLoading: 1
   BankLoadType: 0

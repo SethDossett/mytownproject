@@ -7,22 +7,14 @@ namespace MyTownProject.Audio
     public class PlayOneShot : MonoBehaviour
     {
         [SerializeField] AudioEventSO audioEventSO;
+        [SerializeField] EventReference OneShot;
 
-        private void OnEnable()
-        {
-            audioEventSO.OnRaiseEvent += PlayOneShotClip;
-            audioEventSO.OnRaiseEvent2 += PlayOneShotClipAndPosition;
-        }
-        private void OnDisable()
-        {
-            audioEventSO.OnRaiseEvent -= PlayOneShotClip;
-            audioEventSO.OnRaiseEvent2 -= PlayOneShotClipAndPosition;
-        }
+        //Make DropDown where you can select when you want oneshot played.
+        //onenable, awake, start, custom etc.
 
-        void PlayOneShotClip(EventReference clip)
+        public void PlayOneShotClip()
         {
-            RuntimeManager.PlayOneShot(clip.Guid);
-            print("C IPPPP");
+            audioEventSO.RaiseEvent(OneShot);
         }
 
         void PlayOneShotClipAndPosition(EventReference clip, Vector3 pos)

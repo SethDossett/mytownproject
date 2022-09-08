@@ -39,5 +39,7 @@ namespace MyTownProject.UI
             if (pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(false);
         }
+
+        
     }
 }

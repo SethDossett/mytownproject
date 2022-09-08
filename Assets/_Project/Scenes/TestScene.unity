@@ -339,7 +339,6 @@ GameObject:
   m_Component:
   - component: {fileID: 196798814}
   - component: {fileID: 196798815}
-  - component: {fileID: 196798816}
   - component: {fileID: 196798817}
   - component: {fileID: 196798818}
   m_Layer: 0
@@ -393,19 +392,6 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
---- !u!114 &196798816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 196798813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83168f722526ccc48a329916441ffbe4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioEventSO: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
 --- !u!114 &196798817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,22 +404,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d9990a16ee2e944ba84a1bf2570ad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _oneShot: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
+  audioEventSO: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
   _dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   enterDialogue:
     Guid:
       Data1: 859035509
       Data2: 1141104988
       Data3: 322900119
       Data4: -1737419657
-    Path: event:/EnterDialogue
+    Path: event:/Dialogue/EnterDialogue
   exitDialogue:
     Guid:
       Data1: -2002598768
       Data2: 1274171593
       Data3: 27904647
       Data4: -1639723100
-    Path: event:/ExitDialogue
+    Path: event:/Dialogue/ExitDialogue
+  pauseGame:
+    Guid:
+      Data1: -628460302
+      Data2: 1144216892
+      Data3: -1477553751
+      Data4: 850903147
+    Path: event:/UI/PauseGame
+  unpauseGame:
+    Guid:
+      Data1: 1521177576
+      Data2: 1213776959
+      Data3: 1959651485
+      Data4: -940361316
+    Path: event:/UI/UnPauseGame
 --- !u!114 &196798818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4007,12 +4008,12 @@ PrefabInstance:
     - target: {fileID: 6442097933177688106, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0919607
+      value: -0.09196071
       objectReference: {fileID: 0}
     - target: {fileID: 6442097933177688106, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.016674789
+      value: 0.01667479
       objectReference: {fileID: 0}
     - target: {fileID: 7642660901323194267, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}

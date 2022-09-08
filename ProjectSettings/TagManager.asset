@@ -9,6 +9,7 @@ TagManager:
   - Grass
   - Sand
   - ShallowWater
+  - Wood
   layers:
   - Default
   - TransparentFX

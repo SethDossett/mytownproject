@@ -12,6 +12,10 @@ namespace KinematicCharacterController.Examples
     {
         Default, Talking, Climbing, Targeting, Crawling
     }
+    public enum GroundType
+    {
+        Stone, Grass, Sand, Wood, ShallowWater
+    }
 
     public enum OrientationMethod
     {
@@ -106,6 +110,7 @@ namespace KinematicCharacterController.Examples
 
 
         public CharacterState CurrentCharacterState { get; private set; }
+        public GroundType CurrentGroundType { get; private set; }
         public static event Action<CharacterState> OnPlayerStateChanged;
 
         private Collider[] _probedColliders = new Collider[8];
@@ -1001,9 +1006,44 @@ namespace KinematicCharacterController.Examples
             return true;
         }
 
+        string stone = "Stone";
+        string grass = "Grass";
+        string sand = "Sand";
+        string wood = "Wood";
+        string shallowWater = "ShallowWater";
+        string currentString;
+
         public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
         {
-            print($"Touching  {hitCollider.tag}");
+            string tag = hitCollider.tag;
+            if (tag == currentString) {
+                return;
+            }
+            
+
+            if (tag == stone) {
+                currentString = tag;
+                CurrentGroundType = GroundType.Stone;
+            }
+            else if (tag == grass) {
+                currentString = tag;
+                CurrentGroundType = GroundType.Grass;
+            }
+            else if (tag == sand) { 
+            
+                currentString = tag;
+                CurrentGroundType = GroundType.Sand;
+            }
+            else if (tag == wood) {
+                currentString = tag;
+                CurrentGroundType = GroundType.Wood;
+            }
+            else if (tag == shallowWater) {
+                currentString = tag;
+                CurrentGroundType = GroundType.ShallowWater;
+            } 
+
+            
         }
 
         public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
