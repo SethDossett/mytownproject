@@ -107,6 +107,7 @@ namespace KinematicCharacterController.Examples
         int anim_moving = Animator.StringToHash("Moving");
         int anim_horizontal = Animator.StringToHash("Horizontal");
         int anim_vertical = Animator.StringToHash("Vertical");
+        
 
 
         public CharacterState CurrentCharacterState { get; private set; }
@@ -941,6 +942,17 @@ namespace KinematicCharacterController.Examples
                             }
                         }
 
+                        // Handle landing and leaving ground
+                        if (Motor.GroundingStatus.IsStableOnGround && !Motor.LastGroundingStatus.IsStableOnGround)
+                        {
+
+                            OnLanded();
+                        }
+                        else if (!Motor.GroundingStatus.IsStableOnGround && Motor.LastGroundingStatus.IsStableOnGround)
+                        {
+                            OnLeaveStableGround();        
+                        }
+
                         break;
                     }
                     case CharacterState.Crawling:
@@ -980,15 +992,7 @@ namespace KinematicCharacterController.Examples
 
         public void PostGroundingUpdate(float deltaTime)
         {
-            // Handle landing and leaving ground
-            if (Motor.GroundingStatus.IsStableOnGround && !Motor.LastGroundingStatus.IsStableOnGround)
-            {
-                OnLanded();
-            }
-            else if (!Motor.GroundingStatus.IsStableOnGround && Motor.LastGroundingStatus.IsStableOnGround)
-            {
-                OnLeaveStableGround();        
-            }
+            
         }
 
         public bool IsColliderValidForCollisions(Collider coll)

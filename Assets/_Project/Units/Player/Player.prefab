@@ -826,6 +826,13 @@ MonoBehaviour:
   CameraFollowPoint: {fileID: 6875040720797426742}
   CrouchedCapsuleHeight: 1
   _talkingRotSpeed: 500
+  landing:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   _moveInputVector: {x: 0, y: 0, z: 0}
   _cannotTarget: 0
   accelTime: 3
@@ -1001,6 +1008,13 @@ MonoBehaviour:
       Data3: -1175028575
       Data4: 1702488522
     Path: event:/Player/Footsteps
+  land:
+    Guid:
+      Data1: -757077606
+      Data2: 1110092782
+      Data3: 1784997786
+      Data4: -490932582
+    Path: event:/Player/Land
 --- !u!1 &6875040720686954656
 GameObject:
   m_ObjectHideFlags: 0

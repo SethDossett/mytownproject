@@ -16,6 +16,7 @@ namespace KinematicCharacterController.Examples
 
         [SerializeField] EventReference crawl;
         [SerializeField] EventReference footsteps;
+        [SerializeField] EventReference land;
 
         public void CrawlAudio() => _playOneShot.RaiseEvent(crawl);
 
@@ -23,6 +24,10 @@ namespace KinematicCharacterController.Examples
             if(CC.Motor.GroundingStatus.IsStableOnGround)
                 _playOneShot.RaiseEvent2(footsteps, transform.position);
         } 
+
+        public void LandAudio(){
+            _playOneShot.RaiseEvent2(land, transform.position);
+        }
         //one play if player is grounded and if animation layer is on.
     }
 }
