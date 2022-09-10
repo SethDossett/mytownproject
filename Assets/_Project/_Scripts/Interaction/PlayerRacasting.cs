@@ -6,50 +6,40 @@ using MyTownProject.Cameras;
 using KinematicCharacterController.Examples;
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 
 namespace MyTownProject.Interaction
 {
     public class PlayerRacasting : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] UIEventChannelSO uiEventChannel;
-        [SerializeField] FloatEventSO RecenterCamX;
-        [SerializeField] FloatEventSO RecenterCamY;
-        [SerializeField] TheCharacterController CC;
-        private IInteractable _interactable;
+        [Header("Controls")]
         private NewControls _inputActions;
         private InputAction _interact;
         private InputAction _cameraInput;
         private InputAction _LeftTriggerInput;
-        private GameStateManager.GameState _game_Playing_State;
-        private RaycastHit _hitinfo;
-        private Transform _transform;
-        [SerializeField] Transform _interactionPoint;
-        
 
-        [Header("Values")]
-        [SerializeField] float _interactionPointRadius;
-        [SerializeField] LayerMask _interactableMask;
-        [SerializeField] private float _interactRayLength = 5f;
-        [SerializeField] private Vector3 _offset;
-        [SerializeField] bool canRaycast = false;
-        private readonly Collider[] _colliders = new Collider[3];
-        [SerializeField] private int _numFound;
+        [Header("Events")]
+        [SerializeField] UIEventChannelSO uiEventChannel;
+        [SerializeField] FloatEventSO RecenterCamX;
+        [SerializeField] FloatEventSO RecenterCamY;
+        [SerializeField] TransformEventSO _targetingEvent;
+        [SerializeField] TransformEventSO _changeTargetEvent;
+        [SerializeField] GeneralEventSO _unTargetingEvent;
+        [SerializeField] AudioEventSO _audioEvent;
 
         #region New Lock On
         [Header("References")]
         [SerializeField] Transform currentTarget;
         [SerializeField] Transform _closestTarget = null;
+        [SerializeField] TheCharacterController CC;
+        private IInteractable _interactable;
         [SerializeField] CameraFollow camFollow;
         [SerializeField] Transform lockOnCanvas;
         Animator anim;
         Transform cam;
         //DefMovement defMovement;
         [SerializeField] Transform enemyTarget_Locator;
-        [SerializeField] TransformEventSO _targetingEvent;
-        [SerializeField] TransformEventSO _changeTargetEvent;
-        [SerializeField] GeneralEventSO _unTargetingEvent;
-        [SerializeField] AudioEventSO _audioEvent;
+        private GameStateManager.GameState _game_Playing_State;
 
 
         [Tooltip("StateDrivenMethod for Switching Cameras")]
@@ -62,10 +52,10 @@ namespace MyTownProject.Interaction
         [Tooltip("Angle_Degree")][SerializeField] float maxNoticeAngle = 60;
         [SerializeField] float crossHair_Scale = 0.1f;
         float maxDistance = 25f;
-        
 
 
         [Header("Values")]
+        [SerializeField] bool canRaycast = false;
         [SerializeField] bool findByAngle;
         [SerializeField] LayerMask targetLayers;
         [SerializeField] int _NPCIndex;
@@ -79,6 +69,12 @@ namespace MyTownProject.Interaction
         bool _startTimer;
         [Range(0, 0.5f)][SerializeField] float _nextTargetWindow = 0.25f;
         [SerializeField] float dis;
+
+        [Header("Audio")]
+        [SerializeField] EventReference _recenterCameraSFX;
+        [SerializeField] EventReference _LockOnSFX;
+        [SerializeField] EventReference _LockOffSFX;
+
 
         [Header("Targets")]
         [SerializeField] Collider[] nearbyTargets;
@@ -111,7 +107,6 @@ namespace MyTownProject.Interaction
         {
             CC = GetComponent<TheCharacterController>();
             _game_Playing_State = GameStateManager.GameState.GAME_PLAYING;
-            _transform = transform;
             anim = GetComponent<Animator>();
             cam = Camera.main.transform;
             lockOnCanvas.gameObject.SetActive(false);
@@ -126,10 +121,12 @@ namespace MyTownProject.Interaction
         }
         void CheckPlayerState(CharacterState state)
         {
-            if (state != CharacterState.Default)
-                canRaycast = false;
-            else 
+            if (state == CharacterState.Default)
                 canRaycast = true;
+            else if(state == CharacterState.Targeting)
+                canRaycast = true;
+            else
+                canRaycast = false;    
         }
         private void Update()
         {
@@ -185,6 +182,7 @@ namespace MyTownProject.Interaction
                 if (currentTarget == null && _closestTarget == null) {
                     RecenterCamX.RaiseEvent2(0, 0.1f);
                     RecenterCamY.RaiseEvent2(0, 0.1f);
+                    _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
                 } 
 
 
@@ -424,6 +422,7 @@ namespace MyTownProject.Interaction
         void FoundTarget()
         {
             print("Found");
+            _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
             _targetingEvent.RaiseEvent(currentTarget);
             CC.TransitionToState(CharacterState.Targeting);
             currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = true;
@@ -457,6 +456,7 @@ namespace MyTownProject.Interaction
         IEnumerator FindNextTarget()
         {
             print("FindNext");
+            _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
             _startTimer = false;
             _timer = 0;
             //HideHover(currentTarget);
@@ -497,6 +497,7 @@ namespace MyTownProject.Interaction
         void ResetTarget()
         {
             print("reset");
+            _audioEvent.RaiseEvent2(_LockOffSFX, currentTarget.position);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
             currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
             _unTargetingEvent.RaiseEvent();
@@ -640,15 +641,16 @@ namespace MyTownProject.Interaction
         }
          void CheckForRecenterInput(InputAction.CallbackContext ctx){
             if(canRaycast) return;
-
+            //Need a Recenter CoolDown
             RecenterCamX.RaiseEvent2(0, 0.1f);
             RecenterCamY.RaiseEvent2(0, 0.1f);
+            _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
          }
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            //Gizmos.DrawWireSphere(transform.position + _offset + transform.forward * _hitinfo.distance, 1.5f);
-            Gizmos.DrawWireSphere(_interactionPoint.position, _interactionPointRadius);
+            
+            //Gizmos.DrawWireSphere(_interactionPoint.position, _interactionPointRadius);
             
             Gizmos.DrawWireSphere(transform.position, noticeZone);
             

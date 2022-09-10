@@ -18,8 +18,14 @@ namespace KinematicCharacterController.Examples
         CharacterState _climbing = CharacterState.Climbing;
         CharacterState _targeting = CharacterState.Targeting;
         CharacterState _talking = CharacterState.Talking;
+        CharacterState _crawling = CharacterState.Crawling;
         public Transform _LookAtPoint;
         public UnityAction<TheCharacterController> OnCharacterTeleport;
+        [SerializeField] UnityEvent DefaultStateAction;
+        [SerializeField] UnityEvent ClimbingStateAction;
+        [SerializeField] UnityEvent TalkingStateAction;
+        [SerializeField] UnityEvent TargetingStateAction;
+        [SerializeField] UnityEvent CrawlingStateAction;
         public bool isBeingTeleportedTo { get; set; }
         
         Animator _animator;
@@ -79,8 +85,12 @@ namespace KinematicCharacterController.Examples
             if(state == _talking){
                 TalkingState();
             }
+            if(state == _crawling){
+                CrawlingState();
+            }
         }
         void DefaultState(){
+            DefaultStateAction?.Invoke();
             if(cc.CurrentCharacterState != _default)
                 cc.TransitionToState(_default);
             _animator.SetLayerWeight(0, 1);
@@ -88,20 +98,26 @@ namespace KinematicCharacterController.Examples
             _animator.SetLayerWeight(2, 0);
         }
         void ClimbingState(){
+            ClimbingStateAction?.Invoke();
             _animator.SetLayerWeight(2, 1);
             _animator.SetLayerWeight(0, 0);
             _animator.SetLayerWeight(1, 0);
             _animator.Play("Idle");
         }
         void TargetingState(){
+            TargetingStateAction?.Invoke();
             _animator.SetLayerWeight(1, 1);
             _animator.SetLayerWeight(0, 0);
             _animator.SetLayerWeight(2, 0);
         }
         void TalkingState(){
+            TalkingStateAction?.Invoke();
             _animator.SetLayerWeight(0, 1);
             _animator.SetLayerWeight(1, 0);
             _animator.SetLayerWeight(2, 0);
+        }
+        void CrawlingState(){
+            CrawlingStateAction?.Invoke();
         }
     }
 }
