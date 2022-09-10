@@ -456,33 +456,44 @@ namespace MyTownProject.Interaction
         IEnumerator FindNextTarget()
         {
             print("FindNext");
-            _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
             _startTimer = false;
             _timer = 0;
             //HideHover(currentTarget);
             currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
-            if (remainingTargets.Count <= 0) ResetTarget();
+            if (remainingTargets.Count <= 0)
+            {
+                ResetTarget();
+                yield break;
+            }
             else
             {
                 float closestDis = 10f; // change to max range
                 Transform closetT = null;
-                foreach(var target in nearbyTargets){
+                foreach (var target in nearbyTargets)
+                {
                     print(GetAngle(transform.position, target.transform.position, transform.forward, 0));
-                    if(target.gameObject.GetComponent<NPC_Interact>().beenTargeted == false){
+                    if (target.gameObject.GetComponent<NPC_Interact>().beenTargeted == false)
+                    {
                         float disP = GetDistance(transform, target.transform);
-                        if(disP <= target.transform.GetComponent<IInteractable>().MaxNoticeRange){
+                        if (disP <= target.transform.GetComponent<IInteractable>().MaxNoticeRange)
+                        {
                             float disN = GetDistance(currentTarget, target.transform);
-                            if(disN < closestDis){
+                            if (disN < closestDis)
+                            {
                                 closetT = target.transform;
                                 closestDis = disN;
                             }
                         }
-                        
-                    }
-                
-                }
-                if (!closetT) ResetTarget();
 
+                    }
+
+                }
+                if (!closetT) {
+                    ResetTarget();
+                    yield break;
+                }
+
+                _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
                 currentTarget = closetT;
                 currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = true;
                 CC._target = currentTarget;
@@ -497,7 +508,7 @@ namespace MyTownProject.Interaction
         void ResetTarget()
         {
             print("reset");
-            _audioEvent.RaiseEvent2(_LockOffSFX, currentTarget.position);
+            if(!_isTalking) _audioEvent.RaiseEvent2(_LockOffSFX, currentTarget.position);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
             currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
             _unTargetingEvent.RaiseEvent();
@@ -577,9 +588,6 @@ namespace MyTownProject.Interaction
             }
             
         }
-        bool tarr;
-        bool _hovering;
-        bool _targeting;
         void HideHover(Transform t){
             if(!t.gameObject.GetComponent<NPC_Interact>()._hovered) return;
             
@@ -624,13 +632,13 @@ namespace MyTownProject.Interaction
             uiEventChannel.ShowTextInteract(_interactable.Prompt);
             if (_interact.WasPerformedThisFrame()){
                 Debug.Log($"interacted with {t.gameObject.name}");
+                _isTalking = true;
                 CC.TransitionToState(CharacterState.Talking);
                 if(currentTarget) ResetTarget();
                 cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
                 cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
                 _freeLookCameraOff = false;
                 _interactable.OnInteract(this);
-                _isTalking = true;
                 return;
             } 
 

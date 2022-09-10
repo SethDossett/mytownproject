@@ -961,18 +961,18 @@ MonoBehaviour:
     Path: event:/Camera/RecenterCamera
   _LockOnSFX:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1201158995
+      Data2: 1133052432
+      Data3: 1149166244
+      Data4: -103697009
+    Path: event:/Actions/LockOn
   _LockOffSFX:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1624580476
+      Data2: 1236639407
+      Data3: -469505370
+      Data4: 475322192
+    Path: event:/Actions/LockOff
   nearbyTargets: []
   remainingTargets: []
 --- !u!114 &3634065607003665308
