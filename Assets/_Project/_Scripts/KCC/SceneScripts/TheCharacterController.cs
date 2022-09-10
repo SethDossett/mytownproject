@@ -126,7 +126,7 @@ namespace KinematicCharacterController.Examples
         private Vector3 _internalVelocityAdd = Vector3.zero;
         private bool _canCrouch = false;
         private bool _shouldBeCrouching = false;
-        private bool _isCrouching = false;
+        public bool _isCrouching = false;
         public bool _cannotTarget = false;
 
         private Vector3 lastInnerNormal = Vector3.zero;
@@ -145,6 +145,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] DialogueEventsSO dialogueEvent;
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
+        [SerializeField] UIEventChannelSO UIText;
 
 
         private void OnEnable() {
@@ -204,6 +205,7 @@ namespace KinematicCharacterController.Examples
                     } 
                 case CharacterState.Crawling:
                     {
+                        _canCrouch = false;
                         break;
                     }        
                 
@@ -242,6 +244,8 @@ namespace KinematicCharacterController.Examples
                         _hasFinishedCrouch = false;
                         if (animator.speed != 1f)
                             animator.speed = 1f;
+
+                        _canCrouch = true;     
                         break;
                     }          
             }
@@ -299,6 +303,10 @@ namespace KinematicCharacterController.Examples
                             _jumpRequested = true;
                         }
 
+                        //Show or hide UI Text for Crouch
+                        if(_canCrouch) UIText.ShowTextInteract("Crouch");
+                        else UIText.HideTextInteract();
+
                         // Crouching input
                         if (inputs.CrouchDown && _canCrouch)
                         {
@@ -313,10 +321,10 @@ namespace KinematicCharacterController.Examples
                                     animator.SetBool(anim_isCrouched, true);
 
 
-                                RecenterCamX.RaiseEvent2(0, 0.1f);
-                                RecenterCamY.RaiseEvent2(0, 0.1f);
+                                //RecenterCamX.RaiseEvent2(0, 0.1f);
+                                //RecenterCamY.RaiseEvent2(0, 0.1f);
 
-                                TransitionToState(CharacterState.Crawling);    
+                                TransitionToState(CharacterState.Crawling);  
                                 Debug.Log("Crouch");
                             }
                         }
@@ -631,11 +639,7 @@ namespace KinematicCharacterController.Examples
                             animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
                             animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
 
-                            if (currentVelocityMagnitude <= 0f)
-                            {
-                                _canCrouch = true;
-                            }
-
+                            if (currentVelocityMagnitude <= 0f) _canCrouch = true;   
                             else _canCrouch = false;
                         }
                         // Air movement
@@ -918,6 +922,8 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
+                        
+
                         // Handle jump-related values
                         {
                             // Handle jumping pre-ground grace period
@@ -957,6 +963,10 @@ namespace KinematicCharacterController.Examples
                     }
                     case CharacterState.Crawling:
                     {
+                        //Show or hide UI Text for Crouch
+                        if(_canCrouch) UIText.ShowTextInteract("Crouch");
+                        else UIText.HideTextInteract();    
+
                         // Handle uncrouching
                         if (_isCrouching && !_shouldBeCrouching)
                         {
@@ -980,7 +990,7 @@ namespace KinematicCharacterController.Examples
                                 if (animator.GetBool(anim_isCrouched) != false)
                                     animator.SetBool(anim_isCrouched, false);
 
-                                TransitionToState(CharacterState.Default);    
+                                TransitionToState(CharacterState.Default);   
                                 Debug.Log("Uncrouched");
                             }
                         }

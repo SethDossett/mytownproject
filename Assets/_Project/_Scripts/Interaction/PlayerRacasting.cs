@@ -96,6 +96,7 @@ namespace MyTownProject.Interaction
             _interact.Enable();
             _cameraInput.Enable();
             _LeftTriggerInput.Enable();
+            _LeftTriggerInput.performed += CheckForRecenterInput;
         }
         private void OnDisable()
         {
@@ -104,6 +105,7 @@ namespace MyTownProject.Interaction
             _interact.Disable();
             _cameraInput.Disable();
             _LeftTriggerInput.Disable();
+            _LeftTriggerInput.performed -= CheckForRecenterInput;
         }
         private void Start()
         {
@@ -124,18 +126,14 @@ namespace MyTownProject.Interaction
         }
         void CheckPlayerState(CharacterState state)
         {
-            if (state == CharacterState.Climbing)
+            if (state != CharacterState.Default)
                 canRaycast = false;
-            else if (state == CharacterState.Default)
+            else 
                 canRaycast = true;
-            else
-                canRaycast= true;
-
         }
         private void Update()
         {
-            if (!canRaycast)
-                return;
+            if (!canRaycast) return;    
             
 
             //CheckForInteractable();//old version
@@ -211,53 +209,53 @@ namespace MyTownProject.Interaction
 
         }
         #region Old Raycast Method
-        private void CheckForInteractable()
+        //private void CheckForInteractable()
 
-        {
-            Ray ray = new Ray(_transform.position + _offset, _transform.forward);
-            Debug.DrawRay(ray.origin, ray.direction * _interactRayLength);
-            Debug.DrawRay(ray.origin, ray.direction * 2f, Color.green);
-            if (Physics.Raycast(ray, out _hitinfo, _interactRayLength))
-            {
-                
-                _interactable = _hitinfo.collider.GetComponent<IInteractable>();
-                if(_interactable == null)
-                {
-                    if (_interactable != null)
-                    {
-                        _interactable.OnLoseFocus();
-                        uiEventChannel.HideTextInteract();
-                        _interactable = null;
-                        return;
-                    }
-                    return;
-                }
+        //{
+        //    Ray ray = new Ray(_transform.position + _offset, _transform.forward);
+        //    Debug.DrawRay(ray.origin, ray.direction * _interactRayLength);
+        //    Debug.DrawRay(ray.origin, ray.direction * 2f, Color.green);
+        //    if (Physics.Raycast(ray, out _hitinfo, _interactRayLength))
+        //    {
+        //        
+        //        _interactable = _hitinfo.collider.GetComponent<IInteractable>();
+        //        if(_interactable == null)
+        //        {
+        //            if (_interactable != null)
+        //            {
+        //                _interactable.OnLoseFocus();
+        //                uiEventChannel.HideTextInteract();
+        //                _interactable = null;
+        //                return;
+        //            }
+        //            return;
+        //        }
 
-                if (!_interactable.CanBeInteractedWith || _hitinfo.distance > _interactable.MaxNoticeRange)
-                {
-                    if (_interactable != null)
-                    {
-                        _interactable.OnLoseFocus();
-                        uiEventChannel.HideTextInteract();
-                        _interactable = null;
-                        return;
-                    }
-                    return;
-                }
+        //        if (!_interactable.CanBeInteractedWith || _hitinfo.distance > _interactable.MaxNoticeRange)
+        //        {
+        //            if (_interactable != null)
+        //            {
+        //                _interactable.OnLoseFocus();
+        //                uiEventChannel.HideTextInteract();
+        //                _interactable = null;
+        //                return;
+        //            }
+        //            return;
+        //        }
 
-                uiEventChannel.ShowTextInteract(_interactable.Prompt);
-                //currentTarget.OnFocus(_hitinfo.collider.gameObject.name);
+        //        uiEventChannel.ShowTextInteract(_interactable.Prompt);
+        //        //currentTarget.OnFocus(_hitinfo.collider.gameObject.name);
 
-                if (_interact.WasPerformedThisFrame()) _interactable.OnInteract(this);
+        //        if (_interact.WasPerformedThisFrame()) _interactable.OnInteract(this);
 
-            }
-            else
-            {
-                if (_interactable != null) _interactable = null;
-                
-                uiEventChannel.HideTextInteract();
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        if (_interactable != null) _interactable = null;
+        //        
+        //        uiEventChannel.HideTextInteract();
+        //    }
+        //}
         #endregion
         #region Old Overlap Sphere Method
         //private void Interactor()
@@ -640,7 +638,12 @@ namespace MyTownProject.Interaction
             if (_interactable != null) _interactable = null;
             uiEventChannel.HideTextInteract();
         }
+         void CheckForRecenterInput(InputAction.CallbackContext ctx){
+            if(canRaycast) return;
 
+            RecenterCamX.RaiseEvent2(0, 0.1f);
+            RecenterCamY.RaiseEvent2(0, 0.1f);
+         }
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;

@@ -9,7 +9,6 @@ namespace MyTownProject.Cameras{
 
     public class FreeLookController : MonoBehaviour
     {
-        public Transform _player;
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
         [SerializeField] GeneralEventSO DisableRecenterCam;

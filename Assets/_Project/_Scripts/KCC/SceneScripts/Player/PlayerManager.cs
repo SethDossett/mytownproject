@@ -8,6 +8,7 @@ namespace KinematicCharacterController.Examples
 {
     public class PlayerManager : MonoBehaviour
     {
+        [SerializeField] CharacterState CurrentCharacterState;
         [SerializeField] TransformEventSO PlayerRef;
         [SerializeField] ActionSO teleportPlayer;
         [SerializeField] GeneralEventSO UntargetEvent;
@@ -64,6 +65,8 @@ namespace KinematicCharacterController.Examples
             //cc.TransitionToState(CharacterState.Default);
         }
         void StateChange(CharacterState state){
+            CurrentCharacterState = state;
+
             if(state == _default){
                 DefaultState();
             }

@@ -14,11 +14,15 @@ namespace KinematicCharacterController.Examples
 
         [SerializeField] AudioEventSO _playOneShot;
 
+        
         [SerializeField] EventReference crawl;
         [SerializeField] EventReference footsteps;
         [SerializeField] EventReference land;
 
-        public void CrawlAudio() => _playOneShot.RaiseEvent(crawl);
+        public void CrawlAudio(){
+            if(CC._isCrouching)
+                _playOneShot.RaiseEvent(crawl);
+        }
 
         public void FootStepAudio(){
             if(CC.Motor.GroundingStatus.IsStableOnGround)
