@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{68481d42-1d81-4bd5-a17c-f6b9cae97965}">
 		<property name="name">
-			<value>Footsteps</value>
+			<value>ClimbingLadder</value>
 		</property>
 		<property name="outputFormat">
 			<value>0</value>
@@ -98,7 +98,6 @@
 		<property name="timelockedOffset">
 			<value>0.16</value>
 		</property>
-		<property name="name" />
 		<relationship name="audioFile">
 			<destination>{17844122-0b37-4c77-9529-0e019fc02955}</destination>
 		</relationship>

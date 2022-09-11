@@ -1087,11 +1087,11 @@ MonoBehaviour:
     Path: event:/Player/Crawling
   footsteps:
     Guid:
-      Data1: 1749556546
-      Data2: 1272257921
-      Data3: -1175028575
-      Data4: 1702488522
-    Path: event:/Player/Footsteps
+      Data1: -641790914
+      Data2: 1228471233
+      Data3: -1612490086
+      Data4: -1862917067
+    Path: event:/Player/FootSteps
   land:
     Guid:
       Data1: -757077606
