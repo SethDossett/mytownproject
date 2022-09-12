@@ -42,6 +42,8 @@ namespace MyTownProject.Dialogue
         [Header("Audio")]
         [SerializeField] EventReference SelectGeneric;
         [SerializeField] EventReference skipToEndOfLine;
+        [SerializeField] EventReference submitSFX;
+        [SerializeField] EventReference cancelSFX;
 
         private void OnEnable()
         {
@@ -101,6 +103,7 @@ namespace MyTownProject.Dialogue
             {
                 if (currentStory.currentChoices.Count == 0)
                 {
+                    _oneShot.RaiseEvent(SelectGeneric);// new select sound ,not same as end of line
                     ContinueStory();
                 }
                 else return;
@@ -112,7 +115,7 @@ namespace MyTownProject.Dialogue
             if (currentStory.canContinue)
             {
                 StartCoroutine(DisplayLine(currentStory.Continue()));
-                _oneShot.RaiseEvent(SelectGeneric);
+               
                 HandleTags(currentStory.currentTags);
 
             }
@@ -135,7 +138,7 @@ namespace MyTownProject.Dialogue
                 if (_skipToEndOfLine)
                 {
                     _dialogueText.maxVisibleCharacters = line.Length;
-                    _oneShot.RaiseEvent(skipToEndOfLine);
+                    //_oneShot.RaiseEvent(skipToEndOfLine);
                     _skipToEndOfLine = false;
 
                     break;
@@ -159,6 +162,7 @@ namespace MyTownProject.Dialogue
             ShowChoices();
             continueIcon.transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.InExpo).SetDelay(0.05f).SetUpdate(true);
             _displayingLine = false;
+            _oneShot.RaiseEvent(SelectGeneric);
         }
         void HandleTags(List<string> currentTags)
         {
@@ -222,6 +226,7 @@ namespace MyTownProject.Dialogue
         public void MakeChoice(int choiceIndex)
         {
             currentStory.ChooseChoiceIndex(choiceIndex);
+            _oneShot.RaiseEvent(submitSFX);
             StartCoroutine(TimeBetweenChoices());
 
         }
