@@ -89,6 +89,12 @@ namespace KinematicCharacterController.Examples
         [SerializeField] float _crawlSpeed = 2f;
         bool _hasFinishedCrouch;
 
+        [Header("Falling")]
+        float _timeFallingInAir = 0f;
+        bool _startFallingTimer = false;
+        bool _hardLanding = false;
+        float _timetotriggerHardLanding = 0.5f;
+
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
         public BonusOrientationMethod BonusOrientationMethod = BonusOrientationMethod.None;
@@ -166,7 +172,7 @@ namespace KinematicCharacterController.Examples
         }
         private void Update()
         {
-
+            FallingCheck();
         }
         /// <summary>
         /// Handles movement state transitions and enter/exit callbacks
@@ -948,17 +954,6 @@ namespace KinematicCharacterController.Examples
                             }
                         }
 
-                        // Handle landing and leaving ground
-                        if (Motor.GroundingStatus.IsStableOnGround && !Motor.LastGroundingStatus.IsStableOnGround)
-                        {
-
-                            OnLanded();
-                        }
-                        else if (!Motor.GroundingStatus.IsStableOnGround && Motor.LastGroundingStatus.IsStableOnGround)
-                        {
-                            OnLeaveStableGround();        
-                        }
-
                         break;
                     }
                     case CharacterState.Crawling:
@@ -1002,7 +997,15 @@ namespace KinematicCharacterController.Examples
 
         public void PostGroundingUpdate(float deltaTime)
         {
-            
+            // Handle landing and leaving ground
+            if (Motor.GroundingStatus.IsStableOnGround && !Motor.LastGroundingStatus.IsStableOnGround)
+            {
+                OnLanded();
+            }
+            else if (!Motor.GroundingStatus.IsStableOnGround && Motor.LastGroundingStatus.IsStableOnGround)
+            {
+                OnLeaveStableGround();        
+            }
         }
 
         public bool IsColliderValidForCollisions(Collider coll)
@@ -1087,8 +1090,14 @@ namespace KinematicCharacterController.Examples
 
         protected void OnLanded()
         {
-            animator.SetBool(anim_jumpTrigger, false);
-            animator.SetBool(anim_landTrigger, true);
+            if(_hardLanding){
+                _startFallingTimer = false;
+                animator.SetBool(anim_jumpTrigger, false);
+                animator.SetBool(anim_landTrigger, true);
+                _hardLanding = false;
+                _timeFallingInAir = 0f;
+            }
+            
         }
 
         protected void OnLeaveStableGround()
@@ -1099,12 +1108,23 @@ namespace KinematicCharacterController.Examples
                         Debug.Log("jump");
                         animator.SetBool(anim_landTrigger, false);
                         animator.SetBool(anim_jumpTrigger, true);
+
+                        _startFallingTimer = true;
                         //_jumpRequested = true;
                         break;
                     }
-
             }            
             
+        }
+        void FallingCheck(){
+            if(!_startFallingTimer) return;
+
+            _timeFallingInAir += Time.deltaTime;
+
+            if(_timeFallingInAir >= _timetotriggerHardLanding){
+                _hardLanding = true;
+            }
+
         }
 
         public void OnDiscreteCollisionDetected(Collider hitCollider)

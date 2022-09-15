@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using UnityEngine;
 using MyTownProject.SO;
 using MyTownProject.Events;
+using MyTownProject.Core;
 
 namespace KinematicCharacterController.Examples
 {
@@ -10,6 +11,7 @@ namespace KinematicCharacterController.Examples
     {
         [SerializeField] CharacterState CurrentCharacterState;
         [SerializeField] TransformEventSO PlayerRef;
+        [SerializeField] StateChangerEventSO stateChangedEvent;
         [SerializeField] ActionSO teleportPlayer;
         [SerializeField] GeneralEventSO UntargetEvent;
         [SerializeField] DialogueEventsSO DialogueEvent;
@@ -35,6 +37,7 @@ namespace KinematicCharacterController.Examples
             teleportPlayer.OnTeleport += TeleportPlayer;
             UntargetEvent.OnRaiseEvent += Untargeting;
             TheCharacterController.OnPlayerStateChanged += StateChange;
+            stateChangedEvent.OnGameState += GameStateChanged;
         }
         private void OnDisable()
         {
@@ -42,6 +45,7 @@ namespace KinematicCharacterController.Examples
             teleportPlayer.OnTeleport -= TeleportPlayer;
             UntargetEvent.OnRaiseEvent -= Untargeting;
             TheCharacterController.OnPlayerStateChanged -= StateChange;
+            stateChangedEvent.OnGameState += GameStateChanged;
         }
         private void Awake()
         {
@@ -69,6 +73,14 @@ namespace KinematicCharacterController.Examples
         }
         private void Untargeting(){
             //cc.TransitionToState(CharacterState.Default);
+        }
+        void GameStateChanged(GameStateManager.GameState state){
+            if(state == GameStateManager.GameState.GAME_PAUSED){
+                _animator.updateMode = AnimatorUpdateMode.Normal;
+            }
+            else{
+                _animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+            } 
         }
         void StateChange(CharacterState state){
             CurrentCharacterState = state;
