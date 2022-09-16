@@ -58,7 +58,7 @@ namespace MyTownProject.Interaction
         [SerializeField] bool findByAngle;
         [SerializeField] LayerMask targetLayers;
         [SerializeField] int _NPCIndex;
-        bool _enemyLocked;
+        public bool _enemyLocked;
         bool _isTalking;
         float currentYOffset;
         [SerializeField] Vector3 pos;
@@ -182,6 +182,7 @@ namespace MyTownProject.Interaction
                     if(_enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
                 }
                 if (currentTarget == null && _closestTarget == null) {
+                    CC.TransitionToState(CharacterState.Targeting);
                     RecenterCamX.RaiseEvent2(0, 0.1f);
                     RecenterCamY.RaiseEvent2(0, 0.1f);
                     _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
@@ -193,7 +194,6 @@ namespace MyTownProject.Interaction
             //Keyboard.current.shiftKey.wasReleasedThisFrame
             if (_LeftTriggerInput.WasReleasedThisFrame())
             {
-                uiEventChannel.RaiseBarsOff(0.1f);
                 if (currentTarget != null)
                     _startTimer = true;
             }
@@ -656,14 +656,15 @@ namespace MyTownProject.Interaction
         void CheckForRecenterInput(InputAction.CallbackContext ctx){
             if(canRaycast) return;
             //Need a Recenter CoolDown
+            CC.TransitionToState(CharacterState.Targeting);
             RecenterCamX.RaiseEvent2(0, 0.1f);
             RecenterCamY.RaiseEvent2(0, 0.1f);
             _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
             uiEventChannel.RaiseBarsOn(0.1f);
         }
         void CheckForInputRelease(InputAction.CallbackContext ctx){
-            if (canRaycast) return;
-
+            if(_enemyLocked) return;
+            CC.TransitionToState(CharacterState.Default);
             uiEventChannel.RaiseBarsOff(0.1f);
         }
         private void OnDrawGizmos()

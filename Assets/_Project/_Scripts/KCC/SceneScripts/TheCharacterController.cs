@@ -481,6 +481,8 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Targeting:
                     {
+                        //if not Target then dont rotate
+
                         Quaternion lookRot = Quaternion.LookRotation(_target.position- transform.position, Vector3.up);
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _targetingRotSpeed * Time.deltaTime);
                         //float yawCamera = cam.transform.rotation.eulerAngles.y;
