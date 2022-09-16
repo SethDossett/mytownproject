@@ -746,79 +746,19 @@ MonoBehaviour:
   _LookAtPoint: {fileID: 6875040720797426742}
   DefaultStateAction:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7468897045282317995}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   ClimbingStateAction:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7468897045282317995}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   TalkingStateAction:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7468897045282317995}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   TargetingStateAction:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7468897045282317995}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   CrawlingStateAction:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7468897045282317995}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &4936703484560184526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1100,6 +1040,20 @@ MonoBehaviour:
       Data3: 1784997786
       Data4: -490932582
     Path: event:/Player/Land
+  climbLadder:
+    Guid:
+      Data1: 1749556546
+      Data2: 1272257921
+      Data3: -1175028575
+      Data4: 1702488522
+    Path: event:/Player/ClimbingLadder
+  ladderSigh:
+    Guid:
+      Data1: -1952759951
+      Data2: 1127737229
+      Data3: 1013452673
+      Data4: 2102291778
+    Path: event:/Player/SighGettingOnOffLadder
 --- !u!1 &6875040720686954656
 GameObject:
   m_ObjectHideFlags: 0

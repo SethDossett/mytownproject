@@ -22,16 +22,16 @@ namespace MyTownProject.UI
             uIEventChannel.OnBarsOff -= BarsOff;
         }
 
-        public void BarsOn()
+        public void BarsOn(float speed)
         {
-            _topBar.DOLocalMoveY(245f, _cycleLegth).SetUpdate(true);
-            _bottomBar.DOLocalMoveY(-245f, _cycleLegth).SetUpdate(true);
+            _topBar.DOLocalMoveY(245f, speed).SetUpdate(true);
+            _bottomBar.DOLocalMoveY(-245f, speed).SetUpdate(true);
 
         }
-        public void BarsOff()
+        public void BarsOff(float speed)
         {
-            _topBar.DOLocalMoveY(278f, _cycleLegth).SetUpdate(true);
-            _bottomBar.DOLocalMoveY(-278f, _cycleLegth).SetUpdate(true);
+            _topBar.DOLocalMoveY(278f, speed).SetUpdate(true);
+            _bottomBar.DOLocalMoveY(-278f, speed).SetUpdate(true);
         }
     }
 }

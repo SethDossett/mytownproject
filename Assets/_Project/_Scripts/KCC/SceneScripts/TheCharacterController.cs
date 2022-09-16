@@ -14,7 +14,7 @@ namespace KinematicCharacterController.Examples
     }
     public enum GroundType
     {
-        Stone, Grass, Sand, Wood, ShallowWater
+        Grass, Sand, Stone, Wood, ShallowWater
     }
 
     public enum OrientationMethod
@@ -1058,9 +1058,9 @@ namespace KinematicCharacterController.Examples
             else if (tag == shallowWater) {
                 currentString = tag;
                 CurrentGroundType = GroundType.ShallowWater;
-            } 
+            }
 
-            
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("Surface", (float)CurrentGroundType);
         }
 
         public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)

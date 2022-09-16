@@ -89,7 +89,7 @@ namespace MyTownProject.Interaction
         {
             stateChangerEvent.RaiseEventGame(GameStateManager.GameState.CUTSCENE);
 
-            uIEventChannel.RaiseBarsOn();
+            uIEventChannel.RaiseBarsOn(2f);
             yield return new WaitForSecondsRealtime(1f);
             _animatorRight.Play(crackdoorR);
             _animatorLeft.Play(crackdoorL);

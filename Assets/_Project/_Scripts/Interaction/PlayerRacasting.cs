@@ -27,7 +27,6 @@ namespace MyTownProject.Interaction
         [SerializeField] GeneralEventSO _unTargetingEvent;
         [SerializeField] AudioEventSO _audioEvent;
 
-        #region New Lock On
         [Header("References")]
         [SerializeField] Transform currentTarget;
         [SerializeField] Transform _closestTarget = null;
@@ -80,7 +79,7 @@ namespace MyTownProject.Interaction
         [SerializeField] Collider[] nearbyTargets;
         [SerializeField] List<Transform> remainingTargets = new List<Transform>();
 
-        #endregion
+       
         private void OnEnable()
         {
             GameStateManager.OnGameStateChanged += CheckGameState;
@@ -93,6 +92,7 @@ namespace MyTownProject.Interaction
             _cameraInput.Enable();
             _LeftTriggerInput.Enable();
             _LeftTriggerInput.performed += CheckForRecenterInput;
+            _LeftTriggerInput.canceled += CheckForInputRelease;
         }
         private void OnDisable()
         {
@@ -101,7 +101,8 @@ namespace MyTownProject.Interaction
             _interact.Disable();
             _cameraInput.Disable();
             _LeftTriggerInput.Disable();
-            _LeftTriggerInput.performed -= CheckForRecenterInput;
+            _LeftTriggerInput.canceled -= CheckForRecenterInput;
+            _LeftTriggerInput.canceled -= CheckForInputRelease;
         }
         private void Start()
         {
@@ -111,6 +112,7 @@ namespace MyTownProject.Interaction
             cam = Camera.main.transform;
             lockOnCanvas.gameObject.SetActive(false);
             _startTimer = false;
+            _isTalking = false;
         }
         void CheckGameState(GameStateManager.GameState state)
         {
@@ -183,6 +185,7 @@ namespace MyTownProject.Interaction
                     RecenterCamX.RaiseEvent2(0, 0.1f);
                     RecenterCamY.RaiseEvent2(0, 0.1f);
                     _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
+                    uiEventChannel.RaiseBarsOn(0.1f);
                 } 
 
 
@@ -190,7 +193,7 @@ namespace MyTownProject.Interaction
             //Keyboard.current.shiftKey.wasReleasedThisFrame
             if (_LeftTriggerInput.WasReleasedThisFrame())
             {
-                
+                uiEventChannel.RaiseBarsOff(0.1f);
                 if (currentTarget != null)
                     _startTimer = true;
             }
@@ -424,6 +427,7 @@ namespace MyTownProject.Interaction
             print("Found");
             _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
             _targetingEvent.RaiseEvent(currentTarget);
+            uiEventChannel.RaiseBarsOn(0.1f);
             CC.TransitionToState(CharacterState.Targeting);
             currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = true;
             //HideHover(currentTarget);
@@ -509,6 +513,7 @@ namespace MyTownProject.Interaction
         {
             print("reset");
             if(!_isTalking) _audioEvent.RaiseEvent2(_LockOffSFX, currentTarget.position);
+            uiEventChannel.RaiseBarsOff(0.1f);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
             currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
             _unTargetingEvent.RaiseEvent();
@@ -639,6 +644,7 @@ namespace MyTownProject.Interaction
                 cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
                 _freeLookCameraOff = false;
                 _interactable.OnInteract(this);
+                _isTalking = false;
                 return;
             } 
 
@@ -647,13 +653,19 @@ namespace MyTownProject.Interaction
             if (_interactable != null) _interactable = null;
             uiEventChannel.HideTextInteract();
         }
-         void CheckForRecenterInput(InputAction.CallbackContext ctx){
+        void CheckForRecenterInput(InputAction.CallbackContext ctx){
             if(canRaycast) return;
             //Need a Recenter CoolDown
             RecenterCamX.RaiseEvent2(0, 0.1f);
             RecenterCamY.RaiseEvent2(0, 0.1f);
             _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
-         }
+            uiEventChannel.RaiseBarsOn(0.1f);
+        }
+        void CheckForInputRelease(InputAction.CallbackContext ctx){
+            if (canRaycast) return;
+
+            uiEventChannel.RaiseBarsOff(0.1f);
+        }
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;

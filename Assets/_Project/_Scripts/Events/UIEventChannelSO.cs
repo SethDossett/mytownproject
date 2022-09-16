@@ -17,11 +17,11 @@ namespace MyTownProject.Events
         #endregion
 
         #region Cinematic Bars
-        public UnityAction OnBarsOn;
-        public UnityAction OnBarsOff;
+        public UnityAction<float> OnBarsOn;
+        public UnityAction<float> OnBarsOff;
 
-        public void RaiseBarsOn() => OnBarsOn?.Invoke();
-        public void RaiseBarsOff() => OnBarsOff?.Invoke();
+        public void RaiseBarsOn(float speed) => OnBarsOn?.Invoke(speed);
+        public void RaiseBarsOff(float speed) => OnBarsOff?.Invoke(speed);
         #endregion
 
         #region Interact Text

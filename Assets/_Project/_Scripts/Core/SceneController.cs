@@ -46,7 +46,7 @@ namespace MyTownProject.Core
             yield return new WaitForSecondsRealtime(1f);
             uIEventChannel.RaiseFadeIn(Color.black, 1f);
             yield return new WaitForSecondsRealtime(0.25f);
-            uIEventChannel.RaiseBarsOff();
+            uIEventChannel.RaiseBarsOff(2f);
             yield return new WaitForSecondsRealtime(0.5f);
             stateChangerEvent.RaiseEventGame(GameStateManager.GameState.GAME_PLAYING);
             yield break;
