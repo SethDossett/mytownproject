@@ -15,7 +15,7 @@ public class TargetGroupController : MonoBehaviour
     [SerializeField] TransformEventSO _changeToNextTarget;
     [SerializeField] GeneralEventSO _unTargetingEvent;
     CinemachineTargetGroup targetGroup;
-    Transform _player;
+    GameObject _player;
     void OnEnable(){
         targetGroup = GetComponent<CinemachineTargetGroup>();
         playerRef.OnRaiseEvent += SetPlayerReference;
@@ -33,14 +33,15 @@ public class TargetGroupController : MonoBehaviour
         _changeToNextTarget.OnRaiseEvent = ChangeTarget;
         _unTargetingEvent.OnRaiseEvent -= BackToPlayerView;
     }
+
+    void SetPlayerReference(Transform player) => _player = player.gameObject;
+
     void Start(){
         AddPlayer();
     }
 
-    void SetPlayerReference(Transform player) => _player = player;
-
     void AddPlayer(){
-        Transform lookAtPoint = _player.gameObject.GetComponent<PlayerManager>()._LookAtPoint; 
+        Transform lookAtPoint = _player.GetComponent<PlayerManager>()._LookAtPoint; 
         AddingMember(lookAtPoint, 1, 1);
     } 
     

@@ -1018,7 +1018,7 @@ MonoBehaviour:
   enemyTarget_Locator: {fileID: 0}
   cinemachineAnimator: {fileID: 0}
   zeroVert_Look: 0
-  noticeZone: 7
+  noticeZone: 10
   lookAtSmoothing: 2
   maxNoticeAngle: 60
   crossHair_Scale: 0.1

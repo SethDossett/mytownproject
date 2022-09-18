@@ -64,6 +64,7 @@ namespace MyTownProject.Interaction
         float currentYOffset;
         [SerializeField] Vector3 pos;
         bool _freeLookCameraOff;
+        bool _resettingTarget;
         
         float _timer = 0;
         bool _startTimer;
