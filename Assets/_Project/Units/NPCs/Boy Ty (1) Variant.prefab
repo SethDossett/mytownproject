@@ -182,6 +182,54 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4255200667487251419}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2514430549125040861 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1866899505042432262, guid: c1a162a6a2892354ea5844d6180a3551,
+    type: 3}
+  m_PrefabInstance: {fileID: 4255200667487251419}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3609480419134078925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2514430549125040861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd84a4c2e071e9945b785eb62f6aacae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visible:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 908625630}
+        m_TargetAssemblyTypeName: MyTownProject.Interaction.NPC_Interact, Project
+        m_MethodName: set_IsVisible
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  invisible:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 908625630}
+        m_TargetAssemblyTypeName: MyTownProject.Interaction.NPC_Interact, Project
+        m_MethodName: set_IsVisible
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!54 &908625635
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -256,6 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f527eed4d979fc4bbff60dff5493f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <IsVisible>k__BackingField: 0
   <MaxNoticeRange>k__BackingField: 7
   <MaxInteractRange>k__BackingField: 4
   <CanBeInteractedWith>k__BackingField: 1
@@ -290,6 +339,7 @@ MonoBehaviour:
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _meshes: {fileID: 1030763528534881769}
   _head: {fileID: 6332995043403688154}
+  IsVisible: 0
 --- !u!114 &1502148530
 MonoBehaviour:
   m_ObjectHideFlags: 0

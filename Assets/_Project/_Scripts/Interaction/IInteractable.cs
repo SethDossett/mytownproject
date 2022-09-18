@@ -2,6 +2,7 @@ namespace MyTownProject.Interaction
 {
     public interface IInteractable
     {
+        bool IsVisible { get; }
         float MaxNoticeRange { get; }
         float MaxInteractRange { get; }
         bool CanBeInteractedWith { get; }
@@ -10,7 +11,7 @@ namespace MyTownProject.Interaction
 
 
         void OnFocus(string _string);
-        void OnInteract(PlayerRacasting playerRacasting);
+        void OnInteract(TargetingSystem playerRacasting);
         void OnLoseFocus();
     }
 }

@@ -10,6 +10,7 @@ namespace MyTownProject.Interaction
 {
     public class NPC_Interact : MonoBehaviour, IInteractable
     {
+        [field: SerializeField] public bool IsVisible { get; set; }
         [field: SerializeField] public float MaxNoticeRange { get; private set; }
         [field: SerializeField] public float MaxInteractRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
@@ -41,7 +42,6 @@ namespace MyTownProject.Interaction
     #endregion
 
         public bool beenTargeted;
-
         private void OnEnable()
         {
             GameStateManager.OnGameStateChanged += ChangedGameState;
@@ -57,7 +57,7 @@ namespace MyTownProject.Interaction
             _isFocusing = true;
         }
 
-        public void OnInteract(PlayerRacasting player)
+        public void OnInteract(TargetingSystem player)
         {
             //if (_hasInteracted) return;
 

@@ -11,6 +11,7 @@ namespace MyTownProject.Interaction
 {
     public class Door : MonoBehaviour, IInteractable
     {
+        [field: SerializeField] public bool IsVisible { get; set; }
         [field: SerializeField] public float MaxNoticeRange { get; private set; }
         [field: SerializeField] public float MaxInteractRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
@@ -60,7 +61,7 @@ namespace MyTownProject.Interaction
             _isFocusing = true;
         }
 
-        public void OnInteract(PlayerRacasting player)
+        public void OnInteract(TargetingSystem player)
         {
             if (_hasInteracted) return;
             OpenDoor();

@@ -140,7 +140,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &62758495
 BoxCollider:
@@ -470,7 +470,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &197451244
 BoxCollider:
@@ -565,7 +565,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &286100270
 BoxCollider:
@@ -666,7 +666,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &533625206
 BoxCollider:
@@ -761,7 +761,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &633212540
 BoxCollider:
@@ -846,6 +846,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5606128506353790698, guid: 17b7b62671fd4ee42bc8a637739f2fa8,
+        type: 3}
+      propertyPath: camFollow
+      value: 
+      objectReference: {fileID: 156158453}
+    - target: {fileID: 5606128506353790698, guid: 17b7b62671fd4ee42bc8a637739f2fa8,
+        type: 3}
+      propertyPath: lockOnCanvas
+      value: 
+      objectReference: {fileID: 1903803932}
+    - target: {fileID: 5606128506353790698, guid: 17b7b62671fd4ee42bc8a637739f2fa8,
+        type: 3}
+      propertyPath: cinemachineAnimator
+      value: 
+      objectReference: {fileID: 1989784163}
+    - target: {fileID: 5606128506353790698, guid: 17b7b62671fd4ee42bc8a637739f2fa8,
+        type: 3}
+      propertyPath: enemyTarget_Locator
+      value: 
+      objectReference: {fileID: 2113458275}
     - target: {fileID: 6875040720620598759, guid: 17b7b62671fd4ee42bc8a637739f2fa8,
         type: 3}
       propertyPath: m_Name
@@ -906,21 +926,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7468897045282317995, guid: 17b7b62671fd4ee42bc8a637739f2fa8,
-        type: 3}
-      propertyPath: camFollow
-      value: 
-      objectReference: {fileID: 156158453}
-    - target: {fileID: 7468897045282317995, guid: 17b7b62671fd4ee42bc8a637739f2fa8,
-        type: 3}
-      propertyPath: lockOnCanvas
-      value: 
-      objectReference: {fileID: 1903803932}
-    - target: {fileID: 7468897045282317995, guid: 17b7b62671fd4ee42bc8a637739f2fa8,
-        type: 3}
-      propertyPath: cinemachineAnimator
-      value: 
-      objectReference: {fileID: 1989784163}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 17b7b62671fd4ee42bc8a637739f2fa8, type: 3}
 --- !u!1001 &687539553
@@ -1015,7 +1020,7 @@ GameObject:
   m_TagString: Grass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!64 &773243317
 MeshCollider:
@@ -1123,7 +1128,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &895695626
 BoxCollider:
@@ -1255,7 +1260,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &959224216
 BoxCollider:
@@ -2479,7 +2484,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &1038291200
 BoxCollider:
@@ -2580,7 +2585,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &1196200523
 BoxCollider:
@@ -2985,7 +2990,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &1629009172
 BoxCollider:
@@ -3086,7 +3091,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &1663151792
 BoxCollider:
@@ -3270,7 +3275,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &1741509599
 BoxCollider:
@@ -3591,7 +3596,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &1966871357
 BoxCollider:
@@ -3686,7 +3691,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &1974263050
 BoxCollider:
@@ -3983,12 +3988,12 @@ PrefabInstance:
     - target: {fileID: 3990509560547406127, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0925057
+      value: -0.09250574
       objectReference: {fileID: 0}
     - target: {fileID: 3990509560547406127, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.013323313
+      value: 0.013323318
       objectReference: {fileID: 0}
     - target: {fileID: 5430078407506724998, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
@@ -4003,12 +4008,12 @@ PrefabInstance:
     - target: {fileID: 5501832624355137725, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.09196071
+      value: -0.0919607
       objectReference: {fileID: 0}
     - target: {fileID: 5501832624355137725, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.01667479
+      value: 0.016674789
       objectReference: {fileID: 0}
     - target: {fileID: 6442097933177688106, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
@@ -4023,12 +4028,12 @@ PrefabInstance:
     - target: {fileID: 7642660901323194267, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000030778846
+      value: -0.0000000072815354
       objectReference: {fileID: 0}
     - target: {fileID: 7642660901323194267, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -2.422788e-10
+      value: 5.731777e-10
       objectReference: {fileID: 0}
     - target: {fileID: 8934031689336969521, guid: 2647ee2da2c79d3419f4e0cd8032e236,
         type: 3}
@@ -5194,6 +5199,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 098f05281936b4245a4e5f81f7c7f7bf, type: 3}
+--- !u!4 &2113458275 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7605786663176252342, guid: 9f05942bb6229b646910358906b12fab,
+    type: 3}
+  m_PrefabInstance: {fileID: 1413191733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2114607820
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6340,7 +6351,7 @@ GameObject:
   m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &2133352398
 BoxCollider:

@@ -645,11 +645,11 @@ GameObject:
   - component: {fileID: 1807522987}
   - component: {fileID: 4936703484560184526}
   - component: {fileID: 3156670061489872913}
-  - component: {fileID: 7468897045282317995}
   - component: {fileID: 3634065607003665308}
   - component: {fileID: 8436165082441742949}
   - component: {fileID: 5955142976201537580}
   - component: {fileID: 676443548}
+  - component: {fileID: 5606128506353790698}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -834,6 +834,7 @@ MonoBehaviour:
   _jumpOnLadderSpeed: 3
   _target: {fileID: 0}
   _targetingRotSpeed: 500
+  _hasTargetToLockOn: 0
   _crawlSpeed: 2
   IgnoredColliders: []
   BonusOrientationMethod: 0
@@ -852,71 +853,6 @@ MonoBehaviour:
   RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
   RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
   UIText: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
---- !u!114 &7468897045282317995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6875040720620598759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b177cdbe101cd2948a9f02d724b0eaa6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
-  RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
-  RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
-  _targetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}
-  _changeTargetEvent: {fileID: 11400000, guid: 9923ca68d96e1c94cab833e062b6b065, type: 2}
-  _unTargetingEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
-  _audioEvent: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
-  currentTarget: {fileID: 0}
-  _closestTarget: {fileID: 0}
-  CC: {fileID: 3156670061489872913}
-  camFollow: {fileID: 0}
-  lockOnCanvas: {fileID: 0}
-  enemyTarget_Locator: {fileID: 7605786663176252342, guid: 9f05942bb6229b646910358906b12fab,
-    type: 3}
-  cinemachineAnimator: {fileID: 0}
-  zeroVert_Look: 0
-  noticeZone: 7
-  lookAtSmoothing: 2
-  maxNoticeAngle: 60
-  crossHair_Scale: 0.1
-  canRaycast: 0
-  findByAngle: 0
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 256
-  _NPCIndex: 0
-  _enemyLocked: 0
-  pos: {x: 0, y: 0, z: 0}
-  _nextTargetWindow: 0.15
-  dis: 0
-  _recenterCameraSFX:
-    Guid:
-      Data1: 749191158
-      Data2: 1204719784
-      Data3: -2145550153
-      Data4: -564873958
-    Path: event:/Camera/RecenterCamera
-  _LockOnSFX:
-    Guid:
-      Data1: -1201158995
-      Data2: 1133052432
-      Data3: 1149166244
-      Data4: -103697009
-    Path: event:/Actions/LockOn
-  _LockOffSFX:
-    Guid:
-      Data1: 1624580476
-      Data2: 1236639407
-      Data3: -469505370
-      Data4: 475322192
-    Path: event:/Actions/LockOff
-  nearbyTargets: []
-  remainingTargets: []
 --- !u!114 &3634065607003665308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1055,6 +991,70 @@ MonoBehaviour:
       Data3: 1013452673
       Data4: 2102291778
     Path: event:/Player/SighGettingOnOffLadder
+--- !u!114 &5606128506353790698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6875040720620598759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 930eaae404071ba45b0e94446a6a8f20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
+  RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
+  _targetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}
+  _changeTargetEvent: {fileID: 11400000, guid: 9923ca68d96e1c94cab833e062b6b065, type: 2}
+  _unTargetingEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
+  _audioEvent: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
+  currentTarget: {fileID: 0}
+  _closestTarget: {fileID: 0}
+  CC: {fileID: 3156670061489872913}
+  camFollow: {fileID: 0}
+  lockOnCanvas: {fileID: 0}
+  enemyTarget_Locator: {fileID: 0}
+  cinemachineAnimator: {fileID: 0}
+  zeroVert_Look: 0
+  noticeZone: 7
+  lookAtSmoothing: 2
+  maxNoticeAngle: 60
+  crossHair_Scale: 0.1
+  canRaycast: 0
+  findByAngle: 0
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  _NPCIndex: 0
+  _enemyLocked: 0
+  pos: {x: 0, y: 0, z: 0}
+  _nextTargetWindow: 0.2
+  dis: 0
+  _recenterCameraSFX:
+    Guid:
+      Data1: 749191158
+      Data2: 1204719784
+      Data3: -2145550153
+      Data4: -564873958
+    Path: event:/Camera/RecenterCamera
+  _LockOnSFX:
+    Guid:
+      Data1: -1201158995
+      Data2: 1133052432
+      Data3: 1149166244
+      Data4: -103697009
+    Path: event:/Actions/LockOn
+  _LockOffSFX:
+    Guid:
+      Data1: 1624580476
+      Data2: 1236639407
+      Data3: -469505370
+      Data4: 475322192
+    Path: event:/Actions/LockOff
+  nearbyTargets: []
+  remainingTargets: []
 --- !u!1 &6875040720686954656
 GameObject:
   m_ObjectHideFlags: 0

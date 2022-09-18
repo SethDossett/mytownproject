@@ -13,6 +13,7 @@ namespace MyTownProject.NPC
         [SerializeField] GameObject _meshes;
         CapsuleCollider _collider;
         public GameObject _head;
+        public bool IsVisible;
 
         private void OnEnable()
         {

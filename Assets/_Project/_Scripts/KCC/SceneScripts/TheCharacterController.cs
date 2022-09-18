@@ -84,6 +84,7 @@ namespace KinematicCharacterController.Examples
         [Header("Targeting")]
         public Transform _target;
         [SerializeField] float _targetingRotSpeed = 500f;
+        public bool _hasTargetToLockOn;
 
         [Header("Crawling")]
         [SerializeField] float _crawlSpeed = 2f;
@@ -124,6 +125,7 @@ namespace KinematicCharacterController.Examples
         private RaycastHit[] _probedHits = new RaycastHit[8];
         public Vector3 _moveInputVector;
         private Vector3 _lookInputVector;
+        private Vector3 _rawMoveInputVector;
         private bool _jumpRequested = false;
         private bool _jumpConsumed = false;
         private bool _jumpedThisFrame = false;
@@ -359,6 +361,7 @@ namespace KinematicCharacterController.Examples
                     {
                         // Move and look inputs
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
+                        _rawMoveInputVector = moveInputVector.normalized;
 
                         switch (OrientationMethod)
                         {
@@ -482,11 +485,9 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Targeting:
                     {
                         //if not Target then dont rotate
-
+                        if (!_hasTargetToLockOn) return;
                         Quaternion lookRot = Quaternion.LookRotation(_target.position- transform.position, Vector3.up);
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _targetingRotSpeed * Time.deltaTime);
-                        //float yawCamera = cam.transform.rotation.eulerAngles.y;
-                        //currentRotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera,0), 15 * deltaTime);
                         break;
                     }
                 case CharacterState.Talking:
@@ -644,8 +645,16 @@ namespace KinematicCharacterController.Examples
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                            animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                            animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
+
+                            if (_hasTargetToLockOn){
+                                animator.SetFloat(anim_horizontal, _rawMoveInputVector.x, 0.1f, Time.deltaTime);
+                                animator.SetFloat(anim_vertical, _rawMoveInputVector.y, 0.1f, Time.deltaTime);
+                            }
+                            else{
+                                animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
+                                animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
+                            }
+                            
 
                             if (currentVelocityMagnitude <= 0f) _canCrouch = true;   
                             else _canCrouch = false;
@@ -833,8 +842,56 @@ namespace KinematicCharacterController.Examples
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                            animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                            animator.SetFloat(anim_vertical, currentVelocity.z, 0.1f, Time.deltaTime);
+                            animator.SetFloat(anim_horizontal, inputRight.normalized.x, 0f, Time.deltaTime); //works when doesnt have target
+                            animator.SetFloat(anim_vertical, inputRight.normalized.z, 0f, Time.deltaTime);
+                        }
+                        // Air movement
+                        else
+                        {
+                            _canCrouch = false;
+                            // Add move input
+                            if (_moveInputVector.sqrMagnitude > 0f)
+                            {
+                                Vector3 addedVelocity = _moveInputVector * AirAccelerationSpeed * deltaTime;
+
+                                Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(currentVelocity, Motor.CharacterUp);
+
+                                // Limit air velocity from inputs
+                                if (currentVelocityOnInputsPlane.magnitude < MaxAirMoveSpeed)
+                                {
+                                    // clamp addedVel to make total vel not exceed max vel on inputs plane
+                                    Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, MaxAirMoveSpeed);
+                                    addedVelocity = newTotal - currentVelocityOnInputsPlane;
+                                }
+                                else
+                                {
+                                    // Make sure added vel doesn't go in the direction of the already-exceeding velocity
+                                    if (Vector3.Dot(currentVelocityOnInputsPlane, addedVelocity) > 0f)
+                                    {
+                                        addedVelocity = Vector3.ProjectOnPlane(addedVelocity, currentVelocityOnInputsPlane.normalized);
+                                    }
+                                }
+
+                                // Prevent air-climbing sloped walls
+                                if (Motor.GroundingStatus.FoundAnyGround)
+                                {
+                                    if (Vector3.Dot(currentVelocity + addedVelocity, addedVelocity) > 0f)
+                                    {
+                                        Vector3 perpenticularObstructionNormal = Vector3.Cross(Vector3.Cross(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal), Motor.CharacterUp).normalized;
+                                        addedVelocity = Vector3.ProjectOnPlane(addedVelocity, perpenticularObstructionNormal);
+                                    }
+                                }
+
+                                // Apply added velocity
+                                currentVelocity += addedVelocity;
+
+                            }
+
+                            // Gravity
+                            currentVelocity += Gravity * deltaTime;
+
+                            // Drag
+                            currentVelocity *= (1f / (1f + (Drag * deltaTime)));
                         }
                         // Take into account additive velocity
                         if (_internalVelocityAdd.sqrMagnitude > 0f)

@@ -756,6 +756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f527eed4d979fc4bbff60dff5493f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <IsVisible>k__BackingField: 0
   <MaxNoticeRange>k__BackingField: 7
   <MaxInteractRange>k__BackingField: 5
   <CanBeInteractedWith>k__BackingField: 1
@@ -806,6 +807,7 @@ MonoBehaviour:
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _meshes: {fileID: 5095986871245467832}
   _head: {fileID: 8622573951059017611}
+  IsVisible: 0
 --- !u!114 &302200774757386140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1140,6 +1142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4328718328000787756}
   - component: {fileID: 6126937191629860276}
+  - component: {fileID: 706105425433240967}
   m_Layer: 8
   m_Name: Peasant_Man
   m_TagString: Untagged
@@ -1254,6 +1257,48 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.008862168, y: 0.14127597, z: 0.105633885}
     m_Extent: {x: 0.68259144, y: 1.0226704, z: 0.40099773}
   m_DirtyAABB: 0
+--- !u!114 &706105425433240967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5095986871245467832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd84a4c2e071e9945b785eb62f6aacae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visible:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1004980795796097278}
+        m_TargetAssemblyTypeName: MyTownProject.Interaction.NPC_Interact, Project
+        m_MethodName: set_IsVisible
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  invisible:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1004980795796097278}
+        m_TargetAssemblyTypeName: MyTownProject.Interaction.NPC_Interact, Project
+        m_MethodName: set_IsVisible
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5291557196867898423
 GameObject:
   m_ObjectHideFlags: 0
