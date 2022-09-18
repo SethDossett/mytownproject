@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8719128350330041270}
-  - component: {fileID: 8719128350330041269}
   - component: {fileID: 8719128350330041268}
   - component: {fileID: 8719128350330041259}
   - component: {fileID: 8719128350330041258}
@@ -35,20 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8719128350330041269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8719128350330041271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2195d2b8d3cf834eb079e0c5709d5a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
-  DialogueEventsSO: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
 --- !u!114 &8719128350330041268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,7 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc940b8ef813bb54db9804cfd1c8dd7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  uIEventChannel: {fileID: 0}
+  mainEventChannel: {fileID: 0}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _gameUI: {fileID: 0}
   _clock: {fileID: 0}
@@ -82,7 +68,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  StateChanger: {fileID: 0}
   pauseMenu: {fileID: 0}
+  firstButton: {fileID: 0}
 --- !u!114 &8719128350330041258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,9 +83,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c695278148a094fa6ce32968903b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeText: {fileID: 0}
-  dateText: {fileID: 0}
-  debugText: {fileID: 0}
+  ClockFace: {fileID: 0}
+  Date: {fileID: 0}
+  Time: {fileID: 0}
+  Season: {fileID: 0}
+  Week: {fileID: 0}
+  weatherSprite: {fileID: 0}
+  weatherSprites: []
+  sunlight: {fileID: 0}
+  nightIntensity: 0
+  dayIntensity: 0
+  dayColor: {r: 0, g: 0, b: 0, a: 0}
+  rainyDayColor: {r: 0, g: 0, b: 0, a: 0}
+  nightColor: {r: 0, g: 0, b: 0, a: 0}
+  fireflies: {fileID: 0}
+  dayNightCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &8719128350330041257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,8 +115,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a09741e56323044f9a8326b6eec24ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   DialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  _oneShot: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
   _dialogueText: {fileID: 0}
   _speakerText: {fileID: 0}
   continueIcon: {fileID: 0}
@@ -122,3 +127,31 @@ MonoBehaviour:
   - {fileID: 0}
   loadGlobalsJSON: {fileID: 4900000, guid: c00a0c87a31256e45b5828511e51ef30, type: 3}
   typingSpeed: 0.05
+  SelectGeneric:
+    Guid:
+      Data1: 1271803200
+      Data2: 1255213393
+      Data3: 962738068
+      Data4: 1281935651
+    Path: event:/Dialogue/SelectGeneric
+  skipToEndOfLine:
+    Guid:
+      Data1: -975263616
+      Data2: 1158316049
+      Data3: 2077503619
+      Data4: 1103837895
+    Path: event:/Dialogue/SkipToEndOfLine
+  submitSFX:
+    Guid:
+      Data1: -23669085
+      Data2: 1082615508
+      Data3: 1665769367
+      Data4: 160803895
+    Path: event:/UI/Submit
+  cancelSFX:
+    Guid:
+      Data1: -1717483860
+      Data2: 1259136655
+      Data3: -508259957
+      Data4: -184544575
+    Path: event:/UI/Cancel

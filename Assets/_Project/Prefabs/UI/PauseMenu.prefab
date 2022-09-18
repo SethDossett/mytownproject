@@ -949,14 +949,7 @@ MonoBehaviour:
   MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   StateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   pauseMenu: {fileID: 9052139323242417443}
-  playOneShot: {fileID: 0}
-  navigation:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+  firstButton: {fileID: 1399515899168810333}
 --- !u!1 &4621652774878954901
 GameObject:
   m_ObjectHideFlags: 0

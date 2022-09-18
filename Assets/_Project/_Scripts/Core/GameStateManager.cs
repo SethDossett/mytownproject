@@ -12,6 +12,10 @@ namespace MyTownProject.Core
         public static event Action<GameState> OnGameStateChanged;
         public GameState gameState;
 
+        public enum GameState
+        {
+            GAME_PLAYING, GAME_PAUSED, CUTSCENE
+        }
         public void UpdateState(GameState newState)
         {
             gameState = newState;
@@ -34,10 +38,6 @@ namespace MyTownProject.Core
             OnGameStateChanged?.Invoke(newState);
         }
 
-        public enum GameState
-        {
-            GAME_PLAYING, GAME_PAUSED, CUTSCENE
-        }
 
         #endregion
 
@@ -53,14 +53,13 @@ namespace MyTownProject.Core
         private void Start()
         {
             //playerInput = myPlayerInput.GetComponent<PlayerInput>();
-            UpdateState(GameState.CUTSCENE);
+            UpdateState(GameState.GAME_PAUSED);
         }
 
         private void HandleCutscene()
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 1f;
-            InputManager.ToggleActionMap(InputManager.inputActions.UI);
             myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
@@ -68,7 +67,6 @@ namespace MyTownProject.Core
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 0f;
-            InputManager.ToggleActionMap(InputManager.inputActions.UI);
             myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
@@ -76,9 +74,7 @@ namespace MyTownProject.Core
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 1f;
-            InputManager.ToggleActionMap(InputManager.inputActions.GamePlay);
             myPlayerInput.GetComponent<ExamplePlayer>().enabled = true; //Turning on ExamplePlayerScript
-
         }
         #endregion
 
@@ -86,15 +82,22 @@ namespace MyTownProject.Core
 
         [SerializeField] StateChangerEventSO stateChanger;
         [SerializeField] DialogueEventsSO dialogueEvents;
+        [SerializeField] MainEventChannelSO mainEventChannel;
         void OnEnable()
         {
             stateChanger.OnGameState += UpdateState;
             dialogueEvents.onEnter += EnteringDialogue;
+            dialogueEvents.onExit += EnterGamePlayingState;
+            mainEventChannel.OnGamePaused += EnterGamePausedState;
+            mainEventChannel.OnGameUnPaused += EnterGamePlayingState;
         }
         void OnDisable()
         {
             stateChanger.OnGameState -= UpdateState;
-            dialogueEvents.onEnter += EnteringDialogue;
+            dialogueEvents.onEnter -= EnteringDialogue;
+            dialogueEvents.onExit -= EnterGamePlayingState;
+            mainEventChannel.OnGamePaused -= EnterGamePausedState;
+            mainEventChannel.OnGameUnPaused -= EnterGamePlayingState;
         }
 
         void EnteringDialogue(GameObject obj, TextAsset json)

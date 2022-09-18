@@ -1,4 +1,5 @@
 ﻿using MyTownProject.Events;
+using MyTownProject.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,9 +10,6 @@ namespace KinematicCharacterController.Examples
         public TheCharacterController Character;
         public ExampleCharacterCamera CharacterCamera;
         public MainEventChannelSO MainEventChannelSO;
-
-        [SerializeField] GeneralEventSO _enableControls;
-        [SerializeField] GeneralEventSO _disableControls;
 
         private const string MouseXInput = "Mouse X";
         private const string MouseYInput = "Mouse Y";
@@ -35,8 +33,8 @@ namespace KinematicCharacterController.Examples
         private void OnEnable()
         {
             inputActions.GamePlay.Enable();
-            _disableControls.OnRaiseEvent += DisableControls;
-            _enableControls.OnRaiseEvent += EnableControls;
+            //_disableControls.OnRaiseEvent += DisableControls;
+            //_enableControls.OnRaiseEvent += EnableControls;
             //move = InputManager.inputActions.GamePlay.Move;
            //cameraMove = inputActions.GamePlay.Camera;
            //interact = inputActions.GamePlay.Interact;
@@ -54,8 +52,8 @@ namespace KinematicCharacterController.Examples
         private void OnDisable()
         {
             inputActions.GamePlay.Disable();
-            _disableControls.OnRaiseEvent -= DisableControls;
-            _enableControls.OnRaiseEvent -= EnableControls;
+            //_disableControls.OnRaiseEvent -= DisableControls;
+            //_enableControls.OnRaiseEvent -= EnableControls;
            /* move.Disable();
             cameraMove.Disable();
             //jump.Disable();
@@ -66,7 +64,7 @@ namespace KinematicCharacterController.Examples
         }
         private void Awake()
         {
-            inputActions = new NewControls();
+            inputActions = InputManager.inputActions;
             playerInput = GetComponent<PlayerInput>();
         }
         private void Start()
@@ -85,7 +83,7 @@ namespace KinematicCharacterController.Examples
         {
             if (canPressStart)
             {
-                if (inputActions.GamePlay.Start.WasPressedThisFrame())
+                if (inputActions.GamePlay.Start.WasPressedThisFrame()) // could move this to Pause Menu
                 {
                     MainEventChannelSO.RaiseEventPaused();
                 }
@@ -153,12 +151,6 @@ namespace KinematicCharacterController.Examples
 
             // Apply inputs to character
             Character.SetInputs(ref characterInputs);
-        }
-        void EnableControls(){
-            inputActions.Enable();
-        }
-        void DisableControls(){
-            inputActions.Disable();
         }
     }
 }

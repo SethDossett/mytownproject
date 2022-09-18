@@ -46,6 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameState: 0
   myPlayerInput: {fileID: 0}
+  stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  mainEventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
 --- !u!114 &8262727831412473721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,4 +61,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3fd8f8f6d45f04798d4bda96b4221c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToTick: 0.5
+  currentDay: 0
+  season: 0
+  year: 0
+  hour: 0
+  minutes: 0
+  TickMinutesIncreased: 1
+  TimeBetweenTicks: 1

@@ -1030,7 +1030,7 @@ MonoBehaviour:
   _NPCIndex: 0
   _enemyLocked: 0
   pos: {x: 0, y: 0, z: 0}
-  _nextTargetWindow: 0.2
+  _nextTargetWindow: 0.1
   dis: 0
   _recenterCameraSFX:
     Guid:

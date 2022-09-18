@@ -7,13 +7,14 @@ using DG.Tweening;
 using UnityEngine.EventSystems;
 using MyTownProject.Events;
 using FMODUnity;
+using UnityEngine.InputSystem;
+using MyTownProject.Core;
 
 namespace MyTownProject.Dialogue
 {
     public class UI_DialogueHandler : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] MainEventChannelSO evnt;
         [SerializeField] DialogueEventsSO DialogueEvents;
         [SerializeField] AudioEventSO _oneShot;
         [SerializeField] TextMeshProUGUI _dialogueText;
@@ -45,16 +46,23 @@ namespace MyTownProject.Dialogue
         [SerializeField] EventReference submitSFX;
         [SerializeField] EventReference cancelSFX;
 
+        [Header("Input")]
+        private InputAction submit;
+
         private void OnEnable()
         {
+            submit = InputManager.inputActions.UI.Submit;
+
+            submit.performed += SubmitButton;
+
             DialogueEvents.onEnter += EnterDialogueMode;
-            DialogueEvents.onSubmit += SubmitButton;
             _dialogueVariables = new DialogueVariables(loadGlobalsJSON);
         }
         private void OnDisable()
         {
+            submit.performed -= SubmitButton;
+
             DialogueEvents.onEnter -= EnterDialogueMode;
-            DialogueEvents.onSubmit -= SubmitButton;
         }
         private void Start()
         {
@@ -92,8 +100,9 @@ namespace MyTownProject.Dialogue
             ShowChoices();
         }
 
-        void SubmitButton()
+        void SubmitButton(InputAction.CallbackContext obj)
         {
+            print("shadfjkasdfhjk");
             if (_displayingLine == true)
             {
                 _skipToEndOfLine = true;
@@ -254,7 +263,6 @@ namespace MyTownProject.Dialogue
             _dialogueText.text = "";
             _dialogueVariables.StopListening(currentStory);
             DialogueEvents.Exit();
-            evnt.RaiseEventUnPaused();
         }
     }
 }

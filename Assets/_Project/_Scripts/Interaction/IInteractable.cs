@@ -11,7 +11,7 @@ namespace MyTownProject.Interaction
 
 
         void OnFocus(string _string);
-        void OnInteract(TargetingSystem playerRacasting);
+        void OnInteract(TargetingSystem targetingSystem);
         void OnLoseFocus();
     }
 }
