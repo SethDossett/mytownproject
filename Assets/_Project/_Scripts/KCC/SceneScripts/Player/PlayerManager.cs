@@ -105,31 +105,23 @@ namespace KinematicCharacterController.Examples
             DefaultStateAction?.Invoke();
             if(cc.CurrentCharacterState != _default)
                 cc.TransitionToState(_default);
-            _animator.SetLayerWeight(0, 1);
-            _animator.SetLayerWeight(1, 0);
-            _animator.SetLayerWeight(2, 0);
+            
         }
         void ClimbingState(){
             ClimbingStateAction?.Invoke();
-            _animator.SetLayerWeight(2, 1);
-            _animator.SetLayerWeight(0, 0);
-            _animator.SetLayerWeight(1, 0);
-            _animator.Play("Idle");
+            
         }
         void TargetingState(){
             TargetingStateAction?.Invoke();
-            _animator.SetLayerWeight(1, 1);
-            _animator.SetLayerWeight(0, 0);
-            _animator.SetLayerWeight(2, 0);
+            
         }
         void TalkingState(){
             TalkingStateAction?.Invoke();
-            _animator.SetLayerWeight(0, 1);
-            _animator.SetLayerWeight(1, 0);
-            _animator.SetLayerWeight(2, 0);
+            
         }
         void CrawlingState(){
             CrawlingStateAction?.Invoke();
         }
+
     }
 }

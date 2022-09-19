@@ -18,6 +18,9 @@ namespace MyTownProject.Enviroment{
         GameObject _player;
         TheCharacterController CC;
 
+        int _anim_GetOnTop = Animator.StringToHash("GetOnLadderTop");
+        int _anim_GetOffTop = Animator.StringToHash("GetOffTop");
+
         [Header("Values")]
         [SerializeField] float _ladderHeight;
         [SerializeField] float _heightOnLadder;
@@ -225,7 +228,7 @@ namespace MyTownProject.Enviroment{
             }
             yield return new WaitForEndOfFrame();
             SwitchToClimbingState(false);
-            _player.GetComponent<Animator>().CrossFade("GetOnLadderTop", 0, 2);
+            _player.GetComponent<Animator>().CrossFadeInFixedTime(_anim_GetOnTop, 0.2f, 0);
             yield return new WaitForEndOfFrame();
             
             _onLadder = true;
@@ -241,7 +244,7 @@ namespace MyTownProject.Enviroment{
         }
         IEnumerator GetOffLadderTop(){
             CC._gettingOnOffLadder = true;
-            _player.GetComponent<Animator>().CrossFade("GetOffTop", 0, 2);
+            _player.GetComponent<Animator>().CrossFade(_anim_GetOffTop, 0, 0);
 
             yield return new WaitForSecondsRealtime(0.75f);
             SwitchToDefaltState();

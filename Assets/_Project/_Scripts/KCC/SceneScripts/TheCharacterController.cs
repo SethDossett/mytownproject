@@ -107,13 +107,21 @@ namespace KinematicCharacterController.Examples
         [SerializeField] float _talkingRotSpeed = 500f;
 
         [Header("Animation")]
-        Animator animator;
+        Animator _animator;
+        int _talkState = Animator.StringToHash("Talking");
+        int _idleState = Animator.StringToHash("Idle");
+        int _climbState = Animator.StringToHash("Climbing");
+        int _strafeState = Animator.StringToHash("Strafing");
+        int _hardLandState = Animator.StringToHash("HardLanding");
         int anim_isCrouched = Animator.StringToHash("isCrouched");
+        int anim_isClimbing = Animator.StringToHash("isClimbing");
         int anim_jumpTrigger = Animator.StringToHash("hasJumped");
         int anim_landTrigger = Animator.StringToHash("hasLanded");
         int anim_moving = Animator.StringToHash("Moving");
+        int anim_talking = Animator.StringToHash("isTalking");
         int anim_horizontal = Animator.StringToHash("Horizontal");
         int anim_vertical = Animator.StringToHash("Vertical");
+
         
 
 
@@ -164,13 +172,13 @@ namespace KinematicCharacterController.Examples
         }
         private void Awake()
         {
+            SetInitialReferences();
             // Handle initial state
             TransitionToState(CharacterState.Default);
 
             // Assign the characterController to the motor
             Motor.CharacterController = this;
 
-            SetInitialReferences();
         }
         private void Update()
         {
@@ -196,19 +204,23 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
+                        //_animator.CrossFadeInFixedTime(_idleState, 0.2f, 0);
                         //MaxStableMoveSpeed = 0; // think it might look better to be able to run out of climbing.
                         break;
                     }
                 case CharacterState.Climbing:
                     {
+                        _animator.CrossFadeInFixedTime(_climbState, 0.2f, 0);
                         break;
                     }
                 case CharacterState.Targeting:
                     {
+                        _animator.CrossFadeInFixedTime(_strafeState, 0.25f, 0);
                         break;
                     }
                 case CharacterState.Talking:
                     {
+                        _animator.CrossFadeInFixedTime(_talkState, 0.25f, 0);
                         break;
                     } 
                 case CharacterState.Crawling:
@@ -237,21 +249,24 @@ namespace KinematicCharacterController.Examples
                     {
                         _onLadder = false;
                         print("EXIT CLIMB");
+                        _animator.CrossFadeInFixedTime(_idleState, 0, 0);
                         break;
                     }
                 case CharacterState.Targeting:
                     {
+                        _animator.CrossFadeInFixedTime(_idleState, 0.25f, 0);
                         break;
                     }
                 case CharacterState.Talking:
                     {
+                        _animator.CrossFadeInFixedTime(_idleState, 0.2f, 0);
                         break;
                     } 
                 case CharacterState.Crawling:
                     {
                         _hasFinishedCrouch = false;
-                        if (animator.speed != 1f)
-                            animator.speed = 1f;
+                        if (_animator.speed != 1f)
+                            _animator.speed = 1f;
 
                         _canCrouch = true;     
                         break;
@@ -267,7 +282,7 @@ namespace KinematicCharacterController.Examples
         /// 
         private void SetInitialReferences()
         {
-            animator = GetComponent<Animator>();
+            _animator = GetComponent<Animator>();
             cam = Camera.main;
             RatePerSecond = MaxSpeed / accelTime;
             MaxStableMoveSpeed = 2;
@@ -325,8 +340,8 @@ namespace KinematicCharacterController.Examples
                                 _isCrouching = true;
                                 Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
                                 //MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
-                                if (animator.GetBool(anim_isCrouched) != true)
-                                    animator.SetBool(anim_isCrouched, true);
+                                if (_animator.GetBool(anim_isCrouched) != true)
+                                    _animator.SetBool(anim_isCrouched, true);
 
 
                                 //RecenterCamX.RaiseEvent2(0, 0.1f);
@@ -487,12 +502,16 @@ namespace KinematicCharacterController.Examples
                         //if not Target then dont rotate
                         if (!_hasTargetToLockOn) return;
                         Quaternion lookRot = Quaternion.LookRotation(_target.position- transform.position, Vector3.up);
+                        lookRot.z = 0;
+                        lookRot.x = 0;
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _targetingRotSpeed * Time.deltaTime);
                         break;
                     }
                 case CharacterState.Talking:
                     {
                         Quaternion lookRot = Quaternion.LookRotation(_target.position - transform.position, Vector3.up);
+                        lookRot.z = 0;
+                        lookRot.x = 0;
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _talkingRotSpeed * Time.unscaledDeltaTime);
                         break;
                     } 
@@ -601,7 +620,7 @@ namespace KinematicCharacterController.Examples
                                     if(dot < -0.92f){
                                         changingDirection = true;
                                         MaxStableMoveSpeed = 0;
-                                        animator.CrossFade("ChangeDirection", 0, 0);
+                                        _animator.CrossFade("ChangeDirection", 0, 0);
                                     }
                                 }
                                 else{
@@ -644,15 +663,15 @@ namespace KinematicCharacterController.Examples
                             
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-                            animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
+                            _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
 
                             if (_hasTargetToLockOn){
-                                animator.SetFloat(anim_horizontal, _rawMoveInputVector.x, 0.1f, Time.deltaTime);
-                                animator.SetFloat(anim_vertical, _rawMoveInputVector.y, 0.1f, Time.deltaTime);
+                                _animator.SetFloat(anim_horizontal, _rawMoveInputVector.x, 0.1f, Time.deltaTime);
+                                _animator.SetFloat(anim_vertical, _rawMoveInputVector.y, 0.1f, Time.deltaTime);
                             }
                             else{
-                                animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                                animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
+                                _animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
+                                _animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                             }
                             
 
@@ -733,7 +752,7 @@ namespace KinematicCharacterController.Examples
                                 _jumpRequested = false;
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
-                                animator.SetBool(anim_jumpTrigger, true);
+                                _animator.SetBool(anim_jumpTrigger, true);
                             }
                         }
 
@@ -751,8 +770,8 @@ namespace KinematicCharacterController.Examples
                             currentVelocity.y = 0f;
                             currentVelocity.x = 0f;
                             currentVelocity.z = 0f;
-                            if (animator.speed != 1f)
-                                animator.speed = 1f;
+                            if (_animator.speed != 1f)
+                                _animator.speed = 1f;
                             return;
                         } 
                         if(Motor.GroundingStatus.IsStableOnGround) Motor.ForceUnground();
@@ -765,8 +784,8 @@ namespace KinematicCharacterController.Examples
                             currentVelocity.y = 0f;
                             currentVelocity.x = 0f;
                             currentVelocity.z = 0f;
-                            if (animator.speed != 1f)
-                                animator.speed = 1f;
+                            if (_animator.speed != 1f)
+                                _animator.speed = 1f;
                             //Vector3 ladderStartPos = new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z);
                             //Vector3 newPlayerPos = Vector3.Lerp(Motor.TransientPosition, newCenteredPosition, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             //Vector3 newPlayerPos = Vector3.MoveTowards(Motor.TransientPosition, newCenteredPosition, _jumpOnLadderSpeed * deltaTime);
@@ -786,13 +805,13 @@ namespace KinematicCharacterController.Examples
                             if(currentVelocity.y == 0f)
                             {
                                 if(currentVelocity != Vector3.zero) currentVelocity = Vector3.zero;
-                                if (animator.speed != 0f)
-                                    animator.speed = 0f;
+                                if (_animator.speed != 0f)
+                                    _animator.speed = 0f;
                             }
                             else
                             {
-                                if (animator.speed != 1f)
-                                    animator.speed = 1f;
+                                if (_animator.speed != 1f)
+                                    _animator.speed = 1f;
                             }
                         }
                         
@@ -841,9 +860,9 @@ namespace KinematicCharacterController.Examples
 
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-                            animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                            animator.SetFloat(anim_horizontal, inputRight.normalized.x, 0f, Time.deltaTime); //works when doesnt have target
-                            animator.SetFloat(anim_vertical, inputRight.normalized.z, 0f, Time.deltaTime);
+                            _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
+                            _animator.SetFloat(anim_horizontal, inputRight.normalized.x, 0f, Time.deltaTime); //works when doesnt have target
+                            _animator.SetFloat(anim_vertical, inputRight.normalized.z, 0f, Time.deltaTime);
                         }
                         // Air movement
                         else
@@ -906,9 +925,9 @@ namespace KinematicCharacterController.Examples
                     {
                         float currentVelocityMagnitude = currentVelocity.magnitude;
                         currentVelocity = Vector3.zero;
-                        animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                        animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                        animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
+                        _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
+                        _animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
+                        _animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                         break;
                     }
                 case CharacterState.Crawling:
@@ -917,10 +936,10 @@ namespace KinematicCharacterController.Examples
                         if (!_hasFinishedCrouch)
                         {
                             if (currentVelocity != Vector3.zero) currentVelocity = Vector3.zero;
-                            animator.SetFloat(anim_moving, 0f, 0f, Time.deltaTime);
+                            _animator.SetFloat(anim_moving, 0f, 0f, Time.deltaTime);
 
-                            if (animator.speed != 1f)
-                                animator.speed = 1f;
+                            if (_animator.speed != 1f)
+                                _animator.speed = 1f;
 
                             if(_moveInputVector.magnitude > 0f)
                             {
@@ -949,13 +968,13 @@ namespace KinematicCharacterController.Examples
                         MaxStableMoveSpeed = 2f;
                         if(_moveInputVector.magnitude == 0)
                         {
-                            if (animator.speed != 0f)
-                                animator.speed = 0f;
+                            if (_animator.speed != 0f)
+                                _animator.speed = 0f;
                         }
                         else
                         {
-                            if (animator.speed != 1f)
-                                animator.speed = 1f;
+                            if (_animator.speed != 1f)
+                                _animator.speed = 1f;
                         }
 
 
@@ -969,9 +988,9 @@ namespace KinematicCharacterController.Examples
 
                         // Smooth movement Velocity
                         currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-                        animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                        animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                        animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
+                        _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
+                        _animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
+                        _animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                         break;
                     }               
             }
@@ -1041,8 +1060,8 @@ namespace KinematicCharacterController.Examples
                                 // If no obstructions, uncrouch
                                 //MeshRoot.localScale = new Vector3(1f, 1f, 1f);
                                 _isCrouching = false;
-                                if (animator.GetBool(anim_isCrouched) != false)
-                                    animator.SetBool(anim_isCrouched, false);
+                                if (_animator.GetBool(anim_isCrouched) != false)
+                                    _animator.SetBool(anim_isCrouched, false);
 
                                 TransitionToState(CharacterState.Default);   
                                 Debug.Log("Uncrouched");
@@ -1151,8 +1170,9 @@ namespace KinematicCharacterController.Examples
         {
             if(_hardLanding){
                 _startFallingTimer = false;
-                animator.SetBool(anim_jumpTrigger, false);
-                animator.SetBool(anim_landTrigger, true);
+                _animator.SetBool(anim_jumpTrigger, false);
+                _animator.SetBool(anim_landTrigger, true);
+                _animator.CrossFade(_hardLandState, 0f, 0);
                 _hardLanding = false;
                 _timeFallingInAir = 0f;
             }
@@ -1165,8 +1185,8 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Default:
                     {
                         Debug.Log("jump");
-                        animator.SetBool(anim_landTrigger, false);
-                        animator.SetBool(anim_jumpTrigger, true);
+                        _animator.SetBool(anim_landTrigger, false);
+                        _animator.SetBool(anim_jumpTrigger, true);
 
                         _startFallingTimer = true;
                         //_jumpRequested = true;

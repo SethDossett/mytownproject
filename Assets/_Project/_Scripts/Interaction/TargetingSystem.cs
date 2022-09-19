@@ -34,7 +34,6 @@ namespace MyTownProject.Interaction
         private IInteractable _interactable;
         [SerializeField] CameraFollow camFollow;
         [SerializeField] Transform lockOnCanvas;
-        Animator anim;
         Transform cam;
         //DefMovement defMovement;
         [SerializeField] Transform enemyTarget_Locator;
@@ -110,7 +109,6 @@ namespace MyTownProject.Interaction
         {
             CC = GetComponent<TheCharacterController>();
             _game_Playing_State = GameStateManager.GameState.GAME_PLAYING;
-            anim = GetComponent<Animator>();
             cam = Camera.main.transform;
             lockOnCanvas.gameObject.SetActive(false);
             _startTimer = false;
@@ -438,7 +436,6 @@ namespace MyTownProject.Interaction
             //HideHover(currentTarget);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
-            //anim.SetLayerWeight(1, 1);
             //cinemachineAnimator.Play("TargetingCamera01");
             cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false; // needs to be event fired
             cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
@@ -531,7 +528,6 @@ namespace MyTownProject.Interaction
             currentTarget = null;
             _closestTarget = null;
             _enemyLocked = false;
-            //anim.SetLayerWeight(1, 0);
             cinemachineAnimator.Play("PlayerFreeLook01");
             _NPCIndex = 0;
             BeenTargetedReset();
