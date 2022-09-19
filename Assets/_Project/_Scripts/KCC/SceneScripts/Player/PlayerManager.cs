@@ -13,7 +13,6 @@ namespace KinematicCharacterController.Examples
         [SerializeField] TransformEventSO PlayerRef;
         [SerializeField] StateChangerEventSO stateChangedEvent;
         [SerializeField] ActionSO teleportPlayer;
-        [SerializeField] GeneralEventSO UntargetEvent;
         [SerializeField] DialogueEventsSO DialogueEvent;
         TheCharacterController cc;
         CharacterState _default = CharacterState.Default;
@@ -23,11 +22,9 @@ namespace KinematicCharacterController.Examples
         CharacterState _crawling = CharacterState.Crawling;
         public Transform _LookAtPoint;
         public UnityAction<TheCharacterController> OnCharacterTeleport;
-        [SerializeField] UnityEvent DefaultStateAction;
-        [SerializeField] UnityEvent ClimbingStateAction;
-        [SerializeField] UnityEvent TalkingStateAction;
-        [SerializeField] UnityEvent TargetingStateAction;
-        [SerializeField] UnityEvent CrawlingStateAction;
+        [SerializeField] UnityEvent GamePlayingAction;
+        [SerializeField] UnityEvent GamePausedAction;
+        [SerializeField] UnityEvent CutSceneAction;
         public bool isBeingTeleportedTo { get; set; }
         
         Animator _animator;
@@ -35,17 +32,15 @@ namespace KinematicCharacterController.Examples
         private void OnEnable()
         {   DialogueEvent.onExit += DefaultState;
             teleportPlayer.OnTeleport += TeleportPlayer;
-            UntargetEvent.OnRaiseEvent += Untargeting;
             TheCharacterController.OnPlayerStateChanged += StateChange;
-            stateChangedEvent.OnGameState += GameStateChanged;
+            GameStateManager.OnGameStateChanged += GameStateChanged;
         }
         private void OnDisable()
         {
             DialogueEvent.onExit -= DefaultState;
             teleportPlayer.OnTeleport -= TeleportPlayer;
-            UntargetEvent.OnRaiseEvent -= Untargeting;
             TheCharacterController.OnPlayerStateChanged -= StateChange;
-            stateChangedEvent.OnGameState += GameStateChanged;
+            GameStateManager.OnGameStateChanged  -= GameStateChanged;
         }
         private void Awake()
         {
@@ -71,16 +66,20 @@ namespace KinematicCharacterController.Examples
 
             isBeingTeleportedTo = false;
         }
-        private void Untargeting(){
-            //cc.TransitionToState(CharacterState.Default);
-        }
+        
         void GameStateChanged(GameStateManager.GameState state){
-            if(state == GameStateManager.GameState.GAME_PAUSED){
-                _animator.updateMode = AnimatorUpdateMode.Normal;
-            }
-            else{
+            if(state == GameStateManager.GameState.GAME_PLAYING){
+                GamePlayingAction?.Invoke();
                 _animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+            }
+            else if(state == GameStateManager.GameState.GAME_PAUSED){
+                GamePausedAction?.Invoke();
+                _animator.updateMode = AnimatorUpdateMode.Normal;
             } 
+            else{
+                CutSceneAction?.Invoke();
+                _animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+            }
         }
         void StateChange(CharacterState state){
             CurrentCharacterState = state;
@@ -102,25 +101,25 @@ namespace KinematicCharacterController.Examples
             }
         }
         void DefaultState(){
-            DefaultStateAction?.Invoke();
+            
             if(cc.CurrentCharacterState != _default)
                 cc.TransitionToState(_default);
             
         }
         void ClimbingState(){
-            ClimbingStateAction?.Invoke();
+            
             
         }
         void TargetingState(){
-            TargetingStateAction?.Invoke();
+
             
         }
         void TalkingState(){
-            TalkingStateAction?.Invoke();
+            
             
         }
         void CrawlingState(){
-            CrawlingStateAction?.Invoke();
+
         }
 
     }

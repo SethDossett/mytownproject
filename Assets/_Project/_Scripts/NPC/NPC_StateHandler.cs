@@ -66,6 +66,8 @@ namespace MyTownProject.NPC
             _animator.SetBool(_isWalking, false);
             NPC.RaiseChangedState(npcState);
             Debug.Log("Talking to Player");
+            //NPC will animate if is Talking
+            _animator.updateMode = AnimatorUpdateMode.UnscaledTime; 
         }
 
         private void HandleWalking()
@@ -81,6 +83,7 @@ namespace MyTownProject.NPC
             _animator.SetBool(_isWalking, false);
             _animator.SetTrigger(_isStanding);
             NPC.RaiseChangedState(npcState);
+            _animator.updateMode = AnimatorUpdateMode.Normal;
         }
 
 

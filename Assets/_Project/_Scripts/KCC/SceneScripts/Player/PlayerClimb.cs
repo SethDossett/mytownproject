@@ -15,6 +15,8 @@ namespace KinematicCharacterController.Examples{
         [SerializeField] Vector3 _forwardCastOffset;
         [SerializeField] Vector3 _overPassCastOffset;
 
+        Vector3 _downOrigin;
+
         RaycastHit _downHitInfo;
         RaycastHit _forwardHitInfo;
         RaycastHit _overPassHitInfo;
@@ -35,9 +37,11 @@ namespace KinematicCharacterController.Examples{
         }
         void Update()
         {
+
+            _downOrigin = transform.TransformPoint(_downCastOffset);
             if(!DownCast()) return;
             _forwardCastOffset = new Vector3(transform.position.x, _downHitInfo.point.y, transform.position.z);
-            _overPassCastOffset = new Vector3(transform.position.x, _overPassHeight, transform.position.z);
+            _overPassCastOffset = new Vector3(transform.position.x, transform.position.y + _overPassHeight, transform.position.z);
 
             _forwardDirectionXZ = Vector3.ProjectOnPlane(transform.forward,Vector3.up);
 
@@ -85,13 +89,13 @@ namespace KinematicCharacterController.Examples{
         }
 
         bool DownCast(){
-            return Physics.Raycast(transform.position + _downCastOffset, Vector3.down, out _downHitInfo, _downCastOffset.y - 0.4f, _groundLayer);
+            return Physics.Raycast(_downOrigin, Vector3.down, out _downHitInfo, _downCastOffset.y - 0.4f, _groundLayer);
         }
         bool ForwardCast(){
-            return Physics.Raycast(transform.position + _forwardCastOffset, transform.forward, out _forwardHitInfo, 5f, _groundLayer);
+            return Physics.Raycast(_forwardCastOffset, transform.forward, out _forwardHitInfo, 5f, _groundLayer);
         }
         bool OverPassCast(){
-             return Physics.Raycast(transform.position + _overPassCastOffset, transform.forward, out _overPassHitInfo, 5f, _groundLayer);
+             return Physics.Raycast(_overPassCastOffset, transform.forward, out _overPassHitInfo, 5f, _groundLayer);
         }
 
         bool CharacterSweep(Vector3 pos, Quaternion rot, Vector3 dir, float dis, LayerMask layerMask, float inflate){
@@ -113,7 +117,11 @@ namespace KinematicCharacterController.Examples{
 
         private void OnDrawGizmos()
         {
-            
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.TransformPoint(_downCastOffset), Vector3.down * (_downCastOffset.y - 0.4f));
+            Gizmos.DrawRay(_forwardCastOffset, transform.forward * 5f);
+            Gizmos.DrawRay(_overPassCastOffset, transform.forward * 5f);
+
         }
     }
 

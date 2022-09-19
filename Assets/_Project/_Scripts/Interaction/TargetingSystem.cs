@@ -105,21 +105,32 @@ namespace MyTownProject.Interaction
             _LeftTriggerInput.canceled -= CheckForRecenterInput;
             _LeftTriggerInput.canceled -= CheckForInputRelease;
         }
-        private void Start()
-        {
+        private void Awake(){
             CC = GetComponent<TheCharacterController>();
             _game_Playing_State = GameStateManager.GameState.GAME_PLAYING;
             cam = Camera.main.transform;
+        }
+        private void Start()
+        { //This might be important to put in on enable to make sure these values get set each time we enable/disable.
+            canRaycast = true;
             lockOnCanvas.gameObject.SetActive(false);
             _startTimer = false;
             _isTalking = false;
         }
         void CheckGameState(GameStateManager.GameState state)
         {
-            if(state == _game_Playing_State)
+            if(state == _game_Playing_State){
+                _interact.Enable();
+                _cameraInput.Enable();
+                _LeftTriggerInput.Enable();
                 canRaycast = true;
-            else
+            }
+            else{
+                _interact.Disable();
+                _cameraInput.Disable();
+                _LeftTriggerInput.Disable();
                 canRaycast = false;
+            }
         }
         void CheckPlayerState(CharacterState state)
         {

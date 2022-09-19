@@ -172,7 +172,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1376702581800373149}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d08284f3e47d644ea9c85729ff14efd, type: 3}
   m_Name: 
@@ -645,11 +645,11 @@ GameObject:
   - component: {fileID: 1807522987}
   - component: {fileID: 4936703484560184526}
   - component: {fileID: 3156670061489872913}
+  - component: {fileID: 5606128506353790698}
   - component: {fileID: 3634065607003665308}
+  - component: {fileID: 676443548}
   - component: {fileID: 8436165082441742949}
   - component: {fileID: 5955142976201537580}
-  - component: {fileID: 676443548}
-  - component: {fileID: 5606128506353790698}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -741,24 +741,125 @@ MonoBehaviour:
   PlayerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   stateChangedEvent: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
-  UntargetEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
   DialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _LookAtPoint: {fileID: 6875040720797426742}
-  DefaultStateAction:
+  GamePlayingAction:
     m_PersistentCalls:
-      m_Calls: []
-  ClimbingStateAction:
+      m_Calls:
+      - m_Target: {fileID: 5606128506353790698}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 3634065607003665308}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2977695146509795185}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  GamePausedAction:
     m_PersistentCalls:
-      m_Calls: []
-  TalkingStateAction:
+      m_Calls:
+      - m_Target: {fileID: 5606128506353790698}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3634065607003665308}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2977695146509795185}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  CutSceneAction:
     m_PersistentCalls:
-      m_Calls: []
-  TargetingStateAction:
-    m_PersistentCalls:
-      m_Calls: []
-  CrawlingStateAction:
-    m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5606128506353790698}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3634065607003665308}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2977695146509795185}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &4936703484560184526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -853,6 +954,70 @@ MonoBehaviour:
   RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
   RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
   UIText: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+--- !u!114 &5606128506353790698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6875040720620598759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 930eaae404071ba45b0e94446a6a8f20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
+  RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
+  _targetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}
+  _changeTargetEvent: {fileID: 11400000, guid: 9923ca68d96e1c94cab833e062b6b065, type: 2}
+  _unTargetingEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
+  _audioEvent: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
+  currentTarget: {fileID: 0}
+  _closestTarget: {fileID: 0}
+  CC: {fileID: 3156670061489872913}
+  camFollow: {fileID: 0}
+  lockOnCanvas: {fileID: 0}
+  enemyTarget_Locator: {fileID: 0}
+  cinemachineAnimator: {fileID: 0}
+  zeroVert_Look: 0
+  noticeZone: 10
+  lookAtSmoothing: 2
+  maxNoticeAngle: 60
+  crossHair_Scale: 0.1
+  canRaycast: 0
+  findByAngle: 0
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  _NPCIndex: 0
+  _enemyLocked: 0
+  pos: {x: 0, y: 0, z: 0}
+  _nextTargetWindow: 0.1
+  dis: 0
+  _recenterCameraSFX:
+    Guid:
+      Data1: 749191158
+      Data2: 1204719784
+      Data3: -2145550153
+      Data4: -564873958
+    Path: event:/Camera/RecenterCamera
+  _LockOnSFX:
+    Guid:
+      Data1: -1201158995
+      Data2: 1133052432
+      Data3: 1149166244
+      Data4: -103697009
+    Path: event:/Actions/LockOn
+  _LockOffSFX:
+    Guid:
+      Data1: 1624580476
+      Data2: 1236639407
+      Data3: -469505370
+      Data4: 475322192
+    Path: event:/Actions/LockOff
+  nearbyTargets: []
+  remainingTargets: []
 --- !u!114 &3634065607003665308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,6 +1040,54 @@ MonoBehaviour:
   _endOffset: {x: 0, y: 0, z: 0.2}
   _groudAngleMax: 0
   _wallAngleMax: 0
+--- !u!114 &676443548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6875040720620598759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6ae93715f3ad88478bc8a9f71c37ce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playOneShot: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
+  crawl:
+    Guid:
+      Data1: -290237332
+      Data2: 1137389194
+      Data3: -450059336
+      Data4: 792552752
+    Path: event:/Player/Crawling
+  footsteps:
+    Guid:
+      Data1: -641790914
+      Data2: 1228471233
+      Data3: -1612490086
+      Data4: -1862917067
+    Path: event:/Player/FootSteps
+  land:
+    Guid:
+      Data1: -757077606
+      Data2: 1110092782
+      Data3: 1784997786
+      Data4: -490932582
+    Path: event:/Player/Land
+  climbLadder:
+    Guid:
+      Data1: 1749556546
+      Data2: 1272257921
+      Data3: -1175028575
+      Data4: 1702488522
+    Path: event:/Player/ClimbingLadder
+  ladderSigh:
+    Guid:
+      Data1: -1952759951
+      Data2: 1127737229
+      Data3: 1013452673
+      Data4: 2102291778
+    Path: event:/Player/SighGettingOnOffLadder
 --- !u!114 &8436165082441742949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -943,118 +1156,6 @@ MonoBehaviour:
   - {fileID: 6875040722065359867}
   - {fileID: 6875040721288588114}
   - {fileID: 6875040721052158738}
---- !u!114 &676443548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6875040720620598759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6ae93715f3ad88478bc8a9f71c37ce1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playOneShot: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
-  crawl:
-    Guid:
-      Data1: -290237332
-      Data2: 1137389194
-      Data3: -450059336
-      Data4: 792552752
-    Path: event:/Player/Crawling
-  footsteps:
-    Guid:
-      Data1: -641790914
-      Data2: 1228471233
-      Data3: -1612490086
-      Data4: -1862917067
-    Path: event:/Player/FootSteps
-  land:
-    Guid:
-      Data1: -757077606
-      Data2: 1110092782
-      Data3: 1784997786
-      Data4: -490932582
-    Path: event:/Player/Land
-  climbLadder:
-    Guid:
-      Data1: 1749556546
-      Data2: 1272257921
-      Data3: -1175028575
-      Data4: 1702488522
-    Path: event:/Player/ClimbingLadder
-  ladderSigh:
-    Guid:
-      Data1: -1952759951
-      Data2: 1127737229
-      Data3: 1013452673
-      Data4: 2102291778
-    Path: event:/Player/SighGettingOnOffLadder
---- !u!114 &5606128506353790698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6875040720620598759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 930eaae404071ba45b0e94446a6a8f20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
-  RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
-  RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
-  _targetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}
-  _changeTargetEvent: {fileID: 11400000, guid: 9923ca68d96e1c94cab833e062b6b065, type: 2}
-  _unTargetingEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
-  _audioEvent: {fileID: 11400000, guid: 9ac468d722f9d844eab2146b54091124, type: 2}
-  currentTarget: {fileID: 0}
-  _closestTarget: {fileID: 0}
-  CC: {fileID: 3156670061489872913}
-  camFollow: {fileID: 0}
-  lockOnCanvas: {fileID: 0}
-  enemyTarget_Locator: {fileID: 0}
-  cinemachineAnimator: {fileID: 0}
-  zeroVert_Look: 0
-  noticeZone: 10
-  lookAtSmoothing: 2
-  maxNoticeAngle: 60
-  crossHair_Scale: 0.1
-  canRaycast: 0
-  findByAngle: 0
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 256
-  _NPCIndex: 0
-  _enemyLocked: 0
-  pos: {x: 0, y: 0, z: 0}
-  _nextTargetWindow: 0.1
-  dis: 0
-  _recenterCameraSFX:
-    Guid:
-      Data1: 749191158
-      Data2: 1204719784
-      Data3: -2145550153
-      Data4: -564873958
-    Path: event:/Camera/RecenterCamera
-  _LockOnSFX:
-    Guid:
-      Data1: -1201158995
-      Data2: 1133052432
-      Data3: 1149166244
-      Data4: -103697009
-    Path: event:/Actions/LockOn
-  _LockOffSFX:
-    Guid:
-      Data1: 1624580476
-      Data2: 1236639407
-      Data3: -469505370
-      Data4: 475322192
-    Path: event:/Actions/LockOff
-  nearbyTargets: []
-  remainingTargets: []
 --- !u!1 &6875040720686954656
 GameObject:
   m_ObjectHideFlags: 0

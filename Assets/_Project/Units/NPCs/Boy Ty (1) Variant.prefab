@@ -40,6 +40,16 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 919132149539995598, guid: c1a162a6a2892354ea5844d6180a3551,
         type: 3}
+      propertyPath: m_UpdateMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149539995598, guid: c1a162a6a2892354ea5844d6180a3551,
+        type: 3}
+      propertyPath: m_CullingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149539995598, guid: c1a162a6a2892354ea5844d6180a3551,
+        type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
