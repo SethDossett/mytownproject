@@ -664,15 +664,9 @@ namespace KinematicCharacterController.Examples
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-
-                            if (_hasTargetToLockOn){
-                                _animator.SetFloat(anim_horizontal, _rawMoveInputVector.x, 0.1f, Time.deltaTime);
-                                _animator.SetFloat(anim_vertical, _rawMoveInputVector.y, 0.1f, Time.deltaTime);
-                            }
-                            else{
-                                _animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                                _animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
-                            }
+                            //Dont Think I Need below
+                            //_animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
+                            //_animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                             
 
                             if (currentVelocityMagnitude <= 0f) _canCrouch = true;   
@@ -861,8 +855,8 @@ namespace KinematicCharacterController.Examples
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                            _animator.SetFloat(anim_horizontal, inputRight.normalized.x, 0f, Time.deltaTime); //works when doesnt have target
-                            _animator.SetFloat(anim_vertical, inputRight.normalized.z, 0f, Time.deltaTime);
+                            _animator.SetFloat(anim_horizontal, _rawMoveInputVector.x, 0f, Time.deltaTime);
+                            _animator.SetFloat(anim_vertical, _rawMoveInputVector.z, 0, Time.deltaTime);
                         }
                         // Air movement
                         else

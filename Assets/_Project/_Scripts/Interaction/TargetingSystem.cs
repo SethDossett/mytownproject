@@ -83,6 +83,7 @@ namespace MyTownProject.Interaction
        
         private void OnEnable()
         {
+            SetInitialReferences();
             GameStateManager.OnGameStateChanged += CheckGameState;
             TheCharacterController.OnPlayerStateChanged += CheckPlayerState;
             _inputActions = new NewControls();
@@ -111,7 +112,10 @@ namespace MyTownProject.Interaction
             cam = Camera.main.transform;
         }
         private void Start()
-        { //This might be important to put in on enable to make sure these values get set each time we enable/disable.
+        { 
+            
+        }
+        void SetInitialReferences(){
             canRaycast = true;
             lockOnCanvas.gameObject.SetActive(false);
             _startTimer = false;

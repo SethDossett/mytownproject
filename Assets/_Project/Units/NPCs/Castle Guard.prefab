@@ -774,12 +774,36 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 5108103891202545039}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   invisible:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5108103891202545039}
         m_TargetAssemblyTypeName: MyTownProject.Interaction.NPC_Interact, Project
         m_MethodName: set_IsVisible
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5108103891202545039}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -925,14 +949,14 @@ GameObject:
   - component: {fileID: 1695944756506904056}
   - component: {fileID: 5108103891202545043}
   - component: {fileID: 5108103891202545042}
+  - component: {fileID: 5108103891202545036}
+  - component: {fileID: 5108103891202545037}
+  - component: {fileID: 5108103891202545039}
+  - component: {fileID: 5108103891202545032}
+  - component: {fileID: 5108103891202545038}
+  - component: {fileID: 5108103891202545033}
   - component: {fileID: 5108103891202545035}
   - component: {fileID: 5108103891202545034}
-  - component: {fileID: 5108103891202545033}
-  - component: {fileID: 5108103891202545032}
-  - component: {fileID: 5108103891202545039}
-  - component: {fileID: 5108103891202545038}
-  - component: {fileID: 5108103891202545037}
-  - component: {fileID: 5108103891202545036}
   m_Layer: 8
   m_Name: Castle Guard
   m_TagString: NPC
@@ -1006,6 +1030,115 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &5108103891202545036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342052823658546488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58d044d45dc31547afe21090f55d8c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  _meshes: {fileID: 4783132783178200031}
+  _head: {fileID: 584540993919311779}
+  IsVisible: 0
+--- !u!114 &5108103891202545037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342052823658546488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0edd03097c497854cb67743f0662be4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcState: 0
+  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
+--- !u!114 &5108103891202545039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342052823658546488}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f527eed4d979fc4bbff60dff5493f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsVisible>k__BackingField: 0
+  <MaxNoticeRange>k__BackingField: 7
+  <MaxInteractRange>k__BackingField: 5
+  <CanBeInteractedWith>k__BackingField: 1
+  <CanBeTargeted>k__BackingField: 1
+  <Prompt>k__BackingField: Talk
+  inkJSON: {fileID: 4900000, guid: 99bdfb1311d92d34c9c89f3d49afb339, type: 3}
+  _hovered: 0
+  _targeted: 0
+  npc: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  _hoverIcon: {fileID: 5809348894268107024}
+  _targetIcon: {fileID: 2750298463278810317}
+  _interactionUI: {fileID: 5809348894328972186}
+  _NPCName: {fileID: 5809348893565470639}
+  _titlName: {fileID: 5809348893570957670}
+  _name: Guard
+  ShowName: 1
+  beenTargeted: 0
+--- !u!114 &5108103891202545032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342052823658546488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cafd63f88e7e2e4ea8f502b1becf60a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
+  playerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
+  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  _rotSpeed: 300
+--- !u!114 &5108103891202545038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342052823658546488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36b6460fcaced5049b85925997508aa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
+  _stateHandler: {fileID: 5108103891202545037}
+  _stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
+  _atDestination: 0
+--- !u!114 &5108103891202545033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342052823658546488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 670b66ae2d266f3468e6644b79a1b162, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
 --- !u!114 &5108103891202545035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1082,115 +1215,6 @@ MonoBehaviour:
   - m_Rig: {fileID: 0}
     m_Active: 1
   m_Effectors: []
---- !u!114 &5108103891202545033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5342052823658546488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 670b66ae2d266f3468e6644b79a1b162, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
---- !u!114 &5108103891202545032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5342052823658546488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cafd63f88e7e2e4ea8f502b1becf60a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
-  playerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
-  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
-  _rotSpeed: 300
---- !u!114 &5108103891202545039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5342052823658546488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f527eed4d979fc4bbff60dff5493f17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <IsVisible>k__BackingField: 0
-  <MaxNoticeRange>k__BackingField: 7
-  <MaxInteractRange>k__BackingField: 5
-  <CanBeInteractedWith>k__BackingField: 1
-  <CanBeTargeted>k__BackingField: 1
-  <Prompt>k__BackingField: Talk
-  inkJSON: {fileID: 4900000, guid: 99bdfb1311d92d34c9c89f3d49afb339, type: 3}
-  _hovered: 0
-  _targeted: 0
-  npc: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
-  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
-  _hoverIcon: {fileID: 5809348894268107024}
-  _targetIcon: {fileID: 2750298463278810317}
-  _interactionUI: {fileID: 5809348894328972186}
-  _NPCName: {fileID: 5809348893565470639}
-  _titlName: {fileID: 5809348893570957670}
-  _name: Guard
-  ShowName: 1
-  beenTargeted: 0
---- !u!114 &5108103891202545038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5342052823658546488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36b6460fcaced5049b85925997508aa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
-  _stateHandler: {fileID: 5108103891202545037}
-  _stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
-  _atDestination: 0
---- !u!114 &5108103891202545037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5342052823658546488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0edd03097c497854cb67743f0662be4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  npcState: 0
-  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
-  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
-  stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
---- !u!114 &5108103891202545036
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5342052823658546488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a58d044d45dc31547afe21090f55d8c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
-  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
-  _meshes: {fileID: 4783132783178200031}
-  _head: {fileID: 584540993919311779}
-  IsVisible: 0
 --- !u!1 &5414971593080970857
 GameObject:
   m_ObjectHideFlags: 0
