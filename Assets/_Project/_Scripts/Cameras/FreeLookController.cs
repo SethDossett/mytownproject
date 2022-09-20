@@ -103,7 +103,11 @@ namespace MyTownProject.Cameras{
             cam.m_RecenterToTargetHeading.m_enabled = false;
             cam.m_YAxisRecentering.m_enabled = false;
         }
+        void Update(){
+            
+            
         
+        }
     }
 }
 

@@ -42,22 +42,22 @@ public class TargetGroupController : MonoBehaviour
 
     void AddPlayer(){
         Transform lookAtPoint = _player.GetComponent<PlayerManager>()._LookAtPoint; 
-        AddingMember(lookAtPoint, 1, 1);
+        AddingMember(lookAtPoint, 1, 3);
     } 
     
     void TalkingToNPC(GameObject go, TextAsset text){
         Transform lookAtPoint = go.GetComponent<NPC_Manager>()._head.transform;
-        AddingMember(lookAtPoint, 1, 1);
+        AddingMember(lookAtPoint, 1, 3);
             
     }
     void Targeting(Transform t){
         Transform toTarget = t.gameObject.GetComponent<NPC_Manager>()._head.transform;
-        AddingMember(toTarget, 1, 1);
+        AddingMember(toTarget, 1, 3);
     }
     void ChangeTarget(Transform newtarget){
         RemoveTargets();
         Transform toTarget = newtarget.gameObject.GetComponent<NPC_Manager>()._head.transform;
-        AddingMember(toTarget, 1, 1);
+        AddingMember(toTarget, 1, 3);
         AddPlayer();
     }
 
