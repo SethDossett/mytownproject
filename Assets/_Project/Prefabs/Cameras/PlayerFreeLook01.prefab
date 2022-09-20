@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerIndex: -1
+  AutoEnableInputs: 1
   XYAxis: {fileID: 3320132594706462122, guid: b47afddfe1eb66740a06f0f9c25e30c3, type: 3}
   ZAxis: {fileID: 6173412244233969410, guid: b47afddfe1eb66740a06f0f9c25e30c3, type: 3}
 --- !u!114 &434305510989161058
@@ -195,7 +196,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a79b3b446090b740a03ba9052e7f0d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
+  RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
+  DisableRecenterCam: {fileID: 11400000, guid: d33e28778e67ee948876888558d888ff, type: 2}
   DialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  TargetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}
+  UntargetEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
+  _targetGroup: {fileID: 0}
+  _lensZoomInSpeed: 0.2
+  _lensZoomOutSpeed: 0.6
+  _ZoomIncurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _ZoomOutcurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1501663178068640880
 GameObject:
   m_ObjectHideFlags: 0

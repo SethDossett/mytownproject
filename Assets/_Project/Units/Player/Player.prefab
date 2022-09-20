@@ -959,8 +959,8 @@ MonoBehaviour:
   AirAccelerationSpeed: 10
   Drag: 0.1
   AllowJumpingWhenSliding: 0
-  JumpUpSpeed: 10
-  JumpScalableForwardSpeed: 0
+  JumpUpSpeed: 6
+  JumpScalableForwardSpeed: 3
   JumpPreGroundingGraceTime: 0
   JumpPostGroundingGraceTime: 0
   _newCenteredPosition: {x: 0, y: 0, z: 0}
@@ -973,6 +973,8 @@ MonoBehaviour:
   _targetingRotSpeed: 500
   _hasTargetToLockOn: 0
   _crawlSpeed: 2
+  _timeFallingInAir: 0
+  _timetotriggerHardLanding: 0.5
   IgnoredColliders: []
   BonusOrientationMethod: 0
   BonusOrientationSharpness: 10

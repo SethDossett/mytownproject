@@ -13,6 +13,7 @@ namespace MyTownProject.Cameras{
         [SerializeField] FloatEventSO RecenterCamY;
         [SerializeField] GeneralEventSO DisableRecenterCam;
         [SerializeField] DialogueEventsSO DialogueEvents;
+        [SerializeField] TransformEventSO TargetingEvent;
         [SerializeField] GeneralEventSO UntargetEvent;
         CinemachineFreeLook cam;
         [SerializeField] CinemachineTargetGroup _targetGroup;
@@ -27,6 +28,7 @@ namespace MyTownProject.Cameras{
             cam = GetComponent<CinemachineFreeLook>();
             DialogueEvents.onEnter += TalkingToNPC;
             DialogueEvents.onExit += BackToPlayerView;
+            TargetingEvent.OnRaiseEvent += Target;
             UntargetEvent.OnRaiseEvent += Untarget;
             RecenterCamX.OnRaiseEvent2 += RX;
             RecenterCamY.OnRaiseEvent2 += RY;
@@ -35,6 +37,7 @@ namespace MyTownProject.Cameras{
         void OnDisable(){
             DialogueEvents.onEnter -= TalkingToNPC;
             DialogueEvents.onExit -= BackToPlayerView;
+            TargetingEvent.OnRaiseEvent += Target;
             UntargetEvent.OnRaiseEvent -= Untarget;
             RecenterCamX.OnRaiseEvent2 -= RX;
             RecenterCamY.OnRaiseEvent2 -= RY;
@@ -48,9 +51,14 @@ namespace MyTownProject.Cameras{
         void BackToPlayerView(){
             StartCoroutine(ChangeLens(40, _lensZoomOutSpeed, _ZoomOutcurve));
         }
+
+        void Target(Transform t){
+            RX(0,0.7f);
+            RY(0,0.7f);
+        }
         void Untarget(){
-            RX(0,0);
-            RY(0,0);
+            RX(0,0.1f);
+            RY(0,0.1f);
         }
         IEnumerator ChangeLens(float value, float lerpDuration, AnimationCurve curve){
             float startValue = cam.m_Lens.FieldOfView;
@@ -66,6 +74,7 @@ namespace MyTownProject.Cameras{
             
         }
 
+        //RX() RY() doesnt work if recenterTime is not > 0.
         void RX(float f1, float f2) => StartCoroutine(RecenterXAxis(f1,f2));
         IEnumerator RecenterXAxis(float waitTime, float recenteringTime){
             cam.m_RecenterToTargetHeading.m_WaitTime = waitTime;
@@ -94,15 +103,7 @@ namespace MyTownProject.Cameras{
             cam.m_RecenterToTargetHeading.m_enabled = false;
             cam.m_YAxisRecentering.m_enabled = false;
         }
-        void Update(){
-            // see what world angle camera is facing
-            // what is angle of player
-            //cam.m_XAxis.Value = 5f;
-            
-            if(UnityEngine.InputSystem.Keyboard.current.rKey.wasPressedThisFrame){
-                RX(0,0.7f);
-            }
-        }
+        
     }
 }
 

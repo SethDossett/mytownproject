@@ -452,9 +452,12 @@ namespace MyTownProject.Interaction
             //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
             //cinemachineAnimator.Play("TargetingCamera01");
-            cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false; // needs to be event fired
-            cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
-            _freeLookCameraOff = true;
+
+            //turning off to see if i can better camera
+            //cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false; // needs to be event fired
+            //cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
+            //_freeLookCameraOff = true;
+
             _enemyLocked = true;
             _closestTarget.GetComponent<NPC_Interact>().SetTargeted(); //Set NPC as been targeted.
 
@@ -537,8 +540,10 @@ namespace MyTownProject.Interaction
             if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
             _startTimer = false;
             _timer = 0;
-            cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
-            _freeLookCameraOff = false;
+
+            //turning off to see if i can better camera
+            //cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
+            //_freeLookCameraOff = false;
             lockOnCanvas.gameObject.SetActive(false);
             currentTarget = null;
             _closestTarget = null;
@@ -656,9 +661,12 @@ namespace MyTownProject.Interaction
                 _isTalking = true;
                 CC.TransitionToState(CharacterState.Talking);
                 if(currentTarget) ResetTarget();
-                cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
-                cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
-                _freeLookCameraOff = false;
+
+                //turning off to see if i can better camera
+                //cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
+                //cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
+                //_freeLookCameraOff = false;
+                
                 _interactable.OnInteract(this);
                 _isTalking = false;
                 return;

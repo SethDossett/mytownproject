@@ -10,7 +10,7 @@ namespace KinematicCharacterController.Examples
 {
     public enum CharacterState
     {
-        Default, Talking, Climbing, Targeting, Crawling
+        Default, Jumping, Talking, Climbing, Targeting, Crawling
     }
     public enum GroundType
     {
@@ -91,10 +91,10 @@ namespace KinematicCharacterController.Examples
         bool _hasFinishedCrouch;
 
         [Header("Falling")]
-        float _timeFallingInAir = 0f;
+        [SerializeField] float _timeFallingInAir = 0f;
         bool _startFallingTimer = false;
         bool _hardLanding = false;
-        float _timetotriggerHardLanding = 0.5f;
+        [SerializeField] float _timetotriggerHardLanding = 0.5f;
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -112,6 +112,7 @@ namespace KinematicCharacterController.Examples
         int _idleState = Animator.StringToHash("Idle");
         int _climbState = Animator.StringToHash("Climbing");
         int _strafeState = Animator.StringToHash("Strafing");
+        int _jumpState = Animator.StringToHash("Jump");
         int _hardLandState = Animator.StringToHash("HardLanding");
         int anim_isCrouched = Animator.StringToHash("isCrouched");
         int anim_isClimbing = Animator.StringToHash("isClimbing");
@@ -208,6 +209,11 @@ namespace KinematicCharacterController.Examples
                         //MaxStableMoveSpeed = 0; // think it might look better to be able to run out of climbing.
                         break;
                     }
+                case CharacterState.Jumping:
+                    {
+                        
+                        break;
+                    }    
                 case CharacterState.Climbing:
                     {
                         _animator.CrossFadeInFixedTime(_climbState, 0.2f, 0);
@@ -245,6 +251,11 @@ namespace KinematicCharacterController.Examples
                     {
                         break;
                     }
+                case CharacterState.Jumping:
+                    {
+                        
+                        break;
+                    }       
                 case CharacterState.Climbing:
                     {
                         _onLadder = false;
@@ -354,6 +365,11 @@ namespace KinematicCharacterController.Examples
                         
                         break;
                     }
+                case CharacterState.Jumping:
+                    {
+                        
+                        break;
+                    }       
                 case CharacterState.Climbing:
                     {
                         Vector3 ladderInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveDirection.x, inputs.MoveDirection.y, 0f), 1f);
@@ -490,6 +506,11 @@ namespace KinematicCharacterController.Examples
                         }
                         break;
                     }
+                case CharacterState.Jumping:
+                    {
+                        
+                        break;
+                    }       
                 case CharacterState.Climbing:
                     {
                         //Quaternion lookRot = Quaternion.LookRotation(_newCenteredPosition, Vector3.up);
@@ -720,8 +741,8 @@ namespace KinematicCharacterController.Examples
                             // Drag
                             currentVelocity *= (1f / (1f + (Drag * deltaTime)));
                         }
-
-                        // Handle jumping
+                        //Needs To be put in its own state.
+                        // Handle jumping 
                         _jumpedThisFrame = false;
                         _timeSinceJumpRequested += deltaTime;
                         if (_jumpRequested)
@@ -741,7 +762,8 @@ namespace KinematicCharacterController.Examples
                                 Motor.ForceUnground();
 
                                 // Add to the return velocity and reset jump state
-                                currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                                //currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                                currentVelocity = (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
                                 currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
                                 _jumpRequested = false;
                                 _jumpConsumed = true;
@@ -758,6 +780,11 @@ namespace KinematicCharacterController.Examples
                         }
                         break;
                     }
+                case CharacterState.Jumping:
+                    {
+                        
+                        break;
+                    }       
                 case CharacterState.Climbing:
                     {
                         if(_gettingOnOffLadder){
@@ -1028,6 +1055,11 @@ namespace KinematicCharacterController.Examples
 
                         break;
                     }
+                    case CharacterState.Jumping:
+                    {
+                        
+                        break;
+                    }   
                     case CharacterState.Crawling:
                     {
                         //Show or hide UI Text for Crouch
@@ -1164,26 +1196,31 @@ namespace KinematicCharacterController.Examples
         {
             if(_hardLanding){
                 _startFallingTimer = false;
-                _animator.SetBool(anim_jumpTrigger, false);
-                _animator.SetBool(anim_landTrigger, true);
                 _animator.CrossFade(_hardLandState, 0f, 0);
                 _hardLanding = false;
                 _timeFallingInAir = 0f;
+            }
+            else{
+                _animator.SetBool(anim_landTrigger, true); 
+                _timeFallingInAir = 0f;
+                _startFallingTimer = false;
             }
             
         }
 
         protected void OnLeaveStableGround()
-        {
-            switch(CurrentCharacterState){
+        { //This is called if player is off ground,
+          // I need to know if player has jumped.
+            _animator.SetBool(anim_landTrigger, false); 
+
+            switch(CurrentCharacterState){ 
                 case CharacterState.Default:
                     {
                         Debug.Log("jump");
-                        _animator.SetBool(anim_landTrigger, false);
-                        _animator.SetBool(anim_jumpTrigger, true);
-
+                        
+                        _animator.CrossFade(_jumpState, 0, 0);
                         _startFallingTimer = true;
-                        //_jumpRequested = true;
+                        _jumpRequested = true;
                         break;
                     }
             }            
@@ -1197,6 +1234,8 @@ namespace KinematicCharacterController.Examples
             if(_timeFallingInAir >= _timetotriggerHardLanding){
                 _hardLanding = true;
             }
+
+
 
         }
 
