@@ -1167,8 +1167,8 @@ namespace KinematicCharacterController
                     InternalCharacterMove(ref BaseVelocity, deltaTime);
                 }
                 else
-                {// where to change to fixed delta time?
-                    _transientPosition += BaseVelocity * Time.fixedDeltaTime;
+                {
+                    _transientPosition += BaseVelocity * deltaTime;
                 }
             }
 

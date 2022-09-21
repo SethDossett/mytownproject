@@ -1076,8 +1076,8 @@ MonoBehaviour:
   _overPassCastOffset: {x: 0, y: 0, z: 0}
   _overPassHeight: 1.8
   _endOffset: {x: 0, y: 0, z: 0.2}
-  _groudAngleMax: 0
-  _wallAngleMax: 0
+  _groudAngleMax: 10
+  _wallAngleMax: 10
 --- !u!114 &676443548
 MonoBehaviour:
   m_ObjectHideFlags: 0
