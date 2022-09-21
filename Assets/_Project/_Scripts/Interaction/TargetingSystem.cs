@@ -308,6 +308,8 @@ namespace MyTownProject.Interaction
 
             if (_timer > _nextTargetWindow)
             {
+                uiEventChannel.RaiseBarsOff(0.1f);
+                if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
                 ResetTarget();
             }
         }
@@ -533,11 +535,11 @@ namespace MyTownProject.Interaction
         {
             print("reset");
             if(!_isTalking) _audioEvent.RaiseEvent2(_LockOffSFX, currentTarget.position);
-            uiEventChannel.RaiseBarsOff(0.1f);
+            //uiEventChannel.RaiseBarsOff(0.1f);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
             currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
             _unTargetingEvent.RaiseEvent();
-            if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
+            //if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
             _startTimer = false;
             _timer = 0;
 
@@ -659,6 +661,7 @@ namespace MyTownProject.Interaction
             if (_interact.WasPerformedThisFrame()){
                 Debug.Log($"interacted with {t.gameObject.name}");
                 _isTalking = true;
+                CC._target = t;
                 CC.TransitionToState(CharacterState.Talking);
                 if(currentTarget) ResetTarget();
 

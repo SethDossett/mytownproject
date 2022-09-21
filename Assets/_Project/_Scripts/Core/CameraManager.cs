@@ -19,7 +19,7 @@ namespace MyTownProject.Core
 
         #region Animations
         int playerFreeLook01 = Animator.StringToHash("PlayerFreeLook01");
-        int targetCamera = Animator.StringToHash("TargetingCamera");
+        int targetCamera = Animator.StringToHash("TargetingCamera01");
         int dialogueVCam01 = Animator.StringToHash("DialogueVirtalCamera01");
         #endregion
 

@@ -53,12 +53,14 @@ namespace MyTownProject.Cameras{
         }
 
         void Target(Transform t){
-            RX(0,0.7f);
-            RY(0,0.7f);
+            StartCoroutine(ChangeLens(60, _lensZoomOutSpeed, _ZoomOutcurve));
+            //RX(0,0.1f);
+            //RY(0,0.1f);
         }
         void Untarget(){
-            RX(0,0.1f);
-            RY(0,0.1f);
+            BackToPlayerView();
+            //RX(0,0.1f);
+            //RY(0,0.1f);
         }
         IEnumerator ChangeLens(float value, float lerpDuration, AnimationCurve curve){
             float startValue = cam.m_Lens.FieldOfView;

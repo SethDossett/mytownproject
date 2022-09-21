@@ -522,7 +522,7 @@ namespace KinematicCharacterController.Examples
                     {
                         //if not Target then dont rotate
                         if (!_hasTargetToLockOn) return;
-                        Quaternion lookRot = Quaternion.LookRotation(_target.position- transform.position, Vector3.up);
+                        Quaternion lookRot = Quaternion.LookRotation(_target.position - transform.position, Vector3.up);
                         lookRot.z = 0;
                         lookRot.x = 0;
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _targetingRotSpeed * Time.deltaTime);
@@ -534,6 +534,7 @@ namespace KinematicCharacterController.Examples
                         lookRot.z = 0;
                         lookRot.x = 0;
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _talkingRotSpeed * Time.unscaledDeltaTime);
+                        print("WOrk?");
                         break;
                     } 
                 case CharacterState.Crawling:
@@ -882,8 +883,8 @@ namespace KinematicCharacterController.Examples
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                            _animator.SetFloat(anim_horizontal, _rawMoveInputVector.x, 0f, Time.deltaTime);
-                            _animator.SetFloat(anim_vertical, _rawMoveInputVector.z, 0, Time.deltaTime);
+                            _animator.SetFloat(anim_horizontal, _moveInputVector.x, 0f, Time.deltaTime);
+                            _animator.SetFloat(anim_vertical, _moveInputVector.z, 0, Time.deltaTime);
                         }
                         // Air movement
                         else

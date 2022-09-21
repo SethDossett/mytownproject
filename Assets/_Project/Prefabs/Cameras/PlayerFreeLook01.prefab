@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 3904953701851746935}
   - component: {fileID: 8401484340933978329}
   - component: {fileID: 7755064179809454}
-  - component: {fileID: 2378530097777393372}
+  - component: {fileID: 2125270666873611627}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -316,7 +316,7 @@ MonoBehaviour:
   m_LegacyHeightOffset: 3.4028235e+38
   m_LegacyHeadingBias: 3.4028235e+38
   m_HeadingIsSlave: 1
---- !u!114 &2378530097777393372
+--- !u!114 &2125270666873611627
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -332,10 +332,10 @@ MonoBehaviour:
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
-  m_HorizontalDamping: 0
-  m_VerticalDamping: 0
+  m_HorizontalDamping: 0.5
+  m_VerticalDamping: 0.5
   m_ScreenX: 0.5
-  m_ScreenY: 0.55
+  m_ScreenY: 0.5
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_SoftZoneWidth: 0.8
@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 7290392641301549386}
   - component: {fileID: 2351031001049142775}
   - component: {fileID: 4120829767442336378}
-  - component: {fileID: 41690927597447397}
+  - component: {fileID: 621729093573515680}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -442,7 +442,7 @@ MonoBehaviour:
   m_LegacyHeightOffset: 3.4028235e+38
   m_LegacyHeadingBias: 3.4028235e+38
   m_HeadingIsSlave: 1
---- !u!114 &41690927597447397
+--- !u!114 &621729093573515680
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -458,8 +458,8 @@ MonoBehaviour:
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
-  m_HorizontalDamping: 0
-  m_VerticalDamping: 0
+  m_HorizontalDamping: 0.5
+  m_VerticalDamping: 0.5
   m_ScreenX: 0.5
   m_ScreenY: 0.5
   m_DeadZoneWidth: 0
@@ -702,7 +702,7 @@ GameObject:
   - component: {fileID: 1070927709480287463}
   - component: {fileID: 653933589348693854}
   - component: {fileID: 7528971962157291312}
-  - component: {fileID: 1164180742219742379}
+  - component: {fileID: 5416305063877343134}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -790,7 +790,7 @@ MonoBehaviour:
   m_LegacyHeightOffset: 3.4028235e+38
   m_LegacyHeadingBias: 3.4028235e+38
   m_HeadingIsSlave: 1
---- !u!114 &1164180742219742379
+--- !u!114 &5416305063877343134
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -806,10 +806,10 @@ MonoBehaviour:
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
-  m_HorizontalDamping: 0
-  m_VerticalDamping: 0
+  m_HorizontalDamping: 0.5
+  m_VerticalDamping: 0.5
   m_ScreenX: 0.5
-  m_ScreenY: 0.6
+  m_ScreenY: 0.5
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_SoftZoneWidth: 0.8

@@ -94,6 +94,8 @@ namespace KinematicCharacterController.Examples
 
         public void UpdateWithInput(float deltaTime, float zoomInput, Vector3 rotationInput)
         {
+            return;
+
             if(isTargeting){
                 currentCharacterState = CharacterState.Targeting;
             }

@@ -960,7 +960,7 @@ MonoBehaviour:
   Drag: 0.1
   AllowJumpingWhenSliding: 0
   JumpUpSpeed: 6
-  JumpScalableForwardSpeed: 3
+  JumpScalableForwardSpeed: 3.5
   JumpPreGroundingGraceTime: 0
   JumpPostGroundingGraceTime: 0
   _newCenteredPosition: {x: 0, y: 0, z: 0}
