@@ -16,7 +16,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] DialogueEventsSO DialogueEvent;
         TheCharacterController cc;
         CharacterState _default = CharacterState.Default;
-        CharacterState _climbing = CharacterState.Climbing;
+        CharacterState _climbing = CharacterState.ClimbLadder;
         CharacterState _targeting = CharacterState.Targeting;
         CharacterState _talking = CharacterState.Talking;
         CharacterState _crawling = CharacterState.Crawling;

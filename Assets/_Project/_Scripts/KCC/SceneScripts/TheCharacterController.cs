@@ -10,7 +10,7 @@ namespace KinematicCharacterController.Examples
 {
     public enum CharacterState
     {
-        Default, Jumping, Talking, Climbing, Targeting, Crawling
+        Default, Climbing, Talking, ClimbLadder, Targeting, Crawling
     }
     public enum GroundType
     {
@@ -71,6 +71,7 @@ namespace KinematicCharacterController.Examples
         public float JumpScalableForwardSpeed = 10f;
         public float JumpPreGroundingGraceTime = 0f;
         public float JumpPostGroundingGraceTime = 0f;
+        [SerializeField] [Range(0f, 10f)]float _speedNeededToJump = 4.5f; 
 
         [Header("Climbing")]
         
@@ -127,9 +128,12 @@ namespace KinematicCharacterController.Examples
         int anim_talking = Animator.StringToHash("isTalking");
         int anim_horizontal = Animator.StringToHash("Horizontal");
         int anim_vertical = Animator.StringToHash("Vertical");
+        int anim_Hang= Animator.StringToHash("Hang");
 
         public CharacterState CurrentCharacterState { get; private set; }
         public GroundType CurrentGroundType { get; private set; }
+
+        private HitStabilityReport CurrentHitStabilityReport; 
         public static event Action<CharacterState> OnPlayerStateChanged;
 
         private Collider[] _probedColliders = new Collider[8];
@@ -207,17 +211,18 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
+                        Gravity = new Vector3(0, -30f, 0);
                         //_animator.CrossFadeInFixedTime(_idleState, 0.2f, 0);
                         //MaxStableMoveSpeed = 0; // think it might look better to be able to run out of climbing.
                         break;
                     }
-                case CharacterState.Jumping:
+                case CharacterState.Climbing:
                     {
                         Motor.ForceUnground();
 
                         break;
                     }    
-                case CharacterState.Climbing:
+                case CharacterState.ClimbLadder:
                     {
                         _animator.CrossFadeInFixedTime(_climbState, 0.2f, 0);
                         break;
@@ -254,12 +259,13 @@ namespace KinematicCharacterController.Examples
                     {
                         break;
                     }
-                case CharacterState.Jumping:
+                case CharacterState.Climbing:
                     {
-                        
+                        _animator.CrossFadeInFixedTime(_idleState, 0.25f, 0);
+                        playerClimb._isClimbing = false;
                         break;
                     }       
-                case CharacterState.Climbing:
+                case CharacterState.ClimbLadder:
                     {
                         _onLadder = false;
                         print("EXIT CLIMB");
@@ -370,12 +376,13 @@ namespace KinematicCharacterController.Examples
                         
                         break;
                     }
-                case CharacterState.Jumping:
+                case CharacterState.Climbing:
                     {
-                        
+                        // Move and look inputs
+                        _moveInputVector = cameraPlanarRotation * moveInputVector;
                         break;
                     }       
-                case CharacterState.Climbing:
+                case CharacterState.ClimbLadder:
                     {
                         Vector3 ladderInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveDirection.x, inputs.MoveDirection.y, 0f), 1f);
 
@@ -511,12 +518,13 @@ namespace KinematicCharacterController.Examples
                         }
                         break;
                     }
-                case CharacterState.Jumping:
+                case CharacterState.Climbing:
                     {
-                        
+                        Quaternion toRot = Quaternion.LookRotation(-CurrentHitStabilityReport.LedgeFacingDirection, Vector3.up); 
+                        currentRotation = Quaternion.RotateTowards(transform.rotation, toRot, 500 * Time.deltaTime); 
                         break;
                     }       
-                case CharacterState.Climbing:
+                case CharacterState.ClimbLadder:
                     {
                         //Quaternion lookRot = Quaternion.LookRotation(_newCenteredPosition, Vector3.up);
                         currentRotation = Quaternion.RotateTowards(transform.rotation, _newLadderRotation, 500 * Time.deltaTime);   
@@ -751,7 +759,7 @@ namespace KinematicCharacterController.Examples
                         // Handle jumping 
                         _jumpedThisFrame = false;
                         _timeSinceJumpRequested += deltaTime;
-                        if (_jumpRequested)
+                        if (_jumpRequested && currentVelocity.magnitude >= _speedNeededToJump)
                         {
                             // See if we actually are allowed to jump
                             if (!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime))
@@ -777,8 +785,19 @@ namespace KinematicCharacterController.Examples
                                 _animator.SetBool(anim_jumpTrigger, true);
                             }
                         }
+                        //Look For Ledge
+                        else if(_jumpRequested && currentVelocity.magnitude < _speedNeededToJump){
+                            playerClimb._isClimbing = true;
+                            currentVelocity = Vector3.zero;
+                            Gravity = Vector3.zero;
+                            Vector3 offset = new Vector3(0, -1f, 0.3f);
+                            Motor.SetPosition(transform.TransformPoint(offset));
+                            TransitionToState(CharacterState.Climbing);
+                            _animator.CrossFadeInFixedTime(anim_Hang, 0, 0);
+                        }
 
                         // Take into account additive velocity
+                        //Does not currently get called
                         if (_internalVelocityAdd.sqrMagnitude > 0f)
                         {
                             currentVelocity += _internalVelocityAdd;
@@ -786,17 +805,20 @@ namespace KinematicCharacterController.Examples
                         }
                         break;
                     }
-                case CharacterState.Jumping:
-                    {
-
-                        break;
-                    }       
                 case CharacterState.Climbing:
                     {
+
+                        float dot = Vector3.Dot(_moveInputVector, CurrentHitStabilityReport.LedgeFacingDirection);
+                        print(dot);
+                        if(dot >= 0.9f){
+                            TransitionToState(CharacterState.Default);
+                        }
+                        break;
+                    }       
+                case CharacterState.ClimbLadder:
+                    {
                         if(_gettingOnOffLadder){
-                            currentVelocity.y = 0f;
-                            currentVelocity.x = 0f;
-                            currentVelocity.z = 0f;
+                            currentVelocity = Vector3.zero;
                             if (_animator.speed != 1f)
                                 _animator.speed = 1f;
                             return;
@@ -808,9 +830,7 @@ namespace KinematicCharacterController.Examples
                         float currentVelocityMagnitude = currentVelocity.magnitude;
                         
                         if(!_onLadder){
-                            currentVelocity.y = 0f;
-                            currentVelocity.x = 0f;
-                            currentVelocity.z = 0f;
+                            currentVelocity = Vector3.zero;
                             if (_animator.speed != 1f)
                                 _animator.speed = 1f;
                             //Vector3 ladderStartPos = new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z);
@@ -819,7 +839,6 @@ namespace KinematicCharacterController.Examples
                             Motor.SetTransientPosition(newCenteredPosition, true);
                             if(Vector3.Distance(Motor.TransientPosition, newCenteredPosition) <= float.Epsilon){
                                 _onLadder = true;
-                                print("ladder is true");
                             }
                             else _onLadder = false; 
                         }
@@ -1061,7 +1080,7 @@ namespace KinematicCharacterController.Examples
 
                         break;
                     }
-                    case CharacterState.Jumping:
+                    case CharacterState.Climbing:
                     {
                         
                         break;
@@ -1196,6 +1215,7 @@ namespace KinematicCharacterController.Examples
 
         public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport)
         {
+            CurrentHitStabilityReport = hitStabilityReport;
         }
 
         protected void OnLanded()
@@ -1224,6 +1244,12 @@ namespace KinematicCharacterController.Examples
             switch(CurrentCharacterState){ 
                 case CharacterState.Default: // one for climbing
                     {
+
+
+
+
+
+
                         Debug.Log("jump");
                         
                         _animator.CrossFade(_jumpState, 0, 0);

@@ -179,7 +179,6 @@ namespace KinematicCharacterController.Examples{
                 if(_groudAngle > _groudAngleMax) return false;
                 Vector3 vectSurface = Vector3.ProjectOnPlane(_forwardDirectionXZ, _downHitInfo.normal);
                 _endPosition = _downHitInfo.point + Quaternion.LookRotation(vectSurface, Vector3.up) * _endOffset;
-                print("Overpass");
                 //De-Penetration
                 Collider colliderB = _downHitInfo.collider;
                 bool _penetrationOverlap = Physics.ComputePenetration(

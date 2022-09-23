@@ -181,11 +181,11 @@ namespace MyTownProject.Enviroment{
             
         }
         void SwitchToClimbingState(bool onBottom){
+            //When player is getting on the Bottom of the Ladder
             if(onBottom){
                 _startHeight = transform.position.y;
-                //_checkForPlayer = false;
                 _onLadder = true;
-                CC.TransitionToState(CharacterState.Climbing);
+                CC.TransitionToState(CharacterState.ClimbLadder);
                 _ladderCollider.enabled = false;
                 CC._newCenteredPosition = transform.position + _StartPosBottom;
                 CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
@@ -193,17 +193,13 @@ namespace MyTownProject.Enviroment{
                 RecenterCamY.OnRaiseEvent2(0,0.35f);
                 print("SwitchedToClimbing");
             }
-            else{
+            else{//When player is getting on the Top of the Ladder
                 _ladderForward = transform.right;
                 _startHeight = transform.position.y;
-                //_checkForPlayer = false;
-                //_onLadder = true;
-                CC.TransitionToState(CharacterState.Climbing);
+                CC.TransitionToState(CharacterState.ClimbLadder);
                 CC._newCenteredPosition =  transform.position + _StartPosTop;
                 CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
                 _ladderCollider.enabled = false;
-                
-                //_exitLadderCalled = false;
                 print("SwitchedToClimbing");
             }
 
@@ -222,9 +218,8 @@ namespace MyTownProject.Enviroment{
             inputActions.Disable();
             DisableControls.RaiseEvent();
             float dis = Vector3.Distance(CC.Motor.TransientPosition, transform.position + Vector3.up * _ladderHeight);
-            print(dis);
             if(dis != 0f){
-                CC.Motor.SetPosition(transform.position + Vector3.up * _ladderHeight);
+                CC.Motor.SetPosition(transform.position + Vector3.up * _ladderHeight);//could cash
             }
             yield return new WaitForEndOfFrame();
             SwitchToClimbingState(false);

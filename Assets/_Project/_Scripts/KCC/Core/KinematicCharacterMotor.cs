@@ -259,6 +259,16 @@ namespace KinematicCharacterController
         [Tooltip("The maximun downward slope angle change that the character can be subjected to and still be snapping to the ground")]
         [Range(1f, 180f)]
         public float MaxStableDenivelationAngle = 180f;
+        /// <summary>
+        /// Inner position of the Ledge
+        /// </summary> 
+        [Tooltip("Inner position of the Ledge")]
+        public RaycastHit _innerLedgeHit;
+        /// <summary>
+        /// Outer position of the Ledge
+        /// </summary> 
+        [Tooltip("Outer position of the Ledge")]
+        public RaycastHit _outerLedgeHit;
 
 
         [Header("Rigidbody interaction settings")]
@@ -2029,10 +2039,10 @@ namespace KinematicCharacterController
                         hitPoint + (atCharacterUp * SecondaryProbesVertical) + (innerHitDirection * SecondaryProbesHorizontal),
                         -atCharacterUp,
                         ledgeCheckHeight + SecondaryProbesVertical,
-                        out RaycastHit innerLedgeHit,
+                        out _innerLedgeHit,
                         _internalCharacterHits) > 0)
                 {
-                    Vector3 innerLedgeNormal = innerLedgeHit.normal;
+                    Vector3 innerLedgeNormal = _innerLedgeHit.normal;
                     stabilityReport.InnerNormal = innerLedgeNormal;
                     isStableLedgeInner = IsStableOnNormal(innerLedgeNormal);
                 }
@@ -2041,10 +2051,10 @@ namespace KinematicCharacterController
                         hitPoint + (atCharacterUp * SecondaryProbesVertical) + (-innerHitDirection * SecondaryProbesHorizontal),
                         -atCharacterUp,
                         ledgeCheckHeight + SecondaryProbesVertical,
-                        out RaycastHit outerLedgeHit,
+                        out _outerLedgeHit,
                         _internalCharacterHits) > 0)
                 {
-                    Vector3 outerLedgeNormal = outerLedgeHit.normal;
+                    Vector3 outerLedgeNormal = _outerLedgeHit.normal;
                     stabilityReport.OuterNormal = outerLedgeNormal;
                     isStableLedgeOuter = IsStableOnNormal(outerLedgeNormal);
                 }
@@ -2065,7 +2075,7 @@ namespace KinematicCharacterController
                     stabilityReport.IsStable = IsStableWithSpecialCases(ref stabilityReport, withCharacterVelocity);
                 }
             }
-
+            
             // Step handling
             if (StepHandling != StepHandlingMethod.None && !stabilityReport.IsStable)
             {
@@ -2085,6 +2095,7 @@ namespace KinematicCharacterController
             CharacterController.ProcessHitStabilityReport(hitCollider, hitNormal, hitPoint, atCharacterPosition, atCharacterRotation, ref stabilityReport);
         }
 
+        
         private void DetectSteps(Vector3 characterPosition, Quaternion characterRotation, Vector3 hitPoint, Vector3 innerHitDirection, ref HitStabilityReport stabilityReport)
         {
             int nbStepHits = 0;
