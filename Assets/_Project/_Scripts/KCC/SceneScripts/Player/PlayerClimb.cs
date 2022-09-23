@@ -94,7 +94,7 @@ namespace KinematicCharacterController.Examples{
                         _matchTargetRotation = _forwardNormalXZRotation;
                         //CC.TransitionToState(CharacterState.Jumping);
                         CC.Motor.ForceUnground();
-                        CC.Motor.SetTransientPosition(_matchTargetPosition,true);
+                        CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
                         _animator.CrossFadeInFixedTime(anim_JumpToHang, 0, 0);
                         //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
                     }
@@ -104,7 +104,7 @@ namespace KinematicCharacterController.Examples{
                         _matchTargetRotation = _forwardNormalXZRotation;
                         //CC.TransitionToState(CharacterState.Jumping);
                         CC.Motor.ForceUnground();
-                        CC.Motor.SetTransientPosition(_matchTargetPosition,true);
+                        CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
                         _animator.CrossFadeInFixedTime(anim_ClimbUp, 0, 0);
                         //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.23f);
                     }
@@ -114,7 +114,7 @@ namespace KinematicCharacterController.Examples{
                         _matchTargetRotation = _forwardNormalXZRotation;
                         //CC.TransitionToState(CharacterState.Jumping);
                         CC.Motor.ForceUnground();
-                        CC.Motor.SetTransientPosition(_matchTargetPosition,true);
+                        CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
                         _animator.CrossFadeInFixedTime(anim_Vault, 0, 0);
                         //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.05f, 0.16f);
                     }
@@ -124,7 +124,7 @@ namespace KinematicCharacterController.Examples{
                         _matchTargetRotation = _forwardNormalXZRotation;
                         //CC.TransitionToState(CharacterState.Jumping);
                         CC.Motor.ForceUnground();
-                        CC.Motor.SetTransientPosition(_matchTargetPosition,true);
+                        CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
                         _animator.CrossFadeInFixedTime(anim_StepUp, 0, 0);
                         //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.12f);
                     }

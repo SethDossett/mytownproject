@@ -74,7 +74,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] [Range(0f, 10f)]float _speedNeededToJump = 4.5f; 
 
         [Header("Climbing")]
-        
+        float _climbTimer;
 
         [Header("ClimbingLadder")]
         public Vector3 _newCenteredPosition;
@@ -128,7 +128,10 @@ namespace KinematicCharacterController.Examples
         int anim_talking = Animator.StringToHash("isTalking");
         int anim_horizontal = Animator.StringToHash("Horizontal");
         int anim_vertical = Animator.StringToHash("Vertical");
+        //Climb States
         int anim_Hang= Animator.StringToHash("Hang");
+        int anim_DropToHang= Animator.StringToHash("DropToHang");
+        int anim_ClimbUp = Animator.StringToHash("ClimbUp");
 
         public CharacterState CurrentCharacterState { get; private set; }
         public GroundType CurrentGroundType { get; private set; }
@@ -219,6 +222,7 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Climbing:
                     {
                         Motor.ForceUnground();
+                        _climbTimer = 0;
 
                         break;
                     }    
@@ -503,7 +507,7 @@ namespace KinematicCharacterController.Examples
                                 currentRotation = Quaternion.FromToRotation(currentUp, smoothedGroundNormal) * currentRotation;
 
                                 // Move the position to create a rotation around the bottom hemi center instead of around the pivot
-                                Motor.SetTransientPosition(initialCharacterBottomHemiCenter + (currentRotation * Vector3.down * Motor.Capsule.radius), false);
+                                Motor.SetTransientPosition(initialCharacterBottomHemiCenter + (currentRotation * Vector3.down * Motor.Capsule.radius), false, 0);
                             }
                             else
                             {
@@ -578,7 +582,7 @@ namespace KinematicCharacterController.Examples
                                 currentRotation = Quaternion.FromToRotation(currentUp, smoothedGroundNormal) * currentRotation;
 
                                 // Move the position to create a rotation around the bottom hemi center instead of around the pivot
-                                Motor.SetTransientPosition(initialCharacterBottomHemiCenter + (currentRotation * Vector3.down * Motor.Capsule.radius), false);
+                                Motor.SetTransientPosition(initialCharacterBottomHemiCenter + (currentRotation * Vector3.down * Motor.Capsule.radius), false, 0);
                             }
                             else
                             {
@@ -790,10 +794,10 @@ namespace KinematicCharacterController.Examples
                             playerClimb._isClimbing = true;
                             currentVelocity = Vector3.zero;
                             Gravity = Vector3.zero;
-                            Vector3 offset = new Vector3(0, -1f, 0.3f);
-                            Motor.SetPosition(transform.TransformPoint(offset));
+                            Motor.Capsule.enabled = false;
+                            _animator.CrossFadeInFixedTime(anim_DropToHang, 0.1f, 0);
+                            StartCoroutine(DropToHang());
                             TransitionToState(CharacterState.Climbing);
-                            _animator.CrossFadeInFixedTime(anim_Hang, 0, 0);
                         }
 
                         // Take into account additive velocity
@@ -807,11 +811,32 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Climbing:
                     {
+                        if (_moveInputVector.magnitude == 1){
 
-                        float dot = Vector3.Dot(_moveInputVector, CurrentHitStabilityReport.LedgeFacingDirection);
-                        print(dot);
-                        if(dot >= 0.9f){
-                            TransitionToState(CharacterState.Default);
+                            float dot = Vector3.Dot(_moveInputVector, CurrentHitStabilityReport.LedgeFacingDirection);
+                            //Press towards ledge to climb up
+                            if(dot <= -0.9f){
+                                _climbTimer += Time.deltaTime;
+                                if(_climbTimer >= 0.5f){
+                                    _climbTimer = 0;
+                                    _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f,0);
+                                    //Motor.Capsule.enabled = true;
+                                    //TransitionToState(CharacterState.Default);
+                                }
+                            }
+                            //Press away from ledge to drop down
+                            else if(dot >= 0.9f){
+                                _climbTimer += Time.deltaTime;
+                                if(_climbTimer >= 0.5f){
+                                    _climbTimer = 0;
+                                    Motor.Capsule.enabled = true;
+                                    TransitionToState(CharacterState.Default);
+                                }
+                            }
+                            else{
+                                _climbTimer = 0;
+                            }
+                            
                         }
                         break;
                     }       
@@ -836,7 +861,7 @@ namespace KinematicCharacterController.Examples
                             //Vector3 ladderStartPos = new Vector3(newCenteredPosition.x,transform.position.y, newCenteredPosition.z);
                             //Vector3 newPlayerPos = Vector3.Lerp(Motor.TransientPosition, newCenteredPosition, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             //Vector3 newPlayerPos = Vector3.MoveTowards(Motor.TransientPosition, newCenteredPosition, _jumpOnLadderSpeed * deltaTime);
-                            Motor.SetTransientPosition(newCenteredPosition, true);
+                            Motor.SetTransientPosition(newCenteredPosition, true, 5);
                             if(Vector3.Distance(Motor.TransientPosition, newCenteredPosition) <= float.Epsilon){
                                 _onLadder = true;
                             }
@@ -1258,6 +1283,18 @@ namespace KinematicCharacterController.Examples
                         break;
                     }
             }            
+            
+        }
+
+        IEnumerator DropToHang(){
+            Vector3 goalPos = transform.TransformPoint(new Vector3(0, -1.3f, 0.1f));
+            float dis = Vector3.Distance(Motor.TransientPosition, goalPos);
+            print(dis);
+            while(dis > 1){
+                Motor.SetTransientPosition(goalPos, true, 5);
+                yield return null;
+            }
+            yield break;
             
         }
         void FallingCheck(){
