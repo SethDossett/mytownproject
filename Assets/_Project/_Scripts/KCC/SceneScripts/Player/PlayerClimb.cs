@@ -6,41 +6,142 @@ using UnityEngine;
 namespace KinematicCharacterController.Examples{
     public class PlayerClimb : MonoBehaviour
     {
+        [Header("References")]
         TheCharacterController CC;
+        NewControls inputActions;
         CapsuleCollider _capsule;
 
         [Header("Raycast Checks")]
         [SerializeField] LayerMask _groundLayer;
         [SerializeField] Vector3 _downCastOffset;
-        [SerializeField] Vector3 _forwardCastOffset;
-        [SerializeField] Vector3 _overPassCastOffset;
+        Vector3 _forwardCastOffset;
+        Vector3 _overPassCastOffset;
 
+        [Header("Positions")]
+        [SerializeField] Vector3 _endOffset;
+        [SerializeField] Vector3 _hangOffset;
         Vector3 _downOrigin;
+        Vector3 _endPosition;
 
         RaycastHit _downHitInfo;
         RaycastHit _forwardHitInfo;
         RaycastHit _overPassHitInfo;
 
+        [Header("Values")]
+        public bool _isClimbing;
         [SerializeField] float _overPassHeight;
         float _climbHeight;
         Vector3 _forwardDirectionXZ;
         Vector3 _forwardNormalXZ;
-        Vector3 _endPosition;
-        [SerializeField] Vector3 _endOffset;
-
         [SerializeField] float _groudAngleMax;
         [SerializeField] float _wallAngleMax;
         float _groudAngle;
         float _wallAngle;
+        
+
+        [Header("Heights")]
+        [SerializeField] float _hangHeight = 1.5f;
+        [SerializeField] float _climbUpHeight = 0.9f;
+        [SerializeField] float _vaultHeight = 0.4f;
+        [SerializeField] float _stepUpHeight = 0.25f;
+
+
+        [Header("Animations")]
+        Animator _animator;
+        Vector3 _matchTargetPosition;
+        Quaternion _matchTargetRotation;
+        Quaternion _forwardNormalXZRotation;
+        MatchTargetWeightMask _weightMask = new MatchTargetWeightMask(Vector3.one, 1);
+        int anim_Hang= Animator.StringToHash("Hang");
+        int anim_JumpToHang= Animator.StringToHash("JumpToHang");
+        int anim_ClimbUp = Animator.StringToHash("ClimbUp");
+        int anim_Vault = Animator.StringToHash("Vault");
+        int anim_StepUp = Animator.StringToHash("StepUp");
+        int anim_FreeHangDrop = Animator.StringToHash("FreeHangDrop");
+        int anim_HangClimbUp = Animator.StringToHash("HangClimbUp");
+
+
+
+        private void OnEnable() {
+            inputActions.GamePlay.Enable();
+        }
+        private void OnDisable() {
+            inputActions.GamePlay.Enable();
+        }
+        void Awake(){
+            inputActions = new NewControls();
+        }
         void Start(){
+            _animator = GetComponent<Animator>();
             CC = GetComponent<TheCharacterController>();
             _capsule = GetComponent<CapsuleCollider>();
         }
         void Update()
         {
+            if(_isClimbing) return;
 
+            float value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
+            if(value > 0){
+                if(CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition)){
+                    
+                    float climbHeight = _downHitInfo.point.y - transform.position.y;
+                    Vector3 forwardNormalXZ = Vector3.ProjectOnPlane(_forwardHitInfo.normal, Vector3.up);
+                    _forwardNormalXZRotation = Quaternion.LookRotation(-forwardNormalXZ, Vector3.up);
+
+                    if(climbHeight > _hangHeight){
+                        _isClimbing = true;
+                        _matchTargetPosition = _forwardHitInfo.point + _forwardNormalXZRotation * _hangOffset;
+                        _matchTargetRotation = _forwardNormalXZRotation;
+                        //CC.TransitionToState(CharacterState.Jumping);
+                        CC.Motor.ForceUnground();
+                        CC.Motor.SetTransientPosition(_matchTargetPosition,true);
+                        _animator.CrossFadeInFixedTime(anim_JumpToHang, 0, 0);
+                        //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
+                    }
+                    else if(climbHeight > _climbUpHeight){
+                        _isClimbing = true;
+                        _matchTargetPosition = _endPosition;
+                        _matchTargetRotation = _forwardNormalXZRotation;
+                        //CC.TransitionToState(CharacterState.Jumping);
+                        CC.Motor.ForceUnground();
+                        CC.Motor.SetTransientPosition(_matchTargetPosition,true);
+                        _animator.CrossFadeInFixedTime(anim_ClimbUp, 0, 0);
+                        //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.23f);
+                    }
+                    else if(climbHeight > _vaultHeight){
+                        _isClimbing = true;
+                        _matchTargetPosition = _endPosition;
+                        _matchTargetRotation = _forwardNormalXZRotation;
+                        //CC.TransitionToState(CharacterState.Jumping);
+                        CC.Motor.ForceUnground();
+                        CC.Motor.SetTransientPosition(_matchTargetPosition,true);
+                        _animator.CrossFadeInFixedTime(anim_Vault, 0, 0);
+                        //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.05f, 0.16f);
+                    }
+                    else if(climbHeight > _stepUpHeight){
+                        _isClimbing = true;
+                        _matchTargetPosition = _endPosition;
+                        _matchTargetRotation = _forwardNormalXZRotation;
+                        //CC.TransitionToState(CharacterState.Jumping);
+                        CC.Motor.ForceUnground();
+                        CC.Motor.SetTransientPosition(_matchTargetPosition,true);
+                        _animator.CrossFadeInFixedTime(anim_StepUp, 0, 0);
+                        //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.12f);
+                    }
+                    else{
+                        _isClimbing = false;
+                    }
+                    
+                }
+                
+
+            }
             
             
+        }
+        void OnAnimatorMove() {
+            if(_animator.isMatchingTarget)
+                _animator.ApplyBuiltinRootMotion();
         }
 
         bool DownCast(){
@@ -53,7 +154,7 @@ namespace KinematicCharacterController.Examples{
              return Physics.Raycast(_overPassCastOffset, transform.forward, out _overPassHitInfo, 5f, _groundLayer);
         }
 
-        bool CanClimb(out RaycastHit downRaycastHit, out RaycastHit forwardRaycastHit, out Vector3 endPosition){
+        public bool CanClimb(out RaycastHit downRaycastHit, out RaycastHit forwardRaycastHit, out Vector3 endPosition){
             endPosition = Vector3.zero;
             downRaycastHit = new RaycastHit();
             forwardRaycastHit = new RaycastHit();

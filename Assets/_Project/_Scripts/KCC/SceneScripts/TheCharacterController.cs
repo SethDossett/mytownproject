@@ -73,6 +73,9 @@ namespace KinematicCharacterController.Examples
         public float JumpPostGroundingGraceTime = 0f;
 
         [Header("Climbing")]
+        
+
+        [Header("ClimbingLadder")]
         public Vector3 _newCenteredPosition;
         public Quaternion _newLadderRotation;
         public float _climbSpeedY = 2f;
@@ -108,12 +111,14 @@ namespace KinematicCharacterController.Examples
 
         [Header("Animation")]
         Animator _animator;
+        //States
         int _talkState = Animator.StringToHash("Talking");
         int _idleState = Animator.StringToHash("Idle");
         int _climbState = Animator.StringToHash("Climbing");
         int _strafeState = Animator.StringToHash("Strafing");
         int _jumpState = Animator.StringToHash("Jump");
         int _hardLandState = Animator.StringToHash("HardLanding");
+        //Parameter Values
         int anim_isCrouched = Animator.StringToHash("isCrouched");
         int anim_isClimbing = Animator.StringToHash("isClimbing");
         int anim_jumpTrigger = Animator.StringToHash("hasJumped");
@@ -122,9 +127,6 @@ namespace KinematicCharacterController.Examples
         int anim_talking = Animator.StringToHash("isTalking");
         int anim_horizontal = Animator.StringToHash("Horizontal");
         int anim_vertical = Animator.StringToHash("Vertical");
-
-        
-
 
         public CharacterState CurrentCharacterState { get; private set; }
         public GroundType CurrentGroundType { get; private set; }
@@ -211,7 +213,8 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Jumping:
                     {
-                        
+                        Motor.ForceUnground();
+
                         break;
                     }    
                 case CharacterState.Climbing:
@@ -291,9 +294,11 @@ namespace KinematicCharacterController.Examples
         /// This is called every frame by ExamplePlayer in order to tell the character what its inputs are
         /// </summary>
         /// 
+        PlayerClimb playerClimb;
         private void SetInitialReferences()
         {
             _animator = GetComponent<Animator>();
+            playerClimb = GetComponent<PlayerClimb>();
             cam = Camera.main;
             RatePerSecond = MaxSpeed / accelTime;
             MaxStableMoveSpeed = 2;
@@ -783,7 +788,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Jumping:
                     {
-                        
+
                         break;
                     }       
                 case CharacterState.Climbing:
@@ -1196,12 +1201,14 @@ namespace KinematicCharacterController.Examples
         protected void OnLanded()
         {
             if(_hardLanding){
+                playerClimb._isClimbing = false;
                 _startFallingTimer = false;
                 _animator.CrossFade(_hardLandState, 0f, 0);
                 _hardLanding = false;
                 _timeFallingInAir = 0f;
             }
             else{
+                playerClimb._isClimbing = false;
                 _animator.SetBool(anim_landTrigger, true); 
                 _timeFallingInAir = 0f;
                 _startFallingTimer = false;
@@ -1215,7 +1222,7 @@ namespace KinematicCharacterController.Examples
             _animator.SetBool(anim_landTrigger, false); 
 
             switch(CurrentCharacterState){ 
-                case CharacterState.Default:
+                case CharacterState.Default: // one for climbing
                     {
                         Debug.Log("jump");
                         

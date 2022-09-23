@@ -1071,13 +1071,17 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  _downCastOffset: {x: 0, y: 3, z: 0.75}
-  _forwardCastOffset: {x: 0, y: 0, z: 0}
-  _overPassCastOffset: {x: 0, y: 0, z: 0}
-  _overPassHeight: 1.8
+  _downCastOffset: {x: 0, y: 3, z: 0.6}
   _endOffset: {x: 0, y: 0, z: 0.2}
-  _groudAngleMax: 10
-  _wallAngleMax: 10
+  _hangOffset: {x: 0, y: 0, z: 0}
+  _isClimbing: 0
+  _overPassHeight: 1.8
+  _groudAngleMax: 60
+  _wallAngleMax: 8
+  _hangHeight: 2.1
+  _climbUpHeight: 0.9
+  _vaultHeight: 0.4
+  _stepUpHeight: 0.25
 --- !u!114 &676443548
 MonoBehaviour:
   m_ObjectHideFlags: 0
