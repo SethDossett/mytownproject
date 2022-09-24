@@ -968,7 +968,7 @@ MonoBehaviour:
   _newLadderRotation: {x: 0, y: 0, z: 0, w: 0}
   _climbSpeedY: 2
   _climbSpeedX: 2
-  _gettingOnOffLadder: 0
+  _gettingOnOffObstacle: 0
   _jumpOnLadderSpeed: 3
   _target: {fileID: 0}
   _targetingRotSpeed: 500
@@ -993,6 +993,8 @@ MonoBehaviour:
   RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
   RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
   UIText: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  EnableControls: {fileID: 11400000, guid: e0d754fc0fbdb564d9a419d976d7238c, type: 2}
+  DisableControls: {fileID: 11400000, guid: 1f9619156896d6a468b85690b3ab4d6d, type: 2}
 --- !u!114 &5606128506353790698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1074,7 +1076,7 @@ MonoBehaviour:
     m_Bits: 64
   _downCastOffset: {x: 0, y: 3, z: 0.6}
   _endOffset: {x: 0, y: 0, z: 0.2}
-  _hangOffset: {x: 0, y: 0, z: 0}
+  _hangOffset: {x: 0, y: 1.8, z: -0.2}
   _isClimbing: 0
   _overPassHeight: 1.8
   _groudAngleMax: 60

@@ -75,6 +75,7 @@ namespace KinematicCharacterController.Examples
 
         [Header("Climbing")]
         float _climbTimer;
+        Vector3 _ledgeDirection;
 
         [Header("ClimbingLadder")]
         public Vector3 _newCenteredPosition;
@@ -82,7 +83,7 @@ namespace KinematicCharacterController.Examples
         public float _climbSpeedY = 2f;
         public float _climbSpeedX = 2f;
         bool _onLadder = false;
-        public bool _gettingOnOffLadder;
+        public bool _gettingOnOffObstacle;
         [SerializeField] float _jumpOnLadderSpeed = 5f;
 
         [Header("Targeting")]
@@ -172,6 +173,8 @@ namespace KinematicCharacterController.Examples
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
         [SerializeField] UIEventChannelSO UIText;
+        [SerializeField] GeneralEventSO EnableControls;
+        [SerializeField] GeneralEventSO DisableControls;
 
 
         private void OnEnable() {
@@ -193,6 +196,9 @@ namespace KinematicCharacterController.Examples
         private void Update()
         {
             FallingCheck();
+            if(Keyboard.current.uKey.wasPressedThisFrame){
+                
+            }
         }
         /// <summary>
         /// Handles movement state transitions and enter/exit callbacks
@@ -203,6 +209,7 @@ namespace KinematicCharacterController.Examples
             OnStateExit(tmpInitialState, newState);
             CurrentCharacterState = newState;
             OnStateEnter(newState, tmpInitialState);
+            print("Transition to " + newState);
         }
 
         /// <summary>
@@ -522,15 +529,14 @@ namespace KinematicCharacterController.Examples
                         }
                         break;
                     }
-                case CharacterState.Climbing:
+               case CharacterState.Climbing:
                     {
-                        Quaternion toRot = Quaternion.LookRotation(-CurrentHitStabilityReport.LedgeFacingDirection, Vector3.up); 
+                        Quaternion toRot = Quaternion.LookRotation(-_ledgeDirection, Vector3.up); 
                         currentRotation = Quaternion.RotateTowards(transform.rotation, toRot, 500 * Time.deltaTime); 
                         break;
                     }       
                 case CharacterState.ClimbLadder:
                     {
-                        //Quaternion lookRot = Quaternion.LookRotation(_newCenteredPosition, Vector3.up);
                         currentRotation = Quaternion.RotateTowards(transform.rotation, _newLadderRotation, 500 * Time.deltaTime);   
 
                         break;
@@ -611,6 +617,8 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
+                        //Dont move player if he is getting on and off Something.
+                        if(_gettingOnOffObstacle) return;
                         // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
@@ -789,14 +797,23 @@ namespace KinematicCharacterController.Examples
                                 _animator.SetBool(anim_jumpTrigger, true);
                             }
                         }
-                        //Look For Ledge
+                        //Drop To Hang
                         else if(_jumpRequested && currentVelocity.magnitude < _speedNeededToJump){
+                            print("droptohang");
+                            _gettingOnOffObstacle = true;
+                            _ledgeDirection = CurrentHitStabilityReport.LedgeFacingDirection;
+                            _jumpRequested = false;
+                            _jumpConsumed = true; //Precautionary
+                            _jumpedThisFrame = true; //Precautionary
+                            _timeFallingInAir = 0;
+                            _startFallingTimer = false;
                             playerClimb._isClimbing = true;
                             currentVelocity = Vector3.zero;
                             Gravity = Vector3.zero;
                             Motor.Capsule.enabled = false;
                             _animator.CrossFadeInFixedTime(anim_DropToHang, 0.1f, 0);
-                            StartCoroutine(DropToHang());
+                            Vector3 goalPos = transform.TransformPoint(new Vector3(0, -1.3f, 0.1f));
+                            StartCoroutine(DropToHang(goalPos));
                             TransitionToState(CharacterState.Climbing);
                         }
 
@@ -811,6 +828,8 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Climbing:
                     {
+                        if(_gettingOnOffObstacle) return;
+
                         if (_moveInputVector.magnitude == 1){
 
                             float dot = Vector3.Dot(_moveInputVector, CurrentHitStabilityReport.LedgeFacingDirection);
@@ -819,9 +838,9 @@ namespace KinematicCharacterController.Examples
                                 _climbTimer += Time.deltaTime;
                                 if(_climbTimer >= 0.5f){
                                     _climbTimer = 0;
+                                    _gettingOnOffObstacle = true;
                                     _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f,0);
-                                    //Motor.Capsule.enabled = true;
-                                    //TransitionToState(CharacterState.Default);
+                                    StartCoroutine(ClimbBackUp());
                                 }
                             }
                             //Press away from ledge to drop down
@@ -831,6 +850,7 @@ namespace KinematicCharacterController.Examples
                                     _climbTimer = 0;
                                     Motor.Capsule.enabled = true;
                                     TransitionToState(CharacterState.Default);
+                                    _gettingOnOffObstacle = false;
                                 }
                             }
                             else{
@@ -842,7 +862,7 @@ namespace KinematicCharacterController.Examples
                     }       
                 case CharacterState.ClimbLadder:
                     {
-                        if(_gettingOnOffLadder){
+                        if(_gettingOnOffObstacle){
                             currentVelocity = Vector3.zero;
                             if (_animator.speed != 1f)
                                 _animator.speed = 1f;
@@ -1286,17 +1306,42 @@ namespace KinematicCharacterController.Examples
             
         }
 
-        IEnumerator DropToHang(){
-            Vector3 goalPos = transform.TransformPoint(new Vector3(0, -1.3f, 0.1f));
-            float dis = Vector3.Distance(Motor.TransientPosition, goalPos);
-            print(dis);
-            while(dis > 1){
-                Motor.SetTransientPosition(goalPos, true, 5);
+        //Make into One Method?
+        IEnumerator DropToHang(Vector3 pos){
+            //Disable Controls
+            
+            float dis = Vector3.Distance(Motor.TransientPosition, pos);
+            float timer = 0;
+            while(timer < 1){
+                timer += Time.deltaTime;
+                Motor.SetTransientPosition(pos, true, 5);
                 yield return null;
             }
+            _gettingOnOffObstacle = false;
+            print("done");
             yield break;
             
         }
+        IEnumerator ClimbBackUp(){
+            //Disable Controls
+            Vector3 goalPos = transform.TransformPoint(new Vector3(0, 1.3f, 0.3f));
+            float dis = Vector3.Distance(Motor.TransientPosition, goalPos);
+            float timer = 0;
+            while(timer < 1){
+                timer += Time.deltaTime;
+                Motor.SetTransientPosition(goalPos, true, 1.8f);
+                yield return null;
+            }
+            print("done2");
+            Motor.Capsule.enabled = true;
+            Motor.SetRotation(Quaternion.identity);
+            //Moveinputvector needs to be 0 at this point.
+            TransitionToState(CharacterState.Default);
+            _gettingOnOffObstacle = false;
+
+            yield break;
+        }
+
         void FallingCheck(){
             if(!_startFallingTimer) return;
 

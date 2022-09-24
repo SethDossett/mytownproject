@@ -83,67 +83,16 @@ namespace KinematicCharacterController.Examples{
             float value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
             if(value > 0){
                 if(CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition)){
-                    
-                    float climbHeight = _downHitInfo.point.y - transform.position.y;
-                    Vector3 forwardNormalXZ = Vector3.ProjectOnPlane(_forwardHitInfo.normal, Vector3.up);
-                    _forwardNormalXZRotation = Quaternion.LookRotation(-forwardNormalXZ, Vector3.up);
-
-                    if(climbHeight > _hangHeight){
-                        _isClimbing = true;
-                        _matchTargetPosition = _forwardHitInfo.point + _forwardNormalXZRotation * _hangOffset;
-                        _matchTargetRotation = _forwardNormalXZRotation;
-                        //CC.TransitionToState(CharacterState.Jumping);
-                        CC.Motor.ForceUnground();
-                        CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
-                        _animator.CrossFadeInFixedTime(anim_JumpToHang, 0, 0);
-                        //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
-                    }
-                    else if(climbHeight > _climbUpHeight){
-                        _isClimbing = true;
-                        _matchTargetPosition = _endPosition;
-                        _matchTargetRotation = _forwardNormalXZRotation;
-                        //CC.TransitionToState(CharacterState.Jumping);
-                        CC.Motor.ForceUnground();
-                        CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
-                        _animator.CrossFadeInFixedTime(anim_ClimbUp, 0, 0);
-                        //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.23f);
-                    }
-                    else if(climbHeight > _vaultHeight){
-                        _isClimbing = true;
-                        _matchTargetPosition = _endPosition;
-                        _matchTargetRotation = _forwardNormalXZRotation;
-                        //CC.TransitionToState(CharacterState.Jumping);
-                        CC.Motor.ForceUnground();
-                        CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
-                        _animator.CrossFadeInFixedTime(anim_Vault, 0, 0);
-                        //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.05f, 0.16f);
-                    }
-                    else if(climbHeight > _stepUpHeight){
-                        _isClimbing = true;
-                        _matchTargetPosition = _endPosition;
-                        _matchTargetRotation = _forwardNormalXZRotation;
-                        //CC.TransitionToState(CharacterState.Jumping);
-                        CC.Motor.ForceUnground();
-                        CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
-                        _animator.CrossFadeInFixedTime(anim_StepUp, 0, 0);
-                        //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.12f);
-                    }
-                    else{
-                        _isClimbing = false;
-                    }
-                    
+                    InitiateClimb();
                 }
-                
-
             }
-            
-            
         }
         void OnAnimatorMove() {
             if(_animator.isMatchingTarget)
                 _animator.ApplyBuiltinRootMotion();
         }
-
+        //Look for ledge Raycasts
+        //bool LedgeCast(){}
         bool DownCast(){
             return Physics.Raycast(_downOrigin, Vector3.down, out _downHitInfo, _downCastOffset.y - 0.4f, _groundLayer);
         }
@@ -226,6 +175,56 @@ namespace KinematicCharacterController.Examples{
             bool sweepHit = Physics.CapsuleCast(bottom, top, radius, dir, dis, layerMask);
 
             return sweepHit;
+        }
+
+        void InitiateClimb(){
+
+            float climbHeight = _downHitInfo.point.y - transform.position.y;
+            Vector3 forwardNormalXZ = Vector3.ProjectOnPlane(_forwardHitInfo.normal, Vector3.up);
+            _forwardNormalXZRotation = Quaternion.LookRotation(-forwardNormalXZ, Vector3.up);
+            if(climbHeight > _hangHeight){
+                _isClimbing = true;
+                _matchTargetPosition = _forwardHitInfo.point + _forwardNormalXZRotation * _hangOffset;
+                _matchTargetRotation = _forwardNormalXZRotation;
+                //CC.TransitionToState(CharacterState.Jumping);
+                CC.Motor.ForceUnground();
+                CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
+                _animator.CrossFadeInFixedTime(anim_JumpToHang, 0, 0);
+                //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
+            }
+            else if(climbHeight > _climbUpHeight){
+                _isClimbing = true;
+                _matchTargetPosition = _endPosition;
+                _matchTargetRotation = _forwardNormalXZRotation;
+                //CC.TransitionToState(CharacterState.Jumping);
+                CC.Motor.ForceUnground();
+                CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
+                _animator.CrossFadeInFixedTime(anim_ClimbUp, 0, 0);
+                //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.23f);
+            }
+            else if(climbHeight > _vaultHeight){
+                _isClimbing = true;
+                _matchTargetPosition = _endPosition;
+                _matchTargetRotation = _forwardNormalXZRotation;
+                //CC.TransitionToState(CharacterState.Jumping);
+                CC.Motor.ForceUnground();
+                CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
+                _animator.CrossFadeInFixedTime(anim_Vault, 0, 0);
+                //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.05f, 0.16f);
+            }
+            else if(climbHeight > _stepUpHeight){
+                _isClimbing = true;
+                _matchTargetPosition = _endPosition;
+                _matchTargetRotation = _forwardNormalXZRotation;
+                //CC.TransitionToState(CharacterState.Jumping);
+                CC.Motor.ForceUnground();
+                CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
+                _animator.CrossFadeInFixedTime(anim_StepUp, 0, 0);
+                //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.12f);
+            }
+            else{
+                _isClimbing = false;
+            }
         }
 
         private void OnDrawGizmos()

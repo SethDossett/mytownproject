@@ -191,7 +191,6 @@ namespace MyTownProject.Enviroment{
                 CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
                 RecenterCamX.OnRaiseEvent2(0,0.35f);
                 RecenterCamY.OnRaiseEvent2(0,0.35f);
-                print("SwitchedToClimbing");
             }
             else{//When player is getting on the Top of the Ladder
                 _ladderForward = transform.right;
@@ -200,7 +199,6 @@ namespace MyTownProject.Enviroment{
                 CC._newCenteredPosition =  transform.position + _StartPosTop;
                 CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
                 _ladderCollider.enabled = false;
-                print("SwitchedToClimbing");
             }
 
         }
@@ -210,11 +208,9 @@ namespace MyTownProject.Enviroment{
             _heightOnLadder = 0;
             _ladderCollider.enabled = true;
             _exitLadderCalled = false;
-            print("SwitchedToDefault");
         }
 
         IEnumerator GetOnLadderTop(){
-            print("geton ladder top");
             inputActions.Disable();
             DisableControls.RaiseEvent();
             float dis = Vector3.Distance(CC.Motor.TransientPosition, transform.position + Vector3.up * _ladderHeight);
@@ -238,14 +234,13 @@ namespace MyTownProject.Enviroment{
 
         }
         IEnumerator GetOffLadderTop(){
-            CC._gettingOnOffLadder = true;
+            CC._gettingOnOffObstacle = true;
             _player.GetComponent<Animator>().CrossFade(_anim_GetOffTop, 0, 0);
 
             yield return new WaitForSecondsRealtime(0.75f);
             SwitchToDefaltState();
             CC.Motor.SetPosition(transform.position + _SphereCastOffsetTop);
-            CC._gettingOnOffLadder = false;
-            print("GetOFFTopOfLadder");
+            CC._gettingOnOffObstacle = false;
         }
 
         private void OnDrawGizmos()
