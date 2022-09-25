@@ -227,6 +227,10 @@ namespace KinematicCharacterController.Examples{
             }
         }
 
+        bool InAirCheck(){
+            return false;
+        }
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

@@ -8,9 +8,10 @@ using UnityEngine.InputSystem;
 
 namespace KinematicCharacterController.Examples
 {
+    #region Stucts and Enums
     public enum CharacterState
     {
-        Default, Climbing, Talking, ClimbLadder, Targeting, Crawling
+        Default, Climbing, Talking, ClimbLadder, Targeting, Crawling, Jumping
     }
     public enum GroundType
     {
@@ -50,6 +51,7 @@ namespace KinematicCharacterController.Examples
         TowardsGroundSlopeAndGravity,
     }
 
+    #endregion
     public class TheCharacterController : MonoBehaviour, ICharacterController
     {
         public KinematicCharacterMotor Motor;
@@ -196,9 +198,6 @@ namespace KinematicCharacterController.Examples
         private void Update()
         {
             FallingCheck();
-            if(Keyboard.current.uKey.wasPressedThisFrame){
-                
-            }
         }
         /// <summary>
         /// Handles movement state transitions and enter/exit callbacks
@@ -226,6 +225,11 @@ namespace KinematicCharacterController.Examples
                         //MaxStableMoveSpeed = 0; // think it might look better to be able to run out of climbing.
                         break;
                     }
+                case CharacterState.Jumping:
+                    {
+                        
+                        break;
+                    }    
                 case CharacterState.Climbing:
                     {
                         Motor.ForceUnground();
@@ -270,6 +274,11 @@ namespace KinematicCharacterController.Examples
                     {
                         break;
                     }
+                case CharacterState.Jumping:
+                    {
+                        
+                        break;
+                    }    
                 case CharacterState.Climbing:
                     {
                         _animator.CrossFadeInFixedTime(_idleState, 0.25f, 0);
@@ -387,6 +396,12 @@ namespace KinematicCharacterController.Examples
                         
                         break;
                     }
+                case CharacterState.Jumping:
+                    {
+                        // Move and look inputs
+                        _moveInputVector = cameraPlanarRotation * moveInputVector;
+                        break;
+                    }       
                 case CharacterState.Climbing:
                     {
                         // Move and look inputs
@@ -529,6 +544,12 @@ namespace KinematicCharacterController.Examples
                         }
                         break;
                     }
+
+               case CharacterState.Jumping:
+                    {
+                        
+                        break;
+                    }     
                case CharacterState.Climbing:
                     {
                         Quaternion toRot = Quaternion.LookRotation(-_ledgeDirection, Vector3.up); 
@@ -795,6 +816,7 @@ namespace KinematicCharacterController.Examples
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
                                 _animator.SetBool(anim_jumpTrigger, true);
+                                TransitionToState(CharacterState.Jumping);
                             }
                         }
                         //Drop To Hang
@@ -826,38 +848,91 @@ namespace KinematicCharacterController.Examples
                         }
                         break;
                     }
+                case CharacterState.Jumping:
+                    {
+                        // Air movement
+                        if(!Motor.GroundingStatus.IsStableOnGround)
+                        {
+                            _canCrouch = false;
+                            // Add move input
+                            if (_moveInputVector.sqrMagnitude > 0f)
+                            {
+                                Vector3 addedVelocity = _moveInputVector * AirAccelerationSpeed * deltaTime;
+
+                                Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(currentVelocity, Motor.CharacterUp);
+
+                                // Limit air velocity from inputs
+                                if (currentVelocityOnInputsPlane.magnitude < MaxAirMoveSpeed)
+                                {
+                                    // clamp addedVel to make total vel not exceed max vel on inputs plane
+                                    Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, MaxAirMoveSpeed);
+                                    addedVelocity = newTotal - currentVelocityOnInputsPlane;
+                                }
+                                else
+                                {
+                                    // Make sure added vel doesn't go in the direction of the already-exceeding velocity
+                                    if (Vector3.Dot(currentVelocityOnInputsPlane, addedVelocity) > 0f)
+                                    {
+                                        addedVelocity = Vector3.ProjectOnPlane(addedVelocity, currentVelocityOnInputsPlane.normalized);
+                                    }
+                                }
+
+                                // Prevent air-climbing sloped walls
+                                if (Motor.GroundingStatus.FoundAnyGround)
+                                {
+                                    if (Vector3.Dot(currentVelocity + addedVelocity, addedVelocity) > 0f)
+                                    {
+                                        Vector3 perpenticularObstructionNormal = Vector3.Cross(Vector3.Cross(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal), Motor.CharacterUp).normalized;
+                                        addedVelocity = Vector3.ProjectOnPlane(addedVelocity, perpenticularObstructionNormal);
+                                    }
+                                }
+
+                                // Apply added velocity
+                                currentVelocity += addedVelocity;
+                                
+                            }
+
+                            // Gravity
+                            currentVelocity += Gravity * deltaTime;
+
+                            // Drag
+                            currentVelocity *= (1f / (1f + (Drag * deltaTime)));
+                        }
+                        break;
+                    }    
                 case CharacterState.Climbing:
                     {
                         if(_gettingOnOffObstacle) return;
 
-                        if (_moveInputVector.magnitude == 1){
+                        
 
-                            float dot = Vector3.Dot(_moveInputVector, CurrentHitStabilityReport.LedgeFacingDirection);
-                            //Press towards ledge to climb up
-                            if(dot <= -0.9f){
-                                _climbTimer += Time.deltaTime;
-                                if(_climbTimer >= 0.5f){
-                                    _climbTimer = 0;
-                                    _gettingOnOffObstacle = true;
-                                    _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f,0);
-                                    StartCoroutine(ClimbBackUp());
-                                }
-                            }
-                            //Press away from ledge to drop down
-                            else if(dot >= 0.9f){
-                                _climbTimer += Time.deltaTime;
-                                if(_climbTimer >= 0.5f){
-                                    _climbTimer = 0;
-                                    Motor.Capsule.enabled = true;
-                                    TransitionToState(CharacterState.Default);
-                                    _gettingOnOffObstacle = false;
-                                }
-                            }
-                            else{
+                        float dot = Vector3.Dot(_moveInputVector, _ledgeDirection);
+                        print(dot);
+                        //Press towards ledge to climb up
+                        if(dot <= -0.9f){
+                            _climbTimer += Time.deltaTime;
+                            if(_climbTimer >= 0.3f){
                                 _climbTimer = 0;
+                                _gettingOnOffObstacle = true;
+                                _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f,0);
+                                StartCoroutine(ClimbBackUp());
                             }
-                            
                         }
+                        //Press away from ledge to drop down
+                        else if(dot >= 0.9f){
+                            _climbTimer += Time.deltaTime;
+                            if(_climbTimer >= 0.5f){
+                                _climbTimer = 0;
+                                Motor.Capsule.enabled = true;
+                                TransitionToState(CharacterState.Default);
+                                _gettingOnOffObstacle = false;
+                            }
+                        }
+                        else{
+                            _climbTimer = 0;
+                        }
+                            
+                        
                         break;
                     }       
                 case CharacterState.ClimbLadder:
@@ -1097,8 +1172,6 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
-                        
-
                         // Handle jump-related values
                         {
                             // Handle jumping pre-ground grace period
@@ -1123,6 +1196,11 @@ namespace KinematicCharacterController.Examples
                             }
                         }
 
+                        break;
+                    }
+                    case CharacterState.Jumping:
+                    {
+                        
                         break;
                     }
                     case CharacterState.Climbing:
@@ -1278,7 +1356,7 @@ namespace KinematicCharacterController.Examples
                 _timeFallingInAir = 0f;
                 _startFallingTimer = false;
             }
-            
+            TransitionToState(CharacterState.Default);
         }
 
         protected void OnLeaveStableGround()
