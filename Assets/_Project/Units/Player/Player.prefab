@@ -955,6 +955,7 @@ MonoBehaviour:
   StableMovementSharpness: 12
   OrientationSharpness: 20
   OrientationMethod: 1
+  _defaultOrientationSharpness: 20
   MaxAirMoveSpeed: 4
   AirAccelerationSpeed: 10
   Drag: 0.1
@@ -992,6 +993,7 @@ MonoBehaviour:
   dialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
   RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
+  DisableRecentering: {fileID: 11400000, guid: d33e28778e67ee948876888558d888ff, type: 2}
   UIText: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
   EnableControls: {fileID: 11400000, guid: e0d754fc0fbdb564d9a419d976d7238c, type: 2}
   DisableControls: {fileID: 11400000, guid: 1f9619156896d6a468b85690b3ab4d6d, type: 2}

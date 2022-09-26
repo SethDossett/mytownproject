@@ -61,11 +61,13 @@ namespace KinematicCharacterController.Examples
         public float StableMovementSharpness = 15f;
         public float OrientationSharpness = 10f;
         public OrientationMethod OrientationMethod = OrientationMethod.TowardsCamera;
+        [SerializeField] float _defaultOrientationSharpness = 20f;
 
         [Header("Air Movement")]
         public float MaxAirMoveSpeed = 15f;
         public float AirAccelerationSpeed = 15f;
         public float Drag = 0.1f;
+        float _offGroundTimeBuffer;
 
         [Header("Jumping")]
         public bool AllowJumpingWhenSliding = false;
@@ -78,6 +80,7 @@ namespace KinematicCharacterController.Examples
         [Header("Climbing")]
         float _climbTimer;
         Vector3 _ledgeDirection;
+        bool _dropDownRequested;
 
         [Header("ClimbingLadder")]
         public Vector3 _newCenteredPosition;
@@ -95,7 +98,9 @@ namespace KinematicCharacterController.Examples
 
         [Header("Crawling")]
         [SerializeField] float _crawlSpeed = 2f;
+        float _crawlRotationSpeed = 1f;
         bool _hasFinishedCrouch;
+        bool _moveBackwards;
 
         [Header("Falling")]
         [SerializeField] float _timeFallingInAir = 0f;
@@ -174,6 +179,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] DialogueEventsSO dialogueEvent;
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
+        [SerializeField] GeneralEventSO DisableRecentering;
         [SerializeField] UIEventChannelSO UIText;
         [SerializeField] GeneralEventSO EnableControls;
         [SerializeField] GeneralEventSO DisableControls;
@@ -255,6 +261,8 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Crawling:
                     {
                         _canCrouch = false;
+                        _moveBackwards = false;
+                        OrientationSharpness = _crawlRotationSpeed;
                         break;
                     }        
                 
@@ -304,7 +312,10 @@ namespace KinematicCharacterController.Examples
                     } 
                 case CharacterState.Crawling:
                     {
+                        DisableRecentering.RaiseEvent();
+                        OrientationSharpness = _defaultOrientationSharpness;
                         _hasFinishedCrouch = false;
+                        
                         if (_animator.speed != 1f)
                             _animator.speed = 1f;
 
@@ -385,10 +396,6 @@ namespace KinematicCharacterController.Examples
                                 if (_animator.GetBool(anim_isCrouched) != true)
                                     _animator.SetBool(anim_isCrouched, true);
 
-
-                                //RecenterCamX.RaiseEvent2(0, 0.1f);
-                                //RecenterCamY.RaiseEvent2(0, 0.1f);
-
                                 TransitionToState(CharacterState.Crawling);  
                                 Debug.Log("Crouch");
                             }
@@ -404,8 +411,13 @@ namespace KinematicCharacterController.Examples
                     }       
                 case CharacterState.Climbing:
                     {
+                        if(_dropDownRequested) return;
                         // Move and look inputs
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
+
+                        if(inputs.Interact){
+                            _dropDownRequested = true;
+                        }
                         break;
                     }       
                 case CharacterState.ClimbLadder:
@@ -452,6 +464,19 @@ namespace KinematicCharacterController.Examples
                     {
                         // Move and look inputs
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
+
+                        // Camera Recenter while Moving
+                        if(_moveInputVector.magnitude > 0 && _moveBackwards == false)
+                            RecenterCamX.ThreeFloats(0, 2f,0);
+                        else
+                            DisableRecentering.RaiseEvent();
+
+                        // If player presses opposite direction crawl backwards
+                        float dot = Vector3.Dot(_moveInputVector, transform.forward);
+                        if(dot <= -0.9f)
+                            _moveBackwards = true;
+                        else    
+                            _moveBackwards = false;
 
                         switch (OrientationMethod)
                         {
@@ -583,6 +608,8 @@ namespace KinematicCharacterController.Examples
                     } 
                 case CharacterState.Crawling:
                     {
+                        if(_moveBackwards) return;
+
                         if (_lookInputVector.sqrMagnitude > 0f && OrientationSharpness > 0f)
                         {
                             // Smoothly interpolate from current to target look direction
@@ -850,6 +877,8 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Jumping:
                     {
+                        // Might want to tighten up how much you can move in air.
+
                         // Air movement
                         if(!Motor.GroundingStatus.IsStableOnGround)
                         {
@@ -902,9 +931,11 @@ namespace KinematicCharacterController.Examples
                     }    
                 case CharacterState.Climbing:
                     {
-                        if(_gettingOnOffObstacle) return;
-
-                        
+                        //During Animation, we dont want to be able to move
+                        if(_gettingOnOffObstacle){
+                            _dropDownRequested = false;
+                            return;
+                        } 
 
                         float dot = Vector3.Dot(_moveInputVector, _ledgeDirection);
                         print(dot);
@@ -918,21 +949,18 @@ namespace KinematicCharacterController.Examples
                                 StartCoroutine(ClimbBackUp());
                             }
                         }
-                        //Press away from ledge to drop down
-                        else if(dot >= 0.9f){
-                            _climbTimer += Time.deltaTime;
-                            if(_climbTimer >= 0.5f){
-                                _climbTimer = 0;
-                                Motor.Capsule.enabled = true;
-                                TransitionToState(CharacterState.Default);
-                                _gettingOnOffObstacle = false;
-                            }
-                        }
+                        //Could Slide if held left or right
                         else{
                             _climbTimer = 0;
                         }
-                            
-                        
+
+                        //Pressed Interact Btn to drop
+                        if(_dropDownRequested){
+                            _dropDownRequested = false;
+                            Motor.Capsule.enabled = true;
+                            TransitionToState(CharacterState.Default);
+                            _gettingOnOffObstacle = false;
+                        }  
                         break;
                     }       
                 case CharacterState.ClimbLadder:
@@ -1148,15 +1176,17 @@ namespace KinematicCharacterController.Examples
                         currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
 
                         // Calculate target velocity
-                        Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
+                        Vector3 inputRight = Vector3.Cross(transform.forward, Motor.CharacterUp);
                         Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
                         Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
 
                         // Smooth movement Velocity
-                        currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                        if(!_moveBackwards)
+                            currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                        else
+                            currentVelocity = Vector3.Lerp(currentVelocity, -targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+
                         _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                        _animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                        _animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                         break;
                     }               
             }
@@ -1367,17 +1397,20 @@ namespace KinematicCharacterController.Examples
             switch(CurrentCharacterState){ 
                 case CharacterState.Default: // one for climbing
                     {
-
-
-
-
-
-
                         Debug.Log("jump");
                         
                         _animator.CrossFade(_jumpState, 0, 0);
                         _startFallingTimer = true;
                         _jumpRequested = true;
+                        break;
+                    }
+                case CharacterState.Jumping:
+                    {
+                        break;
+                    }
+                
+                case CharacterState.Climbing:
+                    {
                         break;
                     }
             }            

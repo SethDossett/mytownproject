@@ -160,8 +160,8 @@ namespace MyTownProject.Interaction
                 if(_cameraInput.ReadValue<Vector2>().magnitude > 0){
                     _freeLookCameraOff = false;
                     cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
-                    RecenterCamX.RaiseEvent2(0, 0.5f);
-                    RecenterCamY.RaiseEvent2(0, 0.5f);
+                    RecenterCamX.ThreeFloats(0, 0.5f, 1);
+                    RecenterCamY.ThreeFloats(0, 0.5f, 1);
                 }
             }
             
@@ -199,8 +199,8 @@ namespace MyTownProject.Interaction
                 }
                 if (currentTarget == null && _closestTarget == null) {
                     CC.TransitionToState(CharacterState.Targeting);
-                    RecenterCamX.RaiseEvent2(0, 0.1f);
-                    RecenterCamY.RaiseEvent2(0, 0.1f);
+                    RecenterCamX.ThreeFloats(0, 0.1f, 1);
+                    RecenterCamY.ThreeFloats(0, 0.1f, 1);
                     _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
                     uiEventChannel.RaiseBarsOn(0.1f);
                 } 
@@ -688,8 +688,8 @@ namespace MyTownProject.Interaction
                 CC.TransitionToState(CharacterState.Targeting);
             }
             
-            RecenterCamX.RaiseEvent2(0, 0.1f);
-            RecenterCamY.RaiseEvent2(0, 0.1f);
+            RecenterCamX.ThreeFloats(0, 0.1f, 1);
+            RecenterCamY.ThreeFloats(0, 0.1f, 1);
             _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
             uiEventChannel.RaiseBarsOn(0.1f);
         }

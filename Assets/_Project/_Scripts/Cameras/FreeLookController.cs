@@ -1,6 +1,5 @@
-using System.Security.Cryptography;
 using System.Collections;
-using System.Collections.Generic;
+using KinematicCharacterController.Examples;
 using UnityEngine;
 using MyTownProject.Events;
 using Cinemachine;
@@ -17,6 +16,7 @@ namespace MyTownProject.Cameras{
         [SerializeField] GeneralEventSO UntargetEvent;
         CinemachineFreeLook cam;
         [SerializeField] CinemachineTargetGroup _targetGroup;
+        [SerializeField] TheCharacterController CC;
 
         [Range(0.1f, 2f)][SerializeField] float _lensZoomInSpeed = 0.2f;
         [Range(0.1f, 5f)][SerializeField] float _lensZoomOutSpeed = 0.6f;
@@ -30,8 +30,8 @@ namespace MyTownProject.Cameras{
             DialogueEvents.onExit += BackToPlayerView;
             TargetingEvent.OnRaiseEvent += Target;
             UntargetEvent.OnRaiseEvent += Untarget;
-            RecenterCamX.OnRaiseEvent2 += RX;
-            RecenterCamY.OnRaiseEvent2 += RY;
+            RecenterCamX.OnRaiseEvent3 += RX;
+            RecenterCamY.OnRaiseEvent3 += RY;
             DisableRecenterCam.OnRaiseEvent += DisableRecenter;
         }
         void OnDisable(){
@@ -39,9 +39,9 @@ namespace MyTownProject.Cameras{
             DialogueEvents.onExit -= BackToPlayerView;
             TargetingEvent.OnRaiseEvent += Target;
             UntargetEvent.OnRaiseEvent -= Untarget;
-            RecenterCamX.OnRaiseEvent2 -= RX;
-            RecenterCamY.OnRaiseEvent2 -= RY;
-            DisableRecenterCam.OnRaiseEvent += DisableRecenter;
+            RecenterCamX.OnRaiseEvent3 -= RX;
+            RecenterCamY.OnRaiseEvent3 -= RY;
+            DisableRecenterCam.OnRaiseEvent -= DisableRecenter;
         }
 
         void TalkingToNPC(GameObject go, TextAsset text){
@@ -77,27 +77,27 @@ namespace MyTownProject.Cameras{
         }
 
         //RX() RY() doesnt work if recenterTime is not > 0.
-        void RX(float f1, float f2) => StartCoroutine(RecenterXAxis(f1,f2));
-        IEnumerator RecenterXAxis(float waitTime, float recenteringTime){
-            cam.m_RecenterToTargetHeading.m_WaitTime = waitTime;
-            cam.m_RecenterToTargetHeading.m_RecenteringTime = recenteringTime;
-            cam.m_RecenterToTargetHeading.m_enabled = true;
-            yield return new WaitForSeconds(waitTime + recenteringTime * 3);
-            yield return new WaitForEndOfFrame();
-            //yield return new WaitUntil(()=> Mathf.Abs(cam.m_XAxis.Value) < 0.1f);  
-            DisableRecenter();
-            yield break;
-               
-            
+        void RX(float f1, float f2, float f3) => StartCoroutine(RecenterXAxis(f1,f2, f3));
+        IEnumerator RecenterXAxis(float waitTime, float recenteringTime, float disableRecenter){
+            EnableRecenter(waitTime, recenteringTime, false);
+            // a value greater than 0 will not disable recentering
+            if(disableRecenter > 0){
+                yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 3);
+                yield return new WaitForEndOfFrame();
+                DisableRecenter();
+            }
+            yield break;  
         }
-        void RY(float f1, float f2) => StartCoroutine(RecenterYAxis(f1,f2));
-        IEnumerator RecenterYAxis(float waitTime, float recenteringTime){
-            cam.m_YAxisRecentering.m_WaitTime = waitTime;
-            cam.m_YAxisRecentering.m_RecenteringTime = recenteringTime;
-            cam.m_YAxisRecentering.m_enabled = true;
-            yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 3);
-            yield return new WaitForEndOfFrame();
-            DisableRecenter();
+        void RY(float f1, float f2, float f3) => StartCoroutine(RecenterYAxis(f1,f2, f3));
+        IEnumerator RecenterYAxis(float waitTime, float recenteringTime, float disableRecenter){
+            EnableRecenter(waitTime, recenteringTime, true);
+            // a value greater than 0 will not disable recentering
+            if(disableRecenter > 0){
+                yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 3);
+                yield return new WaitForEndOfFrame();
+                DisableRecenter();
+            }
+            
             yield break;
         }
 
@@ -105,6 +105,22 @@ namespace MyTownProject.Cameras{
             cam.m_RecenterToTargetHeading.m_enabled = false;
             cam.m_YAxisRecentering.m_enabled = false;
         }
+
+        void EnableRecenter(float waitTime, float recenteringTime, bool recenterY){
+            //Recenters Y Axis
+            if(recenterY){
+                cam.m_YAxisRecentering.m_WaitTime = waitTime;
+                cam.m_YAxisRecentering.m_RecenteringTime = recenteringTime;
+                cam.m_YAxisRecentering.m_enabled = true;
+            }
+            //Recenters X Axis
+            else{
+                cam.m_RecenterToTargetHeading.m_WaitTime = waitTime;
+                cam.m_RecenterToTargetHeading.m_RecenteringTime = recenteringTime;
+                cam.m_RecenterToTargetHeading.m_enabled = true;
+            }
+        }
+        
         void Update(){
             
             

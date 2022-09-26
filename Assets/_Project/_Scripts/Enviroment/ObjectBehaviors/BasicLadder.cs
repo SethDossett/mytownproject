@@ -189,8 +189,8 @@ namespace MyTownProject.Enviroment{
                 _ladderCollider.enabled = false;
                 CC._newCenteredPosition = transform.position + _StartPosBottom;
                 CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
-                RecenterCamX.OnRaiseEvent2(0,0.35f);
-                RecenterCamY.OnRaiseEvent2(0,0.35f);
+                RecenterCamX.ThreeFloats(0,0.35f, 1);
+                RecenterCamY.ThreeFloats(0,0.35f, 1);
             }
             else{//When player is getting on the Top of the Ladder
                 _ladderForward = transform.right;
@@ -224,8 +224,8 @@ namespace MyTownProject.Enviroment{
             
             _onLadder = true;
             yield return new WaitForEndOfFrame();
-            RecenterCamX.OnRaiseEvent2(0,0.35f);
-            RecenterCamY.OnRaiseEvent2(0,0.35f);
+            RecenterCamX.ThreeFloats(0,0.35f, 1);
+            RecenterCamY.ThreeFloats(0,0.35f, 1);
             yield return new WaitForSecondsRealtime(0.45f);
             _exitLadderCalled = false;
             inputActions.Enable();
