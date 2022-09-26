@@ -959,12 +959,15 @@ MonoBehaviour:
   MaxAirMoveSpeed: 4
   AirAccelerationSpeed: 10
   Drag: 0.1
+  _restrictJumping: 0
   AllowJumpingWhenSliding: 0
   JumpUpSpeed: 6
   JumpScalableForwardSpeed: 3.5
   JumpPreGroundingGraceTime: 0
   JumpPostGroundingGraceTime: 0
   _speedNeededToJump: 4
+  CanHang: 0
+  _isHanging: 0
   _newCenteredPosition: {x: 0, y: 0, z: 0}
   _newLadderRotation: {x: 0, y: 0, z: 0, w: 0}
   _climbSpeedY: 2
@@ -1078,15 +1081,16 @@ MonoBehaviour:
     m_Bits: 64
   _downCastOffset: {x: 0, y: 3, z: 0.6}
   _endOffset: {x: 0, y: 0, z: 0.2}
-  _hangOffset: {x: 0, y: 1.8, z: -0.2}
+  _hangOffset: {x: 0, y: -1.8, z: -0.2}
   _isClimbing: 0
   _overPassHeight: 1.8
+  _downRaycastHitDis: 0
   _groudAngleMax: 60
   _wallAngleMax: 8
-  _hangHeight: 2.1
-  _climbUpHeight: 0.9
-  _vaultHeight: 0.4
-  _stepUpHeight: 0.25
+  _hangHeight: 1.4
+  _climbUpHeight: 0.8
+  _vaultHeight: 0.65
+  _stepUpHeight: 0.4
 --- !u!114 &676443548
 MonoBehaviour:
   m_ObjectHideFlags: 0

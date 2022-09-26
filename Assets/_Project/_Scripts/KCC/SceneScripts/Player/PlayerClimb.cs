@@ -31,6 +31,7 @@ namespace KinematicCharacterController.Examples{
         public bool _isClimbing;
         [SerializeField] float _overPassHeight;
         float _climbHeight;
+        public float _downRaycastHitDis;
         Vector3 _forwardDirectionXZ;
         Vector3 _forwardNormalXZ;
         [SerializeField] float _groudAngleMax;
@@ -94,7 +95,9 @@ namespace KinematicCharacterController.Examples{
         //Look for ledge Raycasts
         //bool LedgeCast(){}
         bool DownCast(){
-            return Physics.Raycast(_downOrigin, Vector3.down, out _downHitInfo, _downCastOffset.y - 0.4f, _groundLayer);
+            // was downcastoffset.y - 0.4f, so it did not go lower than step height,
+            // but now i want low enough that i can see if i can hang.
+            return Physics.Raycast(_downOrigin, Vector3.down, out _downHitInfo, _downCastOffset.y + 1.5f, _groundLayer);
         }
         bool ForwardCast(){
             return Physics.Raycast(_forwardCastOffset, transform.forward, out _forwardHitInfo, 5f, _groundLayer);
@@ -109,15 +112,20 @@ namespace KinematicCharacterController.Examples{
             forwardRaycastHit = new RaycastHit();
 
             _downOrigin = transform.TransformPoint(_downCastOffset);
-            if(!DownCast()) return false;
+            if(!DownCast()){
+                CC.CanHang = true;
+                return false;
+            }
+            CC.CanHang = false; 
+            _downRaycastHitDis = _downHitInfo.point.y - transform.position.y;
+            if(_downRaycastHitDis <= 0.4f) return false;
             _forwardCastOffset = new Vector3(transform.position.x, _downHitInfo.point.y, transform.position.z);
             _overPassCastOffset = new Vector3(transform.position.x, transform.position.y + _overPassHeight, transform.position.z);
 
             _forwardDirectionXZ = Vector3.ProjectOnPlane(transform.forward,Vector3.up);
-
             if(!ForwardCast()) return false;
             _climbHeight = _downHitInfo.point.y - transform.position.y;    
-            
+            if(_climbHeight <= 0.4f) return false; // so that we dont try to climb if object is less than step height
             if(OverPassCast() || _climbHeight < _overPassHeight){
                 
                 _forwardNormalXZ = Vector3.ProjectOnPlane(_forwardHitInfo.normal, Vector3.up);
@@ -178,47 +186,38 @@ namespace KinematicCharacterController.Examples{
         }
 
         void InitiateClimb(){
-
+            CC.TransitionToState(CharacterState.Climbing);
+            _isClimbing = true;
             float climbHeight = _downHitInfo.point.y - transform.position.y;
             Vector3 forwardNormalXZ = Vector3.ProjectOnPlane(_forwardHitInfo.normal, Vector3.up);
             _forwardNormalXZRotation = Quaternion.LookRotation(-forwardNormalXZ, Vector3.up);
             if(climbHeight > _hangHeight){
-                _isClimbing = true;
                 _matchTargetPosition = _forwardHitInfo.point + _forwardNormalXZRotation * _hangOffset;
+                //_matchTargetPosition = _downHitInfo.point;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                //CC.TransitionToState(CharacterState.Jumping);
-                CC.Motor.ForceUnground();
-                CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
+                StartCoroutine(DoClimb(1, _matchTargetPosition, 5));
                 _animator.CrossFadeInFixedTime(anim_JumpToHang, 0, 0);
+                CC._isHanging = true;
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
             }
             else if(climbHeight > _climbUpHeight){
-                _isClimbing = true;
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                //CC.TransitionToState(CharacterState.Jumping);
-                CC.Motor.ForceUnground();
-                CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
+                StartCoroutine(DoClimb(1, _matchTargetPosition, 5));
                 _animator.CrossFadeInFixedTime(anim_ClimbUp, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.23f);
             }
             else if(climbHeight > _vaultHeight){
-                _isClimbing = true;
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                //CC.TransitionToState(CharacterState.Jumping);
-                CC.Motor.ForceUnground();
-                CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
+                StartCoroutine(DoClimb(1, _matchTargetPosition, 5));
                 _animator.CrossFadeInFixedTime(anim_Vault, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.05f, 0.16f);
             }
             else if(climbHeight > _stepUpHeight){
-                _isClimbing = true;
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                //CC.TransitionToState(CharacterState.Jumping);
-                CC.Motor.ForceUnground();
-                CC.Motor.SetTransientPosition(_matchTargetPosition,true, 5);
+                StartCoroutine(DoClimb(1, _matchTargetPosition, 5));
                 _animator.CrossFadeInFixedTime(anim_StepUp, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.12f);
             }
@@ -227,6 +226,18 @@ namespace KinematicCharacterController.Examples{
             }
         }
 
+
+        IEnumerator DoClimb(float loopTime, Vector3 goalPos, float speed){
+            CC._gettingOnOffObstacle = true;
+            float timer = 0;
+            while(timer < loopTime){
+                timer += Time.deltaTime;
+                CC.Motor.SetTransientPosition(goalPos, true, speed);
+                yield return null;
+            }
+            CC._gettingOnOffObstacle = false;
+            yield break;
+        }
         bool InAirCheck(){
             return false;
         }

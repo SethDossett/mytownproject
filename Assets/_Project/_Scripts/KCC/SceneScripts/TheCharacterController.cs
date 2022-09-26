@@ -70,6 +70,7 @@ namespace KinematicCharacterController.Examples
         float _offGroundTimeBuffer;
 
         [Header("Jumping")]
+        public bool _restrictJumping;
         public bool AllowJumpingWhenSliding = false;
         public float JumpUpSpeed = 10f;
         public float JumpScalableForwardSpeed = 10f;
@@ -78,9 +79,11 @@ namespace KinematicCharacterController.Examples
         [SerializeField] [Range(0f, 10f)]float _speedNeededToJump = 4.5f; 
 
         [Header("Climbing")]
+        public bool CanHang;
         float _climbTimer;
         Vector3 _ledgeDirection;
         bool _dropDownRequested;
+        public bool _isHanging;
 
         [Header("ClimbingLadder")]
         public Vector3 _newCenteredPosition;
@@ -816,56 +819,46 @@ namespace KinematicCharacterController.Examples
                             currentVelocity *= (1f / (1f + (Drag * deltaTime)));
                         }
                         //Needs To be put in its own state.
-                        // Handle jumping 
-                        _jumpedThisFrame = false;
-                        _timeSinceJumpRequested += deltaTime;
-                        if (_jumpRequested && currentVelocity.magnitude >= _speedNeededToJump)
-                        {
-                            // See if we actually are allowed to jump
-                            if (!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime))
+                        // Handle jumping
+                        if(!_restrictJumping) {
+
+                            _jumpedThisFrame = false;
+                            _timeSinceJumpRequested += deltaTime;
+                            if (_jumpRequested && currentVelocity.magnitude >= _speedNeededToJump)
                             {
-                                // Calculate jump direction before ungrounding
-                                Vector3 jumpDirection = Motor.CharacterUp;
-                                if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround)
+                                // See if we actually are allowed to jump
+                                if (!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime))
                                 {
-                                    jumpDirection = Motor.GroundingStatus.GroundNormal;
+                                    // Calculate jump direction before ungrounding
+                                    Vector3 jumpDirection = Motor.CharacterUp;
+                                    if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround)
+                                    {
+                                        jumpDirection = Motor.GroundingStatus.GroundNormal;
+                                    }
+
+                                    // Makes the character skip ground probing/snapping on its next update. 
+                                    // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
+                                    Motor.ForceUnground();
+
+                                    // Add to the return velocity and reset jump state
+                                    //currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                                    currentVelocity = (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                                    currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
+                                    _jumpRequested = false;
+                                    _jumpConsumed = true;
+                                    _jumpedThisFrame = true;
+                                    _animator.SetBool(anim_jumpTrigger, true);
+                                    TransitionToState(CharacterState.Jumping);
                                 }
-
-                                // Makes the character skip ground probing/snapping on its next update. 
-                                // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
-                                Motor.ForceUnground();
-
-                                // Add to the return velocity and reset jump state
-                                //currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
-                                currentVelocity = (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
-                                currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
-                                _jumpRequested = false;
-                                _jumpConsumed = true;
-                                _jumpedThisFrame = true;
-                                _animator.SetBool(anim_jumpTrigger, true);
-                                TransitionToState(CharacterState.Jumping);
+                            }
+                            //Drop To Hang
+                            else if(_jumpRequested && currentVelocity.magnitude < _speedNeededToJump){
+                                if(CanHang){
+                                    currentVelocity = Vector3.zero;
+                                    StartCoroutine(DropToHang());
+                                }
                             }
                         }
-                        //Drop To Hang
-                        else if(_jumpRequested && currentVelocity.magnitude < _speedNeededToJump){
-                            print("droptohang");
-                            _gettingOnOffObstacle = true;
-                            _ledgeDirection = CurrentHitStabilityReport.LedgeFacingDirection;
-                            _jumpRequested = false;
-                            _jumpConsumed = true; //Precautionary
-                            _jumpedThisFrame = true; //Precautionary
-                            _timeFallingInAir = 0;
-                            _startFallingTimer = false;
-                            playerClimb._isClimbing = true;
-                            currentVelocity = Vector3.zero;
-                            Gravity = Vector3.zero;
-                            Motor.Capsule.enabled = false;
-                            _animator.CrossFadeInFixedTime(anim_DropToHang, 0.1f, 0);
-                            Vector3 goalPos = transform.TransformPoint(new Vector3(0, -1.3f, 0.1f));
-                            StartCoroutine(DropToHang(goalPos));
-                            TransitionToState(CharacterState.Climbing);
-                        }
-
                         // Take into account additive velocity
                         //Does not currently get called
                         if (_internalVelocityAdd.sqrMagnitude > 0f)
@@ -936,31 +929,11 @@ namespace KinematicCharacterController.Examples
                             _dropDownRequested = false;
                             return;
                         } 
-
-                        float dot = Vector3.Dot(_moveInputVector, _ledgeDirection);
-                        print(dot);
-                        //Press towards ledge to climb up
-                        if(dot <= -0.9f){
-                            _climbTimer += Time.deltaTime;
-                            if(_climbTimer >= 0.3f){
-                                _climbTimer = 0;
-                                _gettingOnOffObstacle = true;
-                                _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f,0);
-                                StartCoroutine(ClimbBackUp());
-                            }
-                        }
-                        //Could Slide if held left or right
-                        else{
-                            _climbTimer = 0;
+                        if(_isHanging){
+                            HangingChecks();
                         }
 
-                        //Pressed Interact Btn to drop
-                        if(_dropDownRequested){
-                            _dropDownRequested = false;
-                            Motor.Capsule.enabled = true;
-                            TransitionToState(CharacterState.Default);
-                            _gettingOnOffObstacle = false;
-                        }  
+
                         break;
                     }       
                 case CharacterState.ClimbLadder:
@@ -1417,15 +1390,53 @@ namespace KinematicCharacterController.Examples
             
         }
 
-        //Make into One Method?
-        IEnumerator DropToHang(Vector3 pos){
-            //Disable Controls
+        void HangingChecks(){
+            float dot = Vector3.Dot(_moveInputVector, _ledgeDirection);
+            print(dot);
+            //Press towards ledge to climb up
+            if(dot <= -0.9f){
+                _climbTimer += Time.deltaTime;
+                if(_climbTimer >= 0.3f){
+                    _climbTimer = 0;
+                    _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f,0);
+                    StartCoroutine(ClimbBackUp());
+                }
+            }
+            //Could Slide if held left or right
+            else{
+                _climbTimer = 0;
+            }
+            //Pressed Interact Btn to drop
+            if(_dropDownRequested){
+                _dropDownRequested = false;
+                Motor.Capsule.enabled = true;
+                TransitionToState(CharacterState.Default);
+                _gettingOnOffObstacle = false;
+                _isHanging = false;
+            } 
+        
+        }
+        IEnumerator DropToHang(){
+            print("droptohang");
+            _gettingOnOffObstacle = true;
+            _ledgeDirection = CurrentHitStabilityReport.LedgeFacingDirection;
+            _jumpRequested = false;
+            _jumpConsumed = true; //Precautionary
+            _jumpedThisFrame = true; //Precautionary
+            _timeFallingInAir = 0;
+            _startFallingTimer = false;
+            playerClimb._isClimbing = true;
+            _isHanging = true;
+            Gravity = Vector3.zero;
+            Motor.Capsule.enabled = false;
+            _animator.CrossFadeInFixedTime(anim_DropToHang, 0.1f, 0);
+            Vector3 goalPos = transform.TransformPoint(new Vector3(0, -1.3f, 0.1f));
+            TransitionToState(CharacterState.Climbing);
             
-            float dis = Vector3.Distance(Motor.TransientPosition, pos);
             float timer = 0;
             while(timer < 1){
                 timer += Time.deltaTime;
-                Motor.SetTransientPosition(pos, true, 5);
+                Motor.SetTransientPosition(goalPos, true, 5);
                 yield return null;
             }
             _gettingOnOffObstacle = false;
@@ -1435,8 +1446,8 @@ namespace KinematicCharacterController.Examples
         }
         IEnumerator ClimbBackUp(){
             //Disable Controls
+            _gettingOnOffObstacle = true;
             Vector3 goalPos = transform.TransformPoint(new Vector3(0, 1.3f, 0.3f));
-            float dis = Vector3.Distance(Motor.TransientPosition, goalPos);
             float timer = 0;
             while(timer < 1){
                 timer += Time.deltaTime;
@@ -1449,7 +1460,7 @@ namespace KinematicCharacterController.Examples
             //Moveinputvector needs to be 0 at this point.
             TransitionToState(CharacterState.Default);
             _gettingOnOffObstacle = false;
-
+            _isHanging = false;
             yield break;
         }
 

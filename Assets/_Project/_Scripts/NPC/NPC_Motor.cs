@@ -10,7 +10,7 @@ namespace MyTownProject.NPC
         [SerializeField] NPC_ScriptableObject NPC;
         [SerializeField] TransformEventSO playerRef;
         [SerializeField] DialogueEventsSO dialogueEvents;
-        Transform _player;
+        [SerializeField] Transform _player;
         Rigidbody rb;
         [Range(20f, 300f)][SerializeField] float _rotSpeed = 100f;
         bool _talking = false;
