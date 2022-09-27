@@ -83,9 +83,8 @@ namespace KinematicCharacterController.Examples{
 
             //Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
             Vector3 input = CC._moveInputVector;
-            _forwardDirectionXZ = Vector3.ProjectOnPlane(transform.forward,Vector3.up);
-            float dot = Vector3.Dot(input, _forwardDirectionXZ);
-            if(dot >= 0.95f){
+            float dot = Vector3.Dot(input, transform.forward.normalized);
+            if(dot >= 0.9f){
                 if(CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition)){
                     InitiateClimb();
                 }
@@ -187,7 +186,7 @@ namespace KinematicCharacterController.Examples{
 
             return sweepHit;
         }
-
+        [SerializeField] float amount;
         void InitiateClimb(){
             CC.TransitionToState(CharacterState.Climbing);
             _isClimbing = true;
@@ -195,11 +194,12 @@ namespace KinematicCharacterController.Examples{
             Vector3 forwardNormalXZ = Vector3.ProjectOnPlane(_forwardHitInfo.normal, Vector3.up);
             _forwardNormalXZRotation = Quaternion.LookRotation(-forwardNormalXZ, Vector3.up);
             if(climbHeight > _hangHeight){
-                _matchTargetPosition = _forwardHitInfo.point + _forwardNormalXZRotation * _hangOffset;
-                //_matchTargetPosition = _downHitInfo.point;
+                //_matchTargetPosition = _forwardHitInfo.point + _forwardNormalXZRotation * _hangOffset;
+                _matchTargetPosition = transform.TransformPoint(0, climbHeight - 1.21f, amount);
                 _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(1, _matchTargetPosition, _matchTargetRotation, 5));
-                _animator.CrossFadeInFixedTime(anim_JumpToHang, 0, 0);
+                CC.Motor.Capsule.enabled = false;
+                StartCoroutine(DoClimb(1, _matchTargetPosition, transform.rotation, 5));
+                _animator.CrossFadeInFixedTime(anim_JumpToHang, .25f, 0);
                 CC._isHanging = true;
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
             }

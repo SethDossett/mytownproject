@@ -924,7 +924,7 @@ MonoBehaviour:
   AllowSteppingWithoutStableGrounding: 0
   MinRequiredStepDepth: 0.1
   LedgeAndDenivelationHandling: 1
-  MaxStableDistanceFromLedge: 0.44
+  MaxStableDistanceFromLedge: 0.38
   MaxVelocityForLedgeSnap: 0
   MaxStableDenivelationAngle: 180
   InteractiveRigidbodyHandling: 1
@@ -1081,7 +1081,7 @@ MonoBehaviour:
     m_Bits: 64
   _downCastOffset: {x: 0, y: 3, z: 0.6}
   _endOffset: {x: 0, y: 0, z: 0.2}
-  _hangOffset: {x: 0, y: -1.8, z: -0.2}
+  _hangOffset: {x: 0, y: -1.5, z: -0.3}
   _isClimbing: 0
   _overPassHeight: 1.8
   _downRaycastHitDis: 0
@@ -1091,6 +1091,7 @@ MonoBehaviour:
   _climbUpHeight: 0.8
   _vaultHeight: 0.65
   _stepUpHeight: 0.4
+  amount: 0.3
 --- !u!114 &676443548
 MonoBehaviour:
   m_ObjectHideFlags: 0

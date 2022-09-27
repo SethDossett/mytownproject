@@ -225,79 +225,6 @@ namespace MyTownProject.Interaction
             }
 
         }
-        #region Old Raycast Method
-        //private void CheckForInteractable()
-
-        //{
-        //    Ray ray = new Ray(_transform.position + _offset, _transform.forward);
-        //    Debug.DrawRay(ray.origin, ray.direction * _interactRayLength);
-        //    Debug.DrawRay(ray.origin, ray.direction * 2f, Color.green);
-        //    if (Physics.Raycast(ray, out _hitinfo, _interactRayLength))
-        //    {
-        //        
-        //        _interactable = _hitinfo.collider.GetComponent<IInteractable>();
-        //        if(_interactable == null)
-        //        {
-        //            if (_interactable != null)
-        //            {
-        //                _interactable.OnLoseFocus();
-        //                uiEventChannel.HideTextInteract();
-        //                _interactable = null;
-        //                return;
-        //            }
-        //            return;
-        //        }
-
-        //        if (!_interactable.CanBeInteractedWith || _hitinfo.distance > _interactable.MaxNoticeRange)
-        //        {
-        //            if (_interactable != null)
-        //            {
-        //                _interactable.OnLoseFocus();
-        //                uiEventChannel.HideTextInteract();
-        //                _interactable = null;
-        //                return;
-        //            }
-        //            return;
-        //        }
-
-        //        uiEventChannel.ShowTextInteract(_interactable.Prompt);
-        //        //currentTarget.OnFocus(_hitinfo.collider.gameObject.name);
-
-        //        if (_interact.WasPerformedThisFrame()) _interactable.OnInteract(this);
-
-        //    }
-        //    else
-        //    {
-        //        if (_interactable != null) _interactable = null;
-        //        
-        //        uiEventChannel.HideTextInteract();
-        //    }
-        //}
-        #endregion
-        #region Old Overlap Sphere Method
-        //private void Interactor()
-        //{
-        //    _numFound = Physics.OverlapSphereNonAlloc(_interactionPoint.position, _interactionPointRadius, _colliders, _interactableMask);
-//
-        //    
-        //    if (_numFound > 0)
-        //    {
-        //        _interactable = _colliders[0].GetComponentInParent<IInteractable>();
-        //        
-        //        if (_interactable == null) return;
-//
-        //        uiEventChannel.ShowTextInteract(_interactable.Prompt);
-//
-        //        if (_interact.WasPerformedThisFrame()) _interactable.OnInteract(this);
-        //    }
-        //    else
-        //    {
-        //        if (_interactable != null) _interactable = null;
-//
-        //        uiEventChannel.HideTextInteract();
-        //    }
-        //}
-        #endregion
         void CheckTimer()
         {
             if (_startTimer)
@@ -373,7 +300,6 @@ namespace MyTownProject.Interaction
                     _closestTarget = null;
                     ResetTarget();
                 }
-                print("Blocked");
                 return;
             } 
             if(GetDistance(transform, closestTarget) > closestTarget.GetComponent<IInteractable>().MaxNoticeRange){
@@ -399,7 +325,6 @@ namespace MyTownProject.Interaction
             }
             if (Blocked(t.position + Vector3.up * 1.2f)){ //
                 t.gameObject.GetComponent<NPC_Interact>()._hovered = false;
-                print("Blocked");
                  return false;
             }
             if(GetAngle(t.position,transform.position,transform.forward, 0) > maxNoticeAngle){
