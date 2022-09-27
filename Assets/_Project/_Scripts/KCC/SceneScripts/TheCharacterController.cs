@@ -580,8 +580,10 @@ namespace KinematicCharacterController.Examples
                     }     
                case CharacterState.Climbing:
                     {
-                        Quaternion toRot = Quaternion.LookRotation(-_ledgeDirection, Vector3.up); 
-                        currentRotation = Quaternion.RotateTowards(transform.rotation, toRot, 500 * Time.deltaTime); 
+                        if(_isHanging){
+                            Quaternion toRot = Quaternion.LookRotation(-_ledgeDirection, Vector3.up); 
+                            currentRotation = Quaternion.RotateTowards(transform.rotation, toRot, 500 * Time.deltaTime); 
+                        }
                         break;
                     }       
                 case CharacterState.ClimbLadder:
@@ -1347,18 +1349,17 @@ namespace KinematicCharacterController.Examples
         protected void OnLanded()
         {
             if(_hardLanding){
-                playerClimb._isClimbing = false;
-                _startFallingTimer = false;
                 _animator.CrossFade(_hardLandState, 0f, 0);
                 _hardLanding = false;
-                _timeFallingInAir = 0f;
             }
             else{
-                playerClimb._isClimbing = false;
                 _animator.SetBool(anim_landTrigger, true); 
-                _timeFallingInAir = 0f;
-                _startFallingTimer = false;
             }
+            
+            playerClimb._isClimbing = false;
+            _timeFallingInAir = 0f;
+            _startFallingTimer = false;
+            _isHanging = false;
             TransitionToState(CharacterState.Default);
         }
 
@@ -1392,14 +1393,14 @@ namespace KinematicCharacterController.Examples
 
         void HangingChecks(){
             float dot = Vector3.Dot(_moveInputVector, _ledgeDirection);
-            print(dot);
+            Quaternion rot = Quaternion.Euler(transform.forward);
             //Press towards ledge to climb up
             if(dot <= -0.9f){
                 _climbTimer += Time.deltaTime;
                 if(_climbTimer >= 0.3f){
                     _climbTimer = 0;
                     _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f,0);
-                    StartCoroutine(ClimbBackUp());
+                    StartCoroutine(ClimbBackUp(rot));
                 }
             }
             //Could Slide if held left or right
@@ -1444,23 +1445,23 @@ namespace KinematicCharacterController.Examples
             yield break;
             
         }
-        IEnumerator ClimbBackUp(){
+        IEnumerator ClimbBackUp(Quaternion goalRot){
             //Disable Controls
             _gettingOnOffObstacle = true;
+            _isHanging = false;
             Vector3 goalPos = transform.TransformPoint(new Vector3(0, 1.3f, 0.3f));
             float timer = 0;
             while(timer < 1){
                 timer += Time.deltaTime;
                 Motor.SetTransientPosition(goalPos, true, 1.8f);
+                Motor.SetRotation(goalRot);
                 yield return null;
             }
             print("done2");
             Motor.Capsule.enabled = true;
-            Motor.SetRotation(Quaternion.identity);
             //Moveinputvector needs to be 0 at this point.
             TransitionToState(CharacterState.Default);
             _gettingOnOffObstacle = false;
-            _isHanging = false;
             yield break;
         }
 
