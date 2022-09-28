@@ -248,6 +248,7 @@ namespace KinematicCharacterController.Examples
                     }    
                 case CharacterState.ClimbLadder:
                     {
+                        playerClimb._isClimbing = true;
                         _animator.CrossFadeInFixedTime(_climbState, 0.2f, 0);
                         break;
                     }
@@ -293,13 +294,12 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Climbing:
                     {
                         _animator.CrossFadeInFixedTime(_idleState, 0.25f, 0);
-                        playerClimb._isClimbing = false;
                         break;
                     }       
                 case CharacterState.ClimbLadder:
                     {
                         _onLadder = false;
-                        print("EXIT CLIMB");
+                        print("EXIT LADDER");
                         _animator.CrossFadeInFixedTime(_idleState, 0, 0);
                         break;
                     }
@@ -930,6 +930,7 @@ namespace KinematicCharacterController.Examples
                     {
                         //During Animation, we dont want to be able to move
                         if(_gettingOnOffObstacle){
+                            currentVelocity = Vector3.zero;
                             _dropDownRequested = false;
                             return;
                         } 

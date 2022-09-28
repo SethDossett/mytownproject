@@ -16,6 +16,7 @@ namespace KinematicCharacterController.Examples{
         [SerializeField] Vector3 _downCastOffset;
         Vector3 _forwardCastOffset;
         Vector3 _overPassCastOffset;
+        float _downCastRayLength = 1.5f;
 
         [Header("Positions")]
         [SerializeField] Vector3 _endOffset;
@@ -28,7 +29,6 @@ namespace KinematicCharacterController.Examples{
         RaycastHit _overPassHitInfo;
 
         [Header("Values")]
-        public bool _isClimbing;
         [SerializeField] float _overPassHeight;
         float _climbHeight;
         public float _downRaycastHitDis;
@@ -38,6 +38,14 @@ namespace KinematicCharacterController.Examples{
         [SerializeField] float _wallAngleMax;
         float _groudAngle;
         float _wallAngle;
+        [SerializeField] [Range(0f,0.6f)] float _climbBufferTime = 0.3f;
+        float timer = 0;
+
+        [Header("Checks")]
+        public bool _isClimbing;
+        bool _onGround;
+
+
         
 
         [Header("Heights")]
@@ -65,6 +73,7 @@ namespace KinematicCharacterController.Examples{
 
         private void OnEnable() {
             inputActions.GamePlay.Enable();
+            TheCharacterController.OnPlayerStateChanged += PlayerStateChange;
         }
         private void OnDisable() {
             inputActions.GamePlay.Enable();
@@ -77,10 +86,27 @@ namespace KinematicCharacterController.Examples{
             CC = GetComponent<TheCharacterController>();
             _capsule = GetComponent<CapsuleCollider>();
         }
+        void PlayerStateChange(CharacterState state){
+            if(state == CharacterState.Default){
+                _onGround = true;
+                _isClimbing = false;
+            }
+            else if(state == CharacterState.Jumping){
+                _onGround = false;
+                _isClimbing = false;
+            }
+            else{
+                _isClimbing = true;
+            }
+        }
         void Update()
         {
             if(_isClimbing) return;
 
+            if(!_onGround) InAirCheck(); else GroundCheck();
+
+        }
+        void GroundCheck(){
             //Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
             Vector3 input = CC._moveInputVector;
             float dot = Vector3.Dot(input, transform.forward.normalized);
@@ -88,18 +114,20 @@ namespace KinematicCharacterController.Examples{
                 if(CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition)){
                     InitiateClimb();
                 }
+                else timer = 0;
             }
         }
-        void OnAnimatorMove() {
-            if(_animator.isMatchingTarget)
-                _animator.ApplyBuiltinRootMotion();
+        void InAirCheck(){
+            if(DetectLedge()){
+                print("grab ledge");
+            }
+            return;
         }
-        //Look for ledge Raycasts
         //bool LedgeCast(){}
         bool DownCast(){
             // was downcastoffset.y - 0.4f, so it did not go lower than step height,
             // but now i want low enough that i can see if i can hang.
-            return Physics.Raycast(_downOrigin, Vector3.down, out _downHitInfo, _downCastOffset.y + 1.5f, _groundLayer);
+            return Physics.Raycast(_downOrigin, Vector3.down, out _downHitInfo, _downCastOffset.y + _downCastRayLength, _groundLayer);
         }
         bool ForwardCast(){
             return Physics.Raycast(_forwardCastOffset, transform.forward, out _forwardHitInfo, 5f, _groundLayer);
@@ -160,12 +188,17 @@ namespace KinematicCharacterController.Examples{
 
                 if(!upSweepHit && !forwardSweepHit)
                 {
-                    endPosition = _endPosition;
-                    downRaycastHit = _downHitInfo;
-                    forwardRaycastHit = _forwardHitInfo;
-                    print("CanClimb");
-                    return true;
+                    timer += Time.deltaTime;
+                    if(timer >= _climbBufferTime){
+                        timer = 0;
+                        endPosition = _endPosition;
+                        downRaycastHit = _downHitInfo;
+                        forwardRaycastHit = _forwardHitInfo;
+                        print("CanClimb");
+                        return true;
+                    }
                 }
+                else timer = 0;
 
             }
             return false;
@@ -186,7 +219,7 @@ namespace KinematicCharacterController.Examples{
 
             return sweepHit;
         }
-        [SerializeField] float amount;
+        [SerializeField] float amount; // set distance and dispose variable
         void InitiateClimb(){
             CC.TransitionToState(CharacterState.Climbing);
             _isClimbing = true;
@@ -221,7 +254,7 @@ namespace KinematicCharacterController.Examples{
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
                 StartCoroutine(DoClimb(1, _matchTargetPosition, _matchTargetRotation, 5));
-                _animator.CrossFadeInFixedTime(anim_StepUp, 0, 0);
+                _animator.CrossFadeInFixedTime(anim_StepUp, 0.1f, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.12f);
             }
             else{
@@ -236,16 +269,42 @@ namespace KinematicCharacterController.Examples{
             while(timer < loopTime){
                 timer += Time.deltaTime;
                 CC.Motor.SetTransientPosition(goalPos, true, speed);
+                //CC.Motor.SetPosition(goalPos);
                 CC.Motor.SetRotation(goalRot);
                 yield return null;
             }
             CC._gettingOnOffObstacle = false;
             yield break;
         }
-        bool InAirCheck(){
+        
+        bool DetectLedge(){
+            //downcast if there is a ledge infront of player
+            _downOrigin = transform.TransformPoint(_downCastOffset);
+            if(!DownCast()) return false;
+
+            //Send forwardcast to see what angle player is facing
+            _forwardCastOffset = new Vector3(transform.position.x, _downHitInfo.point.y, transform.position.z);
+            _forwardDirectionXZ = Vector3.ProjectOnPlane(transform.forward,Vector3.up);
+            if(!ForwardCast()) return false;
+            _wallAngle = Vector3.Angle(-_forwardNormalXZ,_forwardDirectionXZ);
+            if(_wallAngle > _wallAngleMax + 5) return false;
+
+            //check distance from players feet to ledge
+            _downRaycastHitDis = _downHitInfo.point.y - transform.position.y;
+            if(_downRaycastHitDis > 0.5f){
+                CC.TransitionToState(CharacterState.Climbing);
+                _isClimbing = true;
+                _matchTargetPosition = transform.TransformPoint(0, _downRaycastHitDis - 1.21f, amount);
+                _matchTargetRotation = transform.rotation;
+                CC.Motor.Capsule.enabled = false;
+                StartCoroutine(DoClimb(1, _matchTargetPosition, _matchTargetRotation, 10));
+                _animator.CrossFadeInFixedTime(anim_Hang, .25f, 0);
+                CC._isHanging = true;
+                return true;
+            }
+
             return false;
         }
-
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
