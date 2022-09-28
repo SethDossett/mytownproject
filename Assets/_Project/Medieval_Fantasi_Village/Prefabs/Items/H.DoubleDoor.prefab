@@ -92,8 +92,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0109c6d86ee08b341a2d6f8f7ee7c863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <MaxRange>k__BackingField: 1
+  <IsVisible>k__BackingField: 0
+  <MaxNoticeRange>k__BackingField: 3
+  <MaxInteractRange>k__BackingField: 1
   <CanBeInteractedWith>k__BackingField: 1
+  <CanBeTargeted>k__BackingField: 0
   <Prompt>k__BackingField: Open
   mainEventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   _interactionDoor: {fileID: 11400000, guid: 4a078630cf4eb4f4ea2587087df13fca, type: 2}

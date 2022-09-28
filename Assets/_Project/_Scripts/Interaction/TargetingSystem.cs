@@ -35,7 +35,6 @@ namespace MyTownProject.Interaction
         [SerializeField] CameraFollow camFollow;
         [SerializeField] Transform lockOnCanvas;
         Transform cam;
-        //DefMovement defMovement;
         [SerializeField] Transform enemyTarget_Locator;
         CharacterState currentCharacterState;
         private GameStateManager.GameState _game_Playing_State;
@@ -64,6 +63,8 @@ namespace MyTownProject.Interaction
         [SerializeField] Vector3 pos;
         bool _freeLookCameraOff;
         bool _resettingTarget;
+        Vector3 _npcRayPoint = new Vector3(0, 1.2f, 0);
+        Vector3 _playerRayPoint = new Vector3(0, 1.5f, 0);
         
         float _timer = 0;
         bool _startTimer;
@@ -79,6 +80,7 @@ namespace MyTownProject.Interaction
         [Header("Targets")]
         [SerializeField] Collider[] nearbyTargets;
         [SerializeField] List<Transform> remainingTargets = new List<Transform>();
+        [SerializeField] List<Transform> AvailableTargets = new List<Transform>();
 
        
         private void OnEnable()
@@ -150,18 +152,12 @@ namespace MyTownProject.Interaction
         {
             if (!canRaycast) return;
 
-
-            //CheckForInteractable();//old version
-            //Interactor();//old version
             CC._hasTargetToLockOn = _enemyLocked;
             camFollow.lockedTarget = _enemyLocked;
-            //defMovement.lockMovement = enemyLocked;
             if(currentTarget && _freeLookCameraOff){ // might not want, it is janky, transitioning from kcc to freelook cam.
                 if(_cameraInput.ReadValue<Vector2>().magnitude > 0){
-                    _freeLookCameraOff = false;
-                    cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
-                    RecenterCamX.ThreeFloats(0, 0.5f, 1);
-                    RecenterCamY.ThreeFloats(0, 0.5f, 1);
+                    ChangeCamera();
+                    RecenterCamera(0, 0.5f, 1);
                 }
             }
             
@@ -216,7 +212,7 @@ namespace MyTownProject.Interaction
 
             if (!_enemyLocked)
             {
-                CheckForNPCS();
+                SearchForInteractables();
             }
             if (_enemyLocked)
             {
@@ -240,12 +236,54 @@ namespace MyTownProject.Interaction
                 ResetTarget();
             }
         }
-        private void CheckForNPCS()
+        [SerializeField] float _angle;
+        void SearchForInteractables()
         {
             nearbyTargets = Physics.OverlapSphere(transform.position, noticeZone, targetLayers);
             float closestAngle = maxNoticeAngle;
             float closestDis = maxDistance;
             Transform closestTarget = null;
+
+            //Check to see what targets are available
+            foreach(var target in nearbyTargets){
+                Transform t = target.transform;
+                AvailableTargets.Add(t);
+                IInteractable interactable = t.gameObject.GetComponent<IInteractable>();
+                //Is this interactable able to be targted?
+                if(interactable == null || !interactable.IsVisible || !interactable.CanBeTargeted || interactable.BeenTargeted){
+                    AvailableTargets.Remove(t);
+                    print("Removed by initial");
+                    continue;
+                }
+                // Is Target Blocked out of sight?
+                if(Blocked(t.position + _npcRayPoint)){
+                    AvailableTargets.Remove(t);
+                    print("Removed by blocked");
+                    continue;
+                }
+                // Is Target too far away?
+                if(GetDistance(transform, t) > interactable.MaxNoticeRange){
+                    AvailableTargets.Remove(t);
+                    print("Removed by distance");
+                    continue;
+                }
+                // Is the angle of interactable within our players max view?
+                if(GetAngle(t.position, transform.position, transform.forward) > maxNoticeAngle){
+                    AvailableTargets.Remove(t);
+                    print("Removed by player view");
+                    continue;
+                }
+                //Is the angle of our player within our interactables max view?
+                if(GetAngle(transform.position, t.position, t.forward) > interactable.MaxNoticeAngle){
+                    AvailableTargets.Remove(t);
+                    print("Removed by npc view");
+                    continue;
+                }
+                print("perfect");
+                    
+            }
+
+
             if (findByAngle) //Dont Need, Depricated
             {
                 if (nearbyTargets.Length <= 0) return;
@@ -254,7 +292,7 @@ namespace MyTownProject.Interaction
 
                     Vector3 dir = nearbyTargets[i].transform.position - cam.position;
                     dir.y = 0;
-                    float _angle = Vector3.Angle(cam.forward, dir);
+                    _angle = Vector3.Angle(cam.forward, dir);
 
                     if (_angle < closestAngle)
                     {
@@ -272,7 +310,7 @@ namespace MyTownProject.Interaction
                 {
                     Transform t = nearbyTargets[i].transform;
                     float dis = GetDistance(transform, t);
-                    float ang = GetAngle(t.position, transform.position, transform.forward, 0);
+                    float ang = GetAngle(t.position, transform.position, transform.forward);
                     IInteractable interactable = t.gameObject.GetComponent<IInteractable>();
                     if (interactable.CanBeTargeted && interactable.IsVisible){
                         if(ang <= maxNoticeAngle){
@@ -294,8 +332,8 @@ namespace MyTownProject.Interaction
             currentYOffset = h - half_h;
             if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
             Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
-            if(Blocked(closestTarget.position + Vector3.up * 1.2f)){
-                closestTarget.gameObject.GetComponent<NPC_Interact>()._hovered = false;
+            if(Blocked(closestTarget.position + _npcRayPoint)){
+                closestTarget.gameObject.GetComponent<NPC_Interact>().Hovered = false;
                 if(_closestTarget){
                     _closestTarget = null;
                     ResetTarget();
@@ -307,7 +345,7 @@ namespace MyTownProject.Interaction
                 _closestTarget = null;
                 return; // not working right with findByAngle
             }
-            if(GetAngle(closestTarget.position,transform.position,transform.forward, 0) > maxNoticeAngle){
+            if(GetAngle(closestTarget.position,transform.position,transform.forward) > maxNoticeAngle){
                 //print(GetAngle(closestTarget.position,transform.position,transform.forward, 0));
                 _closestTarget = null;
                 return;
@@ -315,7 +353,7 @@ namespace MyTownProject.Interaction
             
 
             _closestTarget = closestTarget;
-            _closestTarget.gameObject.GetComponent<NPC_Interact>()._hovered = true;
+            _closestTarget.gameObject.GetComponent<NPC_Interact>().Hovered = true;
 
         }
         bool StillClosestTarget(Transform t){
@@ -323,11 +361,11 @@ namespace MyTownProject.Interaction
             {
                 return false;
             }
-            if (Blocked(t.position + Vector3.up * 1.2f)){ //
-                t.gameObject.GetComponent<NPC_Interact>()._hovered = false;
+            if (Blocked(t.position + _npcRayPoint)){ //
+                t.gameObject.GetComponent<NPC_Interact>().Hovered = false;
                  return false;
             }
-            if(GetAngle(t.position,transform.position,transform.forward, 0) > maxNoticeAngle){
+            if(GetAngle(t.position,transform.position,transform.forward) > maxNoticeAngle){
                 //HideHover(t);
                  return false;
             }
@@ -342,7 +380,7 @@ namespace MyTownProject.Interaction
         bool Blocked(Vector3 t)
         {
             RaycastHit hit;
-            if (Physics.Linecast(transform.position + Vector3.up * 1.5f, t, out hit))
+            if (Physics.Linecast(transform.position + _playerRayPoint, t, out hit))
             {
                 if (!hit.transform.CompareTag("NPC")) return true;
             }
@@ -360,9 +398,9 @@ namespace MyTownProject.Interaction
 
             return distance;
         }
-        float GetAngle(Vector3 loc1, Vector3 loc2, Vector3 forwardDir, int lockYAxis){
+        float GetAngle(Vector3 loc1, Vector3 loc2, Vector3 forwardDir, bool lockYAxis = false){
             Vector3 dir = loc1 - loc2;
-            if(lockYAxis == 1) dir.y = 0;
+            if(lockYAxis) dir.y = 0;
             float angle = Vector3.Angle(forwardDir, dir);
             return angle;
         }
@@ -374,16 +412,14 @@ namespace MyTownProject.Interaction
             _targetingEvent.RaiseEvent(currentTarget);
             uiEventChannel.RaiseBarsOn(0.1f);
             CC.TransitionToState(CharacterState.Targeting);
-            currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = true;
+            currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted = true;
             //HideHover(currentTarget);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
             lockOnCanvas.gameObject.SetActive(true);
             //cinemachineAnimator.Play("TargetingCamera01");
 
             //turning off to see if i can better camera
-            //cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false; // needs to be event fired
-            //cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
-            //_freeLookCameraOff = true;
+            //ChangeCamera(true);
 
             _enemyLocked = true;
             _closestTarget.GetComponent<NPC_Interact>().SetTargeted(); //Set NPC as been targeted.
@@ -410,7 +446,7 @@ namespace MyTownProject.Interaction
             _startTimer = false;
             _timer = 0;
             //HideHover(currentTarget);
-            currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
+            currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted = false;
             if (remainingTargets.Count <= 0)
             {
                 ResetTarget();
@@ -422,7 +458,7 @@ namespace MyTownProject.Interaction
                 Transform closetT = null;
                 foreach (var target in nearbyTargets)
                 {
-                    print(GetAngle(transform.position, target.transform.position, transform.forward, 0));
+                    print(GetAngle(transform.position, target.transform.position, transform.forward));
                     if (target.gameObject.GetComponent<NPC_Interact>().beenTargeted == false)
                     {
                         float disP = GetDistance(transform, target.transform);
@@ -446,7 +482,7 @@ namespace MyTownProject.Interaction
 
                 _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
                 currentTarget = closetT;
-                currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = true;
+                currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted = true;
                 CC._target = currentTarget;
                 //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted();
                 closetT.gameObject.GetComponent<NPC_Interact>().beenTargeted = true;
@@ -462,15 +498,14 @@ namespace MyTownProject.Interaction
             if(!_isTalking) _audioEvent.RaiseEvent2(_LockOffSFX, currentTarget.position);
             //uiEventChannel.RaiseBarsOff(0.1f);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
-            currentTarget.gameObject.GetComponent<NPC_Interact>()._targeted = false;
+            currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted = false;
             _unTargetingEvent.RaiseEvent();
             //if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
             _startTimer = false;
             _timer = 0;
 
             //turning off to see if i can better camera
-            //cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
-            //_freeLookCameraOff = false;
+            //ChangeCamera();
             lockOnCanvas.gameObject.SetActive(false);
             currentTarget = null;
             _closestTarget = null;
@@ -513,7 +548,7 @@ namespace MyTownProject.Interaction
                 foreach(var npc in nearbyTargets){
                     if(npc.gameObject.transform != _closestTarget){
                         //HideHover(npc.gameObject.transform);
-                        npc.gameObject.GetComponent<NPC_Interact>()._hovered = false;
+                        npc.gameObject.GetComponent<NPC_Interact>().Hovered = false;
                     }
                     else{
                         //npc.gameObject.GetComponent<NPC_Interact>()._hovered = false;
@@ -526,7 +561,7 @@ namespace MyTownProject.Interaction
                 foreach (var npc in nearbyTargets)
                 {
                     
-                    npc.gameObject.GetComponent<NPC_Interact>()._hovered = false;
+                    npc.gameObject.GetComponent<NPC_Interact>().Hovered = false;
                     
                 }
                 
@@ -542,10 +577,10 @@ namespace MyTownProject.Interaction
             
         }
         void HideHover(Transform t){
-            if(!t.gameObject.GetComponent<NPC_Interact>()._hovered) return;
+            if(!t.gameObject.GetComponent<NPC_Interact>().Hovered) return;
             
             //t.gameObject.GetComponent<NPC_Interact>().HideHover();
-            t.gameObject.GetComponent<NPC_Interact>()._hovered = true;
+            t.gameObject.GetComponent<NPC_Interact>().Hovered = true;
 
             print($"Hide Hover" + t.gameObject.name);
          }
@@ -591,9 +626,7 @@ namespace MyTownProject.Interaction
                 if(currentTarget) ResetTarget();
 
                 //turning off to see if i can better camera
-                //cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
-                //cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
-                //_freeLookCameraOff = false;
+                //ChangeCamera();
                 
                 _interactable.OnInteract(this);
                 _isTalking = false;
@@ -605,6 +638,24 @@ namespace MyTownProject.Interaction
             if (_interactable != null) _interactable = null;
             uiEventChannel.HideTextInteract();
         }
+        void ChangeCamera(bool targetingCam = false){
+            if(!targetingCam){
+                _freeLookCameraOff = false;
+                cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
+                cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
+
+            }
+            else{
+                _freeLookCameraOff = true;
+                cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false;
+                cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
+
+            }
+        }
+        void RecenterCamera(float waitTime, float recenteringTime, float disableRecenter){
+            RecenterCamX.ThreeFloats(waitTime, recenteringTime, disableRecenter);
+            RecenterCamY.ThreeFloats(waitTime, recenteringTime, disableRecenter);
+        }
         void CheckForRecenterInput(InputAction.CallbackContext ctx){
             if(canRaycast) return;
             //Need a Recenter CoolDown
@@ -612,9 +663,7 @@ namespace MyTownProject.Interaction
             {
                 CC.TransitionToState(CharacterState.Targeting);
             }
-            
-            RecenterCamX.ThreeFloats(0, 0.1f, 1);
-            RecenterCamY.ThreeFloats(0, 0.1f, 1);
+            RecenterCamera(0, 0.1f, 1);
             _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
             uiEventChannel.RaiseBarsOn(0.1f);
         }

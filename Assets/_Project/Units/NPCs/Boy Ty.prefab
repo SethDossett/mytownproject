@@ -2113,7 +2113,7 @@ MonoBehaviour:
   _targetIcon: {fileID: 2006442392128529457}
   _interactionUI: {fileID: 7885135899004699494}
   _NPCName: {fileID: 7885135900287772499}
-  _titlName: {fileID: 7885135900291195290}
+  _titleName: {fileID: 7885135900291195290}
   _name: Ty
   ShowName: 1
   beenTargeted: 0
@@ -2132,6 +2132,7 @@ MonoBehaviour:
   NPC: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
   playerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  _player: {fileID: 0}
   _rotSpeed: 300
 --- !u!114 &908625629
 MonoBehaviour:

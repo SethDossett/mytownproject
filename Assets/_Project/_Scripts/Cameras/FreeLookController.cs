@@ -78,9 +78,9 @@ namespace MyTownProject.Cameras{
 
         //RX() RY() doesnt work if recenterTime is not > 0.
         void RX(float f1, float f2, float f3) => StartCoroutine(RecenterXAxis(f1,f2, f3));
-        IEnumerator RecenterXAxis(float waitTime, float recenteringTime, float disableRecenter){
+        IEnumerator RecenterXAxis(float waitTime, float recenteringTime, float disableRecenter = 1){
             EnableRecenter(waitTime, recenteringTime, false);
-            // a value greater than 0 will not disable recentering
+            // a value greater than 0 will disable recentering
             if(disableRecenter > 0){
                 yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 3);
                 yield return new WaitForEndOfFrame();
@@ -89,7 +89,7 @@ namespace MyTownProject.Cameras{
             yield break;  
         }
         void RY(float f1, float f2, float f3) => StartCoroutine(RecenterYAxis(f1,f2, f3));
-        IEnumerator RecenterYAxis(float waitTime, float recenteringTime, float disableRecenter){
+        IEnumerator RecenterYAxis(float waitTime, float recenteringTime, float disableRecenter = 1){
             EnableRecenter(waitTime, recenteringTime, true);
             // a value greater than 0 will not disable recentering
             if(disableRecenter > 0){

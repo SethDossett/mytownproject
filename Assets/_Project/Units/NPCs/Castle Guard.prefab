@@ -1090,7 +1090,7 @@ MonoBehaviour:
   _targetIcon: {fileID: 2750298463278810317}
   _interactionUI: {fileID: 5809348894328972186}
   _NPCName: {fileID: 5809348893565470639}
-  _titlName: {fileID: 5809348893570957670}
+  _titleName: {fileID: 5809348893570957670}
   _name: Guard
   ShowName: 1
   beenTargeted: 0
@@ -1109,6 +1109,7 @@ MonoBehaviour:
   NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
   playerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  _player: {fileID: 0}
   _rotSpeed: 300
 --- !u!114 &5108103891202545038
 MonoBehaviour:

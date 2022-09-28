@@ -13,10 +13,14 @@ namespace MyTownProject.Interaction
     {
         [field: SerializeField] public bool IsVisible { get; set; }
         [field: SerializeField] public float MaxNoticeRange { get; private set; }
+        [field: SerializeField] public float MaxNoticeAngle { get; private set; }
         [field: SerializeField] public float MaxInteractRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
         [field: SerializeField] public bool CanBeTargeted { get; private set; }
         [field: SerializeField] public string Prompt { get; private set; }
+        [field: SerializeField] public bool Hovered { get; set; }
+        [field: SerializeField] public bool Targeted { get; set; }
+        [field: SerializeField] public bool BeenTargeted { get; set; }
 
 
         [Header("ScriptableObjects")]
@@ -74,7 +78,16 @@ namespace MyTownProject.Interaction
             _isFocusing = false;
             _hasInteracted = false;
         }
-    
+        public void SetHovered(){
+
+        }
+        public void SetTargeted(){
+            
+            
+        }
+        public void SetBeenTargeted(){
+
+        }
         public void OpenDoor()
         {
             if (!_isLocked)

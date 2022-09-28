@@ -775,20 +775,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsVisible>k__BackingField: 0
   <MaxNoticeRange>k__BackingField: 7
+  <MaxNoticeAngle>k__BackingField: 70
   <MaxInteractRange>k__BackingField: 5
   <CanBeInteractedWith>k__BackingField: 1
   <CanBeTargeted>k__BackingField: 1
   <Prompt>k__BackingField: Talk
+  <Hovered>k__BackingField: 0
+  <Targeted>k__BackingField: 0
+  <BeenTargeted>k__BackingField: 0
   inkJSON: {fileID: 4900000, guid: 99bdfb1311d92d34c9c89f3d49afb339, type: 3}
-  _hovered: 0
-  _targeted: 0
   npc: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _hoverIcon: {fileID: 8676062695412038052}
   _targetIcon: {fileID: 1068022606628426873}
   _interactionUI: {fileID: 8676062695476998958}
   _NPCName: {fileID: 8676062694780081947}
-  _titlName: {fileID: 8676062694786126290}
+  _titleName: {fileID: 8676062694786126290}
   _name: Jerry
   ShowName: 1
   beenTargeted: 0
@@ -807,6 +809,7 @@ MonoBehaviour:
   NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
   playerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  _player: {fileID: 0}
   _rotSpeed: 200
 --- !u!114 &1004980796562242122
 MonoBehaviour:
