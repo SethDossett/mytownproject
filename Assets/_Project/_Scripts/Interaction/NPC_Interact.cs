@@ -11,27 +11,29 @@ namespace MyTownProject.Interaction
     public class NPC_Interact : MonoBehaviour, IInteractable
     {
         [field: SerializeField] public bool IsVisible { get; set; }
-        [field: SerializeField] public float MaxNoticeRange { get; private set; }
-        [field: SerializeField] public float MaxNoticeAngle { get; private set; }
-        [field: SerializeField] public float MaxInteractRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
         [field: SerializeField] public bool CanBeTargeted { get; private set; }
-        [field: SerializeField] public string Prompt { get; private set; }
         [field: SerializeField] public bool Hovered { get; set; }
         [field: SerializeField] public bool Targeted { get; set; }
         [field: SerializeField] public bool BeenTargeted { get; set; }
+        [field: SerializeField] public bool DoesAngleMatter { get; private set; }
+        [field: SerializeField] public float MaxNoticeAngle { get; private set; }
+        [field: SerializeField] public float MaxNoticeRange { get; private set; }
+        [field: SerializeField] public float MaxInteractRange { get; private set; }
+        [field: SerializeField] public string Prompt { get; private set; }
 
-        [SerializeField] private TextAsset inkJSON;
-        bool _hasInteracted = false;
-        bool _isFocusing = false;
 
 
         [Header("References")]
+        [SerializeField] private TextAsset inkJSON;
         //[SerializeField] private CinemachineTargetGroup _targetGroup;
         [SerializeField] private NPC_ScriptableObject npc;
         [SerializeField] DialogueEventsSO dialogueEvents;
 
     #region new variables
+        [Header("Script Specific")]
+        bool _hasInteracted = false;
+        bool _isFocusing = false;
         [SerializeField] GameObject _hoverIcon;
         [SerializeField] GameObject _targetIcon;
         [SerializeField] GameObject _interactionUI;
@@ -151,20 +153,21 @@ namespace MyTownProject.Interaction
             }
 
         }
-        public void SetHovered(){
-            Hovered = !Hovered;
+        public void SetHovered(bool setTrue){
+            if(setTrue) Hovered = true;
+            else Hovered = false;
         }
-        public void SetTargeted(){
-            if(!beenTargeted)
-                beenTargeted = true;
+        public void SetTargeted(bool setTrue){
+            if(setTrue) Targeted = true;
+            else Targeted = false;
             
         }
-        public void SetBeenTargeted(){
-            BeenTargeted = !BeenTargeted;
+        public void SetBeenTargeted(bool setTrue){
+            if(setTrue) BeenTargeted = true;
+            else BeenTargeted = false;
         }
         public void UnsetTargeted(){
-            if(beenTargeted)
-                beenTargeted = false;
+            beenTargeted = false;
         }
 
         void TurnOffAllIcons(){

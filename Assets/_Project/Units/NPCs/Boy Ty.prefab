@@ -2099,14 +2099,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <IsVisible>k__BackingField: 0
-  <MaxNoticeRange>k__BackingField: 7
-  <MaxInteractRange>k__BackingField: 4
   <CanBeInteractedWith>k__BackingField: 1
   <CanBeTargeted>k__BackingField: 1
+  <Hovered>k__BackingField: 0
+  <Targeted>k__BackingField: 0
+  <BeenTargeted>k__BackingField: 0
+  <DoesAngleMatter>k__BackingField: 1
+  <MaxNoticeAngle>k__BackingField: 0
+  <MaxNoticeRange>k__BackingField: 7
+  <MaxInteractRange>k__BackingField: 4
   <Prompt>k__BackingField: Talk
   inkJSON: {fileID: 4900000, guid: 0399cd33086b95d498336c31540946b3, type: 3}
-  _hovered: 0
-  _targeted: 0
   npc: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _hoverIcon: {fileID: 7885135899044530668}

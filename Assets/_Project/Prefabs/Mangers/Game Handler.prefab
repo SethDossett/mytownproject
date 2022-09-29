@@ -61,10 +61,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3fd8f8f6d45f04798d4bda96b4221c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentDay: 0
+  currentDay: 1
   season: 0
   year: 0
-  hour: 0
-  minutes: 0
-  TickMinutesIncreased: 1
+  hour: 5
+  minutes: 30
+  TickMinutesIncreased: 10
   TimeBetweenTicks: 1

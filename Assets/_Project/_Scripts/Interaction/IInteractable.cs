@@ -5,6 +5,7 @@ namespace MyTownProject.Interaction
         bool IsVisible { get; }
         float MaxNoticeRange { get; }
         float MaxNoticeAngle { get; }
+        bool DoesAngleMatter { get; }
         float MaxInteractRange { get; }
         bool CanBeInteractedWith { get; }
         bool CanBeTargeted { get; }
@@ -17,8 +18,8 @@ namespace MyTownProject.Interaction
         void OnFocus(string _string);
         void OnInteract(TargetingSystem targetingSystem);
         void OnLoseFocus();
-        void SetHovered();
-        void SetTargeted();
-        void SetBeenTargeted();
+        void SetHovered(bool setTrue);
+        void SetTargeted(bool setTrue);
+        void SetBeenTargeted(bool setTrue);
     }
 }

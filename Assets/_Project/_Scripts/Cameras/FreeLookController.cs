@@ -14,9 +14,10 @@ namespace MyTownProject.Cameras{
         [SerializeField] DialogueEventsSO DialogueEvents;
         [SerializeField] TransformEventSO TargetingEvent;
         [SerializeField] GeneralEventSO UntargetEvent;
+        [SerializeField] TransformEventSO PlayerReference;
         CinemachineFreeLook cam;
         [SerializeField] CinemachineTargetGroup _targetGroup;
-        [SerializeField] TheCharacterController CC;
+        TheCharacterController CC;
 
         [Range(0.1f, 2f)][SerializeField] float _lensZoomInSpeed = 0.2f;
         [Range(0.1f, 5f)][SerializeField] float _lensZoomOutSpeed = 0.6f;
@@ -26,6 +27,7 @@ namespace MyTownProject.Cameras{
         
         void OnEnable(){
             cam = GetComponent<CinemachineFreeLook>();
+            PlayerReference.OnRaiseEvent += GetPlayerReference;
             DialogueEvents.onEnter += TalkingToNPC;
             DialogueEvents.onExit += BackToPlayerView;
             TargetingEvent.OnRaiseEvent += Target;
@@ -35,6 +37,7 @@ namespace MyTownProject.Cameras{
             DisableRecenterCam.OnRaiseEvent += DisableRecenter;
         }
         void OnDisable(){
+            PlayerReference.OnRaiseEvent -= GetPlayerReference;
             DialogueEvents.onEnter -= TalkingToNPC;
             DialogueEvents.onExit -= BackToPlayerView;
             TargetingEvent.OnRaiseEvent += Target;
@@ -43,7 +46,9 @@ namespace MyTownProject.Cameras{
             RecenterCamY.OnRaiseEvent3 -= RY;
             DisableRecenterCam.OnRaiseEvent -= DisableRecenter;
         }
-
+        void GetPlayerReference(Transform player){
+            CC = player.GetComponent<TheCharacterController>();
+        } 
         void TalkingToNPC(GameObject go, TextAsset text){
             StartCoroutine(ChangeLens(25, _lensZoomInSpeed, _ZoomIncurve));
             
@@ -121,11 +126,6 @@ namespace MyTownProject.Cameras{
             }
         }
         
-        void Update(){
-            
-            
-        
-        }
     }
 }
 

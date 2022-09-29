@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using MyTownProject.Events;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,10 +58,10 @@ namespace KinematicCharacterController.Examples
 
         [Header("Targeting Cam")]
         [SerializeField] float _rotateToTargetSpeed;
-        [SerializeField] Transform player;
-        [SerializeField] Transform target;
+        Transform _player;
         public bool isTargeting;
         Camera mainCam;
+        TransformEventSO PlayerReference;
 
         void OnValidate()
         {
@@ -72,6 +71,7 @@ namespace KinematicCharacterController.Examples
 
         void Awake()
         {
+            PlayerReference.OnRaiseEvent += GetPlayerReference;
             currentCharacterState = CharacterState.Default;
             mainCam = Camera.main;
             Transform = this.transform;
@@ -83,7 +83,9 @@ namespace KinematicCharacterController.Examples
 
             PlanarDirection = Vector3.forward;
         }
-
+        void OnDestroy() => PlayerReference.OnRaiseEvent -= GetPlayerReference;
+        void GetPlayerReference(Transform player) => _player = player;
+        
         // Set the transform that the camera will orbit around
         public void SetFollowTransform(Transform t)
         {
@@ -128,7 +130,7 @@ namespace KinematicCharacterController.Examples
                         // Apply rotation
                         //Transform.rotation = targetRotation;
 
-                        Vector3 dir = target.position - Transform.position;
+                        Vector3 dir = _player.position - Transform.position;
                         dir.y = 0;
                         dir.Normalize();
 
@@ -207,9 +209,9 @@ namespace KinematicCharacterController.Examples
 
                     break;
                 }
-                case CharacterState.Targeting:{
-
-                        Vector3 dir = target.position - Transform.position;
+                case CharacterState.Targeting:
+                {
+                        Vector3 dir = (_player.position + new Vector3(0 ,1.2f, 0)) - Transform.position;
                         dir.y = 0;
                         dir.Normalize();
 

@@ -7,9 +7,11 @@ namespace KinematicCharacterController.Examples
 {
     public class ExamplePlayer : MonoBehaviour
     {
-        public TheCharacterController Character;
+        TheCharacterController CC;
         public ExampleCharacterCamera CharacterCamera;
-        public MainEventChannelSO MainEventChannelSO;
+        [SerializeField] MainEventChannelSO MainEventChannelSO;
+        [SerializeField] TransformEventSO playerReference;
+        Transform _player;
 
         private const string MouseXInput = "Mouse X";
         private const string MouseYInput = "Mouse Y";
@@ -19,13 +21,7 @@ namespace KinematicCharacterController.Examples
 
         private PlayerInput playerInput;
         private NewControls inputActions;
-        private InputAction move;
-        private InputAction cameraMove;
-        private InputAction jump;
-        private InputAction crouch;
-        private InputAction zoom;
-        private InputAction interact;
-        private InputAction start;
+        private InputAction move, cameraMove, jump, crouch, zoom, interact, start, leftTrigger;
 
         private bool canPressStart = true;
         private bool isPaused = false;
@@ -35,12 +31,13 @@ namespace KinematicCharacterController.Examples
             inputActions.GamePlay.Enable();
             //_disableControls.OnRaiseEvent += DisableControls;
             //_enableControls.OnRaiseEvent += EnableControls;
-            //move = InputManager.inputActions.GamePlay.Move;
-           //cameraMove = inputActions.GamePlay.Camera;
-           //interact = inputActions.GamePlay.Interact;
-           //crouch = inputActions.GamePlay.Crouch;
+            move = inputActions.GamePlay.Move;
+           cameraMove = inputActions.GamePlay.Camera;
+           interact = inputActions.GamePlay.Interact;
+           crouch = inputActions.GamePlay.Crouch;
            //zoom = inputActions.GamePlay.Zoom;
-           //start = inputActions.GamePlay.Start;
+           start = inputActions.GamePlay.Start;
+           leftTrigger = inputActions.GamePlay.LeftTrigger;
             //move.Enable();
             //cameraMove.Enable();
             //jump.Enable();
@@ -54,36 +51,45 @@ namespace KinematicCharacterController.Examples
             inputActions.GamePlay.Disable();
             //_disableControls.OnRaiseEvent -= DisableControls;
             //_enableControls.OnRaiseEvent -= EnableControls;
-           /* move.Disable();
-            cameraMove.Disable();
+            //move.Disable();
+            //cameraMove.Disable();
             //jump.Disable();
-            crouch.Disable();
-            zoom.Disable(); 
-            interact.Disable();
-            start.Disable();*/
+            //crouch.Disable();
+            //zoom.Disable(); 
+            //interact.Disable();
+            //start.Disable();
         }
+        void GetPlayerReference(Transform player){
+            _player = player;
+            CC = _player.GetComponent<TheCharacterController>();
+        }  
+
         private void Awake()
         {
+            playerReference.OnRaiseEvent += GetPlayerReference;
             inputActions = InputManager.inputActions;
             playerInput = GetComponent<PlayerInput>();
+        }
+        private void OnDestroy() {
+            playerReference.OnRaiseEvent -= GetPlayerReference;
         }
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
 
             // Tell camera to follow transform
-            CharacterCamera.SetFollowTransform(Character.CameraFollowPoint);
+            CharacterCamera.SetFollowTransform(CC.CameraFollowPoint);
 
             // Ignore the character's collider(s) for camera obstruction checks
             CharacterCamera.IgnoredColliders.Clear();
-            CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
+            CharacterCamera.IgnoredColliders.AddRange(CC.GetComponentsInChildren<Collider>());
         }
 
         private void Update()
         {
             if (canPressStart)
             {
-                if (inputActions.GamePlay.Start.WasPressedThisFrame()) // could move this to Pause Menu
+                if (start.WasPressedThisFrame()) // could move this to Pause Menu
                 {
                     MainEventChannelSO.RaiseEventPaused();
                 }
@@ -94,10 +100,10 @@ namespace KinematicCharacterController.Examples
         private void LateUpdate()
         {
             // Handle rotating the camera along with physics movers
-            if (CharacterCamera.RotateWithPhysicsMover && Character.Motor.AttachedRigidbody != null)
+            if (CharacterCamera.RotateWithPhysicsMover && CC.Motor.AttachedRigidbody != null)
             {
-                CharacterCamera.PlanarDirection = Character.Motor.AttachedRigidbody.GetComponent<PhysicsMover>().RotationDeltaFromInterpolation * CharacterCamera.PlanarDirection;
-                CharacterCamera.PlanarDirection = Vector3.ProjectOnPlane(CharacterCamera.PlanarDirection, Character.Motor.CharacterUp).normalized;
+                CharacterCamera.PlanarDirection = CC.Motor.AttachedRigidbody.GetComponent<PhysicsMover>().RotationDeltaFromInterpolation * CharacterCamera.PlanarDirection;
+                CharacterCamera.PlanarDirection = Vector3.ProjectOnPlane(CharacterCamera.PlanarDirection, CC.Motor.CharacterUp).normalized;
             }
 
             HandleCameraInput();
@@ -140,17 +146,17 @@ namespace KinematicCharacterController.Examples
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
             // Build the CharacterInputs struct
-            characterInputs.MoveDirection = inputActions.GamePlay.Move.ReadValue<Vector2>();
+            characterInputs.MoveDirection = move.ReadValue<Vector2>();
             characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
             //characterInputs.JumpDown = jump.WasPressedThisFrame();
-            characterInputs.CrouchDown = inputActions.GamePlay.Crouch.WasPressedThisFrame();
-            characterInputs.CrouchUp = inputActions.GamePlay.Crouch.WasReleasedThisFrame();
-            characterInputs.Interact = inputActions.GamePlay.Interact.WasPerformedThisFrame();
-            characterInputs.LeftTriggerDown = inputActions.GamePlay.LeftTrigger.WasPressedThisFrame();
-            characterInputs.LeftTriggerDown = inputActions.GamePlay.LeftTrigger.WasReleasedThisFrame();
+            characterInputs.CrouchDown = crouch.WasPressedThisFrame();
+            characterInputs.CrouchUp = crouch.WasReleasedThisFrame();
+            characterInputs.Interact = interact.WasPerformedThisFrame();
+            characterInputs.LeftTriggerDown = leftTrigger.WasPressedThisFrame();
+            characterInputs.LeftTriggerDown = leftTrigger.WasReleasedThisFrame();
 
             // Apply inputs to character
-            Character.SetInputs(ref characterInputs);
+            CC.SetInputs(ref characterInputs);
         }
     }
 }

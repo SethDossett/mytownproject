@@ -32,16 +32,9 @@ namespace MyTownProject.Interaction
         [SerializeField] Transform _closestTarget = null;
         [SerializeField] TheCharacterController CC;
         private IInteractable _interactable;
-        [SerializeField] CameraFollow camFollow;
-        [SerializeField] Transform lockOnCanvas;
         Transform cam;
-        [SerializeField] Transform enemyTarget_Locator;
         CharacterState currentCharacterState;
         private GameStateManager.GameState _game_Playing_State;
-
-
-        [Tooltip("StateDrivenMethod for Switching Cameras")]
-        [SerializeField] Animator cinemachineAnimator;
 
         [Header("Settings")]
         [SerializeField] bool zeroVert_Look;
@@ -81,6 +74,7 @@ namespace MyTownProject.Interaction
         [SerializeField] Collider[] nearbyTargets;
         [SerializeField] List<Transform> remainingTargets = new List<Transform>();
         [SerializeField] List<Transform> AvailableTargets = new List<Transform>();
+        [SerializeField] List<Transform> AvailableObjects = new List<Transform>();
 
        
         private void OnEnable()
@@ -119,7 +113,6 @@ namespace MyTownProject.Interaction
         }
         void SetInitialReferences(){
             canRaycast = true;
-            lockOnCanvas.gameObject.SetActive(false);
             _startTimer = false;
             _isTalking = false;
         }
@@ -153,7 +146,6 @@ namespace MyTownProject.Interaction
             if (!canRaycast) return;
 
             CC._hasTargetToLockOn = _enemyLocked;
-            camFollow.lockedTarget = _enemyLocked;
             if(currentTarget && _freeLookCameraOff){ // might not want, it is janky, transitioning from kcc to freelook cam.
                 if(_cameraInput.ReadValue<Vector2>().magnitude > 0){
                     ChangeCamera();
@@ -212,7 +204,10 @@ namespace MyTownProject.Interaction
 
             if (!_enemyLocked)
             {
+                //If We Are not Locked On Search for interactables
                 SearchForInteractables();
+                // If interactables found, then find closest target
+                if(AvailableTargets.Count > 0) FindClosestTarget(); 
             }
             if (_enemyLocked)
             {
@@ -244,12 +239,24 @@ namespace MyTownProject.Interaction
             float closestDis = maxDistance;
             Transform closestTarget = null;
 
+            if(nearbyTargets.Length <= 0){
+                return;
+            }
+
             //Check to see what targets are available
             foreach(var target in nearbyTargets){
                 Transform t = target.transform;
-                AvailableTargets.Add(t);
+                
                 IInteractable interactable = t.gameObject.GetComponent<IInteractable>();
+                //Does canbetargeted matter if this pick up item, can be interacted but not targeted
+                //Maybe have a 2nd list for items inradius that cant be targeted
+
                 //Is this interactable able to be targted?
+                if(interactable == null || !interactable.IsVisible){
+                    AvailableTargets.Remove(t);
+                    print("Removed by initial");
+                    continue;
+                }
                 if(interactable == null || !interactable.IsVisible || !interactable.CanBeTargeted || interactable.BeenTargeted){
                     AvailableTargets.Remove(t);
                     print("Removed by initial");
@@ -267,19 +274,27 @@ namespace MyTownProject.Interaction
                     print("Removed by distance");
                     continue;
                 }
-                // Is the angle of interactable within our players max view?
-                if(GetAngle(t.position, transform.position, transform.forward) > maxNoticeAngle){
-                    AvailableTargets.Remove(t);
-                    print("Removed by player view");
-                    continue;
+                //Need Check Does player sight/view angle matter ex: for picking up items in field
+                // player view or interactable view doesnt seem to matter with enemies
+                if(interactable.DoesAngleMatter){
+                    // Is the angle of interactable within our players max view?
+                    if(GetAngle(t.position, transform.position, transform.forward) > maxNoticeAngle){
+                        AvailableTargets.Remove(t);
+                        print("Removed by player view");
+                        continue;
+                    }   
+                    //Is the angle of our player within our interactables max view?
+                    if(GetAngle(transform.position, t.position, t.forward) > interactable.MaxNoticeAngle){
+                        AvailableTargets.Remove(t);
+                        print("Removed by npc view");
+                        continue;
+                    }
                 }
-                //Is the angle of our player within our interactables max view?
-                if(GetAngle(transform.position, t.position, t.forward) > interactable.MaxNoticeAngle){
-                    AvailableTargets.Remove(t);
-                    print("Removed by npc view");
-                    continue;
+                //If list does not contain interactable, then add
+                if(!AvailableTargets.Contains(t)){
+                    AvailableTargets.Add(t);
+                    print("perfect");
                 }
-                print("perfect");
                     
             }
 
@@ -325,6 +340,7 @@ namespace MyTownProject.Interaction
             }
 
             if (!closestTarget) return;
+            //This was old way to place UI icon at center of target
             float h1 = closestTarget.GetComponent<CapsuleCollider>().height;
             float h2 = closestTarget.localScale.y;
             float h = h1 * h2;
@@ -333,7 +349,7 @@ namespace MyTownProject.Interaction
             if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
             Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
             if(Blocked(closestTarget.position + _npcRayPoint)){
-                closestTarget.gameObject.GetComponent<NPC_Interact>().Hovered = false;
+                closestTarget.gameObject.GetComponent<IInteractable>().SetHovered(false);
                 if(_closestTarget){
                     _closestTarget = null;
                     ResetTarget();
@@ -352,9 +368,29 @@ namespace MyTownProject.Interaction
             }
             
 
-            _closestTarget = closestTarget;
-            _closestTarget.gameObject.GetComponent<NPC_Interact>().Hovered = true;
+            //_closestTarget = closestTarget;
+            //_closestTarget.gameObject.GetComponent<IInteractable>().SetHovered(true);
 
+        }
+
+        void FindClosestTarget(){
+            float closestDis = maxDistance;
+            Transform closestTarget = null;
+
+            foreach(Transform target in AvailableTargets){
+                float dis = GetDistance(transform, target);
+                if (dis < closestDis){
+                    closestTarget = target;
+                    closestDis = dis; 
+                }
+
+            }
+            if(!closestTarget){
+                _closestTarget = null;
+                return;
+            }
+            _closestTarget = closestTarget;
+            _closestTarget.gameObject.GetComponent<IInteractable>().SetHovered(true);
         }
         bool StillClosestTarget(Transform t){
             if (!t.GetComponent<IInteractable>().IsVisible)
@@ -362,7 +398,7 @@ namespace MyTownProject.Interaction
                 return false;
             }
             if (Blocked(t.position + _npcRayPoint)){ //
-                t.gameObject.GetComponent<NPC_Interact>().Hovered = false;
+                t.gameObject.GetComponent<IInteractable>().SetHovered(false);
                  return false;
             }
             if(GetAngle(t.position,transform.position,transform.forward) > maxNoticeAngle){
@@ -412,24 +448,23 @@ namespace MyTownProject.Interaction
             _targetingEvent.RaiseEvent(currentTarget);
             uiEventChannel.RaiseBarsOn(0.1f);
             CC.TransitionToState(CharacterState.Targeting);
-            currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted = true;
+            currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true);
             //HideHover(currentTarget);
-            //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted(); //Make Events that fire for UI Targeted
-            lockOnCanvas.gameObject.SetActive(true);
-            //cinemachineAnimator.Play("TargetingCamera01");
+            //currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true)(); //Make Events that fire for UI Targeted
+
 
             //turning off to see if i can better camera
             //ChangeCamera(true);
 
             _enemyLocked = true;
-            _closestTarget.GetComponent<NPC_Interact>().SetTargeted(); //Set NPC as been targeted.
+            _closestTarget.GetComponent<IInteractable>().SetBeenTargeted(true); //Set NPC as been targeted.
 
             for (int i = 0; i < nearbyTargets.Length; i++)
             {
                 Transform t = nearbyTargets[i].transform;
                 remainingTargets.Add(t);
                 print(GetDistance(transform,t) + t.gameObject.name);
-                if (t.gameObject.GetComponent<NPC_Interact>().beenTargeted == true)
+                if (t.gameObject.GetComponent<IInteractable>().BeenTargeted == true)
                 {
                     remainingTargets.Remove(t);
                 }
@@ -446,7 +481,7 @@ namespace MyTownProject.Interaction
             _startTimer = false;
             _timer = 0;
             //HideHover(currentTarget);
-            currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted = false;
+            currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(false);
             if (remainingTargets.Count <= 0)
             {
                 ResetTarget();
@@ -459,7 +494,7 @@ namespace MyTownProject.Interaction
                 foreach (var target in nearbyTargets)
                 {
                     print(GetAngle(transform.position, target.transform.position, transform.forward));
-                    if (target.gameObject.GetComponent<NPC_Interact>().beenTargeted == false)
+                    if (target.gameObject.GetComponent<IInteractable>().BeenTargeted == false)
                     {
                         float disP = GetDistance(transform, target.transform);
                         if (disP <= target.transform.GetComponent<IInteractable>().MaxNoticeRange)
@@ -482,10 +517,10 @@ namespace MyTownProject.Interaction
 
                 _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
                 currentTarget = closetT;
-                currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted = true;
+                currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true);
                 CC._target = currentTarget;
-                //currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted();
-                closetT.gameObject.GetComponent<NPC_Interact>().beenTargeted = true;
+                //currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true)();
+                closetT.gameObject.GetComponent<IInteractable>().SetBeenTargeted(true);
                 _changeTargetEvent.RaiseEvent(currentTarget);
             }
 
@@ -498,7 +533,7 @@ namespace MyTownProject.Interaction
             if(!_isTalking) _audioEvent.RaiseEvent2(_LockOffSFX, currentTarget.position);
             //uiEventChannel.RaiseBarsOff(0.1f);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
-            currentTarget.gameObject.GetComponent<NPC_Interact>().Targeted = false;
+            currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(false);
             _unTargetingEvent.RaiseEvent();
             //if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
             _startTimer = false;
@@ -506,11 +541,9 @@ namespace MyTownProject.Interaction
 
             //turning off to see if i can better camera
             //ChangeCamera();
-            lockOnCanvas.gameObject.SetActive(false);
             currentTarget = null;
             _closestTarget = null;
             _enemyLocked = false;
-            cinemachineAnimator.Play("PlayerFreeLook01");
             _NPCIndex = 0;
             BeenTargetedReset();
         }
@@ -519,13 +552,14 @@ namespace MyTownProject.Interaction
         {
             foreach (var npc in nearbyTargets)
             {
-                NPC_Interact m = npc.GetComponent<NPC_Interact>(); // set npc back to not being targeted
-                m.UnsetTargeted();
+                IInteractable m = npc.GetComponent<IInteractable>(); // set npc back to not being targeted
+                m.SetBeenTargeted(false);
                 //m.UnTargeted();
                 //HideHover(m.gameObject.transform);
             }
             remainingTargets.Clear();
         }
+        // i dont think this is need any longer
         private void LookAtTarget()
         {
             if (currentTarget == null)
@@ -533,14 +567,6 @@ namespace MyTownProject.Interaction
                 ResetTarget();
                 return;
             }
-            //currentTarget.GetComponent<NPC_Interact>().Targeted();
-            pos = currentTarget.position + new Vector3(0, currentYOffset, 0);
-           
-            enemyTarget_Locator.position = pos;
-            Vector3 dir = currentTarget.position - transform.position;
-            dir.y = 0;
-            Quaternion rot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * lookAtSmoothing);
         }
         private void IconControl(){
 
@@ -548,7 +574,7 @@ namespace MyTownProject.Interaction
                 foreach(var npc in nearbyTargets){
                     if(npc.gameObject.transform != _closestTarget){
                         //HideHover(npc.gameObject.transform);
-                        npc.gameObject.GetComponent<NPC_Interact>().Hovered = false;
+                        npc.gameObject.GetComponent<IInteractable>().SetHovered(false);
                     }
                     else{
                         //npc.gameObject.GetComponent<NPC_Interact>()._hovered = false;
@@ -560,9 +586,7 @@ namespace MyTownProject.Interaction
             {
                 foreach (var npc in nearbyTargets)
                 {
-                    
-                    npc.gameObject.GetComponent<NPC_Interact>().Hovered = false;
-                    
+                    npc.gameObject.GetComponent<IInteractable>().SetHovered(false);
                 }
                 
             }
@@ -576,20 +600,15 @@ namespace MyTownProject.Interaction
             }
             
         }
+        //Not being used
         void HideHover(Transform t){
-            if(!t.gameObject.GetComponent<NPC_Interact>().Hovered) return;
+            if(!t.gameObject.GetComponent<IInteractable>().Hovered) return;
             
             //t.gameObject.GetComponent<NPC_Interact>().HideHover();
-            t.gameObject.GetComponent<NPC_Interact>().Hovered = true;
+            t.gameObject.GetComponent<IInteractable>().SetHovered(true);
 
             print($"Hide Hover" + t.gameObject.name);
          }
-        private void LockOnCanvas()
-        {
-            lockOnCanvas.position = pos;
-            lockOnCanvas.localScale = Vector3.one * ((cam.position - pos).magnitude * crossHair_Scale);
-        }
-
         void CheckForIInteractable(){
             
             if(currentTarget == null){

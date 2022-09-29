@@ -1022,10 +1022,6 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   _closestTarget: {fileID: 0}
   CC: {fileID: 3156670061489872913}
-  camFollow: {fileID: 0}
-  lockOnCanvas: {fileID: 0}
-  enemyTarget_Locator: {fileID: 0}
-  cinemachineAnimator: {fileID: 0}
   zeroVert_Look: 0
   noticeZone: 10
   lookAtSmoothing: 2
@@ -1065,6 +1061,7 @@ MonoBehaviour:
   nearbyTargets: []
   remainingTargets: []
   AvailableTargets: []
+  AvailableObjects: []
   _angle: 0
 --- !u!114 &3634065607003665308
 MonoBehaviour:

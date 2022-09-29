@@ -14,6 +14,7 @@ namespace MyTownProject.Interaction
         [field: SerializeField] public bool IsVisible { get; set; }
         [field: SerializeField] public float MaxNoticeRange { get; private set; }
         [field: SerializeField] public float MaxNoticeAngle { get; private set; }
+        [field: SerializeField] public bool DoesAngleMatter { get; private set; }
         [field: SerializeField] public float MaxInteractRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
         [field: SerializeField] public bool CanBeTargeted { get; private set; }
@@ -78,14 +79,14 @@ namespace MyTownProject.Interaction
             _isFocusing = false;
             _hasInteracted = false;
         }
-        public void SetHovered(){
+        public void SetHovered(bool setTrue){
 
         }
-        public void SetTargeted(){
+        public void SetTargeted(bool setTrue){
             
             
         }
-        public void SetBeenTargeted(){
+        public void SetBeenTargeted(bool setTrue){
 
         }
         public void OpenDoor()

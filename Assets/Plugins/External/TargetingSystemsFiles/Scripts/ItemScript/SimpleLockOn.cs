@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SimpleLockOn : MonoBehaviour
 {
-    [SerializeField] Transform target;
+    Transform target;
     void OnEnable(){
         if(target == null) target = Camera.main.transform;
         StartCoroutine(LookAtTarget());

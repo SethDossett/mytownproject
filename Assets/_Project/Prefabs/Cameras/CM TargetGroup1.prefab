@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9023857825524559348}
   - component: {fileID: 9023857825524559349}
+  - component: {fileID: 6650432471007822404}
   m_Layer: 0
   m_Name: CM TargetGroup1
   m_TagString: Untagged
@@ -53,3 +54,21 @@ MonoBehaviour:
   - target: {fileID: 0}
     weight: 0.45
     radius: 1
+--- !u!114 &6650432471007822404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9023857825524559338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c68dd303a7efb54280ae80b831305ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  playerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
+  _targetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}
+  _changeToNextTarget: {fileID: 11400000, guid: 9923ca68d96e1c94cab833e062b6b065,
+    type: 2}
+  _unTargetingEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
