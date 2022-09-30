@@ -19,6 +19,7 @@ namespace MyTownProject.NPC
         
         private void OnEnable()
         {
+            //TransformEventSO.OnRaiseEvent
             playerRef.OnRaiseEvent += SetPlayerReference;
             NPC.OnChangedState += CheckNPCState;
         }
