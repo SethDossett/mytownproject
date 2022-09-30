@@ -7,7 +7,7 @@ namespace KinematicCharacterController.Examples
 {
     public class ExamplePlayer : MonoBehaviour
     {
-        TheCharacterController CC;
+        [SerializeField]TheCharacterController CC;
         public ExampleCharacterCamera CharacterCamera;
         [SerializeField] MainEventChannelSO MainEventChannelSO;
         [SerializeField] TransformEventSO playerReference;
@@ -28,7 +28,6 @@ namespace KinematicCharacterController.Examples
 
         private void OnEnable()
         {
-            playerReference.OnRaiseEvent += GetPlayerReference;
             inputActions.GamePlay.Enable();
             //_disableControls.OnRaiseEvent += DisableControls;
             //_enableControls.OnRaiseEvent += EnableControls;
@@ -67,6 +66,7 @@ namespace KinematicCharacterController.Examples
 
         private void Awake()
         {
+            //playerReference.OnRaiseEvent += GetPlayerReference;
             inputActions = InputManager.inputActions;
             playerInput = GetComponent<PlayerInput>();
         }
