@@ -44,9 +44,9 @@ namespace KinematicCharacterController.Examples
         }
         private void Awake()
         {
+            PlayerRef.RaiseEvent(transform);
             cc = GetComponent<TheCharacterController>();
             _animator = GetComponent<Animator>();
-            PlayerRef.RaiseEvent(transform);
         }
         private void TeleportPlayer(Vector3 location, Quaternion rotation)
         {

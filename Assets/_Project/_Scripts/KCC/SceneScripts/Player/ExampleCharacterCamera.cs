@@ -83,7 +83,9 @@ namespace KinematicCharacterController.Examples
 
             PlanarDirection = Vector3.forward;
         }
-        void OnDestroy() => PlayerReference.OnRaiseEvent -= GetPlayerReference;
+        
+        void OnEnable() => PlayerReference.OnRaiseEvent += GetPlayerReference;
+        void OnDisable() => PlayerReference.OnRaiseEvent -= GetPlayerReference;
         void GetPlayerReference(Transform player) => _player = player;
         
         // Set the transform that the camera will orbit around
