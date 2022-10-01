@@ -10,7 +10,7 @@ namespace MyTownProject.Core
         [SerializeField] int targetFrameRate;
         private void Awake()
         {
-            if(GameObject.Find("New Game Manager")) Destroy(gameObject);
+            //if(GameObject.Find("New Game Manager")) Destroy(gameObject);
             if(setFrameRate)
                 Application.targetFrameRate = targetFrameRate;
             else
@@ -19,8 +19,8 @@ namespace MyTownProject.Core
 
         void Start()
         {
-            DontDestroyOnLoad(gameObject);
-            gameObject.name = "New Game Manager";
+            //DontDestroyOnLoad(gameObject);
+            //gameObject.name = "New Game Manager";
             StartCoroutine(EnterScene());
         }
 

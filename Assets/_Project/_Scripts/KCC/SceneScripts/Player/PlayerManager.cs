@@ -108,7 +108,6 @@ namespace KinematicCharacterController.Examples
         }
         void ClimbingState(){
             
-            
         }
         void TargetingState(){
 
