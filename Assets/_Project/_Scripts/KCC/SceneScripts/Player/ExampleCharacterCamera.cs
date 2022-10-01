@@ -58,10 +58,10 @@ namespace KinematicCharacterController.Examples
 
         [Header("Targeting Cam")]
         [SerializeField] float _rotateToTargetSpeed;
-        Transform _player;
+        [SerializeField] Transform _player;
         public bool isTargeting;
         Camera mainCam;
-        TransformEventSO PlayerReference;
+        [SerializeField] TransformEventSO PlayerReference;
 
         void OnValidate()
         {
@@ -71,7 +71,7 @@ namespace KinematicCharacterController.Examples
 
         void Awake()
         {
-            PlayerReference.OnRaiseEvent += GetPlayerReference;
+            //PlayerReference.OnRaiseEvent += GetPlayerReference;
             currentCharacterState = CharacterState.Default;
             mainCam = Camera.main;
             Transform = this.transform;
@@ -83,9 +83,13 @@ namespace KinematicCharacterController.Examples
 
             PlanarDirection = Vector3.forward;
         }
-        
-        void OnEnable() => PlayerReference.OnRaiseEvent += GetPlayerReference;
-        void OnDisable() => PlayerReference.OnRaiseEvent -= GetPlayerReference;
+
+        void OnEnable() {
+            PlayerReference.OnRaiseEvent += GetPlayerReference;
+        } 
+        void OnDisable(){
+            PlayerReference.OnRaiseEvent -= GetPlayerReference;
+        } 
         void GetPlayerReference(Transform player) => _player = player;
         
         // Set the transform that the camera will orbit around

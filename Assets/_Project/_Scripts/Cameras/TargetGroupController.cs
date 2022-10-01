@@ -15,7 +15,7 @@ public class TargetGroupController : MonoBehaviour
     [SerializeField] TransformEventSO _changeToNextTarget;
     [SerializeField] GeneralEventSO _unTargetingEvent;
     CinemachineTargetGroup targetGroup;
-    GameObject _player;
+    [SerializeField] GameObject _player;
     void OnEnable(){
         targetGroup = GetComponent<CinemachineTargetGroup>();
         playerRef.OnRaiseEvent += SetPlayerReference;

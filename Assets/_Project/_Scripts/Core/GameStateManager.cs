@@ -60,21 +60,21 @@ namespace MyTownProject.Core
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 0f;
-            myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
+            //myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
         private void HandleGamePaused()
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 0f;
-            myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
+            //myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
         private void HandleGamePlaying()
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 1f;
-            myPlayerInput.GetComponent<ExamplePlayer>().enabled = true; //Turning on ExamplePlayerScript
+            //myPlayerInput.GetComponent<ExamplePlayer>().enabled = true; //Turning on ExamplePlayerScript
         }
         #endregion
 
