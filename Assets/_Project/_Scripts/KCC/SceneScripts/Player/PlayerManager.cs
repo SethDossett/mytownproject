@@ -30,7 +30,8 @@ namespace KinematicCharacterController.Examples
         Animator _animator;
 
         private void OnEnable()
-        {   DialogueEvent.onExit += DefaultState;
+        {   
+            DialogueEvent.onExit += DefaultState;
             teleportPlayer.OnTeleport += TeleportPlayer;
             TheCharacterController.OnPlayerStateChanged += StateChange;
             GameStateManager.OnGameStateChanged += GameStateChanged;
@@ -44,9 +45,14 @@ namespace KinematicCharacterController.Examples
         }
         private void Awake()
         {
-            PlayerRef.RaiseEvent(transform);
             cc = GetComponent<TheCharacterController>();
             _animator = GetComponent<Animator>();
+        }
+        void Start(){
+            //Calls Event to pass a refence to player to other scripts
+            //Other Scripts are subscribed in Awake()
+            PlayerRef.RaiseEvent(transform);
+
         }
         private void TeleportPlayer(Vector3 location, Quaternion rotation)
         {

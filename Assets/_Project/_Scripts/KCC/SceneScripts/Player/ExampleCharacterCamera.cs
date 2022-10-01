@@ -71,7 +71,7 @@ namespace KinematicCharacterController.Examples
 
         void Awake()
         {
-            //PlayerReference.OnRaiseEvent += GetPlayerReference;
+            PlayerReference.OnRaiseEvent += GetPlayerReference;
             currentCharacterState = CharacterState.Default;
             mainCam = Camera.main;
             Transform = this.transform;
@@ -83,12 +83,14 @@ namespace KinematicCharacterController.Examples
 
             PlanarDirection = Vector3.forward;
         }
+        void OnDestroy(){
+            PlayerReference.OnRaiseEvent -= GetPlayerReference;
+        }
 
         void OnEnable() {
-            PlayerReference.OnRaiseEvent += GetPlayerReference;
+            //PlayerReference.OnRaiseEvent += GetPlayerReference;
         } 
         void OnDisable(){
-            PlayerReference.OnRaiseEvent -= GetPlayerReference;
         } 
         void GetPlayerReference(Transform player) => _player = player;
         

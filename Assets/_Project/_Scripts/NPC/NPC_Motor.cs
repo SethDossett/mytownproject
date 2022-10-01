@@ -16,16 +16,21 @@ namespace MyTownProject.NPC
         bool _talking = false;
 
         Quaternion _prevRotation;
+        void Awake(){
+            playerRef.OnRaiseEvent += SetPlayerReference;
+
+        }
+        void OnDestroy(){
+            playerRef.OnRaiseEvent -= SetPlayerReference;
         
+        }
         private void OnEnable()
         {
             //TransformEventSO.OnRaiseEvent
-            playerRef.OnRaiseEvent += SetPlayerReference;
             NPC.OnChangedState += CheckNPCState;
         }
         private void OnDisable()
         {
-            playerRef.OnRaiseEvent -= SetPlayerReference;
             NPC.OnChangedState -= CheckNPCState;
         }
         void SetPlayerReference(Transform player) => _player = player;

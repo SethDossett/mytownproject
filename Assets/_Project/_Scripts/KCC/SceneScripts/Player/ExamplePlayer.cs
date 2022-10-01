@@ -66,7 +66,7 @@ namespace KinematicCharacterController.Examples
 
         private void Awake()
         {
-            //playerReference.OnRaiseEvent += GetPlayerReference;
+            playerReference.OnRaiseEvent += GetPlayerReference;
             inputActions = InputManager.inputActions;
             playerInput = GetComponent<PlayerInput>();
         }
