@@ -71,6 +71,7 @@ namespace KinematicCharacterController.Examples
 
         void Awake()
         {
+            print($"awake {gameObject.name}");
             PlayerReference.OnRaiseEvent += GetPlayerReference;
             currentCharacterState = CharacterState.Default;
             mainCam = Camera.main;
@@ -92,7 +93,11 @@ namespace KinematicCharacterController.Examples
         } 
         void OnDisable(){
         } 
-        void GetPlayerReference(Transform player) => _player = player;
+        void GetPlayerReference(Transform player){
+            _player = player;
+            
+            print($"Got Ref {gameObject.name}");
+        }
         
         // Set the transform that the camera will orbit around
         public void SetFollowTransform(Transform t)

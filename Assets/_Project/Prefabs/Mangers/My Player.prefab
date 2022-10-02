@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 461cd396e3fc7cc4eb9c92bde05c1b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CC: {fileID: 0}
   CharacterCamera: {fileID: 0}
   MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   playerReference: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}

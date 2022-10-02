@@ -17,6 +17,7 @@ public class TargetGroupController : MonoBehaviour
     CinemachineTargetGroup targetGroup;
     [SerializeField] GameObject _player;
     void Awake(){
+        print($"awake {gameObject.name}");
         playerRef.OnRaiseEvent += SetPlayerReference;
     }
     void OnDestroy(){
@@ -40,10 +41,11 @@ public class TargetGroupController : MonoBehaviour
     
     void SetPlayerReference(Transform player){
         _player = player.gameObject;
+        print($"Got Ref {gameObject.name}");
+        AddPlayer();
     } 
 
     void Start(){
-        AddPlayer();
     }
 
     void AddPlayer(){

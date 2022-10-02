@@ -62,10 +62,12 @@ namespace KinematicCharacterController.Examples
         void GetPlayerReference(Transform player){
             _player = player;
             CC = _player.GetComponent<TheCharacterController>();
+            print($"Got Ref {gameObject.name}");
         }  
 
         private void Awake()
         {
+            print($"awake {gameObject.name}");
             playerReference.OnRaiseEvent += GetPlayerReference;
             inputActions = InputManager.inputActions;
             playerInput = GetComponent<PlayerInput>();

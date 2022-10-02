@@ -17,6 +17,7 @@ namespace MyTownProject.NPC
 
         Quaternion _prevRotation;
         void Awake(){
+            print($"awake {gameObject.name}");
             playerRef.OnRaiseEvent += SetPlayerReference;
 
         }

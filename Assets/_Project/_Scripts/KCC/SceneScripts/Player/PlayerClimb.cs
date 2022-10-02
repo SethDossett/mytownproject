@@ -10,6 +10,7 @@ namespace KinematicCharacterController.Examples{
         TheCharacterController CC;
         NewControls inputActions;
         CapsuleCollider _capsule;
+        CharacterState CurrentCharacterState;
 
         [Header("Raycast Checks")]
         [SerializeField] LayerMask _groundLayer;
@@ -44,16 +45,13 @@ namespace KinematicCharacterController.Examples{
         [Header("Checks")]
         public bool _isClimbing;
         bool _onGround;
-
-
-        
+        bool _crawling;
 
         [Header("Heights")]
         [SerializeField] float _hangHeight = 1.5f;
         [SerializeField] float _climbUpHeight = 0.9f;
         [SerializeField] float _vaultHeight = 0.4f;
         [SerializeField] float _stepUpHeight = 0.25f;
-
 
         [Header("Animations")]
         Animator _animator;
@@ -68,7 +66,6 @@ namespace KinematicCharacterController.Examples{
         int anim_StepUp = Animator.StringToHash("StepUp");
         int anim_FreeHangDrop = Animator.StringToHash("FreeHangDrop");
         int anim_HangClimbUp = Animator.StringToHash("HangClimbUp");
-
 
 
         private void OnEnable() {
@@ -87,16 +84,25 @@ namespace KinematicCharacterController.Examples{
             _capsule = GetComponent<CapsuleCollider>();
         }
         void PlayerStateChange(CharacterState state){
+            CurrentCharacterState = state;
             if(state == CharacterState.Default){
                 _onGround = true;
                 _isClimbing = false;
+                _crawling = false;
             }
             else if(state == CharacterState.Jumping){
                 _onGround = false;
                 _isClimbing = false;
+                _crawling = false;
+            }
+            else if(state == CharacterState.Crawling){
+                _onGround = true;
+                _isClimbing = false;
+                _crawling = true;
             }
             else{
                 _isClimbing = true;
+                _crawling = false;
             }
         }
         void Update()
@@ -107,19 +113,31 @@ namespace KinematicCharacterController.Examples{
 
         }
         void GroundCheck(){
-            //Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
-            Vector3 input = CC._moveInputVector;
-            float dot = Vector3.Dot(input, transform.forward.normalized);
-            if(dot >= 0.9f){
-                if(CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition)){
-                    InitiateClimb();
+            if(!_crawling){
+                Vector3 input = CC._moveInputVector;
+                float dot = Vector3.Dot(input, transform.forward.normalized);
+                if(dot >= 0.9f){
+                    if(CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition)){
+                        InitiateClimb();
+                    }
+                    else timer = 0;
                 }
-                else timer = 0;
+                
             }
+            else{
+                _downOrigin = transform.TransformPoint(_downCastOffset);
+                _downRaycastHitDis = _downHitInfo.point.y - transform.position.y;
+                if(!DownCast() || _downRaycastHitDis >= 0)
+                {
+                    print("dont move");
+                }
+            }
+
         }
         void InAirCheck(){
-            if(DetectLedge()){
+            if(DetectLedge(transform.TransformPoint(_downCastOffset))){
                 print("grab ledge");
+                GrabLedge();
             }
             return;
         }
@@ -277,9 +295,10 @@ namespace KinematicCharacterController.Examples{
             yield break;
         }
         
-        bool DetectLedge(){
+        bool DetectLedge(Vector3 downOrigin){
             //downcast if there is a ledge infront of player
-            _downOrigin = transform.TransformPoint(_downCastOffset);
+            _downOrigin = downOrigin;
+            //_downOrigin = transform.TransformPoint(_downCastOffset);
             if(!DownCast()) return false;
 
             //Send forwardcast to see what angle player is facing
@@ -292,18 +311,20 @@ namespace KinematicCharacterController.Examples{
             //check distance from players feet to ledge
             _downRaycastHitDis = _downHitInfo.point.y - transform.position.y;
             if(_downRaycastHitDis > 0.5f){
-                CC.TransitionToState(CharacterState.Climbing);
-                _isClimbing = true;
-                _matchTargetPosition = transform.TransformPoint(0, _downRaycastHitDis - 1.21f, amount);
-                _matchTargetRotation = transform.rotation;
-                CC.Motor.Capsule.enabled = false;
-                StartCoroutine(DoClimb(1, _matchTargetPosition, _matchTargetRotation, 10));
-                _animator.CrossFadeInFixedTime(anim_Hang, .25f, 0);
-                CC._isHanging = true;
                 return true;
             }
 
             return false;
+        }
+        void GrabLedge(){
+            CC.TransitionToState(CharacterState.Climbing);
+            _isClimbing = true;
+            _matchTargetPosition = transform.TransformPoint(0, _downRaycastHitDis - 1.21f, amount);
+            _matchTargetRotation = transform.rotation;
+            CC.Motor.Capsule.enabled = false;
+            StartCoroutine(DoClimb(1, _matchTargetPosition, _matchTargetRotation, 10));
+            _animator.CrossFadeInFixedTime(anim_Hang, .25f, 0);
+            CC._isHanging = true;
         }
         private void OnDrawGizmos()
         {

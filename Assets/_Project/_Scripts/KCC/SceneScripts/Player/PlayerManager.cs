@@ -51,6 +51,7 @@ namespace KinematicCharacterController.Examples
         void Start(){
             //Calls Event to pass a refence to player to other scripts
             //Other Scripts are subscribed in Awake()
+            print("Start Event Called");
             PlayerRef.RaiseEvent(transform);
 
         }

@@ -394,7 +394,7 @@ namespace KinematicCharacterController.Examples
                             if (!_isCrouching)
                             {
                                 _isCrouching = true;
-                                Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
+                                Motor.SetCapsuleDimensions(0.44f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
                                 //MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
                                 if (_animator.GetBool(anim_isCrouched) != true)
                                     _animator.SetBool(anim_isCrouched, true);
@@ -471,7 +471,7 @@ namespace KinematicCharacterController.Examples
                         // Camera Recenter while Moving
                         if(_moveInputVector.magnitude > 0 && _moveBackwards == false)
                             RecenterCamX.ThreeFloats(0, 2f,0);
-                        else
+                        else// need to turn off once but not over and over
                             DisableRecentering.RaiseEvent();
 
                         // If player presses opposite direction crawl backwards
@@ -1226,7 +1226,8 @@ namespace KinematicCharacterController.Examples
                         if (_isCrouching && !_shouldBeCrouching)
                         {
                             // Do an overlap test with the character's standing height to see if there are any obstructions
-                            Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
+                            // Original Values SetCapsuleDimensions(0.5f, 2f, 1f);
+                            Motor.SetCapsuleDimensions(0.44f, 1.6f, 0.8f);
                             if (Motor.CharacterOverlap(
                                 Motor.TransientPosition,
                                 Motor.TransientRotation,
