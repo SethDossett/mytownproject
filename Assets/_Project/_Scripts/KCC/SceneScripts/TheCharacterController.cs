@@ -100,6 +100,7 @@ namespace KinematicCharacterController.Examples
         public bool _hasTargetToLockOn;
 
         [Header("Crawling")]
+        FallOffPrevention fallOffPrevention;
         [SerializeField] float _crawlSpeed = 2f;
         float _crawlRotationSpeed = 1f;
         bool _hasFinishedCrouch;
@@ -264,6 +265,7 @@ namespace KinematicCharacterController.Examples
                     } 
                 case CharacterState.Crawling:
                     {
+                        fallOffPrevention.enabled = true;
                         _canCrouch = false;
                         _moveBackwards = false;
                         OrientationSharpness = _crawlRotationSpeed;
@@ -315,6 +317,7 @@ namespace KinematicCharacterController.Examples
                     } 
                 case CharacterState.Crawling:
                     {
+                        fallOffPrevention.enabled = false;
                         DisableRecentering.RaiseEvent();
                         OrientationSharpness = _defaultOrientationSharpness;
                         _hasFinishedCrouch = false;
@@ -339,6 +342,7 @@ namespace KinematicCharacterController.Examples
         {
             _animator = GetComponent<Animator>();
             playerClimb = GetComponent<PlayerClimb>();
+            fallOffPrevention = GetComponent<FallOffPrevention>();
             cam = Camera.main;
             RatePerSecond = MaxSpeed / accelTime;
             MaxStableMoveSpeed = 2;

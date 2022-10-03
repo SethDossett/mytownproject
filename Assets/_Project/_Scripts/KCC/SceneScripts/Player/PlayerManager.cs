@@ -9,25 +9,31 @@ namespace KinematicCharacterController.Examples
 {
     public class PlayerManager : MonoBehaviour
     {
+        [Header("References")]
+        public Transform _LookAtPoint;
         [SerializeField] CharacterState CurrentCharacterState;
+        Animator _animator;
+        TheCharacterController cc;
+
+        [Header("Events")]
         [SerializeField] TransformEventSO PlayerRef;
         [SerializeField] StateChangerEventSO stateChangedEvent;
         [SerializeField] ActionSO teleportPlayer;
         [SerializeField] DialogueEventsSO DialogueEvent;
-        TheCharacterController cc;
+        [SerializeField] UnityEvent GamePlayingAction;
+        [SerializeField] UnityEvent GamePausedAction;
+        [SerializeField] UnityEvent CutSceneAction;
+        public UnityAction<TheCharacterController> OnCharacterTeleport;
+
+        [Header("States")]
         CharacterState _default = CharacterState.Default;
         CharacterState _climbing = CharacterState.ClimbLadder;
         CharacterState _targeting = CharacterState.Targeting;
         CharacterState _talking = CharacterState.Talking;
         CharacterState _crawling = CharacterState.Crawling;
-        public Transform _LookAtPoint;
-        public UnityAction<TheCharacterController> OnCharacterTeleport;
-        [SerializeField] UnityEvent GamePlayingAction;
-        [SerializeField] UnityEvent GamePausedAction;
-        [SerializeField] UnityEvent CutSceneAction;
+
         public bool isBeingTeleportedTo { get; set; }
         
-        Animator _animator;
 
         private void OnEnable()
         {   
