@@ -244,6 +244,7 @@ namespace KinematicCharacterController.Examples
                     {
                         Motor.ForceUnground();
                         _climbTimer = 0;
+                        _timeFallingInAir = 0f;
 
                         break;
                     }    
@@ -1418,6 +1419,7 @@ namespace KinematicCharacterController.Examples
             }
             //Pressed Interact Btn to drop
             if(_dropDownRequested){
+                _startFallingTimer = true;
                 _dropDownRequested = false;
                 Motor.Capsule.enabled = true;
                 TransitionToState(CharacterState.Default);

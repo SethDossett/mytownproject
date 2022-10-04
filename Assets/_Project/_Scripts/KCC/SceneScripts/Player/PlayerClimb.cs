@@ -41,6 +41,7 @@ namespace KinematicCharacterController.Examples{
         float _wallAngle;
         [SerializeField] [Range(0f,0.6f)] float _climbBufferTime = 0.3f;
         float timer = 0;
+        float _climbingTimer = 0;
 
         [Header("Checks")]
         public bool _isClimbing;
@@ -73,7 +74,7 @@ namespace KinematicCharacterController.Examples{
             TheCharacterController.OnPlayerStateChanged += PlayerStateChange;
         }
         private void OnDisable() {
-            inputActions.GamePlay.Enable();
+            inputActions.GamePlay.Disable();
         }
         void Awake(){
             inputActions = new NewControls();
@@ -82,6 +83,7 @@ namespace KinematicCharacterController.Examples{
             _animator = GetComponent<Animator>();
             CC = GetComponent<TheCharacterController>();
             _capsule = GetComponent<CapsuleCollider>();
+            _onGround = true;
         }
         void PlayerStateChange(CharacterState state){
             CurrentCharacterState = state;
@@ -119,6 +121,7 @@ namespace KinematicCharacterController.Examples{
                 if(dot >= 0.9f){
                     if(CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition)){
                         InitiateClimb();
+                        print("Initiate");
                     }
                     else timer = 0;
                 }
@@ -141,7 +144,6 @@ namespace KinematicCharacterController.Examples{
             }
             return;
         }
-        //bool LedgeCast(){}
         bool DownCast(){
             // was downcastoffset.y - 0.4f, so it did not go lower than step height,
             // but now i want low enough that i can see if i can hang.
@@ -194,11 +196,11 @@ namespace KinematicCharacterController.Examples{
 
                 //Up Sweep
                 float inflate = -0.05f;
-                float upSweepDistance = _downHitInfo.point.y - transform.position.y;
+                float upSweepDistance = (_downHitInfo.point.y - transform.position.y);
                 Vector3 upSweepDirection = transform.up;
                 Vector3 upSweepOrigin = transform.position; 
                 bool upSweepHit = CharacterSweep(upSweepOrigin, transform.rotation, upSweepDirection, upSweepDistance, _groundLayer, inflate);
-
+                if(upSweepHit) print("Upsweep");
                 //Forward Sweep
                 Vector3 forwardSweepOrigin = transform.position + upSweepDirection * upSweepDistance;
                 Vector3 forwardSweepVector = _endPosition - forwardSweepOrigin;
@@ -283,22 +285,23 @@ namespace KinematicCharacterController.Examples{
 
         IEnumerator DoClimb(float loopTime, Vector3 goalPos,Quaternion goalRot, float speed){
             CC._gettingOnOffObstacle = true;
-            float timer = 0;
-            while(timer < loopTime){
-                timer += Time.deltaTime;
+            _climbingTimer = 0;
+            while(_climbingTimer < loopTime){
+                _climbingTimer += Time.deltaTime;
                 CC.Motor.SetTransientPosition(goalPos, true, speed);
                 //CC.Motor.SetPosition(goalPos);
                 CC.Motor.SetRotation(goalRot);
                 yield return null;
             }
             CC._gettingOnOffObstacle = false;
+            _climbingTimer = 0;
             yield break;
         }
         
         bool DetectLedge(Vector3 downOrigin){
             //downcast if there is a ledge infront of player
-            _downOrigin = downOrigin;
-            //_downOrigin = transform.TransformPoint(_downCastOffset);
+            //_downOrigin = downOrigin;
+            _downOrigin = transform.TransformPoint(_downCastOffset);
             if(!DownCast()) return false;
 
             //Send forwardcast to see what angle player is facing
