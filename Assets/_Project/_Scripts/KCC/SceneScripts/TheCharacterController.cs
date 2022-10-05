@@ -861,12 +861,20 @@ namespace KinematicCharacterController.Examples
                                 }
                             }
                             //Drop To Hang
-                            else if(_jumpRequested && currentVelocity.magnitude < _speedNeededToJump){
-                                if(CanHang){
+                            else if (_jumpRequested && currentVelocity.magnitude < _speedNeededToJump)
+                            {
+                                if (CanHang)
+                                {
                                     currentVelocity = Vector3.zero;
                                     StartCoroutine(DropToHang());
                                 }
+                                //Just Fall off
+                                else
+                                    _jumpRequested = false;
+
                             }
+                            else
+                                _jumpRequested = false;
                         }
                         // Take into account additive velocity
                         //Does not currently get called
@@ -1457,12 +1465,13 @@ namespace KinematicCharacterController.Examples
             
         }
         IEnumerator ClimbBackUp(Quaternion goalRot){
+            print("Booya");
             //Disable Controls
             _gettingOnOffObstacle = true;
             _isHanging = false;
             Vector3 goalPos = transform.TransformPoint(0, 1.3f, 0.3f);
             float timer = 0;
-            while(timer < 1){
+            while(timer < 0.75f){
                 timer += Time.deltaTime;
                 Motor.SetTransientPosition(goalPos, true, 1.8f);
                 Motor.SetRotation(goalRot);

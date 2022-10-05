@@ -67,7 +67,7 @@ namespace KinematicCharacterController.Examples{
         int anim_StepUp = Animator.StringToHash("StepUp");
         int anim_FreeHangDrop = Animator.StringToHash("FreeHangDrop");
         int anim_HangClimbUp = Animator.StringToHash("HangClimbUp");
-
+        int anim_GrabLedge = Animator.StringToHash("GrabLedge");
 
         private void OnEnable() {
             inputActions.GamePlay.Enable();
@@ -251,7 +251,7 @@ namespace KinematicCharacterController.Examples{
                 _matchTargetPosition = transform.TransformPoint(0, climbHeight - 1.21f, amount);
                 _matchTargetRotation = _forwardNormalXZRotation;
                 CC.Motor.Capsule.enabled = false;
-                StartCoroutine(DoClimb(1, _matchTargetPosition, transform.rotation, 5));
+                StartCoroutine(DoClimb(0.4f, 1, _matchTargetPosition, transform.rotation, 2.5f));
                 _animator.CrossFadeInFixedTime(anim_JumpToHang, .25f, 0);
                 CC._isHanging = true;
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
@@ -259,21 +259,21 @@ namespace KinematicCharacterController.Examples{
             else if(climbHeight > _climbUpHeight){
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(1, _matchTargetPosition, _matchTargetRotation, 5));
+                StartCoroutine(DoClimb(0, 1, _matchTargetPosition, _matchTargetRotation, 2.5f));
                 _animator.CrossFadeInFixedTime(anim_ClimbUp, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.23f);
             }
             else if(climbHeight > _vaultHeight){
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(1, _matchTargetPosition, _matchTargetRotation, 5));
+                StartCoroutine(DoClimb(0, 1, _matchTargetPosition, _matchTargetRotation, 5));
                 _animator.CrossFadeInFixedTime(anim_Vault, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.05f, 0.16f);
             }
             else if(climbHeight > _stepUpHeight){
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(1, _matchTargetPosition, _matchTargetRotation, 5));
+                StartCoroutine(DoClimb(0, 1, _matchTargetPosition, _matchTargetRotation, 5));
                 _animator.CrossFadeInFixedTime(anim_StepUp, 0.1f, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.12f);
             }
@@ -283,9 +283,13 @@ namespace KinematicCharacterController.Examples{
         }
 
 
-        IEnumerator DoClimb(float loopTime, Vector3 goalPos,Quaternion goalRot, float speed){
+        IEnumerator DoClimb(float waitTime,float loopTime, Vector3 goalPos,Quaternion goalRot, float speed){
+            //Disable Controls with gettingOnOffObstacle
             CC._gettingOnOffObstacle = true;
             _climbingTimer = 0;
+            //How much time before we start moving Character
+            yield return new WaitForSeconds(waitTime);
+            // Move Character, Loop time is how long animation takes
             while(_climbingTimer < loopTime){
                 _climbingTimer += Time.deltaTime;
                 CC.Motor.SetTransientPosition(goalPos, true, speed);
@@ -293,6 +297,7 @@ namespace KinematicCharacterController.Examples{
                 CC.Motor.SetRotation(goalRot);
                 yield return null;
             }
+            //Enable Controls with gettingOnOffObstacle
             CC._gettingOnOffObstacle = false;
             _climbingTimer = 0;
             yield break;
@@ -325,14 +330,14 @@ namespace KinematicCharacterController.Examples{
             _matchTargetPosition = transform.TransformPoint(0, _downRaycastHitDis - 1.21f, amount);
             _matchTargetRotation = transform.rotation;
             CC.Motor.Capsule.enabled = false;
-            StartCoroutine(DoClimb(1, _matchTargetPosition, _matchTargetRotation, 10));
-            _animator.CrossFadeInFixedTime(anim_Hang, .25f, 0);
+            StartCoroutine(DoClimb(0, 1, _matchTargetPosition, _matchTargetRotation, 10));
+            _animator.CrossFadeInFixedTime(anim_GrabLedge, .25f, 0);
             CC._isHanging = true;
         }
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawRay(transform.TransformPoint(_downCastOffset), Vector3.down * (_downCastOffset.y - 0.4f));
+            Gizmos.DrawRay(transform.TransformPoint(_downCastOffset), Vector3.down * (_downCastOffset.y + _downCastRayLength));
             Gizmos.DrawRay(_forwardCastOffset, transform.forward * 5f);
             Gizmos.DrawRay(_overPassCastOffset, transform.forward * 5f);
 

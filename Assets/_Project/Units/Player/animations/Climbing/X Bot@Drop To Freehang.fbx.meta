@@ -6,6 +6,9 @@ ModelImporter:
   - first:
       74: -203655887218126122
     second: Drop To Freehang
+  - first:
+      74: -2738584534318521346
+    second: Grab Ledge
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -38,7 +41,36 @@ ModelImporter:
       name: Drop To Freehang
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 24
+      firstFrame: 37
+      lastFrame: 51
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 1
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Grab Ledge
+      takeName: mixamo.com
+      internalID: 0
+      firstFrame: 38
       lastFrame: 51
       wrapMode: 0
       orientationOffsetY: 0
