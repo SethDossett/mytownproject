@@ -250,8 +250,7 @@ namespace KinematicCharacterController.Examples{
                 //_matchTargetPosition = _forwardHitInfo.point + _forwardNormalXZRotation * _hangOffset;
                 _matchTargetPosition = transform.TransformPoint(0, climbHeight - 1.21f, amount);
                 _matchTargetRotation = _forwardNormalXZRotation;
-                CC.Motor.Capsule.enabled = false;
-                StartCoroutine(DoClimb(0.4f, 1, _matchTargetPosition, transform.rotation, 2.5f));
+                StartCoroutine(DoClimb(0.4f, 1, _matchTargetPosition, transform.rotation, 2.5f, true));
                 _animator.CrossFadeInFixedTime(anim_JumpToHang, .25f, 0);
                 CC._isHanging = true;
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
@@ -259,7 +258,7 @@ namespace KinematicCharacterController.Examples{
             else if(climbHeight > _climbUpHeight){
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(0, 1, _matchTargetPosition, _matchTargetRotation, 2.5f));
+                StartCoroutine(DoClimb(0, 0.65f, _matchTargetPosition, _matchTargetRotation, 2.5f, true));
                 _animator.CrossFadeInFixedTime(anim_ClimbUp, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.23f);
             }
@@ -283,12 +282,14 @@ namespace KinematicCharacterController.Examples{
         }
 
 
-        IEnumerator DoClimb(float waitTime,float loopTime, Vector3 goalPos,Quaternion goalRot, float speed){
+        IEnumerator DoClimb(float waitTime,float loopTime, Vector3 goalPos,Quaternion goalRot, float speed, bool controlCapsule = false){
             //Disable Controls with gettingOnOffObstacle
             CC._gettingOnOffObstacle = true;
             _climbingTimer = 0;
             //How much time before we start moving Character
             yield return new WaitForSeconds(waitTime);
+            //If true we will disable collider while animation is playing
+            if(controlCapsule) CC.CapsuleEnable(false);
             // Move Character, Loop time is how long animation takes
             while(_climbingTimer < loopTime){
                 _climbingTimer += Time.deltaTime;
@@ -299,6 +300,11 @@ namespace KinematicCharacterController.Examples{
             }
             //Enable Controls with gettingOnOffObstacle
             CC._gettingOnOffObstacle = false;
+            // If true we will enable collider after animation, unless isHanging
+            if (controlCapsule) {
+                if(!CC._isHanging)
+                    CC.CapsuleEnable(true);
+            } 
             _climbingTimer = 0;
             yield break;
         }
@@ -329,7 +335,7 @@ namespace KinematicCharacterController.Examples{
             _isClimbing = true;
             _matchTargetPosition = transform.TransformPoint(0, _downRaycastHitDis - 1.21f, amount);
             _matchTargetRotation = transform.rotation;
-            CC.Motor.Capsule.enabled = false;
+            CC.CapsuleEnable(false);
             StartCoroutine(DoClimb(0, 1, _matchTargetPosition, _matchTargetRotation, 10));
             _animator.CrossFadeInFixedTime(anim_GrabLedge, .25f, 0);
             CC._isHanging = true;

@@ -851,8 +851,11 @@ namespace KinematicCharacterController.Examples
 
                                     // Add to the return velocity and reset jump state
                                     //currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
-                                    currentVelocity = (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
-                                    currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
+                                    currentVelocity = transform.forward * JumpScalableForwardSpeed;
+                                    currentVelocity.y = JumpUpSpeed;
+                                    //currentVelocity = (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                                    //currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
+                                    print(currentVelocity);
                                     _jumpRequested = false;
                                     _jumpConsumed = true;
                                     _jumpedThisFrame = true;
@@ -1408,6 +1411,10 @@ namespace KinematicCharacterController.Examples
             }            
             
         }
+        public void CapsuleEnable(bool enable = true)
+        {
+            Motor.Capsule.enabled = enable;
+        }
 
         void HangingChecks(){
             float dot = Vector3.Dot(_moveInputVector, transform.forward.normalized);
@@ -1429,7 +1436,7 @@ namespace KinematicCharacterController.Examples
             if(_dropDownRequested){
                 _startFallingTimer = true;
                 _dropDownRequested = false;
-                Motor.Capsule.enabled = true;
+                CapsuleEnable(true);
                 TransitionToState(CharacterState.Default);
                 _gettingOnOffObstacle = false;
                 _isHanging = false;
@@ -1448,7 +1455,7 @@ namespace KinematicCharacterController.Examples
             playerClimb._isClimbing = true;
             _isHanging = true;
             Gravity = Vector3.zero;
-            Motor.Capsule.enabled = false;
+            CapsuleEnable(false);
             _animator.CrossFadeInFixedTime(anim_DropToHang, 0.1f, 0);
             Vector3 goalPos = transform.TransformPoint(0, -1.3f, 0.1f);
             TransitionToState(CharacterState.Climbing);
@@ -1478,7 +1485,7 @@ namespace KinematicCharacterController.Examples
                 yield return null;
             }
             print("done2");
-            Motor.Capsule.enabled = true;
+            CapsuleEnable(true);
             //Moveinputvector needs to be 0 at this point.
             TransitionToState(CharacterState.Default);
             _gettingOnOffObstacle = false;
