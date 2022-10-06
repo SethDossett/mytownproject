@@ -1563,8 +1563,26 @@ MonoBehaviour:
   _moveInputVector: {x: 0, y: 0, z: 0}
   _isCrouching: 0
   _cannotTarget: 0
-  accelTime: 3
-  decelTime: 3
+  _accelerateCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _decelerateCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _slideDecelerateCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  accelTime: 2
+  decelTime: 2
   turnSlideTime: 4
   _slideDuration: 0.15
   dialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
@@ -1798,7 +1816,7 @@ MonoBehaviour:
   _minDistance: 0
   _distance: 2.5
   _count: 8
-  _maxHeight: 2.5
+  _maxHeight: 0.66
   _testsCount: 5
   _layer: 0
   _offset: {x: 0, y: 0.25, z: 0}
