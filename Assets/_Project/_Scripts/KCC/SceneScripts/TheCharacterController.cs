@@ -174,6 +174,9 @@ namespace KinematicCharacterController.Examples
 
         [Header("Acceleration")]
         float MaxSpeed = 6f;
+        [SerializeField] AnimationCurve _accelerateCurve;
+        [SerializeField] AnimationCurve _decelerateCurve;
+        [SerializeField] AnimationCurve _slideDecelerateCurve;
         [Range(0,10f)] [SerializeField] float accelTime = 2f;
         [Range(0,10f)] [SerializeField] float decelTime = 2f;
         [Range(0,10f)] [SerializeField] float turnSlideTime = 4f;
