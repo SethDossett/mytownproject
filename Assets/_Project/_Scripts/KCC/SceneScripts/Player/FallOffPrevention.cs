@@ -10,7 +10,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _minDistance = 0.6f;
         [SerializeField] private float _distance = 2.5f;
         [SerializeField] private int _count = 8;
-        [SerializeField] private float _maxHeight = 2.5f;
+        [SerializeField] private float _maxHeight = 0.66f;// 0.4f ledge he can crawl off, 0.5f he cant, dont know where limit is in between.
         [SerializeField] private int _testsCount = 5;
         [SerializeField] private int _layer;
         [SerializeField] private Vector3 _offset = new Vector3(0, 1f, 0);

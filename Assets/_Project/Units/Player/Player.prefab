@@ -1564,6 +1564,8 @@ MonoBehaviour:
   _isCrouching: 0
   _cannotTarget: 0
   accelTime: 3
+  decelTime: 3
+  turnSlideTime: 4
   _slideDuration: 0.15
   dialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}

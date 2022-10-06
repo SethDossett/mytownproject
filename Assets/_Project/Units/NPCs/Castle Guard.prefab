@@ -1082,7 +1082,7 @@ MonoBehaviour:
   <Targeted>k__BackingField: 0
   <BeenTargeted>k__BackingField: 0
   <DoesAngleMatter>k__BackingField: 1
-  <MaxNoticeAngle>k__BackingField: 0
+  <MaxNoticeAngle>k__BackingField: 90
   <MaxNoticeRange>k__BackingField: 7
   <MaxInteractRange>k__BackingField: 5
   <Prompt>k__BackingField: Talk

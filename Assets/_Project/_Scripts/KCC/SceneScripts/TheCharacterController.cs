@@ -174,7 +174,9 @@ namespace KinematicCharacterController.Examples
 
         [Header("Acceleration")]
         float MaxSpeed = 6f;
-        [SerializeField] float accelTime = 3f;
+        [Range(0,10f)] [SerializeField] float accelTime = 2f;
+        [Range(0,10f)] [SerializeField] float decelTime = 2f;
+        [Range(0,10f)] [SerializeField] float turnSlideTime = 4f;
         float RatePerSecond;
         float turnAroundBuffer;
         [Range(0f,0.7f)][SerializeField] float _slideDuration = 0.15f;
@@ -536,6 +538,8 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
+                        //if(changingDirection) return;
+
                         if (_lookInputVector.sqrMagnitude > 0f && OrientationSharpness > 0f)
                         {
                             // Smoothly interpolate from current to target look direction
@@ -710,6 +714,7 @@ namespace KinematicCharacterController.Examples
                             
                             //Determine if change in other direction
                             if(currentVelocity.magnitude < 0.1f && changingDirection == false){
+                                //if player is not facing the direction of input, dont move yet
                                 if(dot < 0.95f){
                                     MaxStableMoveSpeed = 0;
                                 }
@@ -725,8 +730,12 @@ namespace KinematicCharacterController.Examples
                             else{
                                 if(MaxStableMoveSpeed >= MaxSpeed){
                                     if(dot < -0.92f){
+                                        _restrictJumping = true;
                                         changingDirection = true;
-                                        MaxStableMoveSpeed = 0;
+                                        //MaxStableMoveSpeed = 0;
+                                        //Decelerate changing directions to slide
+                                        MaxStableMoveSpeed -= 1f * deltaTime;
+                                        MaxStableMoveSpeed = Mathf.Max(MaxStableMoveSpeed, 0);
                                         _animator.CrossFade("ChangeDirection", 0, 0);
                                     }
                                 }
@@ -737,16 +746,24 @@ namespace KinematicCharacterController.Examples
                                         if(turnAroundBuffer > _slideDuration){
                                             //MaxStableMoveSpeed = 2f;
                                             changingDirection = false;
+                                            _restrictJumping = false;
                                             turnAroundBuffer = 0;
                                         }
                                     }
                                     else{
                                         if(_moveInputVector.magnitude < 0.1f){
-                                            MaxStableMoveSpeed = 0; //might need to change so movement is not odd with thumbstick.
+                                            //MaxStableMoveSpeed = 0; //might need to change so movement is not odd with thumbstick.
+                                            //Decelerate
+                                            MaxStableMoveSpeed -= RatePerSecond * deltaTime;
+                                            MaxStableMoveSpeed = Mathf.Max(MaxStableMoveSpeed, 0);
                                         }
                                         else{
                                             //Walk
-                                            if (_moveInputVector.magnitude < 0.3f) MaxStableMoveSpeed = 1f;
+                                            if (_moveInputVector.magnitude < 0.3f){
+                                                //MaxStableMoveSpeed = 1f;
+                                                MaxStableMoveSpeed += RatePerSecond * deltaTime;
+                                                MaxStableMoveSpeed = Mathf.Min(MaxStableMoveSpeed, 1);
+                                            } 
                                             else
                                             {
                                                 //Run
@@ -766,6 +783,7 @@ namespace KinematicCharacterController.Examples
                             // Calculate target velocity
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+                            if(changingDirection) reorientedInput = -reorientedInput;
                             Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
                             
                             // Smooth movement Velocity
@@ -856,6 +874,7 @@ namespace KinematicCharacterController.Examples
                                     //currentVelocity = (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
                                     //currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
                                     print(currentVelocity);
+                                    print(currentVelocity.magnitude);
                                     _jumpRequested = false;
                                     _jumpConsumed = true;
                                     _jumpedThisFrame = true;

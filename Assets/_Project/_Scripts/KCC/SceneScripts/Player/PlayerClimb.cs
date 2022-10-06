@@ -258,21 +258,21 @@ namespace KinematicCharacterController.Examples{
             else if(climbHeight > _climbUpHeight){
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(0, 0.65f, _matchTargetPosition, _matchTargetRotation, 2.5f, true));
+                StartCoroutine(DoClimb(0.15f, 0.65f, _matchTargetPosition, _matchTargetRotation, 2.5f, true));
                 _animator.CrossFadeInFixedTime(anim_ClimbUp, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.23f);
             }
             else if(climbHeight > _vaultHeight){
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(0, 1, _matchTargetPosition, _matchTargetRotation, 5));
+                StartCoroutine(DoClimb(0.1f, 0.6f, _matchTargetPosition, _matchTargetRotation, 3.5f));
                 _animator.CrossFadeInFixedTime(anim_Vault, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.05f, 0.16f);
             }
             else if(climbHeight > _stepUpHeight){
                 _matchTargetPosition = _endPosition;
                 _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(0, 1, _matchTargetPosition, _matchTargetRotation, 5));
+                StartCoroutine(DoClimb(0.1f, 0.5f, _matchTargetPosition, _matchTargetRotation, 4));
                 _animator.CrossFadeInFixedTime(anim_StepUp, 0.1f, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.12f);
             }
