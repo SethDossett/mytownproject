@@ -393,19 +393,20 @@ namespace MyTownProject.Interaction
             _closestTarget.gameObject.GetComponent<IInteractable>().SetHovered(true);
         }
         bool StillClosestTarget(Transform t){
-            if (!t.GetComponent<IInteractable>().IsVisible)
+            IInteractable interactable = t.GetComponent<IInteractable>();
+            if (!interactable.IsVisible)
             {
                 return false;
             }
             if (Blocked(t.position + _npcRayPoint)){ //
-                t.gameObject.GetComponent<IInteractable>().SetHovered(false);
+                interactable.SetHovered(false);
                  return false;
             }
             if(GetAngle(t.position,transform.position,transform.forward) > maxNoticeAngle){
                 //HideHover(t);
                  return false;
             }
-            if(GetDistance(transform, t) > t.gameObject.GetComponent<IInteractable>().MaxNoticeRange){
+            if(GetDistance(transform, t) > interactable.MaxNoticeRange){
                 //HideHover(t);
                 return false;
             } 
@@ -600,15 +601,6 @@ namespace MyTownProject.Interaction
             }
             
         }
-        //Not being used
-        void HideHover(Transform t){
-            if(!t.gameObject.GetComponent<IInteractable>().Hovered) return;
-            
-            //t.gameObject.GetComponent<NPC_Interact>().HideHover();
-            t.gameObject.GetComponent<IInteractable>().SetHovered(true);
-
-            print($"Hide Hover" + t.gameObject.name);
-         }
         void CheckForIInteractable(){
             
             if(currentTarget == null){

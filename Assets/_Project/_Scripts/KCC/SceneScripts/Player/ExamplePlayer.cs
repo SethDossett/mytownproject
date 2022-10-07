@@ -12,6 +12,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] MainEventChannelSO MainEventChannelSO;
         [SerializeField] TransformEventSO playerReference;
         Transform _player;
+        Camera camera;
 
         private const string MouseXInput = "Mouse X";
         private const string MouseYInput = "Mouse Y";
@@ -71,6 +72,7 @@ namespace KinematicCharacterController.Examples
             playerReference.OnRaiseEvent += GetPlayerReference;
             inputActions = InputManager.inputActions;
             playerInput = GetComponent<PlayerInput>();
+            camera = Camera.main;
         }
         private void OnDestroy() {
             playerReference.OnRaiseEvent -= GetPlayerReference;
@@ -80,11 +82,11 @@ namespace KinematicCharacterController.Examples
             Cursor.lockState = CursorLockMode.Locked;
 
             // Tell camera to follow transform
-            CharacterCamera.SetFollowTransform(CC.CameraFollowPoint);
+            //CharacterCamera.SetFollowTransform(CC.CameraFollowPoint);
 
             // Ignore the character's collider(s) for camera obstruction checks
-            CharacterCamera.IgnoredColliders.Clear();
-            CharacterCamera.IgnoredColliders.AddRange(CC.GetComponentsInChildren<Collider>());
+            //CharacterCamera.IgnoredColliders.Clear();
+            //CharacterCamera.IgnoredColliders.AddRange(CC.GetComponentsInChildren<Collider>());
         }
 
         private void Update()
@@ -149,7 +151,8 @@ namespace KinematicCharacterController.Examples
 
             // Build the CharacterInputs struct
             characterInputs.MoveDirection = move.ReadValue<Vector2>();
-            characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
+            //characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
+            characterInputs.CameraRotation = camera.transform.rotation;
             //characterInputs.JumpDown = jump.WasPressedThisFrame();
             characterInputs.CrouchDown = crouch.WasPressedThisFrame();
             characterInputs.CrouchUp = crouch.WasReleasedThisFrame();
