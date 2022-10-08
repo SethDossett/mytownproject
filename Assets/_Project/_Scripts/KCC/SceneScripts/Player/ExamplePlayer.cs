@@ -12,7 +12,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] MainEventChannelSO MainEventChannelSO;
         [SerializeField] TransformEventSO playerReference;
         Transform _player;
-        Camera camera;
+        Camera mainCamera;
 
         private const string MouseXInput = "Mouse X";
         private const string MouseYInput = "Mouse Y";
@@ -72,7 +72,7 @@ namespace KinematicCharacterController.Examples
             playerReference.OnRaiseEvent += GetPlayerReference;
             inputActions = InputManager.inputActions;
             playerInput = GetComponent<PlayerInput>();
-            camera = Camera.main;
+            mainCamera = Camera.main;
         }
         private void OnDestroy() {
             playerReference.OnRaiseEvent -= GetPlayerReference;
@@ -152,7 +152,7 @@ namespace KinematicCharacterController.Examples
             // Build the CharacterInputs struct
             characterInputs.MoveDirection = move.ReadValue<Vector2>();
             //characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
-            characterInputs.CameraRotation = camera.transform.rotation;
+            characterInputs.CameraRotation = mainCamera.transform.rotation;
             //characterInputs.JumpDown = jump.WasPressedThisFrame();
             characterInputs.CrouchDown = crouch.WasPressedThisFrame();
             characterInputs.CrouchUp = crouch.WasReleasedThisFrame();

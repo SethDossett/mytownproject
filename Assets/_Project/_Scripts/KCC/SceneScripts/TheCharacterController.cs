@@ -156,6 +156,7 @@ namespace KinematicCharacterController.Examples
         public Vector3 _moveInputVector;
         private Vector3 _lookInputVector;
         private Vector3 _rawMoveInputVector;
+        private Quaternion _cameraPlanarRotation;
         private bool _jumpRequested = false;
         private bool _jumpConsumed = false;
         private bool _jumpedThisFrame = false;
@@ -456,6 +457,7 @@ namespace KinematicCharacterController.Examples
                         // Move and look inputs
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
                         _rawMoveInputVector = moveInputVector.normalized;
+                        _cameraPlanarRotation = cameraPlanarRotation;
 
                         switch (OrientationMethod)
                         {
@@ -872,8 +874,8 @@ namespace KinematicCharacterController.Examples
 
                                     // Add to the return velocity and reset jump state
                                     //currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
-                                    currentVelocity = transform.forward * JumpScalableForwardSpeed;
-                                    currentVelocity.y = JumpUpSpeed;
+                                    currentVelocity = transform.forward * JumpScalableForwardSpeed; //current
+                                    currentVelocity.y = JumpUpSpeed; //current
                                     //currentVelocity = (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
                                     //currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
                                     print(currentVelocity);
@@ -1042,6 +1044,7 @@ namespace KinematicCharacterController.Examples
                         // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
+                            float movementDot;
                             MaxStableMoveSpeed = 4;
                             float currentVelocityMagnitude = currentVelocity.magnitude;
 
@@ -1070,9 +1073,22 @@ namespace KinematicCharacterController.Examples
 
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                            //Find Dot product of target pos and player direction.
+                            if(_hasTargetToLockOn){
+                                // not working
+                                movementDot = Vector3.Dot(_moveInputVector, transform.forward);
+                                //print(dot);
+                                
+                                Vector3 dir = Vector3.Cross(_cameraPlanarRotation * transform.forward, _moveInputVector);
+                                //print(dir);
+                            }
+                            else{
+                                movementDot = 0;
+                            }
+                            //Set Animator values
                             _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                            _animator.SetFloat(anim_horizontal, _moveInputVector.x, 0f, Time.deltaTime);
-                            _animator.SetFloat(anim_vertical, _moveInputVector.z, 0, Time.deltaTime);
+                            _animator.SetFloat(anim_horizontal, _rawMoveInputVector.x, 0f, Time.deltaTime);
+                            _animator.SetFloat(anim_vertical, _rawMoveInputVector.z, 0f, Time.deltaTime);
                         }
                         // Air movement
                         else
@@ -1438,7 +1454,7 @@ namespace KinematicCharacterController.Examples
             Motor.Capsule.enabled = enable;
         }
 
-        void HangingChecks(){
+        void HangingChecks(){ // make a coroutine possibly
             float dot = Vector3.Dot(_moveInputVector, transform.forward.normalized);
             Quaternion rot = Quaternion.Euler(transform.forward.normalized);
             //Press towards ledge to climb up
