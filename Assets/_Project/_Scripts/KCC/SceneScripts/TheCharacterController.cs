@@ -84,6 +84,7 @@ namespace KinematicCharacterController.Examples
         Vector3 _ledgeDirection;
         bool _dropDownRequested;
         public bool _isHanging;
+        bool _dropToHang;
 
         [Header("ClimbingLadder")]
         public Vector3 _newCenteredPosition;
@@ -310,6 +311,7 @@ namespace KinematicCharacterController.Examples
                         _onLadder = false;
                         print("EXIT LADDER");
                         _animator.CrossFadeInFixedTime(_idleState, 0, 0);
+                        playerClimb._isClimbing = false;
                         break;
                     }
                 case CharacterState.Targeting:
@@ -595,9 +597,10 @@ namespace KinematicCharacterController.Examples
                case CharacterState.Climbing:
                     {
                         if(_isHanging){
-                            if(_ledgeDirection != Vector3.zero){
+                            if(_dropToHang){
                                 Quaternion toRot = Quaternion.LookRotation(-_ledgeDirection, Vector3.up); 
-                                currentRotation = Quaternion.RotateTowards(transform.rotation, toRot, 500 * Time.deltaTime); 
+                                currentRotation = Quaternion.RotateTowards(transform.rotation, toRot, 500 * Time.deltaTime);
+                                print("CC Rotation");
                             }
                         }
                         break;
@@ -874,6 +877,7 @@ namespace KinematicCharacterController.Examples
 
                                     // Add to the return velocity and reset jump state
                                     //currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                                    currentVelocity = Vector3.zero;
                                     currentVelocity = transform.forward * JumpScalableForwardSpeed; //current
                                     currentVelocity.y = JumpUpSpeed; //current
                                     //currentVelocity = (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
@@ -1406,7 +1410,7 @@ namespace KinematicCharacterController.Examples
 
         protected void OnLanded()
         {   //I dont want player to ground self if decided to Hang
-            if(_isHanging)return;
+            if(_isHanging) return;
 
             if(_hardLanding){
                 _animator.CrossFade(_hardLandState, 0f, 0);
@@ -1415,8 +1419,6 @@ namespace KinematicCharacterController.Examples
             else{
                 _animator.SetBool(anim_landTrigger, true); 
             }
-            
-            playerClimb._isClimbing = false;
             _timeFallingInAir = 0f;
             _startFallingTimer = false;
             TransitionToState(CharacterState.Default);
@@ -1455,6 +1457,8 @@ namespace KinematicCharacterController.Examples
         }
 
         void HangingChecks(){ // make a coroutine possibly
+            //if (_moveInputVector.sqrMagnitude <= 0) return;
+
             float dot = Vector3.Dot(_moveInputVector, transform.forward.normalized);
             Quaternion rot = Quaternion.Euler(transform.forward.normalized);
             //Press towards ledge to climb up
@@ -1463,7 +1467,8 @@ namespace KinematicCharacterController.Examples
                 if(_climbTimer >= 0.3f){
                     _climbTimer = 0;
                     _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f,0);
-                    StartCoroutine(ClimbBackUp(rot));
+                    //StartCoroutine(ClimbBackUp(rot));
+                    playerClimb.ClimbBackUp();
                 }
             }
             //Could Slide if held left or right
@@ -1476,6 +1481,7 @@ namespace KinematicCharacterController.Examples
                 _dropDownRequested = false;
                 CapsuleEnable(true);
                 TransitionToState(CharacterState.Default);
+                playerClimb._isClimbing = false;
                 _gettingOnOffObstacle = false;
                 _isHanging = false;
             } 
@@ -1492,6 +1498,7 @@ namespace KinematicCharacterController.Examples
             _startFallingTimer = false;
             playerClimb._isClimbing = true;
             _isHanging = true;
+            _dropToHang = true;
             Gravity = Vector3.zero;
             CapsuleEnable(false);
             _animator.CrossFadeInFixedTime(anim_DropToHang, 0.1f, 0);
@@ -1505,6 +1512,7 @@ namespace KinematicCharacterController.Examples
                 yield return null;
             }
             _gettingOnOffObstacle = false;
+            _dropToHang = false;
             print("done");
             yield break;
             
@@ -1526,6 +1534,7 @@ namespace KinematicCharacterController.Examples
             CapsuleEnable(true);
             //Moveinputvector needs to be 0 at this point.
             TransitionToState(CharacterState.Default);
+            playerClimb._isClimbing = false;
             _gettingOnOffObstacle = false;
             yield break;
         }

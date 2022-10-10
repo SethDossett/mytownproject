@@ -111,14 +111,14 @@ namespace KinematicCharacterController.Examples{
         {
             if(_isClimbing) return;
 
-            if(!_onGround) InAirCheck(); else GroundCheck();
+            if (_onGround) GroundCheck(); else DetectLedge(transform.TransformPoint(_downCastOffset));
 
         }
         void GroundCheck(){
             if(!_crawling){
                 Vector3 input = CC._moveInputVector;
                 float dot = Vector3.Dot(input, transform.forward.normalized);
-                if(dot >= 0.9f){
+                if(dot >= 0.8f){
                     if(CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition)){
                         InitiateClimb();
                         print("Initiate");
@@ -137,13 +137,7 @@ namespace KinematicCharacterController.Examples{
             }
 
         }
-        void InAirCheck(){
-            if(DetectLedge(transform.TransformPoint(_downCastOffset))){
-                print("grab ledge");
-                GrabLedge();
-            }
-            return;
-        }
+       
         bool DownCast(){
             // was downcastoffset.y - 0.4f, so it did not go lower than step height,
             // but now i want low enough that i can see if i can hang.
@@ -244,35 +238,30 @@ namespace KinematicCharacterController.Examples{
             CC.TransitionToState(CharacterState.Climbing);
             _isClimbing = true;
             float climbHeight = _downHitInfo.point.y - transform.position.y;
-            Vector3 forwardNormalXZ = Vector3.ProjectOnPlane(_forwardHitInfo.normal, Vector3.up);
-            _forwardNormalXZRotation = Quaternion.LookRotation(-forwardNormalXZ, Vector3.up);
-            if(climbHeight > _hangHeight){
+            _matchTargetRotation = FindLedgeNormal(_forwardHitInfo);
+            if (climbHeight > _hangHeight){
                 //_matchTargetPosition = _forwardHitInfo.point + _forwardNormalXZRotation * _hangOffset;
                 _matchTargetPosition = transform.TransformPoint(0, climbHeight - 1.21f, amount);
-                _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(0.4f, 1, _matchTargetPosition, transform.rotation, 2.5f, true));
+                StartCoroutine(DoClimb(0.4f, 1, _matchTargetPosition, _matchTargetRotation, 2.5f, true));
                 _animator.CrossFadeInFixedTime(anim_JumpToHang, .25f, 0);
                 CC._isHanging = true;
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
             }
             else if(climbHeight > _climbUpHeight){
                 _matchTargetPosition = _endPosition;
-                _matchTargetRotation = _forwardNormalXZRotation;
                 StartCoroutine(DoClimb(0.15f, 0.65f, _matchTargetPosition, _matchTargetRotation, 2.5f, true));
                 _animator.CrossFadeInFixedTime(anim_ClimbUp, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.23f);
             }
             else if(climbHeight > _vaultHeight){
                 _matchTargetPosition = _endPosition;
-                _matchTargetRotation = _forwardNormalXZRotation;
                 StartCoroutine(DoClimb(0.1f, 0.6f, _matchTargetPosition, _matchTargetRotation, 3.5f));
                 _animator.CrossFadeInFixedTime(anim_Vault, 0, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.05f, 0.16f);
             }
             else if(climbHeight > _stepUpHeight){
                 _matchTargetPosition = _endPosition;
-                _matchTargetRotation = _forwardNormalXZRotation;
-                StartCoroutine(DoClimb(0.1f, 0.5f, _matchTargetPosition, _matchTargetRotation, 4));
+                StartCoroutine(DoClimb(0.1f, 0.4f, _matchTargetPosition, _matchTargetRotation, 4));
                 _animator.CrossFadeInFixedTime(anim_StepUp, 0.1f, 0);
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0f, 0.12f);
             }
@@ -306,39 +295,83 @@ namespace KinematicCharacterController.Examples{
                     CC.CapsuleEnable(true);
             } 
             _climbingTimer = 0;
+            if (!CC._isHanging)
+            {
+                _isClimbing = false;
+                CC.TransitionToState(CharacterState.Default);
+            }
             yield break;
         }
         
-        bool DetectLedge(Vector3 downOrigin){
+        void DetectLedge(Vector3 downOrigin){ //stops working after climbUp maybe doclimb etc.
             //downcast if there is a ledge infront of player
             //_downOrigin = downOrigin;
             _downOrigin = transform.TransformPoint(_downCastOffset);
-            if(!DownCast()) return false;
+            if(!DownCast()) return;
 
             //Send forwardcast to see what angle player is facing
             _forwardCastOffset = new Vector3(transform.position.x, _downHitInfo.point.y, transform.position.z);
             _forwardDirectionXZ = Vector3.ProjectOnPlane(transform.forward,Vector3.up);
-            if(!ForwardCast()) return false;
+            if(!ForwardCast()) return;
             _wallAngle = Vector3.Angle(-_forwardNormalXZ,_forwardDirectionXZ);
-            if(_wallAngle > _wallAngleMax + 5) return false;
+            if (_wallAngle > _wallAngleMax + 5) return;
 
             //check distance from players feet to ledge
             _downRaycastHitDis = _downHitInfo.point.y - transform.position.y;
             if(_downRaycastHitDis > 0.5f){
-                return true;
+                print("grab ledge");
+                Quaternion ledgeNormalRot = FindLedgeNormal(_forwardHitInfo);
+                GrabLedge(ledgeNormalRot);
+                return;
             }
 
-            return false;
+            return;
         }
-        void GrabLedge(){
+        void GrabLedge(Quaternion wallRotation){
             CC.TransitionToState(CharacterState.Climbing);
             _isClimbing = true;
             _matchTargetPosition = transform.TransformPoint(0, _downRaycastHitDis - 1.21f, amount);
-            _matchTargetRotation = transform.rotation;
             CC.CapsuleEnable(false);
-            StartCoroutine(DoClimb(0, 1, _matchTargetPosition, _matchTargetRotation, 10));
+            StartCoroutine(DoClimb(0, 1, _matchTargetPosition, wallRotation, 10));
             _animator.CrossFadeInFixedTime(anim_GrabLedge, .25f, 0);
             CC._isHanging = true;
+        }
+
+        public void ClimbBackUp() => StartCoroutine(DoClimbBackUp()); // climbing back up rotation is different(DropToHang, InitiateClimb, Grab Ledge.
+        IEnumerator DoClimbBackUp() // whenever we climb back up we can shoot ray to see normal of wall and rotate there.
+        {
+            print("Booya");
+            //Disable Controls
+            CC._gettingOnOffObstacle = true;
+            CC._isHanging = false;
+            Vector3 goalPos = transform.TransformPoint(0, 1.3f, 0.3f);
+
+            _forwardCastOffset = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+            if (!ForwardCast()) Debug.LogError("Forward Cast is not hitting wall");
+            Quaternion goalRot = FindLedgeNormal(_forwardHitInfo);
+            float timer = 0;
+            while (timer < 0.75f)
+            {
+                timer += Time.deltaTime;
+                CC.Motor.SetTransientPosition(goalPos, true, 1.8f);
+                CC.Motor.SetRotation(goalRot);
+                yield return null;
+            }
+            print("done2");
+            CC.CapsuleEnable(true);
+            //Moveinputvector needs to be 0 at this point.
+            CC.TransitionToState(CharacterState.Default);
+            _isClimbing = false;
+            CC._gettingOnOffObstacle = false;
+            yield break;
+        }
+
+        Quaternion FindLedgeNormal(RaycastHit hit)
+        {
+            Vector3 forwardNormalXZ = Vector3.ProjectOnPlane(hit.normal, Vector3.up);
+            _forwardNormalXZRotation = Quaternion.LookRotation(-forwardNormalXZ, Vector3.up);
+
+            return _forwardNormalXZRotation;
         }
         private void OnDrawGizmos()
         {

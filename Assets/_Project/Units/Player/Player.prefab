@@ -1676,7 +1676,7 @@ MonoBehaviour:
   _overPassHeight: 1.8
   _downRaycastHitDis: 0
   _groudAngleMax: 60
-  _wallAngleMax: 8
+  _wallAngleMax: 15
   _climbBufferTime: 0
   _isClimbing: 0
   _hangHeight: 1.4
