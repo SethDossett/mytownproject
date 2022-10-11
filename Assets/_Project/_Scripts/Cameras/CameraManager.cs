@@ -2,8 +2,9 @@ using Cinemachine;
 using MyTownProject.NPC;
 using UnityEngine;
 using MyTownProject.Events;
+using MyTownProject.Core;
 
-namespace MyTownProject.Core
+namespace MyTownProject.Cameras
 {
     public class CameraManager : MonoBehaviour
     {
@@ -52,7 +53,7 @@ namespace MyTownProject.Core
 
         private void EnterDialogue(GameObject npc, TextAsset inkJSON) {
             print("dialogue camera");
-            //SwitchToDialogue();
+            SwitchToDialogue();
         }  
 
 
@@ -66,7 +67,7 @@ namespace MyTownProject.Core
         }
 
         void EnterTargeting(Transform t){
-            //SwitchToTargeting();
+            SwitchToTargeting();
         }
     }
 }

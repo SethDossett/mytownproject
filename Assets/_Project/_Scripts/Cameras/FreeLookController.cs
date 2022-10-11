@@ -24,8 +24,9 @@ namespace MyTownProject.Cameras{
         [SerializeField] AnimationCurve _ZoomIncurve;
         [SerializeField] AnimationCurve _ZoomOutcurve;
 
-        
-        void OnEnable(){
+
+        void OnEnable()
+        {
             cam = GetComponent<CinemachineFreeLook>();
             PlayerReference.OnRaiseEvent += GetPlayerReference;
             DialogueEvents.onEnter += TalkingToNPC;
@@ -36,7 +37,8 @@ namespace MyTownProject.Cameras{
             RecenterCamY.OnRaiseEvent3 += RY;
             DisableRecenterCam.OnRaiseEvent += DisableRecenter;
         }
-        void OnDisable(){
+        void OnDisable()
+        {
             PlayerReference.OnRaiseEvent -= GetPlayerReference;
             DialogueEvents.onEnter -= TalkingToNPC;
             DialogueEvents.onExit -= BackToPlayerView;
@@ -46,86 +48,105 @@ namespace MyTownProject.Cameras{
             RecenterCamY.OnRaiseEvent3 -= RY;
             DisableRecenterCam.OnRaiseEvent -= DisableRecenter;
         }
-        void GetPlayerReference(Transform player){
+        void GetPlayerReference(Transform player)
+        {
             CC = player.GetComponent<TheCharacterController>();
-        } 
-        void TalkingToNPC(GameObject go, TextAsset text){
-            StartCoroutine(ChangeLens(25, _lensZoomInSpeed, _ZoomIncurve));
-            
         }
-        void BackToPlayerView(){
-            StartCoroutine(ChangeLens(40, _lensZoomOutSpeed, _ZoomOutcurve));
+        void TalkingToNPC(GameObject go, TextAsset text)
+        {
+            //StartCoroutine(ChangeLens(25, _lensZoomInSpeed, _ZoomIncurve));
+
+        }
+        void BackToPlayerView()
+        {
+            //StartCoroutine(ChangeLens(40, _lensZoomOutSpeed, _ZoomOutcurve));
         }
 
-        void Target(Transform t){
-            StartCoroutine(ChangeLens(60, _lensZoomOutSpeed, _ZoomOutcurve));
+        void Target(Transform t)
+        {
+            //StartCoroutine(ChangeLens(60, _lensZoomOutSpeed, _ZoomOutcurve));
             //RX(0,0.1f);
             //RY(0,0.1f);
         }
-        void Untarget(){
-            BackToPlayerView();
+        void Untarget()
+        {
+            //BackToPlayerView();
             //RX(0,0.1f);
             //RY(0,0.1f);
         }
-        IEnumerator ChangeLens(float value, float lerpDuration, AnimationCurve curve){
+        IEnumerator ChangeLens(float value, float lerpDuration, AnimationCurve curve)
+        {
             float startValue = cam.m_Lens.FieldOfView;
             float endValue = value;
 
             float timeElapsed = 0;
-            while(timeElapsed < lerpDuration){
-                cam.m_Lens.FieldOfView = Mathf.Lerp(startValue, endValue, curve.Evaluate(timeElapsed/ lerpDuration));
+            while (timeElapsed < lerpDuration)
+            {
+                cam.m_Lens.FieldOfView = Mathf.Lerp(startValue, endValue, curve.Evaluate(timeElapsed / lerpDuration));
                 timeElapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
             cam.m_Lens.FieldOfView = endValue;
-            
+
         }
 
         //RX() RY() doesnt work if recenterTime is not > 0.
-        void RX(float f1, float f2, float f3) => StartCoroutine(RecenterXAxis(f1,f2, f3));
-        IEnumerator RecenterXAxis(float waitTime, float recenteringTime, float disableRecenter = 1){
+        void RX(float f1, float f2, float f3) => StartCoroutine(RecenterXAxis(f1, f2, f3));
+        IEnumerator RecenterXAxis(float waitTime, float recenteringTime, float disableRecenter = 1)
+        {
             EnableRecenter(waitTime, recenteringTime, false);
             // a value greater than 0 will disable recentering
-            if(disableRecenter > 0){
+            if (disableRecenter > 0)
+            {
                 yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 3);
                 yield return new WaitForEndOfFrame();
                 DisableRecenter();
             }
-            yield break;  
+            yield break;
         }
-        void RY(float f1, float f2, float f3) => StartCoroutine(RecenterYAxis(f1,f2, f3));
-        IEnumerator RecenterYAxis(float waitTime, float recenteringTime, float disableRecenter = 1){
+        void RY(float f1, float f2, float f3) => StartCoroutine(RecenterYAxis(f1, f2, f3));
+        IEnumerator RecenterYAxis(float waitTime, float recenteringTime, float disableRecenter = 1)
+        {
             EnableRecenter(waitTime, recenteringTime, true);
             // a value greater than 0 will not disable recentering
-            if(disableRecenter > 0){
+            if (disableRecenter > 0)
+            {
                 yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 3);
                 yield return new WaitForEndOfFrame();
                 DisableRecenter();
             }
-            
+
             yield break;
         }
 
-        void DisableRecenter(){
+        void DisableRecenter()
+        {
             cam.m_RecenterToTargetHeading.m_enabled = false;
             cam.m_YAxisRecentering.m_enabled = false;
         }
 
-        void EnableRecenter(float waitTime, float recenteringTime, bool recenterY){
+        void EnableRecenter(float waitTime, float recenteringTime, bool recenterY)
+        {
             //Recenters Y Axis
-            if(recenterY){
+            if (recenterY)
+            {
                 cam.m_YAxisRecentering.m_WaitTime = waitTime;
                 cam.m_YAxisRecentering.m_RecenteringTime = recenteringTime;
                 cam.m_YAxisRecentering.m_enabled = true;
             }
             //Recenters X Axis
-            else{
+            else
+            {
                 cam.m_RecenterToTargetHeading.m_WaitTime = waitTime;
                 cam.m_RecenterToTargetHeading.m_RecenteringTime = recenteringTime;
                 cam.m_RecenterToTargetHeading.m_enabled = true;
             }
         }
-        
+
+        public void OnCameraLive()
+        {
+
+        }
     }
 }
 
