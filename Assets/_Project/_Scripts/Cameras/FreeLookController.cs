@@ -108,7 +108,7 @@ namespace MyTownProject.Cameras{
         IEnumerator RecenterYAxis(float waitTime, float recenteringTime, float disableRecenter = 1)
         {
             EnableRecenter(waitTime, recenteringTime, true);
-            // a value greater than 0 will not disable recentering
+            // a value greater than 0 will disable recentering
             if (disableRecenter > 0)
             {
                 yield return new WaitForSecondsRealtime(waitTime + recenteringTime * 3);
