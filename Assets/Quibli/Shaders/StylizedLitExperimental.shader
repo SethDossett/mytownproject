@@ -87,6 +87,13 @@
         [HideInInspector][NoScaleOffset]unity_Lightmaps("unity_Lightmaps", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_LightmapsInd("unity_LightmapsInd", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
+        
+        //Dithering Experimental
+        [Toggle(DR_DITHER_ON)]_DITHERING_ENABLED("[FOLDOUT(Dithering){1}]Enable Close Up Dither", Int) = 0
+        [Space]_DitherOffset("[DR_DITHER_ON]Dither Offset", Float) = 0.5
+        [Space]_DitherRange("[DR_DITHER_ON]Dither Range", Float) = 0.5
+        [Space]_ClipThreshold("[DR_DITHER_ON]Clip Threshold", Range(0, 1)) = 1
+
     }
 
     SubShader
