@@ -47,6 +47,10 @@ Material:
     - Secondary_Grid_Size: 25
     - Smoothness: 0.5
     - Use_Secondary_Grid: 0
+    - _ClipThreshold: 1
+    - _DitherOffset: 0.5
+    - _DitherRange: 0.5
+    - _DitherSize: 0.555
     - _Grid_offset: 0
     - _QueueControl: 0
     - _QueueOffset: 0

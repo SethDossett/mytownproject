@@ -70,16 +70,16 @@
         _LightmapDirectionYaw("[DR_ENABLE_LIGHTMAP_DIR][]Yaw", Range(0, 360)) = 0
         [HideInInspector] _LightmapDirection("Direction", Vector) = (0, 1, 0, 0)
 
-        [HideInInspector]_Cutoff ("Base Alpha cutoff", Range (0, 1)) = .5
+        _Cutoff ("Base Alpha cutoff", Range (0, 1)) = .5
 
         // Blending state
-        [HideInInspector] _Surface("__surface", Float) = 0.0
-        [HideInInspector] _Blend("__blend", Float) = 0.0
-        [HideInInspector] _AlphaClip("__clip", Float) = 0.0
-        [HideInInspector] _SrcBlend("__src", Float) = 1.0
-        [HideInInspector] _DstBlend("__dst", Float) = 0.0
-        [HideInInspector] _ZWrite("__zw", Float) = 1.0
-        [HideInInspector] _Cull("__cull", Float) = 2.0
+        [HideInInspector]_Surface("__surface", Float) = 0.0
+        [HideInInspector]_Blend("__blend", Float) = 0.0
+        [HideInInspector]_AlphaClip("__clip", Float) = 0.0
+        [HideInInspector]_SrcBlend("__src", Float) = 1.0
+        [HideInInspector]_DstBlend("__dst", Float) = 0.0
+        [HideInInspector]_ZWrite("__zw", Float) = 1.0
+        [HideInInspector]_Cull("__cull", Float) = 2.0
 
         // Editmode props
         [HideInInspector] _QueueOffset("Queue offset", Float) = 0.0
@@ -89,10 +89,12 @@
         [HideInInspector][NoScaleOffset]unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
         
         //Dithering Experimental
-        [Toggle(DR_DITHER_ON)]_DITHERING_ENABLED("[FOLDOUT(Dithering){1}]Enable Close Up Dither", Int) = 0
-        [Space]_DitherOffset("[DR_DITHER_ON]Dither Offset", Float) = 0.5
-        [Space]_DitherRange("[DR_DITHER_ON]Dither Range", Float) = 0.5
+        [Toggle(DR_DITHER_ON)]_DitheringEnabled("[FOLDOUT(Dithering){1}]Enable Close Up Dither", Int) = 0
+        [Space]_DitherOffset("[DR_DITHER_ON]Dither Offset", Float) = 0.2
+        [Space]_DitherRange("[DR_DITHER_ON]Dither Range", Float) = 3
         [Space]_ClipThreshold("[DR_DITHER_ON]Clip Threshold", Range(0, 1)) = 1
+        [Space]_AlphaImpact("[DR_DITHER_ON]Alpha", Range(0, 1)) = 1
+        [Space]_DitherSize("Dither Size", Range(0, 2)) = 0.74
 
     }
 
@@ -126,6 +128,7 @@
             #pragma shader_feature_local DR_ENABLE_LIGHTMAP_DIR
             #pragma shader_feature_local _TEXTUREBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_ADD
             #pragma shader_feature_local _UNITYSHADOW_OCCLUSION
+            #pragma shader_feature_local DR_DITHER_ON
 
             // -------------------------------------
             // Material Keywords
@@ -274,7 +277,7 @@
 
                 o.fogCoord = ComputeFogFactor(o.position.z);
                 #endif
-
+                
                 return o;
             }
 

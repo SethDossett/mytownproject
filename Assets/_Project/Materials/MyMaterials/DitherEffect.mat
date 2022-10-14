@@ -22,7 +22,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: DitherEffect
   m_Shader: {fileID: 4800000, guid: a55e397019c6348c285a4dd2c7c4ac9f, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _DETAILMAPBLENDINGMODE_MULTIPLY _TEXTUREBLENDINGMODE_MULTIPLY
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -132,6 +132,7 @@ Material:
     - _ClipThreshold: 1
     - _Cull: 2
     - _Cutoff: 0.5
+    - _DITHERING_ENABLED: 0
     - _Depth: 100
     - _DetailAlbedoMapScale: 1
     - _DetailMapBlendingMode: 0
@@ -139,7 +140,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DitherOffset: 0.5
     - _DitherRange: 0.5
-    - _DitherSize: 1
+    - _DitherSize: 0.73
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _FlatRimEdgeSmoothness: 0.5

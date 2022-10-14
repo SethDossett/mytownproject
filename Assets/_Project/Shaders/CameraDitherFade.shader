@@ -6,6 +6,7 @@ Shader "MyTownProject/CameraDitherFade"
             _DitherOffset("Dither Offset", Float) = 0.5
             _DitherRange("Dither Range", Float) = 0.5
             _ClipThreshold("Clip Threshold", Range(0, 1)) = 1
+            _DitherSize("Dither Size", Range(0, 2)) = 0.5
             [HideInInspector][NoScaleOffset]unity_Lightmaps("unity_Lightmaps", 2DArray) = "" {}
             [HideInInspector][NoScaleOffset]unity_LightmapsInd("unity_LightmapsInd", 2DArray) = "" {}
             [HideInInspector][NoScaleOffset]unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
@@ -244,11 +245,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -263,6 +272,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -317,6 +336,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -330,12 +351,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.BaseColor = (_Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0.xyz);
                     surface.NormalTS = IN.TangentSpaceNormal;
                     surface.Emission = float3(0, 0, 0);
@@ -616,11 +642,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -635,6 +669,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -689,6 +733,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -702,12 +748,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.BaseColor = (_Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0.xyz);
                     surface.NormalTS = IN.TangentSpaceNormal;
                     surface.Emission = float3(0, 0, 0);
@@ -931,11 +982,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -950,6 +1009,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -998,6 +1067,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -1011,12 +1082,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
                     surface.AlphaClipThreshold = _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
                     return surface;
@@ -1232,11 +1308,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -1251,6 +1335,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -1299,6 +1393,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -1312,12 +1408,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
                     surface.AlphaClipThreshold = _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
                     return surface;
@@ -1545,11 +1646,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -1564,6 +1673,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -1613,6 +1732,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -1626,12 +1747,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.NormalTS = IN.TangentSpaceNormal;
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
                     surface.AlphaClipThreshold = _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
@@ -1848,11 +1974,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -1867,6 +2001,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -1917,6 +2061,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -1930,12 +2076,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.BaseColor = (_Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0.xyz);
                     surface.Emission = float3(0, 0, 0);
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
@@ -2150,11 +2301,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -2169,6 +2328,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -2218,6 +2387,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -2231,12 +2402,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.BaseColor = (_Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0.xyz);
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
                     surface.AlphaClipThreshold = _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
@@ -2523,11 +2699,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -2542,6 +2726,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -2596,6 +2790,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -2609,12 +2805,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.BaseColor = (_Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0.xyz);
                     surface.NormalTS = IN.TangentSpaceNormal;
                     surface.Emission = float3(0, 0, 0);
@@ -2836,11 +3037,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -2855,6 +3064,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -2903,6 +3122,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -2916,12 +3137,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
                     surface.AlphaClipThreshold = _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
                     return surface;
@@ -3136,11 +3362,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -3155,6 +3389,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -3203,6 +3447,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -3216,12 +3462,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
                     surface.AlphaClipThreshold = _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
                     return surface;
@@ -3448,11 +3699,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -3467,6 +3726,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -3516,6 +3785,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -3529,12 +3800,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.NormalTS = IN.TangentSpaceNormal;
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
                     surface.AlphaClipThreshold = _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
@@ -3751,11 +4027,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -3770,6 +4054,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -3820,6 +4114,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -3833,12 +4129,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.BaseColor = (_Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0.xyz);
                     surface.Emission = float3(0, 0, 0);
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
@@ -4054,11 +4355,19 @@ Shader "MyTownProject/CameraDitherFade"
                 float _DitherOffset;
                 float _DitherRange;
                 float _ClipThreshold;
+                float _DitherSize;
                 CBUFFER_END
                 
                 // Object and Global properties
     
                 // Graph Functions
+                
+                void isShadowCaster_float(out float isSC){
+                    isSC = false;
+                    #ifdef UNITY_PASS_SHADOWCASTER
+                    isSC = true;
+                    #endif
+                }
                 
                 void Unity_Subtract_float(float A, float B, out float Out)
                 {
@@ -4073,6 +4382,16 @@ Shader "MyTownProject/CameraDitherFade"
                 void Unity_Clamp_float(float In, float Min, float Max, out float Out)
                 {
                     Out = clamp(In, Min, Max);
+                }
+                
+                void Unity_Branch_float(float Predicate, float True, float False, out float Out)
+                {
+                    Out = Predicate ? True : False;
+                }
+                
+                void Unity_Divide_float4(float4 A, float4 B, out float4 Out)
+                {
+                    Out = A / B;
                 }
                 
                 void Unity_Dither_float(float In, float4 ScreenPosition, out float Out)
@@ -4122,6 +4441,8 @@ Shader "MyTownProject/CameraDitherFade"
                     float _Split_2817db5781f44513b7c9edab584ecec3_G_2 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[1];
                     float _Split_2817db5781f44513b7c9edab584ecec3_B_3 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[2];
                     float _Split_2817db5781f44513b7c9edab584ecec3_A_4 = _Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0[3];
+                    float _isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0;
+                    isShadowCaster_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0);
                     float4 _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0 = IN.ScreenPosition;
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_R_1 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[0];
                     float _Split_672c853cf3014637b7cc610c6cbebf4d_G_2 = _ScreenPosition_fe5629987a9c42a3b5d15ab384865154_Out_0[1];
@@ -4135,12 +4456,17 @@ Shader "MyTownProject/CameraDitherFade"
                     Unity_Multiply_float(_Subtract_6c8ddc481807483eb8d822e04472024c_Out_2, _Property_e96dba65ad634fdca1431fd5d1816f3d_Out_0, _Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2);
                     float _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3;
                     Unity_Clamp_float(_Multiply_feace10d9c5b4c7f9541192697e4d79c_Out_2, 0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3);
+                    float _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3;
+                    Unity_Branch_float(_isShadowCasterCustomFunction_833bc7ab61fe4733b997350e8fb9302d_isSC_0, 1, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3);
                     float _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
-                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Clamp_016b1a67a55b45b1ae44edaa2ceb36c7_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
+                    Unity_Multiply_float(_Split_2817db5781f44513b7c9edab584ecec3_A_4, _Branch_fa0831812ba9456f8ef318a4587054f1_Out_3, _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2);
                     float _Property_b8372416848b47e992dd7ae2bb3121d4_Out_0 = _ClipThreshold;
                     float4 _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0 = float4(IN.ScreenPosition.xy / IN.ScreenPosition.w, 0, 0);
+                    float _Property_8d366b598ecb441b8a3838febddb4de4_Out_0 = _DitherSize;
+                    float4 _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2;
+                    Unity_Divide_float4(_ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, (_Property_8d366b598ecb441b8a3838febddb4de4_Out_0.xxxx), _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2);
                     float _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
-                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _ScreenPosition_4d208475764d4bfba558099a372606c0_Out_0, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
+                    Unity_Dither_float(_Property_b8372416848b47e992dd7ae2bb3121d4_Out_0, _Divide_eb4c4f03ffb54c0088c398fd384949fb_Out_2, _Dither_f8ded980dc57480daece5954a57acd19_Out_2);
                     surface.BaseColor = (_Property_5d7910440513495abd6a8e8e2fa08ac0_Out_0.xyz);
                     surface.Alpha = _Multiply_65f83325bab0459d84c86c474a9b617e_Out_2;
                     surface.AlphaClipThreshold = _Dither_f8ded980dc57480daece5954a57acd19_Out_2;
