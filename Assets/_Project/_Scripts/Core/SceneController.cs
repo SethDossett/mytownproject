@@ -9,8 +9,12 @@ using KinematicCharacterController.Examples;
 
 namespace MyTownProject.Core
 {
+    public enum CurrentScene{
+        CityScene, Hospital, TerrainConept, TestScene
+    }
     public class SceneController: MonoBehaviour
     {
+        public CurrentScene GamesCurrentScene;
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] UIEventChannelSO uIEventChannel;
         [SerializeField] StateChangerEventSO stateChangerEvent;
@@ -18,11 +22,12 @@ namespace MyTownProject.Core
 
 
         private void OnEnable()
-        {
+        {   SceneManager.activeSceneChanged += SceneChanged;
             mainEventChannel.OnChangeScene += SwitchScene;
         }
         private void OnDisable()
-        {
+        {   
+            SceneManager.activeSceneChanged -= SceneChanged;
             mainEventChannel.OnChangeScene -= SwitchScene;
         }
 
@@ -42,7 +47,6 @@ namespace MyTownProject.Core
 
         IEnumerator EnterScene()
         {
-
             yield return new WaitForSecondsRealtime(1f);
             uIEventChannel.RaiseFadeIn(Color.black, 1f);
             yield return new WaitForSecondsRealtime(0.25f);
@@ -51,6 +55,9 @@ namespace MyTownProject.Core
             stateChangerEvent.RaiseEventGame(GameStateManager.GameState.GAME_PLAYING);
             yield break;
         }
-
+        
+        void SceneChanged(Scene previous, Scene current){
+            GamesCurrentScene = (CurrentScene)current.buildIndex;
+        }
     }
 }

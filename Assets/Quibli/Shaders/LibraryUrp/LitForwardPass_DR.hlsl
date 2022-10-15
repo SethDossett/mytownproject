@@ -99,8 +99,8 @@ half4 StylizedPassFragment(Varyings input) : SV_Target
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
     
     SurfaceData surfaceData;
-    InitializeSimpleLitSurfaceData(input.uv, surfaceData);
-
+    InitializeSimpleLitSurfaceData(input.positionCS ,input.uv, surfaceData);
+    
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
     #if VERSION_GREATER_EQUAL(12, 0)
@@ -148,5 +148,4 @@ half4 StylizedPassFragment(Varyings input) : SV_Target
 
     return color;
 }
-
 #endif // LIT_FORWARD_PASS_DR
