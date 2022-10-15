@@ -12,8 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b74fa13b73f9546a2101f1fe594207, type: 3}
   m_Name: Old Man
   m_EditorClassIdentifier: 
-  runDestination: 0
+  MoveSpeed: 1
+  currentState: 0
+  currentPosition: {x: 0, y: 0, z: 0}
+  currentRotation: {x: 0, y: 0, z: 0, w: 0}
+  currentScene: 3
+  moveTowardsDestination: 0
   atDestination: 1
+  returnToStandingRotation: 1
+  shouldBeStandingRotation: {x: 0, y: 0, z: 0, w: 0}
   currentDestinationIndex: 0
-  destinations:
-  - {fileID: 2135613231336341715, guid: 88f5c0fa4a3a2f246a7d63b3f8af2bb9, type: 3}
+  destinationPaths: []

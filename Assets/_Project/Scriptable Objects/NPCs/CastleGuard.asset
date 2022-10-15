@@ -16,7 +16,7 @@ MonoBehaviour:
   currentState: 0
   currentPosition: {x: 108, y: 2, z: 87.1}
   currentRotation: {x: 0, y: -0.4935143, z: 0, w: 0.86973774}
-  currentScene: 0
+  currentScene: 3
   moveTowardsDestination: 0
   atDestination: 0
   returnToStandingRotation: 0

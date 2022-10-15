@@ -24,6 +24,15 @@ namespace MyTownProject.Interaction
         [field: SerializeField] public bool BeenTargeted { get; set; }
 
 
+        public enum DoorType
+        {
+            RightDoorIn, LeftDoorIn, RightDoorOut, LeftDoorOut
+        }
+
+        [Header("Door Specific")]
+        [SerializeField] DoorType CurrentDoorType;
+        [SerializeField] bool _locked = false;
+
         [Header("ScriptableObjects")]
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] InteractionEventSO _interactionDoor;
@@ -35,7 +44,6 @@ namespace MyTownProject.Interaction
         string _npcTag = "NPC";
 
         [Header("Values")]
-        bool _isLocked = false;
         bool _hasInteracted = false;
         bool _isFocusing = false;
         private bool _needToTeleport;
@@ -50,6 +58,8 @@ namespace MyTownProject.Interaction
         int closeDoor = Animator.StringToHash("closeDoor");
 
 
+
+        
         private void OnEnable()
         {
         
@@ -79,19 +89,25 @@ namespace MyTownProject.Interaction
             _isFocusing = false;
             _hasInteracted = false;
         }
-        public void SetHovered(bool setTrue){
+        public void SetHovered(bool setTrue)
+        {
+            if (setTrue) Hovered = true;
+            else Hovered = false;
+        }
+        public void SetTargeted(bool setTrue)
+        {
+            if (setTrue) Targeted = true;
+            else Targeted = false;
 
         }
-        public void SetTargeted(bool setTrue){
-            
-            
-        }
-        public void SetBeenTargeted(bool setTrue){
-
+        public void SetBeenTargeted(bool setTrue)
+        {
+            if (setTrue) BeenTargeted = true;
+            else BeenTargeted = false;
         }
         public void OpenDoor()
         {
-            if (!_isLocked)
+            if (!_locked)
             {
                 Debug.Log("Open");
                 StartCoroutine(Teleport());
@@ -123,16 +139,17 @@ namespace MyTownProject.Interaction
         }
         private async void OnTriggerEnter(Collider other) // trigger door open event
         {
-            CanBeInteractedWith = false;
+            
             if (other.gameObject.CompareTag(_npcTag)){
+                CanBeInteractedWith = false;
                 _animatorRight.Play(opendoorR);
                 _animatorLeft.Play(opendoorL);
             }
             await Task.Delay(1500);
 
-            CanBeInteractedWith = true;
-            if (other.gameObject.CompareTag(_npcTag))
-            {
+            
+            if (other.gameObject.CompareTag(_npcTag)){
+                CanBeInteractedWith = true;
                 _animatorRight.SetTrigger(closeDoor);
                 _animatorLeft.SetTrigger(closeDoor);
             }

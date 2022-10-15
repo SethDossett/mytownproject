@@ -245,33 +245,30 @@ namespace MyTownProject.Interaction
 
             //Check to see what targets are available
             foreach(var target in nearbyTargets){
+
                 Transform t = target.transform;
-                
                 IInteractable interactable = t.gameObject.GetComponent<IInteractable>();
                 //Does canbetargeted matter if this pick up item, can be interacted but not targeted
                 //Maybe have a 2nd list for items inradius that cant be targeted
 
                 //Is this interactable able to be targted?
-                if(interactable == null || !interactable.IsVisible){
+                if(interactable == null || !interactable.IsVisible || interactable.BeenTargeted){
                     AvailableTargets.Remove(t);
-                    //print("Removed by initial");
-                    continue;
-                }
-                if(interactable == null || !interactable.IsVisible || !interactable.CanBeTargeted || interactable.BeenTargeted){
-                    AvailableTargets.Remove(t);
-                    //print("Removed by initial");
+                    print("Removed by initial");
                     continue;
                 }
                 // Is Target Blocked out of sight?
                 if(Blocked(t.position + _npcRayPoint)){
                     AvailableTargets.Remove(t);
-                    //print("Removed by blocked");
+                    print("Removed by blocked");
                     continue;
                 }
                 // Is Target too far away?
                 if(GetDistance(transform, t) > interactable.MaxNoticeRange){
                     AvailableTargets.Remove(t);
-                    //print("Removed by distance");
+                    print("Removed by distance");
+                    print(GetDistance(transform, t));
+                    Debug.DrawLine(transform.position, t.position, Color.cyan);
                     continue;
                 }
                 //Need Check Does player sight/view angle matter ex: for picking up items in field
@@ -280,22 +277,28 @@ namespace MyTownProject.Interaction
                     // Is the angle of interactable within our players max view?
                     if(GetAngle(t.position, transform.position, transform.forward) > maxNoticeAngle){
                         AvailableTargets.Remove(t);
-                        //print("Removed by player view");
+                        print("Removed by player view");
                         continue;
                     }   
                     //Is the angle of our player within our interactables max view?
                     if(GetAngle(transform.position, t.position, t.forward) > interactable.MaxNoticeAngle){
                         AvailableTargets.Remove(t);
-                        //print("Removed by npc view");
+                        print("Removed by npc view");
                         continue;
                     }
                 }
-                //If list does not contain interactable, then add
-                if(!AvailableTargets.Contains(t)){
-                    AvailableTargets.Add(t);
-                    //print("perfect");
+                //If can be targeted Add to AvailableTargets
+                if (interactable.CanBeTargeted)
+                {//If list does not contain interactable, then add
+                    if (!AvailableTargets.Contains(t))
+                        AvailableTargets.Add(t);
                 }
-                    
+                //If cant be targeted Add to Available Objects
+                else
+                {
+                    if (!AvailableObjects.Contains(t))
+                        AvailableObjects.Add(t);
+                }
             }
 
 
