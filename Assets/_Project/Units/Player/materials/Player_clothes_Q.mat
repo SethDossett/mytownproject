@@ -173,7 +173,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DitherOffset: 0.7
     - _DitherRange: 0.55
-    - _DitherSize: 0.74
+    - _DitherSize: 0.555
     - _DitheringEnabled: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1

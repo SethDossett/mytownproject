@@ -84,31 +84,20 @@ inline void InitializeSimpleLitSurfaceData(float4 screenPosition, float2 uv, out
     outSurfaceData = (SurfaceData)0;
 
     half4 albedoAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-    //outSurfaceData.alpha = albedoAlpha.a * _AlphaImpact;
-    float sp1 = clamp((screenPosition.w - _DitherOffset) * _DitherRange, 0, 1);
-    outSurfaceData.alpha = (albedoAlpha.a * _BaseColor.a) * sp1;
-
 
 	// Screen-door transparency: Discard pixel if below threshold.
-	//float4x4 thresholdMatrix =
-	//{  1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0,
-	//  13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0,
-	//   4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0,
-	//  16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0
-	//};
-	//float4x4 _RowAccess = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
-	//float2 pos = position.xy / position.w;
-	//pos *= _ScreenParams.xy; // pixel position
-	//clip(outSurfaceData.alpha - thresholdMatrix[fmod(pos.x, 4)] * _RowAccess[fmod(pos.y, 4)]);
-
-
-
-
+    #if DR_DITHER_ON
+    float sp1 = clamp((screenPosition.w - _DitherOffset) * _DitherRange, 0, 1);
+    outSurfaceData.alpha = (albedoAlpha.a * _BaseColor.a) * sp1;
     float4 dividedScreenPos = screenPosition/_DitherSize;
     float OutPos;
     Unity_Dither_float(_ClipThreshold, dividedScreenPos, OutPos);
 	//clip(outSurfaceData.alpha - OutPos);
     AlphaDiscard(outSurfaceData.alpha, OutPos);
+    #else
+    outSurfaceData.alpha = albedoAlpha.a * _BaseColor.a;
+    AlphaDiscard(outSurfaceData.alpha, _Cutoff);
+    #endif
 
     outSurfaceData.albedo = albedoAlpha.rgb * _BaseColor.rgb;
     #ifdef _ALPHAPREMULTIPLY_ON

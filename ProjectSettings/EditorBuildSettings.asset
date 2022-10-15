@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/City Scene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/_Project/Scenes/HospitalScene.unity
+    guid: bb7ea26e1fbbd9b449e026cd93cdf291
+  - enabled: 1
+    path: Assets/_Project/Scenes/TerrainConcept01.unity
+    guid: 42f0d4fe1c78f4c6f9d74e38389bc46d
+  - enabled: 1
     path: Assets/_Project/Scenes/TestScene.unity
     guid: a8e66c229ff24684b9b79d595d2262ab
   m_configObjects:

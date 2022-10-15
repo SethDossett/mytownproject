@@ -2,11 +2,7 @@
 #define LIT_FORWARD_PASS_DR
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderVariablesFunctions.hlsl"
-//#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/UnityInput.hlsl"
-//#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Lighting_DR.hlsl"
-#include "StylizedInput.hlsl"
 
 struct Attributes
 {
@@ -105,9 +101,6 @@ half4 StylizedPassFragment(Varyings input) : SV_Target
     SurfaceData surfaceData;
     InitializeSimpleLitSurfaceData(input.positionCS ,input.uv, surfaceData);
     
-    //_AlphaImpact = DitheredAlbedo(input);
-    
-
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
     #if VERSION_GREATER_EQUAL(12, 0)
@@ -118,7 +111,6 @@ half4 StylizedPassFragment(Varyings input) : SV_Target
     ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
     #endif
 
-    //_Cutoff = DitheredAlbedo(GetNormalizedScreenSpaceUV(inputData.positionCS));
     // Computes direct light contribution.
     half4 color = UniversalFragment_DSTRM(inputData, surfaceData.albedo, surfaceData.emission, surfaceData.alpha);
 
@@ -156,15 +148,4 @@ half4 StylizedPassFragment(Varyings input) : SV_Target
 
     return color;
 }
-
-
-// void Unity_Clamp_float(float In, float Min, float Max, out float Out)
-// {
-//     Out = clamp(In, Min, Max);
-// }
-
-// void Unity_Branch_float(float Predicate, float True, float False, out float Out)
-// {
-//     Out = Predicate ? True : False;
-// }
 #endif // LIT_FORWARD_PASS_DR

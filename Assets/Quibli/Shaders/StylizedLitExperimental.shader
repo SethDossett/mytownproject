@@ -40,6 +40,14 @@
         _OutlineDepthOffset("[DR_OUTLINE_ON]Depth Offset", Range(0, 1)) = 0.0
         _CameraDistanceImpact("[DR_OUTLINE_ON]Camera Distance Impact", Range(0, 1)) = 0.5
 
+        //Dithering Experimental
+        [Space][Toggle(DR_DITHER_ON)]_DitheringEnabled("Enable Close Up Dither", Int) = 0
+        [Space]_DitherOffset("[DR_DITHER_ON]Dither Offset", Float) = 0.5
+        [Space]_DitherRange("[DR_DITHER_ON]Dither Range", Float) = 0.5
+        [Space]_ClipThreshold("[DR_DITHER_ON]Clip Threshold", Range(0, 1)) = 1
+        [Space]_AlphaImpact("[DR_DITHER_ON]Alpha", Range(0, 1)) = 1
+        [Space]_DitherSize("[DR_DITHER_ON]Dither Size", Range(0, 2)) = 0.555
+
         [MainTexture] _BaseMap("[FOLDOUT(Texture maps){8}]Albedo", 2D) = "white" {}
         [KeywordEnum(Multiply, Add)]_TextureBlendingMode("[]Blending Mode", Float) = 0
         _TextureImpact("[]Texture Impact", Range(0, 1)) = 1.0
@@ -70,7 +78,7 @@
         _LightmapDirectionYaw("[DR_ENABLE_LIGHTMAP_DIR][]Yaw", Range(0, 360)) = 0
         [HideInInspector] _LightmapDirection("Direction", Vector) = (0, 1, 0, 0)
 
-        _Cutoff ("Base Alpha cutoff", Range (0, 1)) = .5
+        [HideInInspector]_Cutoff ("Base Alpha cutoff", Range (0, 1)) = .5
 
         // Blending state
         [HideInInspector]_Surface("__surface", Float) = 0.0
@@ -88,13 +96,6 @@
         [HideInInspector][NoScaleOffset]unity_LightmapsInd("unity_LightmapsInd", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
         
-        //Dithering Experimental
-        [Toggle(DR_DITHER_ON)]_DitheringEnabled("[FOLDOUT(Dithering){1}]Enable Close Up Dither", Int) = 0
-        [Space]_DitherOffset("[DR_DITHER_ON]Dither Offset", Float) = 0.2
-        [Space]_DitherRange("[DR_DITHER_ON]Dither Range", Float) = 3
-        [Space]_ClipThreshold("[DR_DITHER_ON]Clip Threshold", Range(0, 1)) = 1
-        [Space]_AlphaImpact("[DR_DITHER_ON]Alpha", Range(0, 1)) = 1
-        [Space]_DitherSize("Dither Size", Range(0, 2)) = 0.74
 
     }
 
