@@ -239,7 +239,7 @@ namespace MyTownProject.Enviroment{
 
             yield return new WaitForSecondsRealtime(0.75f);
             SwitchToDefaltState();
-            CC.Motor.SetPosition(transform.position + _SphereCastOffsetTop);
+            CC.Motor.SetPosition(transform.position + _SphereCastOffsetTop);// could be setTransientPosition?
             CC._gettingOnOffObstacle = false;
         }
 

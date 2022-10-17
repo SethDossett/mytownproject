@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MyTownProject.Events;
-using KinematicCharacterController;
+using MyTownProject.SO;
 using System;
 using UnityEngine.InputSystem;
 
@@ -194,12 +194,15 @@ namespace KinematicCharacterController.Examples
         [SerializeField] UIEventChannelSO UIText;
         [SerializeField] GeneralEventSO EnableControls;
         [SerializeField] GeneralEventSO DisableControls;
+        [SerializeField] ActionSO SetTransientLocRot;
 
 
         private void OnEnable() {
+            SetTransientLocRot.OnSetTransientLocRot += SetTransientPosRot;
             dialogueEvent.onEnter += (GameObject npc, TextAsset inkFile) => _target = npc.transform;
         }
         private void OnDisable() {
+            SetTransientLocRot.OnSetTransientLocRot -= SetTransientPosRot;
             dialogueEvent.onEnter -= (GameObject npc, TextAsset inkFile) => _target = npc.transform;
         }
         private void Awake()
@@ -328,6 +331,7 @@ namespace KinematicCharacterController.Examples
                     {
                         fallOffPrevention.enabled = false;
                         DisableRecentering.RaiseEvent();
+                        UIText.HideTextInteract(); 
                         OrientationSharpness = _defaultOrientationSharpness;
                         _hasFinishedCrouch = false;
                         
@@ -1275,11 +1279,7 @@ namespace KinematicCharacterController.Examples
                         break;
                     }   
                     case CharacterState.Crawling:
-                    {
-                        //Show or hide UI Text for Crouch
-                        if(_canCrouch) UIText.ShowTextInteract("Crouch");
-                        else UIText.HideTextInteract();    
-
+                    {   
                         // Handle uncrouching
                         if (_isCrouching && !_shouldBeCrouching)
                         {
@@ -1454,6 +1454,10 @@ namespace KinematicCharacterController.Examples
         public void CapsuleEnable(bool enable = true)
         {
             Motor.Capsule.enabled = enable;
+        }
+        void SetTransientPosRot(Vector3 loc, float lerpSpeed, Quaternion rot){
+            Motor.SetTransientPosition(loc, true, lerpSpeed);
+            Motor.SetRotation(rot);
         }
 
         void HangingChecks(){ // make a coroutine possibly

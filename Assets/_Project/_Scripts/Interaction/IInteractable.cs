@@ -1,3 +1,4 @@
+using UnityEngine;
 namespace MyTownProject.Interaction
 {
     public interface IInteractable
@@ -13,6 +14,7 @@ namespace MyTownProject.Interaction
         bool Hovered { get; }
         bool Targeted { get; }
         bool BeenTargeted { get; }
+        Vector3 InteractionPointOffset { get; }
 
 
         void OnFocus(string _string);
