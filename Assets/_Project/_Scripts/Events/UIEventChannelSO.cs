@@ -36,12 +36,12 @@ namespace MyTownProject.Events
         #region Interact Prompt
         public UnityAction<Transform> OnShowPrompt;
         public UnityAction OnHidePrompt;
-        public UnityAction<PromptName, int, string> OnChangePrompt;
+        public UnityAction<PromptName, int> OnChangePrompt;
         const string _empty = "";
 
         public void ShowPromptInteract(Transform pos) => OnShowPrompt?.Invoke(pos);
         public void HidePromptInteract() => OnHidePrompt?.Invoke();
-        public void ChangePrompt(PromptName name, int priority, string text = _empty) => OnChangePrompt?.Invoke(name, priority, text);
+        public void ChangePrompt(PromptName name, int priority) => OnChangePrompt?.Invoke(name, priority);
         #endregion
     }
 }

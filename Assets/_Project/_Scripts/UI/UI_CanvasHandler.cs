@@ -53,7 +53,7 @@ namespace MyTownProject.UI
             uIEventChannel.OnChangePrompt -= ChangePromptPriority;
         }
 
-        void Start(){
+        void Awake(){
             ChangePromptPriority(PromptName.Null, 1);
         }
         private void CheckGameState(GameStateManager.GameState state)
@@ -130,21 +130,24 @@ namespace MyTownProject.UI
 
         #endregion
         
-        void ChangePromptPriority(PromptName name, int priority, string text = _empty){
+        void ChangePromptPriority(PromptName name, int priority){
             int currentHighestPriority = _highestPriority;
             Prompt topPrompt = null;
+            //Go Through Every prompt we have in Enum List
             foreach(Prompt prompt in prompts){
+                //Change Priority Value
                 if(prompt.name == name){
                     //If trying to change priority but its already the same then return out of function;
                     if(priority == prompt.priority) return;
                     prompt.priority = priority;
                 }
-
+                //Find which prompt we should show
                 if(prompt.priority > currentHighestPriority){
                     topPrompt = prompt;
-                    _highestPriority = prompt.priority;
+                    currentHighestPriority = prompt.priority;
                 }    
             }
+            //Show Top Priority
             if(topPrompt != _currentPrompt){
                 _currentPrompt = topPrompt;
                 SetPrompt();

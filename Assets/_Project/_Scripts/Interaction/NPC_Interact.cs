@@ -20,7 +20,7 @@ namespace MyTownProject.Interaction
         [field: SerializeField] public float MaxNoticeAngle { get; private set; }
         [field: SerializeField] public float MaxNoticeRange { get; private set; }
         [field: SerializeField] public float MaxInteractRange { get; private set; }
-        [field: SerializeField] public string Prompt { get; private set; }
+        [field: SerializeField] public PromptName PromptName { get; private set; }
         [field: SerializeField] public Vector3 InteractionPointOffset { get; private set; }
 
 

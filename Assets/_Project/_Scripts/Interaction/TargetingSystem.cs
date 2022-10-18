@@ -207,7 +207,7 @@ namespace MyTownProject.Interaction
                 //If We Are not Locked On Search for interactables
                 SearchForInteractables();
                 // If interactables found, then find closest target
-                if(AvailableTargets.Count > 0) FindClosestTarget(); 
+                if(AvailableTargets.Count > 0) FindClosestTarget(); else _closestTarget = null;
             }
             if (_enemyLocked)
             {
@@ -640,10 +640,10 @@ namespace MyTownProject.Interaction
                 ClearIInteractable();
                 return;
             } 
-            
-            uiEventChannel.ShowTextInteract(_interactable.Prompt);
-            uiEventChannel.ChangePrompt(PromptName.Talk, 10, "Open");
-            if (_interact.WasPerformedThisFrame()){
+            //Show UI Text Prompt
+            uiEventChannel.ChangePrompt(_interactable.PromptName, 10);
+
+            if (_interact.WasPerformedThisFrame()){ // Do not want all this to happen here, needs to function same from, talking, open door, pick up item etc.
                 Debug.Log($"interacted with {t.gameObject.name}");
                 _isTalking = true;
                 CC._target = t;
@@ -661,8 +661,9 @@ namespace MyTownProject.Interaction
         }
         void ClearIInteractable(){
             if (_interactable != null) _interactable = null;
-            uiEventChannel.HideTextInteract();
-            uiEventChannel.ChangePrompt(PromptName.Talk, 0);
+            //Hide UI Text Prompt
+            uiEventChannel.ChangePrompt(PromptName.Talk, 0); //Not Optimal Way to Set, but good for now
+            uiEventChannel.ChangePrompt(PromptName.Open, 0);
         }
         void ChangeCamera(bool targetingCam = false){
             if(!targetingCam){

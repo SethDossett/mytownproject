@@ -127,14 +127,6 @@ namespace KinematicCharacterController.Examples{
                 }
                 
             }
-            else{
-                _downOrigin = transform.TransformPoint(_downCastOffset);
-                _downRaycastHitDis = _downHitInfo.point.y - transform.position.y;
-                if(!DownCast() || _downRaycastHitDis >= 0)
-                {
-                    print("dont move");
-                }
-            }
 
         }
        

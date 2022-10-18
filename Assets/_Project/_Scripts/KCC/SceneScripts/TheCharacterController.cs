@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyTownProject.Events;
 using MyTownProject.SO;
+using MyTownProject.UI;
 using System;
-using UnityEngine.InputSystem;
+
 
 namespace KinematicCharacterController.Examples
 {
@@ -272,6 +273,11 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Talking:
                     {
                         _animator.CrossFadeInFixedTime(_talkState, 0.25f, 0);
+                        Quaternion lookRot = Quaternion.LookRotation(_target.position - transform.position, Vector3.up);
+                        lookRot.z = 0;
+                        lookRot.x = 0;
+                        Motor.SetRotation(lookRot, false);
+                        print("Work");
                         break;
                     } 
                 case CharacterState.Crawling:
@@ -331,7 +337,7 @@ namespace KinematicCharacterController.Examples
                     {
                         fallOffPrevention.enabled = false;
                         DisableRecentering.RaiseEvent();
-                        UIText.HideTextInteract(); 
+                        UIText.ChangePrompt(PromptName.Crouch, 0); 
                         OrientationSharpness = _defaultOrientationSharpness;
                         _hasFinishedCrouch = false;
                         
@@ -400,8 +406,8 @@ namespace KinematicCharacterController.Examples
                         }
 
                         //Show or hide UI Text for Crouch
-                        if(_canCrouch) UIText.ShowTextInteract("Crouch");
-                        else UIText.HideTextInteract();
+                        if(_canCrouch) UIText.ChangePrompt(PromptName.Crouch, 5);
+                        else UIText.ChangePrompt(PromptName.Crouch, 0);
 
                         // Crouching input
                         if (inputs.CrouchDown && _canCrouch)
@@ -631,7 +637,7 @@ namespace KinematicCharacterController.Examples
                         lookRot.z = 0;
                         lookRot.x = 0;
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _talkingRotSpeed * Time.unscaledDeltaTime);
-                        print("WOrk?");
+                        print("shoudldnt WOrk?");
                         break;
                     } 
                 case CharacterState.Crawling:
@@ -1342,44 +1348,19 @@ namespace KinematicCharacterController.Examples
             return true;
         }
 
-        string stone = "Stone";
-        string grass = "Grass";
-        string sand = "Sand";
-        string wood = "Wood";
-        string shallowWater = "ShallowWater";
-        string currentString;
+        //Need To be In same Order As Enums & Fmod "Surface" Parameter. Also same spelling as Tags in TagManager.
+        List<string> _groundTypeTags = new List<string>() {"Grass", "Sand", "Stone", "Wood", "ShallowWater"};
+        int _currentTagIndex;
 
         public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
-        {
-            string tag = hitCollider.tag;
-            if (tag == currentString) {
-                return;
-            }
-            
+        {   
+            int tagIndex = _groundTypeTags.IndexOf(hitCollider.tag);
+            if(tagIndex == _currentTagIndex) return;
+            CurrentGroundType = (GroundType)tagIndex;
+            _currentTagIndex = tagIndex;
 
-            if (tag == stone) {
-                currentString = tag;
-                CurrentGroundType = GroundType.Stone;
-            }
-            else if (tag == grass) {
-                currentString = tag;
-                CurrentGroundType = GroundType.Grass;
-            }
-            else if (tag == sand) { 
-            
-                currentString = tag;
-                CurrentGroundType = GroundType.Sand;
-            }
-            else if (tag == wood) {
-                currentString = tag;
-                CurrentGroundType = GroundType.Wood;
-            }
-            else if (tag == shallowWater) {
-                currentString = tag;
-                CurrentGroundType = GroundType.ShallowWater;
-            }
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("Surface", (float)_currentTagIndex);
 
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("Surface", (float)CurrentGroundType);
         }
 
         public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)

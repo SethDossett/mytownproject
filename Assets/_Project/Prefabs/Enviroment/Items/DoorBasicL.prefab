@@ -55,10 +55,11 @@ MonoBehaviour:
   <MaxNoticeAngle>k__BackingField: 90
   <MaxNoticeRange>k__BackingField: 2
   <MaxInteractRange>k__BackingField: 2
-  <Prompt>k__BackingField: Open
+  <PromptName>k__BackingField: 1
   <InteractionPointOffset>k__BackingField: {x: 0, y: 0, z: -1}
   CurrentDoorType: 1
   _locked: 0
+  _centerStandingPoint: {x: 0, y: 0, z: 0}
   mainEventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   _interactionDoor: {fileID: 11400000, guid: 4a078630cf4eb4f4ea2587087df13fca, type: 2}
   uIEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
