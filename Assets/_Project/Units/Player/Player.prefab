@@ -1626,7 +1626,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _NPCIndex: 0
-  _enemyLocked: 0
+  _targetLockedOn: 0
   pos: {x: 0, y: 0, z: 0}
   _nextTargetWindow: 0.1
   dis: 0

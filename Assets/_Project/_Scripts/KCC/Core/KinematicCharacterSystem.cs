@@ -119,7 +119,10 @@ namespace KinematicCharacterController
         {
             _instance = this;
         }
-
+        private void Update()
+        {
+            
+        }
         private void FixedUpdate()
         {
             if (Settings.AutoSimulation)

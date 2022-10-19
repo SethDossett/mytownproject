@@ -13,7 +13,6 @@ namespace MyTownProject.Core
         [SerializeField] GeneralEventSO _enableControls;
         [SerializeField] GeneralEventSO _disableControls;
 
-
         private void OnEnable()
         {
             GameStateManager.OnGameStateChanged += ChangedGameState;
@@ -51,10 +50,7 @@ namespace MyTownProject.Core
                 ToggleActionMap(inputActions.UI);
             }
         }
-        private void Start()
-        {
 
-        }
         public static void ToggleActionMap(InputActionMap actionMap)
         {
             if (actionMap.enabled)

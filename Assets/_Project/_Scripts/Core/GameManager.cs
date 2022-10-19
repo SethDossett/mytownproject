@@ -1,5 +1,5 @@
 using UnityEngine;
-using MyTownProject.UI;
+using UnityEngine.InputSystem;
 using System.Collections;
 
 namespace MyTownProject.Core
@@ -16,8 +16,8 @@ namespace MyTownProject.Core
             else
                 Application.targetFrameRate = -1;
         }
-
-        void Start()
+        
+        private void Start()
         {
             DontDestroyOnLoad(gameObject);
             gameObject.name = "New Game Manager";

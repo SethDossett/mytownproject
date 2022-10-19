@@ -65,6 +65,8 @@ MonoBehaviour:
   uIEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
   nextScene: {fileID: 11400000, guid: 7b1d6d908c850e24e8190d0c68af709d, type: 2}
   stateChangerEvent: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
+  SetPlayerPosRot: {fileID: 11400000, guid: 2058ea3555ec84235b1a641170ecfa8c, type: 2}
+  DisableControls: {fileID: 11400000, guid: 1f9619156896d6a468b85690b3ab4d6d, type: 2}
   _animatorRight: {fileID: 0}
   _animatorLeft: {fileID: 0}
 --- !u!65 &4189828769309332515

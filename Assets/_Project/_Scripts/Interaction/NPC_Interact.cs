@@ -1,5 +1,5 @@
 using UnityEngine;
-using Cinemachine;
+using KinematicCharacterController.Examples;
 using MyTownProject.Events;
 using MyTownProject.NPC;
 using MyTownProject.UI;
@@ -31,6 +31,7 @@ namespace MyTownProject.Interaction
         //[SerializeField] private CinemachineTargetGroup _targetGroup;
         [SerializeField] private NPC_ScriptableObject npc;
         [SerializeField] DialogueEventsSO dialogueEvents;
+        
 
     #region new variables
         [Header("Script Specific")]
@@ -66,6 +67,7 @@ namespace MyTownProject.Interaction
         public void OnInteract(TargetingSystem player)
         {
             //if (_hasInteracted) return;
+            player.TransitionCharacterState(CharacterState.Talking);
 
             Debug.Log($"Interacting with {gameObject.name}");
             //_targetGroup.m_Targets[1].target = transform;
@@ -99,7 +101,6 @@ namespace MyTownProject.Interaction
                 TurnOffAllIcons();
             }
             else{
-                if (!_interactionUI.activeInHierarchy)
                 _interactionUI.SetActive(true);
             }
         }
