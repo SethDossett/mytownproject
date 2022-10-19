@@ -1,27 +1,27 @@
 using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
-using TMPro;
-using MyTownProject.UI;
 using MyTownProject.Core;
 using MyTownProject.Events;
 using MyTownProject.SO;
+using MyTownProject.UI;
 
 namespace MyTownProject.Interaction
 {
     public class Door : MonoBehaviour, IInteractable
     {
         [field: SerializeField] public bool IsVisible { get; set; }
-        [field: SerializeField] public float MaxNoticeRange { get; private set; }
-        [field: SerializeField] public float MaxNoticeAngle { get; private set; }
-        [field: SerializeField] public bool DoesAngleMatter { get; private set; }
-        [field: SerializeField] public float MaxInteractRange { get; private set; }
         [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
         [field: SerializeField] public bool CanBeTargeted { get; private set; }
-        [field: SerializeField] public string Prompt { get; private set; }
         [field: SerializeField] public bool Hovered { get; set; }
         [field: SerializeField] public bool Targeted { get; set; }
         [field: SerializeField] public bool BeenTargeted { get; set; }
+        [field: SerializeField] public bool DoesAngleMatter { get; private set; }
+        [field: SerializeField] public float MaxNoticeAngle { get; private set; }
+        [field: SerializeField] public float MaxNoticeRange { get; private set; }
+        [field: SerializeField] public float MaxInteractRange { get; private set; }
+        [field: SerializeField] public PromptName PromptName { get; private set; }
+        [field: SerializeField] public Vector3 InteractionPointOffset { get; private set; }
 
 
         public enum DoorType
@@ -32,6 +32,7 @@ namespace MyTownProject.Interaction
         [Header("Door Specific")]
         [SerializeField] DoorType CurrentDoorType;
         [SerializeField] bool _locked = false;
+        [SerializeField] Vector3 _centerStandingPoint;
 
         [Header("ScriptableObjects")]
         [SerializeField] MainEventChannelSO mainEventChannel;
@@ -41,6 +42,7 @@ namespace MyTownProject.Interaction
         [SerializeField] StateChangerEventSO stateChangerEvent;
 
         [Header("References")]
+        
         string _npcTag = "NPC";
 
         [Header("Values")]
@@ -62,7 +64,7 @@ namespace MyTownProject.Interaction
         
         private void OnEnable()
         {
-        
+            //InteractionPointOffset = new Vector3(0, 0, 0);
         }
         private void OnDisable()
         {
@@ -122,8 +124,8 @@ namespace MyTownProject.Interaction
 
             uIEventChannel.RaiseBarsOn(2f);
             yield return new WaitForSecondsRealtime(1f);
-            _animatorRight.Play(crackdoorR);
-            _animatorLeft.Play(crackdoorL);
+            //_animatorRight.Play(crackdoorR);
+            //_animatorLeft.Play(crackdoorL);
             uIEventChannel.RaiseFadeOut(Color.black, 1f);
             yield return new WaitForSecondsRealtime(1f);
             

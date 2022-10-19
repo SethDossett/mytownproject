@@ -20,7 +20,9 @@ namespace MyTownProject.Interaction
         [field: SerializeField] public float MaxNoticeAngle { get; private set; }
         [field: SerializeField] public float MaxNoticeRange { get; private set; }
         [field: SerializeField] public float MaxInteractRange { get; private set; }
-        [field: SerializeField] public string Prompt { get; private set; }
+        [field: SerializeField] public PromptName PromptName { get; private set; }
+        [field: SerializeField] public Vector3 InteractionPointOffset { get; private set; }
+
 
 
 
@@ -86,6 +88,7 @@ namespace MyTownProject.Interaction
 
         void Start()
         {
+            InteractionPointOffset = new Vector3(0, 1.2f, 0);
             if (!_interactionUI.activeInHierarchy)
                 _interactionUI.SetActive(true);
 

@@ -1,3 +1,5 @@
+using UnityEngine;
+using MyTownProject.UI;
 namespace MyTownProject.Interaction
 {
     public interface IInteractable
@@ -9,10 +11,11 @@ namespace MyTownProject.Interaction
         float MaxInteractRange { get; }
         bool CanBeInteractedWith { get; }
         bool CanBeTargeted { get; }
-        string Prompt { get; }
+        PromptName PromptName { get; }
         bool Hovered { get; }
         bool Targeted { get; }
         bool BeenTargeted { get; }
+        Vector3 InteractionPointOffset { get; }
 
 
         void OnFocus(string _string);

@@ -2,7 +2,7 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using MyTownProject.Core;
 using MyTownProject.Events;
-using MyTownProject.Cameras;
+using MyTownProject.UI;
 using KinematicCharacterController.Examples;
 using System.Collections;
 using System.Collections.Generic;
@@ -207,7 +207,7 @@ namespace MyTownProject.Interaction
                 //If We Are not Locked On Search for interactables
                 SearchForInteractables();
                 // If interactables found, then find closest target
-                if(AvailableTargets.Count > 0) FindClosestTarget(); 
+                if(AvailableTargets.Count > 0) FindClosestTarget(); else _closestTarget = null;
             }
             if (_enemyLocked)
             {
@@ -235,9 +235,9 @@ namespace MyTownProject.Interaction
         void SearchForInteractables()
         {
             nearbyTargets = Physics.OverlapSphere(transform.position, noticeZone, targetLayers);
-            float closestAngle = maxNoticeAngle;
-            float closestDis = maxDistance;
-            Transform closestTarget = null;
+            //float closestAngle = maxNoticeAngle;
+            //float closestDis = maxDistance;
+            //Transform closestTarget = null;
 
             if(nearbyTargets.Length <= 0){
                 return;
@@ -248,127 +248,134 @@ namespace MyTownProject.Interaction
 
                 Transform t = target.transform;
                 IInteractable interactable = t.gameObject.GetComponent<IInteractable>();
+                Vector3 interactionPoint = t.position + interactable.InteractionPointOffset;
                 //Does canbetargeted matter if this pick up item, can be interacted but not targeted
                 //Maybe have a 2nd list for items inradius that cant be targeted
 
                 //Is this interactable able to be targted?
                 if(interactable == null || !interactable.IsVisible || interactable.BeenTargeted){
                     AvailableTargets.Remove(t);
-                    print("Removed by initial");
+                    //print("Removed by initial");
                     continue;
                 }
                 // Is Target Blocked out of sight?
-                if(Blocked(t.position + _npcRayPoint)){
+                if(Blocked(interactionPoint)){
                     AvailableTargets.Remove(t);
-                    print("Removed by blocked");
+                    //print("Removed by blocked");
                     continue;
                 }
                 // Is Target too far away?
-                if(GetDistance(transform, t) > interactable.MaxNoticeRange){
+                if(GetDistance(transform.position, interactionPoint) > interactable.MaxNoticeRange){
                     AvailableTargets.Remove(t);
-                    print("Removed by distance");
-                    print(GetDistance(transform, t));
-                    Debug.DrawLine(transform.position, t.position, Color.cyan);
+                    //print("Removed by distance");
                     continue;
                 }
                 //Need Check Does player sight/view angle matter ex: for picking up items in field
                 // player view or interactable view doesnt seem to matter with enemies
                 if(interactable.DoesAngleMatter){
                     // Is the angle of interactable within our players max view?
-                    if(GetAngle(t.position, transform.position, transform.forward) > maxNoticeAngle){
+                    if(GetAngle(interactionPoint, transform.position, transform.forward) > maxNoticeAngle){
                         AvailableTargets.Remove(t);
-                        print("Removed by player view");
+                        //print("Removed by player view");
                         continue;
                     }   
                     //Is the angle of our player within our interactables max view?
-                    if(GetAngle(transform.position, t.position, t.forward) > interactable.MaxNoticeAngle){
+                    if(GetAngle(transform.position, interactionPoint, t.forward) > interactable.MaxNoticeAngle){
                         AvailableTargets.Remove(t);
-                        print("Removed by npc view");
+                        //print("Removed by npc view");
+                        Debug.DrawRay(interactionPoint, t.forward* 5f, Color.yellow);
                         continue;
                     }
                 }
-                //If can be targeted Add to AvailableTargets
-                if (interactable.CanBeTargeted)
-                {//If list does not contain interactable, then add
-                    if (!AvailableTargets.Contains(t))
-                        AvailableTargets.Add(t);
+                //If list does not contain interactable, then add
+                if (!AvailableTargets.Contains(t)){
+                    AvailableTargets.Add(t);
+
                 }
-                //If cant be targeted Add to Available Objects
-                else
-                {
-                    if (!AvailableObjects.Contains(t))
-                        AvailableObjects.Add(t);
-                }
+
+
+                // //If can be targeted Add to AvailableTargets
+                // if (interactable.CanBeTargeted)
+                // {//If list does not contain interactable, then add
+                //     if (!AvailableTargets.Contains(t))
+                //         AvailableTargets.Add(t);
+                // }
+                // //If cant be targeted Add to Available Objects
+                // else
+                // {
+                //     if (!AvailableObjects.Contains(t))
+                //         AvailableObjects.Add(t);
+                // }
             }
 
 
-            if (findByAngle) //Dont Need, Depricated
-            {
-                if (nearbyTargets.Length <= 0) return;
-                for (int i = 0; i < nearbyTargets.Length; i++)
-                {
-
-                    Vector3 dir = nearbyTargets[i].transform.position - cam.position;
-                    dir.y = 0;
-                    _angle = Vector3.Angle(cam.forward, dir);
-
-                    if (_angle < closestAngle)
-                    {
-                        closestTarget = nearbyTargets[i].transform;
-                        closestAngle = _angle;
-                        _NPCIndex = i;
-                    }
-
-                }
-            }
-            else
-            {
-                if (nearbyTargets.Length <= 0) return;
-                for (int i = 0; i < nearbyTargets.Length; i++)
-                {
-                    Transform t = nearbyTargets[i].transform;
-                    float dis = GetDistance(transform, t);
-                    float ang = GetAngle(t.position, transform.position, transform.forward);
-                    IInteractable interactable = t.gameObject.GetComponent<IInteractable>();
-                    if (interactable.CanBeTargeted && interactable.IsVisible){
-                        if(ang <= maxNoticeAngle){
-                            if (dis < closestDis){
-                                closestTarget = t;
-                                closestDis = dis; 
-                                _NPCIndex = i;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (!closestTarget) return;
-            //This was old way to place UI icon at center of target
-            float h1 = closestTarget.GetComponent<CapsuleCollider>().height;
-            float h2 = closestTarget.localScale.y;
-            float h = h1 * h2;
-            float half_h = (h / 2) / 2;
-            currentYOffset = h - half_h;
-            if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
-            Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
-            if(Blocked(closestTarget.position + _npcRayPoint)){
-                closestTarget.gameObject.GetComponent<IInteractable>().SetHovered(false);
-                if(_closestTarget){
-                    _closestTarget = null;
-                    ResetTarget();
-                }
-                return;
-            } 
-            if(GetDistance(transform, closestTarget) > closestTarget.GetComponent<IInteractable>().MaxNoticeRange){
-                //print(GetDistance(transform, closestTarget));
-                _closestTarget = null;
-                return; // not working right with findByAngle
-            }
-            if(GetAngle(closestTarget.position,transform.position,transform.forward) > maxNoticeAngle){
-                //print(GetAngle(closestTarget.position,transform.position,transform.forward, 0));
-                _closestTarget = null;
-                return;
-            }
+            //if (findByAngle) //Dont Need, Depricated
+            //{
+            //    if (nearbyTargets.Length <= 0) return;
+            //    for (int i = 0; i < nearbyTargets.Length; i++)
+            //    {
+//
+            //        Vector3 dir = nearbyTargets[i].transform.position - cam.position;
+            //        dir.y = 0;
+            //        _angle = Vector3.Angle(cam.forward, dir);
+//
+            //        if (_angle < closestAngle)
+            //        {
+            //            closestTarget = nearbyTargets[i].transform;
+            //            closestAngle = _angle;
+            //            _NPCIndex = i;
+            //        }
+//
+            //    }
+            //}
+            //else
+            //{
+            //    if (nearbyTargets.Length <= 0) return;
+            //    for (int i = 0; i < nearbyTargets.Length; i++)
+            //    {
+            //        Transform t = nearbyTargets[i].transform;
+            //        float dis = GetDistance(transform.position, t.position);
+            //        float ang = GetAngle(t.position, transform.position, transform.forward);
+            //        IInteractable interactable = t.gameObject.GetComponent<IInteractable>();
+            //        if (interactable.CanBeTargeted && interactable.IsVisible){
+            //            if(ang <= maxNoticeAngle){
+            //                if (dis < closestDis){
+            //                    closestTarget = t;
+            //                    closestDis = dis; 
+            //                    _NPCIndex = i;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+//
+            //if (!closestTarget) return;
+            ////This was old way to place UI icon at center of target
+            //float h1 = closestTarget.GetComponent<CapsuleCollider>().height;
+            //float h2 = closestTarget.localScale.y;
+            //float h = h1 * h2;
+            //float half_h = (h / 2) / 2;
+            //currentYOffset = h - half_h;
+            //if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
+            //Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
+            //if(Blocked(closestTarget.position + _npcRayPoint)){
+            //    closestTarget.gameObject.GetComponent<IInteractable>().SetHovered(false);
+            //    if(_closestTarget){
+            //        _closestTarget = null;
+            //        ResetTarget();
+            //    }
+            //    return;
+            //} 
+            //if(GetDistance(transform.position, closestTarget.position) > closestTarget.GetComponent<IInteractable>().MaxNoticeRange){
+            //    //print(GetDistance(transform, closestTarget));
+            //    _closestTarget = null;
+            //    return; // not working right with findByAngle
+            //}
+            //if(GetAngle(closestTarget.position,transform.position,transform.forward) > maxNoticeAngle){
+            //    //print(GetAngle(closestTarget.position,transform.position,transform.forward, 0));
+            //    _closestTarget = null;
+            //    return;
+            //}
             
 
             //_closestTarget = closestTarget;
@@ -381,7 +388,7 @@ namespace MyTownProject.Interaction
             Transform closestTarget = null;
 
             foreach(Transform target in AvailableTargets){
-                float dis = GetDistance(transform, target);
+                float dis = GetDistance(transform.position, target.position);
                 if (dis < closestDis){
                     closestTarget = target;
                     closestDis = dis; 
@@ -397,30 +404,29 @@ namespace MyTownProject.Interaction
         }
         bool StillClosestTarget(Transform t){
             IInteractable interactable = t.GetComponent<IInteractable>();
+            Vector3 interactionPoint = t.position + interactable.InteractionPointOffset;
             if (!interactable.IsVisible)
             {
                 return false;
             }
-            if (Blocked(t.position + _npcRayPoint)){ //
+            if (Blocked(interactionPoint)){ //
                 interactable.SetHovered(false);
                  return false;
             }
-            if(GetAngle(t.position,transform.position,transform.forward) > maxNoticeAngle){
-                //HideHover(t);
+            if(GetAngle(t.position, interactionPoint, transform.forward) > maxNoticeAngle){
                  return false;
             }
-            if(GetDistance(transform, t) > interactable.MaxNoticeRange){
-                //HideHover(t);
+            if(GetDistance(transform.position, interactionPoint) > interactable.MaxNoticeRange){
                 return false;
             } 
 
             return true;
         }
 
-        bool Blocked(Vector3 t)
+        bool Blocked(Vector3 targetPos)
         {
             RaycastHit hit;
-            if (Physics.Linecast(transform.position + _playerRayPoint, t, out hit))
+            if (Physics.Linecast(transform.position + _playerRayPoint, targetPos, out hit))
             {
                 if (!hit.transform.CompareTag("NPC")) return true;
             }
@@ -432,15 +438,19 @@ namespace MyTownProject.Interaction
             dis = (transform.position - pos).magnitude;
             if (dis > noticeZone) return false; else return true;
         }
-        float GetDistance(Transform from, Transform to)
-        {
-            float distance = (from.position - to.position).magnitude;
-
+        float GetDistance(Vector3 from, Vector3 to)
+        {//Right now Y-Axis does not matter with distance
+            Vector2 from2 = new Vector2(from.x, from.z);
+            Vector2 to2 = new Vector2(to.x, to.z);
+            float distance = (from2 - to2).magnitude;
             return distance;
         }
         float GetAngle(Vector3 loc1, Vector3 loc2, Vector3 forwardDir, bool lockYAxis = false){
+            //Right now Y-Axis does not matter with angle
             Vector3 dir = loc1 - loc2;
-            if(lockYAxis) dir.y = 0;
+            //if(lockYAxis) dir.y = 0;
+            dir.y = 0;
+            Debug.DrawLine(loc1,loc2, Color.blue);
             float angle = Vector3.Angle(forwardDir, dir);
             return angle;
         }
@@ -467,12 +477,12 @@ namespace MyTownProject.Interaction
             {
                 Transform t = nearbyTargets[i].transform;
                 remainingTargets.Add(t);
-                print(GetDistance(transform,t) + t.gameObject.name);
+                print(GetDistance(transform.position,t.position) + t.gameObject.name);
                 if (t.gameObject.GetComponent<IInteractable>().BeenTargeted == true)
                 {
                     remainingTargets.Remove(t);
                 }
-                if (GetDistance(transform, t) > t.GetComponent<IInteractable>().MaxNoticeRange)
+                if (GetDistance(transform.position, t.position) > t.GetComponent<IInteractable>().MaxNoticeRange)
                 {
                     remainingTargets.Remove(t);
                 }
@@ -500,10 +510,10 @@ namespace MyTownProject.Interaction
                     print(GetAngle(transform.position, target.transform.position, transform.forward));
                     if (target.gameObject.GetComponent<IInteractable>().BeenTargeted == false)
                     {
-                        float disP = GetDistance(transform, target.transform);
+                        float disP = GetDistance(transform.position, target.transform.position);
                         if (disP <= target.transform.GetComponent<IInteractable>().MaxNoticeRange)
                         {
-                            float disN = GetDistance(currentTarget, target.transform);
+                            float disN = GetDistance(currentTarget.position, target.transform.position);
                             if (disN < closestDis)
                             {
                                 closetT = target.transform;
@@ -626,13 +636,14 @@ namespace MyTownProject.Interaction
                 ClearIInteractable();
                 return;
             }
-            if(GetDistance(transform, t) > _interactable.MaxInteractRange){
+            if(GetDistance(transform.position, t.position) > _interactable.MaxInteractRange){
                 ClearIInteractable();
                 return;
             } 
-            
-            uiEventChannel.ShowTextInteract(_interactable.Prompt);
-            if (_interact.WasPerformedThisFrame()){
+            //Show UI Text Prompt
+            uiEventChannel.ChangePrompt(_interactable.PromptName, 10);
+
+            if (_interact.WasPerformedThisFrame()){ // Do not want all this to happen here, needs to function same from, talking, open door, pick up item etc.
                 Debug.Log($"interacted with {t.gameObject.name}");
                 _isTalking = true;
                 CC._target = t;
@@ -650,7 +661,9 @@ namespace MyTownProject.Interaction
         }
         void ClearIInteractable(){
             if (_interactable != null) _interactable = null;
-            uiEventChannel.HideTextInteract();
+            //Hide UI Text Prompt
+            uiEventChannel.ChangePrompt(PromptName.Talk, 0); //Not Optimal Way to Set, but good for now
+            uiEventChannel.ChangePrompt(PromptName.Open, 0);
         }
         void ChangeCamera(bool targetingCam = false){
             if(!targetingCam){

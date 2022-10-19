@@ -4,23 +4,32 @@ using UnityEngine.UI;
 using TMPro;
 using MyTownProject.Events;
 using MyTownProject.Core;
+using System.Collections.Generic;
 
 namespace MyTownProject.UI
 {
     public class UI_CanvasHandler : MonoBehaviour
     {
+        [Header("Events Channels")]
         [SerializeField] UIEventChannelSO uIEventChannel;
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] DialogueEventsSO dialogueEvents;
 
+        [Header("UI Objects")]
         [SerializeField] private GameObject _gameUI;
         [SerializeField] private GameObject _clock;
         [SerializeField] private GameObject _buttons;
         [SerializeField] private GameObject _dialogue;
         [SerializeField] private TextMeshProUGUI _interactionText;
 
-
+        [Header("Tween Values")]
         [SerializeField] private float _cycleLength = 2f;
+
+        [Header("Prompt Properties")]
+        [SerializeField] Prompt _currentPrompt;
+        [SerializeField] List<Prompt> prompts = new List<Prompt>();
+        int _highestPriority = 0;
+        const string _empty = "";
 
         private void OnEnable()
         {
@@ -30,9 +39,9 @@ namespace MyTownProject.UI
             mainEventChannel.OnSubmit += ContinueIconSubmit;
             uIEventChannel.OnShowTextInteract += ShowInteractionText;
             uIEventChannel.OnHideTextInteract += HideInteractionText;
+            uIEventChannel.OnChangePrompt += ChangePromptPriority;
+
         }
-
-
         private void OnDisable()
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
@@ -41,8 +50,12 @@ namespace MyTownProject.UI
             mainEventChannel.OnSubmit += ContinueIconSubmit;
             uIEventChannel.OnShowTextInteract -= ShowInteractionText;
             uIEventChannel.OnHideTextInteract -= HideInteractionText;
+            uIEventChannel.OnChangePrompt -= ChangePromptPriority;
         }
 
+        void Awake(){
+            ChangePromptPriority(PromptName.Null, 1);
+        }
         private void CheckGameState(GameStateManager.GameState state)
         {
             if (state == GameStateManager.GameState.GAME_PLAYING)
@@ -113,6 +126,36 @@ namespace MyTownProject.UI
             //if (_dialogue.activeInHierarchy)
             //_dialogue.SetActive(false);
         }
+
+
         #endregion
+        
+        void ChangePromptPriority(PromptName name, int priority){
+            int currentHighestPriority = _highestPriority;
+            Prompt topPrompt = null;
+            //Go Through Every prompt we have in Enum List
+            foreach(Prompt prompt in prompts){
+                //Change Priority Value
+                if(prompt.name == name){
+                    //If trying to change priority but its already the same then return out of function;
+                    if(priority == prompt.priority) return;
+                    prompt.priority = priority;
+                }
+                //Find which prompt we should show
+                if(prompt.priority > currentHighestPriority){
+                    topPrompt = prompt;
+                    currentHighestPriority = prompt.priority;
+                }    
+            }
+            //Show Top Priority
+            if(topPrompt != _currentPrompt){
+                _currentPrompt = topPrompt;
+                SetPrompt();
+            }
+        }
+
+        void SetPrompt(){
+            _interactionText.text = _currentPrompt.text;
+        }
     }
 }
