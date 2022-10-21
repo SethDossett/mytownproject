@@ -50,8 +50,8 @@ namespace MyTownProject.Interaction
         [SerializeField] bool findByAngle;
         [SerializeField] LayerMask targetLayers;
         [SerializeField] int _NPCIndex;
-        public bool _enemyLocked;
-        bool _isTalking;
+        public bool _targetLockedOn;
+        bool _isInteracting;
         float currentYOffset;
         [SerializeField] Vector3 pos;
         bool _freeLookCameraOff;
@@ -114,7 +114,7 @@ namespace MyTownProject.Interaction
         void SetInitialReferences(){
             canRaycast = true;
             _startTimer = false;
-            _isTalking = false;
+            _isInteracting = false;
         }
         void CheckGameState(GameStateManager.GameState state)
         {
@@ -141,11 +141,12 @@ namespace MyTownProject.Interaction
             else
                 canRaycast = false;    
         }
+        public void TransitionCharacterState(CharacterState newState) => CC.TransitionToState(newState);
         private void Update()
         {
             if (!canRaycast) return;
 
-            CC._hasTargetToLockOn = _enemyLocked;
+            CC._hasTargetToLockOn = _targetLockedOn;
             if(currentTarget && _freeLookCameraOff){ // might not want, it is janky, transitioning from kcc to freelook cam.
                 if(_cameraInput.ReadValue<Vector2>().magnitude > 0){
                     ChangeCamera();
@@ -183,7 +184,7 @@ namespace MyTownProject.Interaction
                 {
                     CC._target = currentTarget;
                      // so we dont lose closest target when switching
-                    if(_enemyLocked) StartCoroutine(FindNextTarget()); else FoundTarget();
+                    if(_targetLockedOn) StartCoroutine(FindNextTarget()); else FoundTarget();
                 }
                 if (currentTarget == null && _closestTarget == null) {
                     CC.TransitionToState(CharacterState.Targeting);
@@ -202,14 +203,14 @@ namespace MyTownProject.Interaction
                     _startTimer = true;
             }
 
-            if (!_enemyLocked)
+            if (!_targetLockedOn)
             {
                 //If We Are not Locked On Search for interactables
                 SearchForInteractables();
                 // If interactables found, then find closest target
                 if(AvailableTargets.Count > 0) FindClosestTarget(); else _closestTarget = null;
             }
-            if (_enemyLocked)
+            if (_targetLockedOn)
             {
                 if (!TargetOnRange()) StartCoroutine(FindNextTarget());
                 LookAtTarget();
@@ -470,7 +471,7 @@ namespace MyTownProject.Interaction
             //turning off to see if i can better camera
             //ChangeCamera(true);
 
-            _enemyLocked = true;
+            _targetLockedOn = true;
             _closestTarget.GetComponent<IInteractable>().SetBeenTargeted(true); //Set NPC as been targeted.
 
             for (int i = 0; i < nearbyTargets.Length; i++)
@@ -489,7 +490,7 @@ namespace MyTownProject.Interaction
 
             }
         }
-        IEnumerator FindNextTarget()
+        IEnumerator FindNextTarget()// needs to be reworked with Remaining Targets
         {
             print("FindNext");
             _startTimer = false;
@@ -544,7 +545,7 @@ namespace MyTownProject.Interaction
         void ResetTarget()
         {
             print("reset");
-            if(!_isTalking) _audioEvent.RaiseEvent2(_LockOffSFX, currentTarget.position);
+            if(!_isInteracting) _audioEvent.RaiseEvent2(_LockOffSFX, currentTarget.position);
             //uiEventChannel.RaiseBarsOff(0.1f);
             //currentTarget.gameObject.GetComponent<NPC_Interact>().HideTargeted();
             currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(false);
@@ -557,7 +558,7 @@ namespace MyTownProject.Interaction
             //ChangeCamera();
             currentTarget = null;
             _closestTarget = null;
-            _enemyLocked = false;
+            _targetLockedOn = false;
             _NPCIndex = 0;
             BeenTargetedReset();
         }
@@ -645,16 +646,15 @@ namespace MyTownProject.Interaction
 
             if (_interact.WasPerformedThisFrame()){ // Do not want all this to happen here, needs to function same from, talking, open door, pick up item etc.
                 Debug.Log($"interacted with {t.gameObject.name}");
-                _isTalking = true;
+                _isInteracting = true;
                 CC._target = t;
-                CC.TransitionToState(CharacterState.Talking);
                 if(currentTarget) ResetTarget();
 
                 //turning off to see if i can better camera
                 //ChangeCamera();
                 
                 _interactable.OnInteract(this);
-                _isTalking = false;
+                _isInteracting = false;
                 return;
             } 
 
@@ -695,7 +695,7 @@ namespace MyTownProject.Interaction
             uiEventChannel.RaiseBarsOn(0.1f);
         }
         void CheckForInputRelease(InputAction.CallbackContext ctx){
-            if(_enemyLocked) return;
+            if(_targetLockedOn) return;
             if (currentCharacterState == CharacterState.Targeting)
             {
                 CC.TransitionToState(CharacterState.Default);

@@ -51,7 +51,7 @@ namespace MyTownProject.UI
 
         private float startingRotation;
 
-        public Light sunlight;
+        //public Light sunlight;
         public float nightIntensity;
         public float dayIntensity;
 
@@ -94,11 +94,11 @@ namespace MyTownProject.UI
 
             float dayNightT = dayNightCurve.Evaluate(t);
 
-            sunlight.intensity = Mathf.Lerp(dayIntensity, nightIntensity, dayNightT);
+            /*sunlight.intensity = Mathf.Lerp(dayIntensity, nightIntensity, dayNightT);
 
             if (WeatherManager.currentWeather == Weather.Sunny)
                 sunlight.color = Color.Lerp(dayColor, nightColor, dayNightT);
-            else sunlight.color = Color.Lerp(rainyDayColor, nightColor, dayNightT);
+            else sunlight.color = Color.Lerp(rainyDayColor, nightColor, dayNightT);*/
 
             if (dateTime.IsNight() && fireflies.isStopped)
             {

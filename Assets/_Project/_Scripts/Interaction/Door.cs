@@ -5,6 +5,7 @@ using MyTownProject.Core;
 using MyTownProject.Events;
 using MyTownProject.SO;
 using MyTownProject.UI;
+using KinematicCharacterController.Examples;
 
 namespace MyTownProject.Interaction
 {
@@ -34,12 +35,14 @@ namespace MyTownProject.Interaction
         [SerializeField] bool _locked = false;
         [SerializeField] Vector3 _centerStandingPoint;
 
-        [Header("ScriptableObjects")]
+        [Header("Event References")]
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] InteractionEventSO _interactionDoor;
         [SerializeField] UIEventChannelSO uIEventChannel;
         [SerializeField] SceneSO nextScene;
         [SerializeField] StateChangerEventSO stateChangerEvent;
+        [SerializeField] ActionSO SetPlayerPosRot;
+        [SerializeField] GeneralEventSO DisableControls;
 
         [Header("References")]
         
@@ -49,6 +52,7 @@ namespace MyTownProject.Interaction
         bool _hasInteracted = false;
         bool _isFocusing = false;
         private bool _needToTeleport;
+        GameObject _player;
 
         [Header("Animations")]
         [SerializeField] private Animator _animatorRight;
@@ -81,9 +85,9 @@ namespace MyTownProject.Interaction
         public void OnInteract(TargetingSystem player)
         {
             if (_hasInteracted) return;
+            _player = player.gameObject;
             OpenDoor();
             _hasInteracted = true;
-            return;
         }
 
         public void OnLoseFocus()
@@ -120,9 +124,12 @@ namespace MyTownProject.Interaction
         
         IEnumerator Teleport()
         {
+            //DisableControls.RaiseEvent();
             stateChangerEvent.RaiseEventGame(GameStateManager.GameState.CUTSCENE);
-
             uIEventChannel.RaiseBarsOn(2f);
+            //Quaternion lookRot = Quaternion.LookRotation(-transform.forward, Vector3.up);
+            //SetPlayerPosRot.OnSetTransientLocRot(transform.position + _centerStandingPoint, 2f, lookRot);
+            //_player.transform.position = _player.transform.position + Vector3.forward * 2f;
             yield return new WaitForSecondsRealtime(1f);
             //_animatorRight.Play(crackdoorR);
             //_animatorLeft.Play(crackdoorL);
