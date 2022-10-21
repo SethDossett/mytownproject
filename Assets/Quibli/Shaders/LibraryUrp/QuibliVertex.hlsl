@@ -12,42 +12,6 @@ half _WindDirection;
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../Grass/FoliageLib.hlsl"
 
-// float Dither(float In, float4 ScreenPosition)
-// {
-//     float2 uv = ScreenPosition.xy; //* _ScreenParams.xy;
-//     float DITHER_THRESHOLDS[16] =
-//     {
-//         1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0,
-//         13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0,
-//         4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0,
-//         16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0
-//     };
-//     uint index = (uint(uv.x) % 4) * 4 + uint(uv.y) % 4;
-//     return In - DITHER_THRESHOLDS[index];
-// }
-// float DitheredAlbedo(VertexPositionInputs input)
-// {   
-//     // Screen-door transparency: Discard pixel if below threshold.
-// 		float4x4 thresholdMatrix =
-// 		{  1.0 / 17.0,  9.0 / 17.0,  3.0 / 17.0, 11.0 / 17.0,
-// 		  13.0 / 17.0,  5.0 / 17.0, 15.0 / 17.0,  7.0 / 17.0,
-// 		   4.0 / 17.0, 12.0 / 17.0,  2.0 / 17.0, 10.0 / 17.0,
-// 		  16.0 / 17.0,  8.0 / 17.0, 14.0 / 17.0,  6.0 / 17.0
-// 		};
-// 		float4x4 _RowAccess = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
-// 		float2 pos = IN.screenPos.xy / IN.screenPos.w;
-// 		pos *= _ScreenParams.xy; // pixel position
-// 		clip(c.a - thresholdMatrix[fmod(pos.x, 4)] * _RowAccess[fmod(pos.y, 4)]);
-
-
-//     //float4 screenPosition = ComputeScreenPos(TransformWorldToHClip(input.positionWS));
-//     //float4 screenPos = float4(screenPosition.xy / screenPosition.w, 0, 0);
-//     //float4 divideOut = screenPos / _DitherSize.xxxx;
-
-    
-//     //return Dither(_ClipThreshold, divideOut);
-// }
-
 Varyings LitPassVertex(Attributes input)
 {
     Varyings output = (Varyings)0;

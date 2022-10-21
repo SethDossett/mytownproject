@@ -159,7 +159,7 @@ Material:
     - _AlphaImpact: 1
     - _Blend: 0
     - _BumpScale: 1
-    - _CameraDistanceImpact: 0.5
+    - _CameraDistanceImpact: 0.311
     - _ClearCoat: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0

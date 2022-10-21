@@ -159,7 +159,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _ClipThreshold: 1
     - _Cull: 2
-    - _Cutoff: 1
+    - _Cutoff: 0.944
     - _DetailAlbedoMapScale: 1
     - _DetailMapBlendingMode: 0
     - _DetailMapImpact: 0
