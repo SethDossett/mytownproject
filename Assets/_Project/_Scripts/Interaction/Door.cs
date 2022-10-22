@@ -5,7 +5,7 @@ using MyTownProject.Core;
 using MyTownProject.Events;
 using MyTownProject.SO;
 using MyTownProject.UI;
-using KinematicCharacterController.Examples;
+using KinematicCharacterController;
 
 namespace MyTownProject.Interaction
 {
@@ -126,6 +126,7 @@ namespace MyTownProject.Interaction
         {
             //DisableControls.RaiseEvent();
             stateChangerEvent.RaiseEventGame(GameStateManager.GameState.CUTSCENE);
+            //KinematicCharacterSystem.Settings.AutoSimulation = false; // This might should be running whenever cutscene is state.
             uIEventChannel.RaiseBarsOn(2f);
             //Quaternion lookRot = Quaternion.LookRotation(-transform.forward, Vector3.up);
             //SetPlayerPosRot.OnSetTransientLocRot(transform.position + _centerStandingPoint, 2f, lookRot);
@@ -138,6 +139,7 @@ namespace MyTownProject.Interaction
             
             _hasInteracted = true;
             mainEventChannel.RaiseEventChangeScene(nextScene);
+            //KinematicCharacterSystem.Settings.AutoSimulation = true;
         
         }
         private void DoLockedDoor()
