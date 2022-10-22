@@ -77,7 +77,7 @@ namespace KinematicCharacterController.Examples
         public float JumpScalableForwardSpeed = 10f;
         public float JumpPreGroundingGraceTime = 0f;
         public float JumpPostGroundingGraceTime = 0f;
-        [SerializeField] [Range(0f, 10f)]float _speedNeededToJump = 4.5f; 
+        [SerializeField][Range(0f, 10f)] float _speedNeededToJump = 4.5f;
 
         [Header("Climbing")]
         public bool CanHang;
@@ -113,6 +113,7 @@ namespace KinematicCharacterController.Examples
         bool _startFallingTimer = false;
         bool _hardLanding = false;
         [SerializeField] float _timetotriggerHardLanding = 0.5f;
+        public bool _isFalling;
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -143,14 +144,15 @@ namespace KinematicCharacterController.Examples
         int anim_horizontal = Animator.StringToHash("Horizontal");
         int anim_vertical = Animator.StringToHash("Vertical");
         //Climb States
-        int anim_Hang= Animator.StringToHash("Hang");
-        int anim_DropToHang= Animator.StringToHash("DropToHang");
+        int anim_Hang = Animator.StringToHash("Hang");
+        int anim_DropToHang = Animator.StringToHash("DropToHang");
         int anim_ClimbUp = Animator.StringToHash("ClimbUp");
+        int anim_FreeHangDrop = Animator.StringToHash("FreeHangDrop");
 
         public CharacterState CurrentCharacterState { get; private set; }
         public GroundType CurrentGroundType { get; private set; }
 
-        private HitStabilityReport CurrentHitStabilityReport; 
+        private HitStabilityReport CurrentHitStabilityReport;
         public static event Action<CharacterState> OnPlayerStateChanged;
 
         private Collider[] _probedColliders = new Collider[8];
@@ -180,14 +182,14 @@ namespace KinematicCharacterController.Examples
         [SerializeField] AnimationCurve _accelerateCurve;
         [SerializeField] AnimationCurve _decelerateCurve;
         [SerializeField] AnimationCurve _slideDecelerateCurve;
-        [Range(0,10f)] [SerializeField] float accelTime = 2f;
-        [Range(0,10f)] [SerializeField] float decelTime = 2f;
-        [Range(0,10f)] [SerializeField] float turnSlideTime = 4f;
+        [Range(0, 10f)][SerializeField] float accelTime = 2f;
+        [Range(0, 10f)][SerializeField] float decelTime = 2f;
+        [Range(0, 10f)][SerializeField] float turnSlideTime = 4f;
         float RatePerSecond;
         float turnAroundBuffer;
-        [Range(0f,0.7f)][SerializeField] float _slideDuration = 0.15f;
+        [Range(0f, 0.7f)][SerializeField] float _slideDuration = 0.15f;
         bool changingDirection = false;
-        
+
         [SerializeField] DialogueEventsSO dialogueEvent;
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
@@ -198,11 +200,13 @@ namespace KinematicCharacterController.Examples
         [SerializeField] ActionSO SetTransientLocRot;
 
 
-        private void OnEnable() {
+        private void OnEnable()
+        {
             SetTransientLocRot.OnSetTransientLocRot += SetTransientPosRot;
             dialogueEvent.onEnter += (GameObject npc, TextAsset inkFile) => _target = npc.transform;
         }
-        private void OnDisable() {
+        private void OnDisable()
+        {
             SetTransientLocRot.OnSetTransientLocRot -= SetTransientPosRot;
             dialogueEvent.onEnter -= (GameObject npc, TextAsset inkFile) => _target = npc.transform;
         }
@@ -248,9 +252,9 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Jumping:
                     {
-                        
+
                         break;
-                    }    
+                    }
                 case CharacterState.Climbing:
                     {
                         Motor.ForceUnground();
@@ -258,7 +262,7 @@ namespace KinematicCharacterController.Examples
                         _timeFallingInAir = 0f;
 
                         break;
-                    }    
+                    }
                 case CharacterState.ClimbLadder:
                     {
                         playerClimb._isClimbing = true;
@@ -279,7 +283,7 @@ namespace KinematicCharacterController.Examples
                         Motor.SetRotation(lookRot, false);
                         print("Work");
                         break;
-                    } 
+                    }
                 case CharacterState.Crawling:
                     {
                         fallOffPrevention.enabled = true;
@@ -287,8 +291,8 @@ namespace KinematicCharacterController.Examples
                         _moveBackwards = false;
                         OrientationSharpness = _crawlRotationSpeed;
                         break;
-                    }        
-                
+                    }
+
             }
             OnPlayerStateChanged?.Invoke(state);
 
@@ -307,14 +311,17 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Jumping:
                     {
-                        
+
                         break;
-                    }    
+                    }
                 case CharacterState.Climbing:
                     {
-                        _animator.CrossFadeInFixedTime(_idleState, 0.25f, 0);
+                        if (_startFallingTimer)
+                            _animator.CrossFadeInFixedTime(anim_FreeHangDrop, 0.25f, 0);
+                        else
+                            _animator.CrossFadeInFixedTime(_idleState, 0.25f, 0);
                         break;
-                    }       
+                    }
                 case CharacterState.ClimbLadder:
                     {
                         _onLadder = false;
@@ -332,21 +339,21 @@ namespace KinematicCharacterController.Examples
                     {
                         _animator.CrossFadeInFixedTime(_idleState, 0.2f, 0);
                         break;
-                    } 
+                    }
                 case CharacterState.Crawling:
                     {
                         fallOffPrevention.enabled = false;
                         DisableRecentering.RaiseEvent();
-                        UIText.ChangePrompt(PromptName.Crouch, 0); 
+                        UIText.ChangePrompt(PromptName.Crouch, 0);
                         OrientationSharpness = _defaultOrientationSharpness;
                         _hasFinishedCrouch = false;
-                        
+
                         if (_animator.speed != 1f)
                             _animator.speed = 1f;
 
-                        _canCrouch = true;     
+                        _canCrouch = true;
                         break;
-                    }          
+                    }
             }
 
 
@@ -406,7 +413,7 @@ namespace KinematicCharacterController.Examples
                         }
 
                         //Show or hide UI Text for Crouch
-                        if(_canCrouch) UIText.ChangePrompt(PromptName.Crouch, 5);
+                        if (_canCrouch) UIText.ChangePrompt(PromptName.Crouch, 5);
                         else UIText.ChangePrompt(PromptName.Crouch, 0);
 
                         // Crouching input
@@ -422,11 +429,11 @@ namespace KinematicCharacterController.Examples
                                 if (_animator.GetBool(anim_isCrouched) != true)
                                     _animator.SetBool(anim_isCrouched, true);
 
-                                TransitionToState(CharacterState.Crawling);  
+                                TransitionToState(CharacterState.Crawling);
                                 Debug.Log("Crouch");
                             }
                         }
-                        
+
                         break;
                     }
                 case CharacterState.Jumping:
@@ -434,18 +441,19 @@ namespace KinematicCharacterController.Examples
                         // Move and look inputs
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
                         break;
-                    }       
+                    }
                 case CharacterState.Climbing:
                     {
-                        if(_dropDownRequested) return;
+                        if (_dropDownRequested) return;
                         // Move and look inputs
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
 
-                        if(inputs.Interact){
+                        if (inputs.Interact)
+                        {
                             _dropDownRequested = true;
                         }
                         break;
-                    }       
+                    }
                 case CharacterState.ClimbLadder:
                     {
                         Vector3 ladderInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveDirection.x, inputs.MoveDirection.y, 0f), 1f);
@@ -493,16 +501,16 @@ namespace KinematicCharacterController.Examples
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
 
                         // Camera Recenter while Moving
-                        if(_moveInputVector.magnitude > 0 && _moveBackwards == false)
-                            RecenterCamX.ThreeFloats(0, 2f,0);
+                        if (_moveInputVector.magnitude > 0 && _moveBackwards == false)
+                            RecenterCamX.ThreeFloats(0, 2f, 0);
                         else// need to turn off once but not over and over
                             DisableRecentering.RaiseEvent();
 
                         // If player presses opposite direction crawl backwards
                         float dot = Vector3.Dot(_moveInputVector, transform.forward);
-                        if(dot <= -0.9f)
+                        if (dot <= -0.9f)
                             _moveBackwards = true;
-                        else    
+                        else
                             _moveBackwards = false;
 
                         switch (OrientationMethod)
@@ -520,7 +528,7 @@ namespace KinematicCharacterController.Examples
                             _shouldBeCrouching = false;
                         }
                         break;
-                    }               
+                    }
             }
         }
 
@@ -534,7 +542,7 @@ namespace KinematicCharacterController.Examples
         }
 
         private Quaternion _tmpTransientRot;
-        
+
 
         /// <summary>
         /// (Called by KinematicCharacterMotor during its update cycle)
@@ -599,25 +607,27 @@ namespace KinematicCharacterController.Examples
                         break;
                     }
 
-               case CharacterState.Jumping:
+                case CharacterState.Jumping:
                     {
-                        
+
                         break;
-                    }     
-               case CharacterState.Climbing:
+                    }
+                case CharacterState.Climbing:
                     {
-                        if(_isHanging){
-                            if(_dropToHang){
-                                Quaternion toRot = Quaternion.LookRotation(-_ledgeDirection, Vector3.up); 
+                        if (_isHanging)
+                        {
+                            if (_dropToHang)
+                            {
+                                Quaternion toRot = Quaternion.LookRotation(-_ledgeDirection, Vector3.up);
                                 currentRotation = Quaternion.RotateTowards(transform.rotation, toRot, 500 * Time.deltaTime);
                                 print("CC Rotation");
                             }
                         }
                         break;
-                    }       
+                    }
                 case CharacterState.ClimbLadder:
                     {
-                        currentRotation = Quaternion.RotateTowards(transform.rotation, _newLadderRotation, 500 * Time.deltaTime);   
+                        currentRotation = Quaternion.RotateTowards(transform.rotation, _newLadderRotation, 500 * Time.deltaTime);
 
                         break;
                     }
@@ -639,10 +649,10 @@ namespace KinematicCharacterController.Examples
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _talkingRotSpeed * Time.unscaledDeltaTime);
                         print("shoudldnt WOrk?");
                         break;
-                    } 
+                    }
                 case CharacterState.Crawling:
                     {
-                        if(_moveBackwards) return;
+                        if (_moveBackwards) return;
 
                         if (_lookInputVector.sqrMagnitude > 0f && OrientationSharpness > 0f)
                         {
@@ -684,7 +694,7 @@ namespace KinematicCharacterController.Examples
                             currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
                         }
                         break;
-                    }              
+                    }
             }
         }
 
@@ -700,7 +710,7 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Default:
                     {
                         //Dont move player if he is getting on and off Something.
-                        if(_gettingOnOffObstacle) return;
+                        if (_gettingOnOffObstacle) return;
                         // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
@@ -727,27 +737,34 @@ namespace KinematicCharacterController.Examples
 
                             // Reorient velocity on slope
                             currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
-                            
+
                             // Accelerate MaxSpeed
-                            
+
                             //Determine if change in other direction
-                            if(currentVelocity.magnitude < 0.1f && changingDirection == false){
+                            if (currentVelocity.magnitude < 0.1f && changingDirection == false)
+                            {
                                 //if player is not facing the direction of input, dont move yet
-                                if(dot < 0.95f){
+                                if (dot < 0.95f)
+                                {
                                     MaxStableMoveSpeed = 0;
                                 }
-                                else{
-                                    if(MaxStableMoveSpeed < 4) MaxStableMoveSpeed = 4;
-                                    if(MaxStableMoveSpeed != MaxSpeed){
+                                else
+                                {
+                                    if (MaxStableMoveSpeed < 4) MaxStableMoveSpeed = 4;
+                                    if (MaxStableMoveSpeed != MaxSpeed)
+                                    {
                                         MaxStableMoveSpeed += RatePerSecond * deltaTime;
                                         MaxStableMoveSpeed = Mathf.Min(MaxStableMoveSpeed, MaxSpeed);
                                     }
-                                
+
                                 }
                             }
-                            else{
-                                if(MaxStableMoveSpeed >= MaxSpeed){
-                                    if(dot < -0.92f){
+                            else
+                            {
+                                if (MaxStableMoveSpeed >= MaxSpeed)
+                                {
+                                    if (dot < -0.92f)
+                                    {
                                         _restrictJumping = true;
                                         changingDirection = true;
                                         //MaxStableMoveSpeed = 0;
@@ -757,31 +774,38 @@ namespace KinematicCharacterController.Examples
                                         _animator.CrossFade("ChangeDirection", 0, 0);
                                     }
                                 }
-                                else{
-                                    if(changingDirection){
+                                else
+                                {
+                                    if (changingDirection)
+                                    {
                                         turnAroundBuffer += deltaTime;
 
-                                        if(turnAroundBuffer > _slideDuration){
+                                        if (turnAroundBuffer > _slideDuration)
+                                        {
                                             //MaxStableMoveSpeed = 2f;
                                             changingDirection = false;
                                             _restrictJumping = false;
                                             turnAroundBuffer = 0;
                                         }
                                     }
-                                    else{
-                                        if(_moveInputVector.magnitude < 0.1f){
+                                    else
+                                    {
+                                        if (_moveInputVector.magnitude < 0.1f)
+                                        {
                                             //MaxStableMoveSpeed = 0; //might need to change so movement is not odd with thumbstick.
                                             //Decelerate
                                             MaxStableMoveSpeed -= RatePerSecond * deltaTime;
                                             MaxStableMoveSpeed = Mathf.Max(MaxStableMoveSpeed, 0);
                                         }
-                                        else{
+                                        else
+                                        {
                                             //Walk
-                                            if (_moveInputVector.magnitude < 0.3f){
+                                            if (_moveInputVector.magnitude < 0.3f)
+                                            {
                                                 //MaxStableMoveSpeed = 1f;
                                                 MaxStableMoveSpeed += RatePerSecond * deltaTime;
                                                 MaxStableMoveSpeed = Mathf.Min(MaxStableMoveSpeed, 1);
-                                            } 
+                                            }
                                             else
                                             {
                                                 //Run
@@ -793,26 +817,26 @@ namespace KinematicCharacterController.Examples
                                                 }
                                             }
                                         }
-                                        
+
                                     }
                                 }
                             }
-                            
+
                             // Calculate target velocity
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
-                            if(changingDirection) reorientedInput = -reorientedInput;
+                            if (changingDirection) reorientedInput = -reorientedInput;
                             Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
-                            
+
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
                             //Dont Think I Need below
                             //_animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
                             //_animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
-                            
 
-                            if (currentVelocityMagnitude <= 0f) _canCrouch = true;   
+
+                            if (currentVelocityMagnitude <= 0f) _canCrouch = true;
                             else _canCrouch = false;
                         }
                         // Air movement
@@ -854,7 +878,7 @@ namespace KinematicCharacterController.Examples
 
                                 // Apply added velocity
                                 currentVelocity += addedVelocity;
-                                
+
                             }
 
                             // Gravity
@@ -865,7 +889,8 @@ namespace KinematicCharacterController.Examples
                         }
                         //Needs To be put in its own state.
                         // Handle jumping
-                        if(!_restrictJumping) {
+                        if (!_restrictJumping)
+                        {
 
                             _jumpedThisFrame = false;
                             _timeSinceJumpRequested += deltaTime;
@@ -931,7 +956,7 @@ namespace KinematicCharacterController.Examples
                         // Might want to tighten up how much you can move in air.
 
                         // Air movement
-                        if(!Motor.GroundingStatus.IsStableOnGround)
+                        if (!Motor.GroundingStatus.IsStableOnGround)
                         {
                             _canCrouch = false;
                             // Add move input
@@ -969,7 +994,7 @@ namespace KinematicCharacterController.Examples
 
                                 // Apply added velocity
                                 currentVelocity += addedVelocity;
-                                
+
                             }
 
                             // Gravity
@@ -977,39 +1002,46 @@ namespace KinematicCharacterController.Examples
 
                             // Drag
                             currentVelocity *= (1f / (1f + (Drag * deltaTime)));
+
+                            if(currentVelocity.y >= 0) _isFalling = false;
+                            else _isFalling = true;
                         }
                         break;
-                    }    
+                    }
                 case CharacterState.Climbing:
                     {
                         //During Animation, we dont want to be able to move
-                        if(_gettingOnOffObstacle){
+                        if (_gettingOnOffObstacle)
+                        {
                             currentVelocity = Vector3.zero;
                             _dropDownRequested = false;
                             return;
-                        } 
-                        if(_isHanging){
+                        }
+                        if (_isHanging)
+                        {
                             HangingChecks();
                         }
 
 
                         break;
-                    }       
+                    }
                 case CharacterState.ClimbLadder:
                     {
-                        if(_gettingOnOffObstacle){
+                        if (_gettingOnOffObstacle)
+                        {
                             currentVelocity = Vector3.zero;
                             if (_animator.speed != 1f)
                                 _animator.speed = 1f;
                             return;
-                        } 
-                        if(Motor.GroundingStatus.IsStableOnGround) Motor.ForceUnground();
+                        }
+                        if (Motor.GroundingStatus.IsStableOnGround) Motor.ForceUnground();
 
-                        Vector3 newCenteredPosition = _newCenteredPosition;    
+                        Vector3 newCenteredPosition = _newCenteredPosition;
 
                         float currentVelocityMagnitude = currentVelocity.magnitude;
-                        
-                        if(!_onLadder){
+
+                        if (!_onLadder)
+                        {
                             currentVelocity = Vector3.zero;
                             if (_animator.speed != 1f)
                                 _animator.speed = 1f;
@@ -1017,20 +1049,22 @@ namespace KinematicCharacterController.Examples
                             //Vector3 newPlayerPos = Vector3.Lerp(Motor.TransientPosition, newCenteredPosition, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             //Vector3 newPlayerPos = Vector3.MoveTowards(Motor.TransientPosition, newCenteredPosition, _jumpOnLadderSpeed * deltaTime);
                             Motor.SetTransientPosition(newCenteredPosition, true, 5);
-                            if(Vector3.Distance(Motor.TransientPosition, newCenteredPosition) <= float.Epsilon){
+                            if (Vector3.Distance(Motor.TransientPosition, newCenteredPosition) <= float.Epsilon)
+                            {
                                 _onLadder = true;
                             }
-                            else _onLadder = false; 
+                            else _onLadder = false;
                         }
-                        else{
+                        else
+                        {
                             currentVelocity.y = _moveInputVector.y * _climbSpeedY;
                             //currentVelocity.z = -_moveInputVector.x * _climbSpeedX;
                             currentVelocity.x = 0;
                             currentVelocity.z = 0;
 
-                            if(currentVelocity.y == 0f)
+                            if (currentVelocity.y == 0f)
                             {
-                                if(currentVelocity != Vector3.zero) currentVelocity = Vector3.zero;
+                                if (currentVelocity != Vector3.zero) currentVelocity = Vector3.zero;
                                 if (_animator.speed != 0f)
                                     _animator.speed = 0f;
                             }
@@ -1040,8 +1074,8 @@ namespace KinematicCharacterController.Examples
                                     _animator.speed = 1f;
                             }
                         }
-                        
-                        
+
+
 
                         // Reorient velocity on slope
                         //currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
@@ -1088,15 +1122,17 @@ namespace KinematicCharacterController.Examples
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                             //Find Dot product of target pos and player direction.
-                            if(_hasTargetToLockOn){
+                            if (_hasTargetToLockOn)
+                            {
                                 // not working
                                 movementDot = Vector3.Dot(_moveInputVector, transform.forward);
                                 //print(dot);
-                                
+
                                 Vector3 dir = Vector3.Cross(_cameraPlanarRotation * transform.forward, _moveInputVector);
                                 //print(dir);
                             }
-                            else{
+                            else
+                            {
                                 movementDot = 0;
                             }
                             //Set Animator values
@@ -1181,7 +1217,7 @@ namespace KinematicCharacterController.Examples
                             if (_animator.speed != 1f)
                                 _animator.speed = 1f;
 
-                            if(_moveInputVector.magnitude > 0f)
+                            if (_moveInputVector.magnitude > 0f)
                             {
                                 _hasFinishedCrouch = true;
                             }
@@ -1206,7 +1242,7 @@ namespace KinematicCharacterController.Examples
                         }
 
                         MaxStableMoveSpeed = 2f;
-                        if(_moveInputVector.magnitude == 0)
+                        if (_moveInputVector.magnitude == 0)
                         {
                             if (_animator.speed != 0f)
                                 _animator.speed = 0f;
@@ -1227,14 +1263,14 @@ namespace KinematicCharacterController.Examples
                         Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
 
                         // Smooth movement Velocity
-                        if(!_moveBackwards)
+                        if (!_moveBackwards)
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
                         else
                             currentVelocity = Vector3.Lerp(currentVelocity, -targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
 
                         _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
                         break;
-                    }               
+                    }
             }
         }
 
@@ -1274,18 +1310,18 @@ namespace KinematicCharacterController.Examples
 
                         break;
                     }
-                    case CharacterState.Jumping:
+                case CharacterState.Jumping:
                     {
-                        
+
                         break;
                     }
-                    case CharacterState.Climbing:
+                case CharacterState.Climbing:
                     {
-                        
+
                         break;
-                    }   
-                    case CharacterState.Crawling:
-                    {   
+                    }
+                case CharacterState.Crawling:
+                    {
                         // Handle uncrouching
                         if (_isCrouching && !_shouldBeCrouching)
                         {
@@ -1310,13 +1346,13 @@ namespace KinematicCharacterController.Examples
                                 if (_animator.GetBool(anim_isCrouched) != false)
                                     _animator.SetBool(anim_isCrouched, false);
 
-                                TransitionToState(CharacterState.Default);   
+                                TransitionToState(CharacterState.Default);
                                 Debug.Log("Uncrouched");
                             }
                         }
 
                         break;
-                    } 
+                    }
             }
         }
 
@@ -1329,7 +1365,7 @@ namespace KinematicCharacterController.Examples
             }
             else if (!Motor.GroundingStatus.IsStableOnGround && Motor.LastGroundingStatus.IsStableOnGround)
             {
-                OnLeaveStableGround();        
+                OnLeaveStableGround();
             }
         }
 
@@ -1349,13 +1385,13 @@ namespace KinematicCharacterController.Examples
         }
 
         //Need To be In same Order As Enums & Fmod "Surface" Parameter. Also same spelling as Tags in TagManager.
-        List<string> _groundTypeTags = new List<string>() {"Grass", "Sand", "Stone", "Wood", "ShallowWater"};
+        List<string> _groundTypeTags = new List<string>() { "Grass", "Sand", "Stone", "Wood", "ShallowWater" };
         int _currentTagIndex;
 
         public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
-        {   
+        {
             int tagIndex = _groundTypeTags.IndexOf(hitCollider.tag);
-            if(tagIndex == _currentTagIndex) return;
+            if (tagIndex == _currentTagIndex) return;
             CurrentGroundType = (GroundType)tagIndex;
             _currentTagIndex = tagIndex;
 
@@ -1391,30 +1427,34 @@ namespace KinematicCharacterController.Examples
 
         protected void OnLanded()
         {   //I dont want player to ground self if decided to Hang
-            if(_isHanging) return;
+            if (_isHanging) return;
 
-            if(_hardLanding){
+            if (_hardLanding) // Need a delay to input and climbability after hard landing.
+            {
                 _animator.CrossFade(_hardLandState, 0f, 0);
                 _hardLanding = false;
             }
-            else{
-                _animator.SetBool(anim_landTrigger, true); 
+            else
+            {
+                _animator.SetBool(anim_landTrigger, true);
             }
+            _isFalling = false;
             _timeFallingInAir = 0f;
             _startFallingTimer = false;
-            TransitionToState(CharacterState.Default);
+            TransitionToState(CharacterState.Default); // could make bool for landing
         }
 
         protected void OnLeaveStableGround()
         { //This is called if player is off ground,
           // I need to know if player has jumped.
-            _animator.SetBool(anim_landTrigger, false); 
+            _animator.SetBool(anim_landTrigger, false);
 
-            switch(CurrentCharacterState){ 
+            switch (CurrentCharacterState)
+            {
                 case CharacterState.Default: // one for climbing
                     {
                         Debug.Log("jump");
-                        
+
                         _animator.CrossFade(_jumpState, 0, 0);
                         _startFallingTimer = true;
                         _jumpRequested = true;
@@ -1424,44 +1464,50 @@ namespace KinematicCharacterController.Examples
                     {
                         break;
                     }
-                
+
                 case CharacterState.Climbing:
                     {
                         break;
                     }
-            }            
-            
+            }
+
         }
         public void CapsuleEnable(bool enable = true)
         {
             Motor.Capsule.enabled = enable;
         }
-        void SetTransientPosRot(Vector3 loc, float lerpSpeed, Quaternion rot){
+        void SetTransientPosRot(Vector3 loc, float lerpSpeed, Quaternion rot)
+        {
             Motor.SetTransientPosition(loc, true, lerpSpeed);
             Motor.SetRotation(rot);
         }
 
-        void HangingChecks(){ // make a coroutine possibly
+        void HangingChecks()
+        { // make a coroutine possibly
             //if (_moveInputVector.sqrMagnitude <= 0) return;
 
             float dot = Vector3.Dot(_moveInputVector, transform.forward.normalized);
             Quaternion rot = Quaternion.Euler(transform.forward.normalized);
             //Press towards ledge to climb up
-            if(dot >= 0.9f){
+            if (dot >= 0.9f)
+            {
                 _climbTimer += Time.deltaTime;
-                if(_climbTimer >= 0.3f){
+                if (_climbTimer >= 0.3f)
+                {
                     _climbTimer = 0;
-                    _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f,0);
+                    _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f, 0);
                     //StartCoroutine(ClimbBackUp(rot));
                     playerClimb.ClimbBackUp();
                 }
             }
             //Could Slide if held left or right
-            else{
+            else
+            {
                 _climbTimer = 0;
             }
             //Pressed Interact Btn to drop
-            if(_dropDownRequested){
+            if (_dropDownRequested)
+            {
                 _startFallingTimer = true;
                 _dropDownRequested = false;
                 CapsuleEnable(true);
@@ -1469,10 +1515,11 @@ namespace KinematicCharacterController.Examples
                 playerClimb._isClimbing = false;
                 _gettingOnOffObstacle = false;
                 _isHanging = false;
-            } 
-        
+            }
+
         }
-        IEnumerator DropToHang(){
+        IEnumerator DropToHang()
+        {
             print("droptohang");
             _gettingOnOffObstacle = true;
             _ledgeDirection = CurrentHitStabilityReport.LedgeFacingDirection;
@@ -1489,9 +1536,10 @@ namespace KinematicCharacterController.Examples
             _animator.CrossFadeInFixedTime(anim_DropToHang, 0.1f, 0);
             Vector3 goalPos = transform.TransformPoint(0, -1.3f, 0.1f);
             TransitionToState(CharacterState.Climbing);
-            
+
             float timer = 0;
-            while(timer < 1){
+            while (timer < 1)
+            {
                 timer += Time.deltaTime;
                 Motor.SetTransientPosition(goalPos, true, 5);
                 yield return null;
@@ -1500,16 +1548,18 @@ namespace KinematicCharacterController.Examples
             _dropToHang = false;
             print("done");
             yield break;
-            
+
         }
-        IEnumerator ClimbBackUp(Quaternion goalRot){
+        IEnumerator ClimbBackUp(Quaternion goalRot)
+        {
             print("Booya");
             //Disable Controls
             _gettingOnOffObstacle = true;
             _isHanging = false;
             Vector3 goalPos = transform.TransformPoint(0, 1.3f, 0.3f);
             float timer = 0;
-            while(timer < 0.75f){
+            while (timer < 0.75f)
+            {
                 timer += Time.deltaTime;
                 Motor.SetTransientPosition(goalPos, true, 1.8f);
                 Motor.SetRotation(goalRot);
@@ -1524,12 +1574,14 @@ namespace KinematicCharacterController.Examples
             yield break;
         }
 
-        void FallingCheck(){
-            if(!_startFallingTimer) return;
+        void FallingCheck()
+        {
+            if (!_startFallingTimer) return;
 
             _timeFallingInAir += Time.deltaTime;
 
-            if(_timeFallingInAir >= _timetotriggerHardLanding){
+            if (_timeFallingInAir >= _timetotriggerHardLanding)
+            {
                 _hardLanding = true;
             }
 

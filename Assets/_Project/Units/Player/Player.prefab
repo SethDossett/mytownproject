@@ -1296,7 +1296,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 3
+  m_CollisionDetection: 0
 --- !u!114 &1807522987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1552,6 +1552,7 @@ MonoBehaviour:
   _crawlSpeed: 2
   _timeFallingInAir: 0
   _timetotriggerHardLanding: 0.5
+  _isFalling: 0
   IgnoredColliders: []
   BonusOrientationMethod: 0
   BonusOrientationSharpness: 10
