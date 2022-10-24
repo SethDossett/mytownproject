@@ -122,7 +122,7 @@ namespace KinematicCharacterController.Examples
         public Vector3 Gravity = new Vector3(0, -30f, 0);
         public Transform MeshRoot;
         public Transform CameraFollowPoint;
-        public float CrouchedCapsuleHeight = 1f;
+        public float CrouchedCapsuleHeight = 0.95f;
         [SerializeField] float _talkingRotSpeed = 500f;
 
         [Header("Animation")]
@@ -197,17 +197,17 @@ namespace KinematicCharacterController.Examples
         [SerializeField] UIEventChannelSO UIText;
         [SerializeField] GeneralEventSO EnableControls;
         [SerializeField] GeneralEventSO DisableControls;
-        [SerializeField] ActionSO SetTransientLocRot;
+        [SerializeField] ActionSO SetPlayerPosRot;
 
 
         private void OnEnable()
         {
-            SetTransientLocRot.OnSetTransientLocRot += SetTransientPosRot;
+            SetPlayerPosRot.OnSetPosRot += SetTransientPosRot;
             dialogueEvent.onEnter += (GameObject npc, TextAsset inkFile) => _target = npc.transform;
         }
         private void OnDisable()
         {
-            SetTransientLocRot.OnSetTransientLocRot -= SetTransientPosRot;
+            SetPlayerPosRot.OnSetPosRot -= SetTransientPosRot;
             dialogueEvent.onEnter -= (GameObject npc, TextAsset inkFile) => _target = npc.transform;
         }
         private void Awake()
@@ -769,7 +769,7 @@ namespace KinematicCharacterController.Examples
                                         changingDirection = true;
                                         //MaxStableMoveSpeed = 0;
                                         //Decelerate changing directions to slide
-                                        MaxStableMoveSpeed -= 1f * deltaTime;
+                                        MaxStableMoveSpeed -= 50f * deltaTime;
                                         MaxStableMoveSpeed = Mathf.Max(MaxStableMoveSpeed, 0);
                                         _animator.CrossFade("ChangeDirection", 0, 0);
                                     }
@@ -1476,9 +1476,14 @@ namespace KinematicCharacterController.Examples
         {
             Motor.Capsule.enabled = enable;
         }
-        void SetTransientPosRot(Vector3 loc, float lerpSpeed, Quaternion rot)
+        void SetTransientPosRot(Vector3 loc, float lerpSpeed, Quaternion rot, bool LerpPosition)
         {
-            Motor.SetTransientPosition(loc, true, lerpSpeed);
+            if(LerpPosition)// Does Not work while Time.TimeScale = 0.
+                Motor.SetTransientPosition(loc, true, lerpSpeed);
+                //Motor.LerpPosition(loc, 5f);
+            else
+                Motor.SetPosition(loc, false);
+
             Motor.SetRotation(rot);
         }
 

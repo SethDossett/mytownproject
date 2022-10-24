@@ -45,7 +45,7 @@ namespace MyTownProject.Interaction
         [SerializeField] GeneralEventSO DisableControls;
 
         [Header("References")]
-        
+
         string _npcTag = "NPC";
 
         [Header("Values")]
@@ -63,22 +63,10 @@ namespace MyTownProject.Interaction
         int opendoorL = Animator.StringToHash("Door_WideOpen_02");
         int closeDoor = Animator.StringToHash("closeDoor");
 
-
-
-        
-        private void OnEnable()
-        {
-            //InteractionPointOffset = new Vector3(0, 0, 0);
-        }
-        private void OnDisable()
-        {
-        
-        }
-
         public void OnFocus(string interactionName)
         {
             if (_isFocusing) return;
-            
+
             _isFocusing = true;
         }
 
@@ -121,45 +109,71 @@ namespace MyTownProject.Interaction
             else
                 DoLockedDoor();
         }
-        
+
         IEnumerator Teleport()
         {
             //DisableControls.RaiseEvent();
-            stateChangerEvent.RaiseEventGame(GameStateManager.GameState.CUTSCENE);
+            //stateChangerEvent.RaiseEventGame(GameStateManager.GameState.CUTSCENE);
+            StartCoroutine(SimulateMovement());
+            //Quaternion lookRot = Quaternion.LookRotation(-transform.forward, Vector3.up);
+            //SetPlayerPosRot.OnSetPosRot(transform.position + _centerStandingPoint, 2f, lookRot, false);
             //KinematicCharacterSystem.Settings.AutoSimulation = false; // This might should be running whenever cutscene is state.
             uIEventChannel.RaiseBarsOn(2f);
-            //Quaternion lookRot = Quaternion.LookRotation(-transform.forward, Vector3.up);
-            //SetPlayerPosRot.OnSetTransientLocRot(transform.position + _centerStandingPoint, 2f, lookRot);
+            
             //_player.transform.position = _player.transform.position + Vector3.forward * 2f;
             yield return new WaitForSecondsRealtime(1f);
             //_animatorRight.Play(crackdoorR);
             //_animatorLeft.Play(crackdoorL);
             uIEventChannel.RaiseFadeOut(Color.black, 1f);
             yield return new WaitForSecondsRealtime(1f);
-            
+
             _hasInteracted = true;
             mainEventChannel.RaiseEventChangeScene(nextScene);
             //KinematicCharacterSystem.Settings.AutoSimulation = true;
-        
+
+        }
+        float _moveValue;
+        Vector3 _currentVelocity;
+        IEnumerator SimulateMovement()
+        {
+            _moveValue = 0;
+            Vector3 newPos = transform.position + _centerStandingPoint;
+            KinematicCharacterMotor motor = _player.GetComponent<KinematicCharacterController.Examples.TheCharacterController>().Motor;
+
+            while (_moveValue < 1)
+            {
+
+                //_moveValue = Mathf.MoveTowards(_moveValue, 1, 0.05f * Time.unscaledDeltaTime);
+                Vector3 dampPos = Vector3.SmoothDamp(_player.transform.position, newPos, ref _currentVelocity, 5f * Time.unscaledDeltaTime, 10f);
+                //Vector3 lerpPosition = Vector3.Lerp(_player.transform.position, newPos, _moveValue);
+                motor.SetPosition(dampPos);
+                //motor.LerpPosition(transform.position + _centerStandingPoint, 0.5f);
+                yield return null;
+            }
+
+            _moveValue = 0;
+            yield break;
         }
         private void DoLockedDoor()
         {
             _hasInteracted = true;
             Debug.Log("locked");
-        
+
         }
         private async void OnTriggerEnter(Collider other) // trigger door open event
         {
-            
-            if (other.gameObject.CompareTag(_npcTag)){
+
+            if (other.gameObject.CompareTag(_npcTag))
+            {
                 CanBeInteractedWith = false;
                 _animatorRight.Play(opendoorR);
                 _animatorLeft.Play(opendoorL);
             }
             await Task.Delay(1500);
 
-            
-            if (other.gameObject.CompareTag(_npcTag)){
+
+            if (other.gameObject.CompareTag(_npcTag))
+            {
                 CanBeInteractedWith = true;
                 _animatorRight.SetTrigger(closeDoor);
                 _animatorLeft.SetTrigger(closeDoor);
@@ -168,7 +182,7 @@ namespace MyTownProject.Interaction
         }
         private void OnTriggerExit(Collider other) // trigger door close event
         {
-            
+
         }
 
     }

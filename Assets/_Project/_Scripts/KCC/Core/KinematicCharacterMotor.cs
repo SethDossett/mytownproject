@@ -632,6 +632,18 @@ namespace KinematicCharacterController
         }
 
         /// <summary>
+        /// Lerps the character's position directly
+        /// </summary>
+        float lerpTimer = 0;
+        public void LerpPosition(Vector3 position, float LerpSpeed)
+        {
+            lerpTimer = Mathf.MoveTowards(lerpTimer, 1, LerpSpeed * Time.unscaledDeltaTime);
+            Vector3 lerpPosition = Vector3.Lerp(_transform.position, position, lerpTimer);
+            
+            _transform.SetPositionAndRotation(lerpPosition,Quaternion.identity);
+        }
+
+        /// <summary>
         /// Sets the character's rotation directly
         /// </summary>
         public void SetRotation(Quaternion rotation, bool bypassInterpolation = true)
@@ -1657,7 +1669,7 @@ namespace KinematicCharacterController
         public void SetTransientPosition(Vector3 newPos, bool lerpPos, float speed)
         {
             if(lerpPos){
-                _transientPosition = Vector3.MoveTowards(_transientPosition, newPos, speed * Time.deltaTime);
+                _transientPosition = Vector3.MoveTowards(_transientPosition, newPos, speed * Time.unscaledDeltaTime);
             }
             else _transientPosition = newPos;
         }
