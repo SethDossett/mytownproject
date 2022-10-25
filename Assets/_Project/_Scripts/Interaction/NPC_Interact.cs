@@ -17,6 +17,7 @@ namespace MyTownProject.Interaction
         [field: SerializeField] public bool Targeted { get; set; }
         [field: SerializeField] public bool BeenTargeted { get; set; }
         [field: SerializeField] public bool DoesAngleMatter { get; private set; }
+        [field: SerializeField] public bool ExtraRayCheck { get; private set; }
         [field: SerializeField] public float MaxNoticeAngle { get; private set; }
         [field: SerializeField] public float MaxNoticeRange { get; private set; }
         [field: SerializeField] public float MaxInteractRange { get; private set; }
