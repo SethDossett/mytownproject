@@ -34,7 +34,7 @@ namespace MyTownProject.Enviroment
                     break;
                 }
                 case DoorType.PullDoorR:{
-                    _animationHashOpen = pullCloseWide;
+                    _animationHashOpen = pullOpenWide;
                     _animationHashClose = pushCloseWide;
                     break;
                 }
