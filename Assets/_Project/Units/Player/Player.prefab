@@ -1314,6 +1314,7 @@ MonoBehaviour:
   PlayerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   stateChangedEvent: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
+  OpenDoorEvent: {fileID: 11400000, guid: 831079ef99d5c4a739e4b5f9efd7cbbc, type: 2}
   DialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   GamePlayingAction:
     m_PersistentCalls:

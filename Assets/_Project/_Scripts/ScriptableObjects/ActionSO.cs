@@ -1,6 +1,6 @@
 using UnityEngine.Events;
 using UnityEngine;
-using MyTownProject.Interaction;
+using MyTownProject.Enviroment;
 
 namespace MyTownProject.SO
 {
@@ -9,7 +9,7 @@ namespace MyTownProject.SO
     {
         public UnityAction<Vector3, Quaternion> OnTeleport;
         public UnityAction<Vector3, float, Quaternion, bool> OnSetPosRot;
-        public UnityAction<DoorType> OnOpenDoor;
+        public UnityAction<DoorType, GameObject> OnOpenDoor;
 
         public void TeleportObject(Vector3 loc, Quaternion rot)
         {
@@ -21,9 +21,9 @@ namespace MyTownProject.SO
             OnSetPosRot?.Invoke(loc, lerpSpeed, rot, LerpPosition);
         }
 
-        public void OpenDoor(DoorType doorType)
+        public void OpenDoor(DoorType doorType, GameObject door)
         {
-            OnOpenDoor?.Invoke(doorType);
+            OnOpenDoor?.Invoke(doorType, door);
         }
     }
 }

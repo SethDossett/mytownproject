@@ -1,18 +1,13 @@
-using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
-using MyTownProject.Core;
 using MyTownProject.Events;
 using MyTownProject.SO;
 using MyTownProject.UI;
 using KinematicCharacterController;
+using MyTownProject.Enviroment;
 
 namespace MyTownProject.Interaction
 {
-    public enum DoorType
-    {
-        PushDoorR, PullDoorR, PushDoorL, PullDoorL
-    }
     public class Door : MonoBehaviour, IInteractable
     {
         [field: SerializeField] public bool IsVisible { get; set; }
@@ -45,8 +40,7 @@ namespace MyTownProject.Interaction
         [SerializeField] GeneralEventSO DisableControls;
 
         [Header("References")]
-
-        
+        DoorAnimator _doorAnimator;
 
         [Header("Values")]
         bool _hasInteracted = false;
@@ -62,7 +56,10 @@ namespace MyTownProject.Interaction
         int closeDoor = Animator.StringToHash("closeDoor");
         int openWide = Animator.StringToHash("OpenWide");
         int closeWide = Animator.StringToHash("CloseWide");
-
+        private void Start()
+        {
+            _doorAnimator = GetComponent<DoorAnimator>();
+        }
         public void OnFocus(string interactionName)
         {
             if (_isFocusing) return;
@@ -99,7 +96,7 @@ namespace MyTownProject.Interaction
             if (setTrue) BeenTargeted = true;
             else BeenTargeted = false;
         }
-        public void OpenDoor()
+        private void OpenDoor()
         {
             if (!_locked)
             {
@@ -115,17 +112,18 @@ namespace MyTownProject.Interaction
             //DisableControls.RaiseEvent();
             //stateChangerEvent.RaiseEventGame(GameStateManager.GameState.CUTSCENE);
             StartCoroutine(SimulateMovement());
-            //openDoorEvent.OpenDoor(CurrentDoorType);
-            
+            _doorAnimator.PlayDoorAnimation();
+            openDoorEvent.OpenDoor(_doorAnimator.CurrentDoorType, gameObject);
+
             //SetPlayerPosRot.OnSetPosRot(transform.position + _centerStandingPoint, 2f, lookRot, false);
             //KinematicCharacterSystem.Settings.AutoSimulation = false; // This might should be running whenever cutscene is state.
             uIEventChannel.RaiseBarsOn(2f);
-            
+
             //_player.transform.position = _player.transform.position + Vector3.forward * 2f;
-            yield return new WaitForSecondsRealtime(1f);
+            yield return new WaitForSecondsRealtime(0.5f);
             //_animatorRight.Play(crackdoorR);
             //_animatorLeft.Play(crackdoorL);
-            uIEventChannel.RaiseFadeOut(Color.black, 1f);
+            uIEventChannel.RaiseFadeOut(Color.black, 0.5f);
             yield return new WaitForSecondsRealtime(1f);
 
             _hasInteracted = true;
@@ -165,7 +163,7 @@ namespace MyTownProject.Interaction
             Debug.Log("locked");
 
         }
-        
+
 
     }
 

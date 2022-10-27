@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4191409556616497537}
+  - component: {fileID: 1003986556}
   - component: {fileID: 4051623575412761421}
+  - component: {fileID: 1003986557}
   - component: {fileID: 419663966921241309}
   - component: {fileID: 7398089301831834814}
-  - component: {fileID: 1003986556}
-  - component: {fileID: 1003986557}
   m_Layer: 8
   m_Name: DoorBasicL
   m_TagString: NPC
@@ -36,6 +36,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1003986556
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359103654168631225}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 60d060c6c446d4e6191f05071b2c52be, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &4051623575412761421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,6 +89,19 @@ MonoBehaviour:
   stateChangerEvent: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   SetPlayerPosRot: {fileID: 11400000, guid: 2058ea3555ec84235b1a641170ecfa8c, type: 2}
   DisableControls: {fileID: 11400000, guid: 1f9619156896d6a468b85690b3ab4d6d, type: 2}
+--- !u!114 &1003986557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359103654168631225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22898e098ed3b463ea454ce774e91c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <CurrentDoorType>k__BackingField: 2
 --- !u!65 &419663966921241309
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -96,38 +128,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 2, z: 1.4}
   m_Center: {x: 0.75, y: 1, z: 0}
---- !u!95 &1003986556
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359103654168631225}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 60d060c6c446d4e6191f05071b2c52be, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 2
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1003986557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359103654168631225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22898e098ed3b463ea454ce774e91c51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CurrentDoorType: 1
 --- !u!1001 &92725891015600397
 PrefabInstance:
   m_ObjectHideFlags: 0

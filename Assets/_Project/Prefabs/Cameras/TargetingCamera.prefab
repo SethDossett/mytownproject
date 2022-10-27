@@ -84,8 +84,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3346707116087810100}
   - component: {fileID: 7289753198758905973}
-  - component: {fileID: 5943910956628674576}
   - component: {fileID: 8948162758395007200}
+  - component: {fileID: 5943910956628674576}
+  - component: {fileID: 599243611042566095}
   m_Layer: 0
   m_Name: TargetingCamera
   m_TagString: Untagged
@@ -129,11 +130,12 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
+  m_LookAt: {fileID: 9023857825524559348, guid: 0d13ee0734c47b34c953150823892e87,
+    type: 3}
   m_Follow: {fileID: 0}
   m_CommonLens: 1
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 60
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 500
@@ -141,10 +143,23 @@ MonoBehaviour:
     LensShift: {x: 0, y: 0}
   m_Transitions:
     m_BlendHint: 0
-    m_InheritPosition: 0
+    m_InheritPosition: 1
     m_OnCameraLive:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 599243611042566095}
+          m_TargetAssemblyTypeName: MyTownProject.Cameras.TargetingCamController,
+            Project
+          m_MethodName: OnCameraLive
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   m_LegacyBlendHint: 0
   m_YAxis:
     Value: 0.5
@@ -173,12 +188,12 @@ MonoBehaviour:
   m_XAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 150
-    m_AccelTime: 0.1
-    m_DecelTime: 0.1
+    m_MaxSpeed: 200
+    m_AccelTime: 0
+    m_DecelTime: 0
     m_InputAxisName: Mouse X
     m_InputAxisValue: 0
-    m_InvertInput: 0
+    m_InvertInput: 1
     m_MinValue: -180
     m_MaxValue: 180
     m_Wrap: 1
@@ -198,7 +213,7 @@ MonoBehaviour:
     m_RecenteringTime: 2
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
-  m_BindingMode: 5
+  m_BindingMode: 1
   m_SplineCurvature: 1
   m_Orbits:
   - m_Height: 5.89
@@ -212,6 +227,36 @@ MonoBehaviour:
   - {fileID: 1216306118758354466}
   - {fileID: 3631321157011105639}
   - {fileID: 2714336279868746497}
+--- !u!114 &8948162758395007200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3346707116087810102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 64
+  m_IgnoreTag: NPC
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 0
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 2
+  m_DampingWhenOccluded: 2
+  m_OptimalTargetDistance: 0
 --- !u!114 &5943910956628674576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,7 +273,7 @@ MonoBehaviour:
   AutoEnableInputs: 1
   XYAxis: {fileID: 6083923427852674327, guid: b47afddfe1eb66740a06f0f9c25e30c3, type: 3}
   ZAxis: {fileID: 6173412244233969410, guid: b47afddfe1eb66740a06f0f9c25e30c3, type: 3}
---- !u!114 &8948162758395007200
+--- !u!114 &599243611042566095
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,27 +282,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3346707116087810102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Script: {fileID: 11500000, guid: 674d4ae48c8f9624fbe58a96c304bb05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CollideAgainst:
-    serializedVersion: 2
-    m_Bits: 64
-  m_IgnoreTag: 
-  m_TransparentLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_MinimumDistanceFromTarget: 0.1
-  m_AvoidObstacles: 1
-  m_DistanceLimit: 0
-  m_MinimumOcclusionTime: 0
-  m_CameraRadius: 0.1
-  m_Strategy: 2
-  m_MaximumEffort: 4
-  m_SmoothingTime: 0.2
-  m_Damping: 0
-  m_DampingWhenOccluded: 0
-  m_OptimalTargetDistance: 0
+  UntargetEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
+  PlayerReference: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
 --- !u!1 &4549490170594659436
 GameObject:
   m_ObjectHideFlags: 0
