@@ -6,16 +6,16 @@ using MyTownProject.Events;
 
 namespace MyTownProject.Core
 {
+    public enum GameState
+    {
+        GAME_PLAYING, GAME_PAUSED, CUTSCENE
+    }
     public class GameStateManager : MonoBehaviour
     {
         #region State of Game
         public static event Action<GameState> OnGameStateChanged;
         public GameState gameState;
 
-        public enum GameState
-        {
-            GAME_PLAYING, GAME_PAUSED, CUTSCENE
-        }
         public void UpdateState(GameState newState)
         {
             gameState = newState;
@@ -114,7 +114,7 @@ namespace MyTownProject.Core
         }
         void EnterCutsceneState()
         {
-            if(gameState != GameState.CUTSCENE) UpdateState(GameState.CUTSCENE);
+            if (gameState != GameState.CUTSCENE) UpdateState(GameState.CUTSCENE);
         }
 
 

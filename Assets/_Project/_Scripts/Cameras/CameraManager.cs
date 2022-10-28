@@ -74,9 +74,9 @@ namespace MyTownProject.Cameras
         {
             SwitchToDoor();
         }
-        private void CheckGameState(GameStateManager.GameState state)
+        private void CheckGameState(GameState state)
         {
-            if (state == GameStateManager.GameState.GAME_PLAYING)
+            if (state == GameState.GAME_PLAYING)
             {
                 print("freelook");
                 SwitchToFreeLook();

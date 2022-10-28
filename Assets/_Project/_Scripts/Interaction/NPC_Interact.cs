@@ -97,9 +97,9 @@ namespace MyTownProject.Interaction
 
         }
 
-        void ChangedGameState(GameStateManager.GameState state)
+        void ChangedGameState(GameState state)
         {
-            if (state != GameStateManager.GameState.GAME_PLAYING)
+            if (state != GameState.GAME_PLAYING)
             {
                 TurnOffAllIcons();
             }

@@ -117,14 +117,14 @@ namespace KinematicCharacterController.Examples
 
             _animator.CrossFadeInFixedTime(animationHash, 0, 0);
         }
-        void GameStateChanged(GameStateManager.GameState state)
+        void GameStateChanged(GameState state)
         {
-            if (state == GameStateManager.GameState.GAME_PLAYING)
+            if (state == GameState.GAME_PLAYING)
             {
                 GamePlayingAction?.Invoke();
                 _animator.updateMode = AnimatorUpdateMode.UnscaledTime;
             }
-            else if (state == GameStateManager.GameState.GAME_PAUSED)
+            else if (state == GameState.GAME_PAUSED)
             {
                 GamePausedAction?.Invoke();
                 _animator.updateMode = AnimatorUpdateMode.Normal;

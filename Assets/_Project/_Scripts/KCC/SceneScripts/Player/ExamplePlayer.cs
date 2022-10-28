@@ -59,7 +59,7 @@ namespace KinematicCharacterController.Examples
             cameraMove.Disable();
             //jump.Disable();
             crouch.Disable();
-            zoom.Disable();
+            //zoom.Disable();
             interact.Disable();
             start.Disable();
             leftTrigger.Disable();
@@ -79,9 +79,9 @@ namespace KinematicCharacterController.Examples
             playerInput = GetComponent<PlayerInput>();
             mainCamera = Camera.main;
         }
-        void CheckGameState(GameStateManager.GameState state)
+        void CheckGameState(GameState state)
         {
-            if (state == GameStateManager.GameState.GAME_PLAYING)
+            if (state == GameState.GAME_PLAYING)
             {
                 move.Enable();
                 cameraMove.Enable();

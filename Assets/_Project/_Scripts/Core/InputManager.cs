@@ -29,21 +29,21 @@ namespace MyTownProject.Core
        
         void DisableControls() => inputActions.Disable();
         
-        private void ChangedGameState(GameStateManager.GameState state)
+        private void ChangedGameState(GameState state)
         {
-            if (state == GameStateManager.GameState.GAME_PLAYING)
+            if (state == GameState.GAME_PLAYING)
             { print("TOggle gamplay");
                 inputActions.UI.Disable();
                 inputActions.GamePlay.Enable();
                 ToggleActionMap(inputActions.GamePlay);
             }
-            else if (state == GameStateManager.GameState.GAME_PAUSED)
+            else if (state == GameState.GAME_PAUSED)
             {print("TOggle Paues");
                 inputActions.GamePlay.Disable();
                 inputActions.UI.Enable();
                 ToggleActionMap(inputActions.UI);
             }
-            else if (state == GameStateManager.GameState.CUTSCENE)
+            else if (state == GameState.CUTSCENE)
             {print("TOggle UI");
                 inputActions.GamePlay.Disable();
                 inputActions.UI.Enable();

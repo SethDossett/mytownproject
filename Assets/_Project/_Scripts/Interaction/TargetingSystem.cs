@@ -34,7 +34,6 @@ namespace MyTownProject.Interaction
         private IInteractable _interactable;
         Transform cam;
         CharacterState currentCharacterState;
-        private GameStateManager.GameState _game_Playing_State;
 
         [Header("Settings")]
         [SerializeField] bool zeroVert_Look;
@@ -105,7 +104,6 @@ namespace MyTownProject.Interaction
         }
         private void Awake(){
             CC = GetComponent<TheCharacterController>();
-            _game_Playing_State = GameStateManager.GameState.GAME_PLAYING;
             cam = Camera.main.transform;
         }
         private void Start()
@@ -117,9 +115,9 @@ namespace MyTownProject.Interaction
             _startTimer = false;
             _isInteracting = false;
         }
-        void CheckGameState(GameStateManager.GameState state)
+        void CheckGameState(GameState state)
         {
-            if(state == _game_Playing_State){
+            if(state == GameState.GAME_PLAYING){
                 _interact.Enable();
                 _cameraInput.Enable();
                 _LeftTriggerInput.Enable();
@@ -131,6 +129,7 @@ namespace MyTownProject.Interaction
                 _LeftTriggerInput.Disable();
                 canRaycast = false;
             }
+            print($"GameState {state}");
         }
         void CheckPlayerState(CharacterState state)
         {
@@ -704,6 +703,7 @@ namespace MyTownProject.Interaction
             RecenterCamera(0, 0.1f, 1);
             _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
             uiEventChannel.RaiseBarsOn(0.1f);
+            print("RECENTER");
         }
         void CheckForInputRelease(InputAction.CallbackContext ctx){
             if(_targetLockedOn) return;
@@ -712,6 +712,7 @@ namespace MyTownProject.Interaction
                 CC.TransitionToState(CharacterState.Default);
             }
             uiEventChannel.RaiseBarsOff(0.1f);
+            print("RELESE");
         }
         private void OnDrawGizmos()
         {
