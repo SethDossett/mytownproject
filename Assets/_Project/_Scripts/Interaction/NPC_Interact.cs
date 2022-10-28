@@ -17,6 +17,7 @@ namespace MyTownProject.Interaction
         [field: SerializeField] public bool Targeted { get; set; }
         [field: SerializeField] public bool BeenTargeted { get; set; }
         [field: SerializeField] public bool DoesAngleMatter { get; private set; }
+        [field: SerializeField] public bool ExtraRayCheck { get; private set; }
         [field: SerializeField] public float MaxNoticeAngle { get; private set; }
         [field: SerializeField] public float MaxNoticeRange { get; private set; }
         [field: SerializeField] public float MaxInteractRange { get; private set; }
@@ -31,9 +32,9 @@ namespace MyTownProject.Interaction
         //[SerializeField] private CinemachineTargetGroup _targetGroup;
         [SerializeField] private NPC_ScriptableObject npc;
         [SerializeField] DialogueEventsSO dialogueEvents;
-        
 
-    #region new variables
+
+        #region new variables
         [Header("Script Specific")]
         bool _hasInteracted = false;
         bool _isFocusing = false;
@@ -46,7 +47,7 @@ namespace MyTownProject.Interaction
         [SerializeField] bool ShowName = false;
         int hshow = 0;
         int tshow = 1;
-    #endregion
+        #endregion
 
         public bool beenTargeted;
         private void OnEnable()
@@ -96,22 +97,26 @@ namespace MyTownProject.Interaction
 
         }
 
-        void ChangedGameState(GameStateManager.GameState state){
-            if(state != GameStateManager.GameState.GAME_PLAYING){
+        void ChangedGameState(GameState state)
+        {
+            if (state != GameState.GAME_PLAYING)
+            {
                 TurnOffAllIcons();
             }
-            else{
+            else
+            {
                 _interactionUI.SetActive(true);
             }
         }
         void Update()
         {
-            if(!_interactionUI.activeInHierarchy) return;
+            if (!_interactionUI.activeInHierarchy) return;
 
             HandleIcons();
         }
 
-        void HandleIcons(){
+        void HandleIcons()
+        {
             if (Targeted)
             {//If We have targeted NPC we want to hide HoverIcon and TitleIcon
                 Hovered = false;
@@ -121,13 +126,13 @@ namespace MyTownProject.Interaction
                     _titleName.SetActive(false);
                 if (!_targetIcon.activeInHierarchy)
                     _targetIcon.SetActive(true);
-                
+
             }
             else
             {//If We are not Targeting NPC, We Want to hide of TargetIcon
                 if (_targetIcon.activeInHierarchy)
                     _targetIcon.SetActive(false);
-            // Check and see if We should activate HoverIcon
+                // Check and see if We should activate HoverIcon
                 if (Hovered) //Show Hover and Title
                 {
                     if (!_hoverIcon.activeInHierarchy)
@@ -145,7 +150,7 @@ namespace MyTownProject.Interaction
                 }
                 else //Hide Hover and Title
                 {
-                    
+
                     if (_hoverIcon.activeInHierarchy)
                     {
                         print("HoverTurnedOff " + gameObject.name);
@@ -157,24 +162,29 @@ namespace MyTownProject.Interaction
             }
 
         }
-        public void SetHovered(bool setTrue){
-            if(setTrue) Hovered = true;
+        public void SetHovered(bool setTrue)
+        {
+            if (setTrue) Hovered = true;
             else Hovered = false;
         }
-        public void SetTargeted(bool setTrue){
-            if(setTrue) Targeted = true;
+        public void SetTargeted(bool setTrue)
+        {
+            if (setTrue) Targeted = true;
             else Targeted = false;
-            
+
         }
-        public void SetBeenTargeted(bool setTrue){
-            if(setTrue) BeenTargeted = true;
+        public void SetBeenTargeted(bool setTrue)
+        {
+            if (setTrue) BeenTargeted = true;
             else BeenTargeted = false;
         }
-        public void UnsetTargeted(){
+        public void UnsetTargeted()
+        {
             beenTargeted = false;
         }
 
-        void TurnOffAllIcons(){
+        void TurnOffAllIcons()
+        {
             if (_hoverIcon.activeInHierarchy)
                 _hoverIcon.SetActive(false);
             if (_titleName.activeInHierarchy)
@@ -185,6 +195,6 @@ namespace MyTownProject.Interaction
                 _interactionUI.SetActive(false);
         }
 
-        
+
     }
 }

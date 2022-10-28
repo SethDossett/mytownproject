@@ -7,7 +7,7 @@ namespace KinematicCharacterController.Examples
 {
     public class ExamplePlayer : MonoBehaviour
     {
-        [SerializeField]TheCharacterController CC;
+        [SerializeField] TheCharacterController CC;
         public ExampleCharacterCamera CharacterCamera;
         [SerializeField] MainEventChannelSO MainEventChannelSO;
         [SerializeField] TransformEventSO playerReference;
@@ -29,42 +29,47 @@ namespace KinematicCharacterController.Examples
 
         private void OnEnable()
         {
+            GameStateManager.OnGameStateChanged += CheckGameState;
             inputActions.GamePlay.Enable();
             //_disableControls.OnRaiseEvent += DisableControls;
             //_enableControls.OnRaiseEvent += EnableControls;
             move = inputActions.GamePlay.Move;
-           cameraMove = inputActions.GamePlay.Camera;
-           interact = inputActions.GamePlay.Interact;
-           crouch = inputActions.GamePlay.Crouch;
-           //zoom = inputActions.GamePlay.Zoom;
-           start = inputActions.GamePlay.Start;
-           leftTrigger = inputActions.GamePlay.LeftTrigger;
-            //move.Enable();
-            //cameraMove.Enable();
+            cameraMove = inputActions.GamePlay.Camera;
+            interact = inputActions.GamePlay.Interact;
+            crouch = inputActions.GamePlay.Crouch;
+            //zoom = inputActions.GamePlay.Zoom;
+            start = inputActions.GamePlay.Start;
+            leftTrigger = inputActions.GamePlay.LeftTrigger;
+            move.Enable();
+            cameraMove.Enable();
             //jump.Enable();
-            //crouch.Enable();
+            crouch.Enable();
             //zoom.Enable();
-            //interact.Enable();
-            //start.Enable();
+            interact.Enable();
+            start.Enable();
+            leftTrigger.Enable();
         }
         private void OnDisable()
         {
+            GameStateManager.OnGameStateChanged -= CheckGameState;
             inputActions.GamePlay.Disable();
             //_disableControls.OnRaiseEvent -= DisableControls;
             //_enableControls.OnRaiseEvent -= EnableControls;
-            //move.Disable();
-            //cameraMove.Disable();
+            move.Disable();
+            cameraMove.Disable();
             //jump.Disable();
-            //crouch.Disable();
-            //zoom.Disable(); 
-            //interact.Disable();
-            //start.Disable();
+            crouch.Disable();
+            //zoom.Disable();
+            interact.Disable();
+            start.Disable();
+            leftTrigger.Disable();
         }
-        void GetPlayerReference(Transform player){
+        void GetPlayerReference(Transform player)
+        {
             _player = player;
             CC = _player.GetComponent<TheCharacterController>();
             print($"Got Ref {gameObject.name}");
-        }  
+        }
 
         private void Awake()
         {
@@ -74,7 +79,30 @@ namespace KinematicCharacterController.Examples
             playerInput = GetComponent<PlayerInput>();
             mainCamera = Camera.main;
         }
-        private void OnDestroy() {
+        void CheckGameState(GameState state)
+        {
+            if (state == GameState.GAME_PLAYING)
+            {
+                move.Enable();
+                cameraMove.Enable();
+                crouch.Enable();
+                interact.Enable();
+                start.Enable();
+                leftTrigger.Enable();
+            }
+            else
+            {
+                move.Disable();
+                cameraMove.Disable();
+                crouch.Disable();
+                zoom.Disable();
+                interact.Disable();
+                start.Disable();
+                leftTrigger.Enable();
+            }
+        }
+        private void OnDestroy()
+        {
             playerReference.OnRaiseEvent -= GetPlayerReference;
         }
         private void Start()
@@ -120,7 +148,7 @@ namespace KinematicCharacterController.Examples
             //float mouseLookAxisRight = Input.GetAxisRaw(MouseXInput);
             //Vector3 lookInputVector = new Vector3(mouseLookAxisRight, mouseLookAxisUp, 0f);
             Vector2 camDir = inputActions.GamePlay.Camera.ReadValue<Vector2>();
-            Vector3 lookInputVector = new Vector3(camDir.x,camDir.y, 0f);
+            Vector3 lookInputVector = new Vector3(camDir.x, camDir.y, 0f);
 
             // Prevent moving the camera while the cursor isn't locked
             if (Cursor.lockState != CursorLockMode.Locked)
@@ -130,7 +158,7 @@ namespace KinematicCharacterController.Examples
 
             // Input for zooming the camera (disabled in WebGL because it can cause problems)
             //float scrollInput = -Input.GetAxis(MouseScrollInput);
-            float scrollInput = -inputActions.GamePlay.Zoom.ReadValue<float>();   
+            float scrollInput = -inputActions.GamePlay.Zoom.ReadValue<float>();
 #if UNITY_WEBGL
         scrollInput = 0f;
 #endif
@@ -139,10 +167,10 @@ namespace KinematicCharacterController.Examples
             CharacterCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
 
             // Handle toggling zoom level
-           /* if (Input.GetMouseButtonDown(1))
-            {
-                CharacterCamera.TargetDistance = (CharacterCamera.TargetDistance == 0f) ? CharacterCamera.DefaultDistance : 0f;
-            }*/
+            /* if (Input.GetMouseButtonDown(1))
+             {
+                 CharacterCamera.TargetDistance = (CharacterCamera.TargetDistance == 0f) ? CharacterCamera.DefaultDistance : 0f;
+             }*/
         }
 
         private void HandleCharacterInput()

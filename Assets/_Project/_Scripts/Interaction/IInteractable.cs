@@ -11,6 +11,7 @@ namespace MyTownProject.Interaction
         float MaxInteractRange { get; }
         bool CanBeInteractedWith { get; }
         bool CanBeTargeted { get; }
+        bool ExtraRayCheck { get; }
         PromptName PromptName { get; }
         bool Hovered { get; }
         bool Targeted { get; }

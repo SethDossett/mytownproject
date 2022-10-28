@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using System.Collections;
 
 namespace MyTownProject.Core
@@ -8,15 +7,22 @@ namespace MyTownProject.Core
     {
         [SerializeField] bool setFrameRate;
         [SerializeField] int targetFrameRate;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+        static void OnBeforeSplashScreen()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
         private void Awake()
         {
-            if(GameObject.Find("New Game Manager")) Destroy(gameObject);
-            if(setFrameRate)
+            if (GameObject.Find("New Game Manager")) Destroy(gameObject);
+            if (setFrameRate)
                 Application.targetFrameRate = targetFrameRate;
             else
                 Application.targetFrameRate = -1;
         }
-        
+
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -29,7 +35,7 @@ namespace MyTownProject.Core
             // if has cutscene play,
             // after return to play mode
             yield break;
-            
+
         }
 
     }

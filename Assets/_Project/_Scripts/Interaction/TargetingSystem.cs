@@ -34,7 +34,6 @@ namespace MyTownProject.Interaction
         private IInteractable _interactable;
         Transform cam;
         CharacterState currentCharacterState;
-        private GameStateManager.GameState _game_Playing_State;
 
         [Header("Settings")]
         [SerializeField] bool zeroVert_Look;
@@ -48,7 +47,7 @@ namespace MyTownProject.Interaction
         [Header("Values")]
         [SerializeField] bool canRaycast = false;
         [SerializeField] bool findByAngle;
-        [SerializeField] LayerMask targetLayers;
+        [SerializeField] LayerMask _interactableLayer;
         [SerializeField] int _NPCIndex;
         public bool _targetLockedOn;
         bool _isInteracting;
@@ -63,6 +62,7 @@ namespace MyTownProject.Interaction
         bool _startTimer;
         [Range(0, 0.5f)][SerializeField] float _nextTargetWindow = 0.25f;
         [SerializeField] float dis;
+        [Range(0f, 3f)][SerializeField] float _extraRayLength = 0.75f;
 
         [Header("Audio")]
         [SerializeField] EventReference _recenterCameraSFX;
@@ -104,7 +104,6 @@ namespace MyTownProject.Interaction
         }
         private void Awake(){
             CC = GetComponent<TheCharacterController>();
-            _game_Playing_State = GameStateManager.GameState.GAME_PLAYING;
             cam = Camera.main.transform;
         }
         private void Start()
@@ -116,9 +115,9 @@ namespace MyTownProject.Interaction
             _startTimer = false;
             _isInteracting = false;
         }
-        void CheckGameState(GameStateManager.GameState state)
+        void CheckGameState(GameState state)
         {
-            if(state == _game_Playing_State){
+            if(state == GameState.GAME_PLAYING){
                 _interact.Enable();
                 _cameraInput.Enable();
                 _LeftTriggerInput.Enable();
@@ -130,6 +129,7 @@ namespace MyTownProject.Interaction
                 _LeftTriggerInput.Disable();
                 canRaycast = false;
             }
+            print($"GameState {state}");
         }
         void CheckPlayerState(CharacterState state)
         {
@@ -232,10 +232,11 @@ namespace MyTownProject.Interaction
                 ResetTarget();
             }
         }
-        [SerializeField] float _angle;
+        [SerializeField] float _ObjectViewAngle;
+        [SerializeField] float _playerViewAngle;
         void SearchForInteractables()
         {
-            nearbyTargets = Physics.OverlapSphere(transform.position, noticeZone, targetLayers);
+            nearbyTargets = Physics.OverlapSphere(transform.position, noticeZone, _interactableLayer);
             //float closestAngle = maxNoticeAngle;
             //float closestDis = maxDistance;
             //Transform closestTarget = null;
@@ -275,12 +276,14 @@ namespace MyTownProject.Interaction
                 // player view or interactable view doesnt seem to matter with enemies
                 if(interactable.DoesAngleMatter){
                     // Is the angle of interactable within our players max view?
+                    _playerViewAngle = GetAngle(interactionPoint, transform.position, transform.forward);
                     if(GetAngle(interactionPoint, transform.position, transform.forward) > maxNoticeAngle){
                         AvailableTargets.Remove(t);
                         //print("Removed by player view");
                         continue;
                     }   
                     //Is the angle of our player within our interactables max view?
+                    _ObjectViewAngle = GetAngle(transform.position, interactionPoint, t.forward);
                     if(GetAngle(transform.position, interactionPoint, t.forward) > interactable.MaxNoticeAngle){
                         AvailableTargets.Remove(t);
                         //print("Removed by npc view");
@@ -641,6 +644,13 @@ namespace MyTownProject.Interaction
                 ClearIInteractable();
                 return;
             } 
+            if(_interactable.ExtraRayCheck){
+                Debug.DrawRay(transform.position + _playerRayPoint, transform.forward * _extraRayLength, Color.green);
+                if(!Physics.Raycast(transform.position + _playerRayPoint, transform.forward, out RaycastHit hit, _extraRayLength, _interactableLayer)){
+                    ClearIInteractable();
+                    return;
+                }
+            }
             //Show UI Text Prompt
             uiEventChannel.ChangePrompt(_interactable.PromptName, 10);
 
@@ -693,6 +703,7 @@ namespace MyTownProject.Interaction
             RecenterCamera(0, 0.1f, 1);
             _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
             uiEventChannel.RaiseBarsOn(0.1f);
+            print("RECENTER");
         }
         void CheckForInputRelease(InputAction.CallbackContext ctx){
             if(_targetLockedOn) return;
@@ -701,6 +712,7 @@ namespace MyTownProject.Interaction
                 CC.TransitionToState(CharacterState.Default);
             }
             uiEventChannel.RaiseBarsOff(0.1f);
+            print("RELESE");
         }
         private void OnDrawGizmos()
         {

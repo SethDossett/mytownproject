@@ -9,10 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b43d8459fe4812488b2c47ac60e41c3, type: 3}
-  m_Name: KCCSettings
+  m_Script: {fileID: 11500000, guid: 82e6de4196758d640a643c30d82c78a4, type: 3}
+  m_Name: SetPlayerPosRot
   m_EditorClassIdentifier: 
-  AutoSimulation: 1
-  Interpolate: 1
-  MotorsListInitialCapacity: 100
-  MoversListInitialCapacity: 100

@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace KinematicCharacterController.Examples{
     public class PlayerClimb : MonoBehaviour
@@ -11,6 +9,7 @@ namespace KinematicCharacterController.Examples{
         NewControls inputActions;
         CapsuleCollider _capsule;
         CharacterState CurrentCharacterState;
+        ClimbableObj_Modifier _climbableObject;
 
         [Header("Raycast Checks")]
         [SerializeField] LayerMask _groundLayer;
@@ -65,8 +64,6 @@ namespace KinematicCharacterController.Examples{
         int anim_ClimbUp = Animator.StringToHash("ClimbUp");
         int anim_Vault = Animator.StringToHash("Vault");
         int anim_StepUp = Animator.StringToHash("StepUp");
-        int anim_FreeHangDrop = Animator.StringToHash("FreeHangDrop");
-        int anim_HangClimbUp = Animator.StringToHash("HangClimbUp");
         int anim_GrabLedge = Animator.StringToHash("GrabLedge");
 
         private void OnEnable() {
@@ -111,7 +108,7 @@ namespace KinematicCharacterController.Examples{
         {
             if(_isClimbing) return;
 
-            if (_onGround) GroundCheck(); else DetectLedge(transform.TransformPoint(_downCastOffset));
+            if (_onGround) GroundCheck(); else DetectLedge();
 
         }
         void GroundCheck(){
@@ -136,10 +133,10 @@ namespace KinematicCharacterController.Examples{
             return Physics.Raycast(_downOrigin, Vector3.down, out _downHitInfo, _downCastOffset.y + _downCastRayLength, _groundLayer);
         }
         bool ForwardCast(){
-            return Physics.Raycast(_forwardCastOffset, transform.forward, out _forwardHitInfo, 5f, _groundLayer);
+            return Physics.Raycast(_forwardCastOffset, transform.forward, out _forwardHitInfo, 4f, _groundLayer);
         }
         bool OverPassCast(){
-             return Physics.Raycast(_overPassCastOffset, transform.forward, out _overPassHitInfo, 5f, _groundLayer);
+             return Physics.Raycast(_overPassCastOffset, transform.forward, out _overPassHitInfo, 4f, _groundLayer);
         }
 
         public bool CanClimb(out RaycastHit downRaycastHit, out RaycastHit forwardRaycastHit, out Vector3 endPosition){
@@ -149,9 +146,14 @@ namespace KinematicCharacterController.Examples{
 
             _downOrigin = transform.TransformPoint(_downCastOffset);
             if(!DownCast()){
+                _climbableObject = null;
                 CC.CanHang = true;
                 return false;
             }
+            //Check to See if object can be climbed
+            _climbableObject = _downHitInfo.collider.GetComponent<ClimbableObj_Modifier>();
+            if(_climbableObject != null && !_climbableObject.Climbable) return false;
+            
             CC.CanHang = false; 
             _downRaycastHitDis = _downHitInfo.point.y - transform.position.y;
             if(_downRaycastHitDis <= 0.4f) return false;
@@ -295,19 +297,21 @@ namespace KinematicCharacterController.Examples{
             yield break;
         }
         
-        void DetectLedge(Vector3 downOrigin){ //stops working after climbUp maybe doclimb etc.
+        void DetectLedge(){ //stops working after climbUp maybe doclimb etc.
+            if(!CC._isFalling) return;
             //downcast if there is a ledge infront of player
             //_downOrigin = downOrigin;
             _downOrigin = transform.TransformPoint(_downCastOffset);
             if(!DownCast()) return;
 
             //Send forwardcast to see what angle player is facing
-            _forwardCastOffset = new Vector3(transform.position.x, _downHitInfo.point.y, transform.position.z);
-            _forwardDirectionXZ = Vector3.ProjectOnPlane(transform.forward,Vector3.up);
+            _forwardCastOffset = new Vector3(transform.position.x, _downHitInfo.point.y - 0.01f, transform.position.z);
             if(!ForwardCast()) return;
+            _forwardDirectionXZ = Vector3.ProjectOnPlane(transform.forward,Vector3.up);
+            _forwardNormalXZ = Vector3.ProjectOnPlane(_forwardHitInfo.normal, Vector3.up);
             _wallAngle = Vector3.Angle(-_forwardNormalXZ,_forwardDirectionXZ);
             if (_wallAngle > _wallAngleMax + 5) return;
-
+           
             //check distance from players feet to ledge
             _downRaycastHitDis = _downHitInfo.point.y - transform.position.y;
             if(_downRaycastHitDis > 0.5f){
@@ -369,8 +373,8 @@ namespace KinematicCharacterController.Examples{
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.TransformPoint(_downCastOffset), Vector3.down * (_downCastOffset.y + _downCastRayLength));
-            Gizmos.DrawRay(_forwardCastOffset, transform.forward * 5f);
-            Gizmos.DrawRay(_overPassCastOffset, transform.forward * 5f);
+            Gizmos.DrawRay(_forwardCastOffset, transform.forward * 4f);
+            Gizmos.DrawRay(_overPassCastOffset, transform.forward * 4f);
 
         }
     }

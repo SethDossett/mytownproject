@@ -231,6 +231,7 @@
             {
                 float4 position : POSITION;
                 float3 normal : NORMAL;
+                float2 uv : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -238,6 +239,7 @@
             {
                 float4 position : SV_POSITION;
                 float3 normal : NORMAL;
+                float2 uv : TEXCOORD0;
 
                 float fogCoord : TEXCOORD1;
 
@@ -275,7 +277,7 @@
 
                 o.position = clipPosition;
                 o.normal = clipNormal;
-
+                o.uv = v.uv;
                 o.fogCoord = ComputeFogFactor(o.position.z);
                 #endif
                 
@@ -285,7 +287,15 @@
             half4 FragmentProgram(VertexOutput i) : SV_TARGET {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
                 half4 color = _OutlineColor;
+
+                SurfaceData surfaceData;
+                InitializeSimpleLitSurfaceData(i.position ,i.uv, surfaceData);
+                color.a = surfaceData.alpha;
+
+
                 color.rgb = MixFog(color.rgb, i.fogCoord);
+                color.a = OutputAlpha(color.a, _Surface);
+
                 return color;
             }
             ENDHLSL

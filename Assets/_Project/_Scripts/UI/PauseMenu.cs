@@ -13,7 +13,7 @@ namespace MyTownProject.UI
         [SerializeField] StateChangerEventSO StateChanger;
         [SerializeField] GameObject pauseMenu;
         [SerializeField] GameObject firstButton;
-        GameStateManager.GameState currentGameState;
+        GameState currentGameState;
 
         private InputAction exit;
         private InputAction submit;
@@ -40,21 +40,21 @@ namespace MyTownProject.UI
             MainEventChannelSO.OnGamePaused -= Pause;
             MainEventChannelSO.OnGameUnPaused -= Resume;
         }
-        private void ChangedGameState(GameStateManager.GameState state)
+        private void ChangedGameState(GameState state)
         {
             currentGameState = state;
 
-            if (state == GameStateManager.GameState.GAME_PLAYING)
+            if (state == GameState.GAME_PLAYING)
             {
                 exit.Disable();
                 submit.Disable();
             }
-            else if (state == GameStateManager.GameState.GAME_PAUSED)
+            else if (state == GameState.GAME_PAUSED)
             {
                 exit.Enable();
                 submit.Enable();
             }
-            else if (state == GameStateManager.GameState.CUTSCENE)
+            else if (state == GameState.CUTSCENE)
             {
                 exit.Enable();
                 submit.Enable();
@@ -62,7 +62,7 @@ namespace MyTownProject.UI
         }
         private void StartButtonPressed(InputAction.CallbackContext obj)
         {
-            if(currentGameState == GameStateManager.GameState.GAME_PAUSED)
+            if(currentGameState == GameState.GAME_PAUSED)
                 MainEventChannelSO.RaiseEventUnPaused();
         }
         private void SubmitButtonPressed(InputAction.CallbackContext obj)

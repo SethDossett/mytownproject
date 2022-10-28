@@ -56,9 +56,9 @@ namespace MyTownProject.UI
         void Awake(){
             ChangePromptPriority(PromptName.Null, 1);
         }
-        private void CheckGameState(GameStateManager.GameState state)
+        private void CheckGameState(GameState state)
         {
-            if (state == GameStateManager.GameState.GAME_PLAYING)
+            if (state == GameState.GAME_PLAYING)
             {
                 UI_UnhideAll();
                 if (_dialogue.activeInHierarchy)
@@ -115,7 +115,7 @@ namespace MyTownProject.UI
             if (!_dialogue.activeInHierarchy)
                 _dialogue.SetActive(true);
 
-
+            uIEventChannel.RaiseBarsOff(0.1f);
         }
         void ContinueIconSubmit()
         {
