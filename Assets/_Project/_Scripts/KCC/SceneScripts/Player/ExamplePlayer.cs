@@ -30,7 +30,7 @@ namespace KinematicCharacterController.Examples
         private void OnEnable()
         {
             GameStateManager.OnGameStateChanged += CheckGameState;
-            inputActions.GamePlay.Enable();
+            //inputActions.GamePlay.Enable();
             //_disableControls.OnRaiseEvent += DisableControls;
             //_enableControls.OnRaiseEvent += EnableControls;
             move = inputActions.GamePlay.Move;
@@ -40,29 +40,29 @@ namespace KinematicCharacterController.Examples
             //zoom = inputActions.GamePlay.Zoom;
             start = inputActions.GamePlay.Start;
             leftTrigger = inputActions.GamePlay.LeftTrigger;
-            move.Enable();
-            cameraMove.Enable();
-            //jump.Enable();
-            crouch.Enable();
-            //zoom.Enable();
-            interact.Enable();
-            start.Enable();
-            leftTrigger.Enable();
+            // move.Enable();
+            // cameraMove.Enable();
+            // //jump.Enable();
+            // crouch.Enable();
+            // //zoom.Enable();
+            // interact.Enable();
+            // start.Enable();
+            // leftTrigger.Enable();
         }
         private void OnDisable()
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
-            inputActions.GamePlay.Disable();
+            //inputActions.GamePlay.Disable();
             //_disableControls.OnRaiseEvent -= DisableControls;
             //_enableControls.OnRaiseEvent -= EnableControls;
-            move.Disable();
-            cameraMove.Disable();
-            //jump.Disable();
-            crouch.Disable();
-            //zoom.Disable();
-            interact.Disable();
-            start.Disable();
-            leftTrigger.Disable();
+            // move.Disable();
+            // cameraMove.Disable();
+            // //jump.Disable();
+            // crouch.Disable();
+            // //zoom.Disable();
+            // interact.Disable();
+            // start.Disable();
+            // leftTrigger.Disable();
         }
         void GetPlayerReference(Transform player)
         {
@@ -83,22 +83,22 @@ namespace KinematicCharacterController.Examples
         {
             if (state == GameState.GAME_PLAYING)
             {
-                move.Enable();
-                cameraMove.Enable();
-                crouch.Enable();
-                interact.Enable();
-                start.Enable();
-                leftTrigger.Enable();
+                // move.Enable();
+                // cameraMove.Enable();
+                // crouch.Enable();
+                // interact.Enable();
+                // start.Enable();
+                // leftTrigger.Enable();
             }
             else
             {
-                move.Disable();
-                cameraMove.Disable();
-                crouch.Disable();
-                zoom.Disable();
-                interact.Disable();
-                start.Disable();
-                leftTrigger.Enable();
+                // move.Disable();
+                // cameraMove.Disable();
+                // crouch.Disable();
+                // zoom.Disable();
+                // interact.Disable();
+                // start.Disable();
+                // leftTrigger.Enable();
             }
         }
         private void OnDestroy()

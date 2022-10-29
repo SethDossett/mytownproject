@@ -15,14 +15,16 @@ namespace MyTownProject.UI
         [SerializeField] GameObject firstButton;
         GameState currentGameState;
 
+        private NewControls _inputActions;
         private InputAction exit;
         private InputAction submit;
         private void OnEnable()
         {
             GameStateManager.OnGameStateChanged += ChangedGameState;
 
-            exit = InputManager.inputActions.UI.Exit;
-            submit = InputManager.inputActions.UI.Submit;
+            _inputActions = InputManager.inputActions;
+            exit = _inputActions.UI.Exit;
+            submit = _inputActions.UI.Submit;
             
             exit.performed += StartButtonPressed;
             submit.performed += SubmitButtonPressed;

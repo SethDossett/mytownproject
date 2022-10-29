@@ -52,7 +52,6 @@ namespace MyTownProject.Core
         }
         private void Start()
         {
-            //playerInput = myPlayerInput.GetComponent<PlayerInput>();
             UpdateState(GameState.GAME_PAUSED);
         }
 
@@ -60,6 +59,7 @@ namespace MyTownProject.Core
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 0f;
+            InputManager.ToggleActionMap(InputManager.inputActions.UI);
             //myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
@@ -67,6 +67,7 @@ namespace MyTownProject.Core
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 0f;
+            InputManager.ToggleActionMap(InputManager.inputActions.UI);
             //myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
@@ -74,6 +75,7 @@ namespace MyTownProject.Core
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 1f;
+            InputManager.ToggleActionMap(InputManager.inputActions.GamePlay);
             //myPlayerInput.GetComponent<ExamplePlayer>().enabled = true; //Turning on ExamplePlayerScript
         }
         #endregion

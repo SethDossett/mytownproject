@@ -5,7 +5,7 @@ using MyTownProject.Events;
 
 namespace MyTownProject.Core
 {
-    public class InputManager : MonoBehaviour
+    public class InputManager
     {
         public static NewControls inputActions = new NewControls();
         public static event Action<InputActionMap> actionMapChange;
@@ -32,19 +32,19 @@ namespace MyTownProject.Core
         private void ChangedGameState(GameState state)
         {
             if (state == GameState.GAME_PLAYING)
-            { print("TOggle gamplay");
+            { 
                 inputActions.UI.Disable();
                 inputActions.GamePlay.Enable();
                 ToggleActionMap(inputActions.GamePlay);
             }
             else if (state == GameState.GAME_PAUSED)
-            {print("TOggle Paues");
+            {
                 inputActions.GamePlay.Disable();
                 inputActions.UI.Enable();
                 ToggleActionMap(inputActions.UI);
             }
             else if (state == GameState.CUTSCENE)
-            {print("TOggle UI");
+            {
                 inputActions.GamePlay.Disable();
                 inputActions.UI.Enable();
                 ToggleActionMap(inputActions.UI);

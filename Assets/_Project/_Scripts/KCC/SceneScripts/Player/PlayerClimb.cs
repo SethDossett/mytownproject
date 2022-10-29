@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using MyTownProject.Core;
 
 namespace KinematicCharacterController.Examples{
     public class PlayerClimb : MonoBehaviour
@@ -67,14 +68,12 @@ namespace KinematicCharacterController.Examples{
         int anim_GrabLedge = Animator.StringToHash("GrabLedge");
 
         private void OnEnable() {
-            inputActions.GamePlay.Enable();
             TheCharacterController.OnPlayerStateChanged += PlayerStateChange;
         }
         private void OnDisable() {
-            inputActions.GamePlay.Disable();
         }
         void Awake(){
-            inputActions = new NewControls();
+            inputActions = InputManager.inputActions;
         }
         void Start(){
             _animator = GetComponent<Animator>();

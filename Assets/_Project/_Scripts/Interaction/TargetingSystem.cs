@@ -82,13 +82,10 @@ namespace MyTownProject.Interaction
             SetInitialReferences();
             GameStateManager.OnGameStateChanged += CheckGameState;
             TheCharacterController.OnPlayerStateChanged += CheckPlayerState;
-            _inputActions = new NewControls();
+            _inputActions = InputManager.inputActions;
             _interact = _inputActions.GamePlay.Interact;
             _cameraInput = _inputActions.GamePlay.Camera;
             _LeftTriggerInput = _inputActions.GamePlay.LeftTrigger;
-            _interact.Enable();
-            _cameraInput.Enable();
-            _LeftTriggerInput.Enable();
             _LeftTriggerInput.performed += CheckForRecenterInput;
             _LeftTriggerInput.canceled += CheckForInputRelease;
         }
@@ -96,9 +93,6 @@ namespace MyTownProject.Interaction
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             TheCharacterController.OnPlayerStateChanged -= CheckPlayerState;
-            _interact.Disable();
-            _cameraInput.Disable();
-            _LeftTriggerInput.Disable();
             _LeftTriggerInput.canceled -= CheckForRecenterInput;
             _LeftTriggerInput.canceled -= CheckForInputRelease;
         }
@@ -118,18 +112,14 @@ namespace MyTownProject.Interaction
         void CheckGameState(GameState state)
         {
             if(state == GameState.GAME_PLAYING){
-                _interact.Enable();
-                _cameraInput.Enable();
-                _LeftTriggerInput.Enable();
+                
+                print("GAMESTATE CHECK WORKS PLAYING");
                 canRaycast = true;
             }
             else{
-                _interact.Disable();
-                _cameraInput.Disable();
-                _LeftTriggerInput.Disable();
+                print("GAMESTATE CHECK WORKS PAUSE/CUTSCENE");
                 canRaycast = false;
             }
-            print($"GameState {state}");
         }
         void CheckPlayerState(CharacterState state)
         {
