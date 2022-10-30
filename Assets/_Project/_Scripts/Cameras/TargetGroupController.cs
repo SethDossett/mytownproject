@@ -5,6 +5,7 @@ using MyTownProject.Events;
 using KinematicCharacterController.Examples;
 using MyTownProject.NPC;
 using MyTownProject.Enviroment;
+using MyTownProject.Interaction;
 
 namespace MyTownProject.Cameras
 {
@@ -51,6 +52,7 @@ namespace MyTownProject.Cameras
         {
             _player = player.gameObject;
             print($"Got Ref {gameObject.name}");
+            RemoveTargets();
             AddPlayer();
         }
 
@@ -85,7 +87,7 @@ namespace MyTownProject.Cameras
         void OpeningDoor(DoorType doorType, GameObject door)
         {
             RemoveTargets();
-            AddingMember(door.transform, 1, 3);
+            AddingMember(door.GetComponent<Door>().LookAtPosition, 1, 3);
         }
 
         void BackToPlayerView()

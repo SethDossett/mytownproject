@@ -71,8 +71,19 @@ MonoBehaviour:
   - m_From: PlayerFreeLook01
     m_To: DoorVCam1
     m_Blend:
-      m_Style: 3
-      m_Time: 0.2
+      m_Style: 1
+      m_Time: 0.8
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: TargetingCamera
+    m_To: DoorVCam1
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.8
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []

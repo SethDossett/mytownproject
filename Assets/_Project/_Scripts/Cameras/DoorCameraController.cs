@@ -2,6 +2,7 @@ using UnityEngine;
 using Cinemachine;
 using MyTownProject.SO;
 using MyTownProject.Enviroment;
+using MyTownProject.Interaction;
 
 namespace MyTownProject.Cameras
 {
@@ -9,6 +10,8 @@ namespace MyTownProject.Cameras
     {
         CinemachineVirtualCamera cam;
         [SerializeField] ActionSO OpenDoor;
+        Transform _doorCameraPosition;
+
         private void OnEnable()
         {
             OpenDoor.OnOpenDoor += SetCameraPosition;
@@ -26,10 +29,12 @@ namespace MyTownProject.Cameras
 
         void SetCameraPosition(DoorType type, GameObject door)
         {
-            Vector3 offset = door.transform.rotation * new Vector3(20f ,0, 15f);
-            Vector3 pos = door.transform.position + offset;
-            Quaternion rot = door.transform.rotation;
-            cam.ForceCameraPosition(pos, rot);
+            cam.Follow = door.GetComponent<Door>().CameraPosition;
+            // Vector3 offset = door.transform.rotation * new Vector3(20f ,0, 15f);
+            // Vector3 pos = door.transform.position + offset;
+            // Quaternion rot = door.transform.rotation;
+            // _doorCameraPosition.position = pos;
+            
         }
         
 
