@@ -64,9 +64,9 @@ sysinfo.txt
 *.app
 
 # Mac stuff
-.DS_Store
-.bak
-.BAK
+*.DS_Store
+*.bak
+*.BAK
 
 # Crashlytics generated file
 crashlytics-build.properties

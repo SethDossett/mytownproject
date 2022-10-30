@@ -5,7 +5,7 @@
 			<value>LockOff</value>
 		</property>
 		<property name="outputFormat">
-			<value>2</value>
+			<value>1</value>
 		</property>
 		<relationship name="folder">
 			<destination>{8ee40111-817c-4005-be2a-d040d1c4a2d1}</destination>
@@ -118,7 +118,6 @@
 	<object class="MixerBusEffectChain" id="{ab00d534-712e-4116-85b2-edb33ecc4db7}">
 		<relationship name="effects">
 			<destination>{b24f42c5-51c0-43ef-8e7a-9781d94171fa}</destination>
-			<destination>{ade40803-65b4-4e16-8985-062aa01f30b9}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{4190c2d3-2fc3-43e0-9a0d-730e9b86d67d}" />
@@ -135,6 +134,5 @@
 	</object>
 	<object class="MixerBusPanner" id="{c094154c-065f-4300-800d-f9bf5e527742}" />
 	<object class="MixerBusFader" id="{b24f42c5-51c0-43ef-8e7a-9781d94171fa}" />
-	<object class="SpatialiserEffect" id="{ade40803-65b4-4e16-8985-062aa01f30b9}" />
 	<object class="MixerBusFader" id="{e80c8ea4-ab2e-40ca-9e72-ebec5d86483a}" />
 </objects>
