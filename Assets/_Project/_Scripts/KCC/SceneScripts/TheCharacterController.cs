@@ -276,6 +276,10 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Talking:
                     {
+                        
+                        _animator.SetFloat(anim_moving, 0, 0f, Time.deltaTime);
+                        _animator.SetFloat(anim_horizontal, 0, 0.1f, Time.deltaTime);
+                        _animator.SetFloat(anim_vertical, 0, 0.1f, Time.deltaTime);
                         _animator.CrossFadeInFixedTime(_talkState, 0.25f, 0);
                         Quaternion lookRot = Quaternion.LookRotation(_target.position - transform.position, Vector3.up);
                         lookRot.z = 0;
@@ -493,6 +497,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Talking:
                     {
+                        _moveInputVector = Vector3.zero;
                         break;
                     }
                 case CharacterState.Crawling:
@@ -763,7 +768,7 @@ namespace KinematicCharacterController.Examples
                             {
                                 if (MaxStableMoveSpeed >= MaxSpeed)
                                 {
-                                    if (dot < -0.92f)
+                                    if (dot < -0.96f)
                                     {
                                         _restrictJumping = true;
                                         changingDirection = true;
@@ -1199,11 +1204,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Talking:
                     {
-                        float currentVelocityMagnitude = currentVelocity.magnitude;
                         currentVelocity = Vector3.zero;
-                        _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                        _animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                        _animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                         break;
                     }
                 case CharacterState.Crawling:
@@ -1315,9 +1316,8 @@ namespace KinematicCharacterController.Examples
 
                         break;
                     }
-                case CharacterState.Climbing:
+                case CharacterState.Talking:
                     {
-
                         break;
                     }
                 case CharacterState.Crawling:
@@ -1462,6 +1462,11 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Jumping:
                     {
+                        break;
+                    }
+                case CharacterState.Targeting:
+                    {
+                        
                         break;
                     }
 

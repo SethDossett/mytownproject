@@ -16,8 +16,8 @@ MonoBehaviour:
   - m_From: PlayerFreeLook01
     m_To: DialogueVCam01
     m_Blend:
-      m_Style: 1
-      m_Time: 0.1
+      m_Style: 2
+      m_Time: 0.5
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -28,7 +28,7 @@ MonoBehaviour:
     m_To: PlayerFreeLook01
     m_Blend:
       m_Style: 1
-      m_Time: 0.1
+      m_Time: 0.5
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -39,7 +39,7 @@ MonoBehaviour:
     m_To: TargetingCamera
     m_Blend:
       m_Style: 1
-      m_Time: 0.1
+      m_Time: 0.2
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -50,7 +50,7 @@ MonoBehaviour:
     m_To: PlayerFreeLook01
     m_Blend:
       m_Style: 1
-      m_Time: 0.1
+      m_Time: 0.3
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -60,8 +60,8 @@ MonoBehaviour:
   - m_From: TargetingCamera
     m_To: DialogueVCam01
     m_Blend:
-      m_Style: 1
-      m_Time: 0.1
+      m_Style: 2
+      m_Time: 0.5
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []
