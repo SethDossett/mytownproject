@@ -49,7 +49,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 22100000, guid: 60d060c6c446d4e6191f05071b2c52be, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 1
   m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -81,7 +81,7 @@ MonoBehaviour:
   <MaxNoticeRange>k__BackingField: 3
   <MaxInteractRange>k__BackingField: 3
   <PromptName>k__BackingField: 1
-  <InteractionPointOffset>k__BackingField: {x: 0, y: 0, z: -0.75}
+  <InteractionPointOffset>k__BackingField: {x: 0.75, y: 0, z: 0}
   _locked: 0
   _centerStandingPoint: {x: 0.5, y: 0, z: -0.75}
   CameraPosition: {fileID: 3387905195582835479}

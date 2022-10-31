@@ -55,6 +55,7 @@ namespace MyTownProject.Interaction
         [SerializeField] Vector3 pos;
         bool _freeLookCameraOff;
         bool _resettingTarget;
+        string _npcTag = "NPC";
         Vector3 _npcRayPoint = new Vector3(0, 1.2f, 0);
         Vector3 _playerRayPoint = new Vector3(0, 1.5f, 0);
         
@@ -240,7 +241,7 @@ namespace MyTownProject.Interaction
 
                 Transform t = target.transform;
                 IInteractable interactable = t.gameObject.GetComponent<IInteractable>();
-                Vector3 interactionPoint = t.position + interactable.InteractionPointOffset;
+                Vector3 interactionPoint = t.TransformPoint(interactable.InteractionPointOffset);
                 //Does canbetargeted matter if this pick up item, can be interacted but not targeted
                 //Maybe have a 2nd list for items inradius that cant be targeted
 
@@ -398,7 +399,7 @@ namespace MyTownProject.Interaction
         }
         bool StillClosestTarget(Transform t){
             IInteractable interactable = t.GetComponent<IInteractable>();
-            Vector3 interactionPoint = t.position + interactable.InteractionPointOffset;
+            Vector3 interactionPoint = t.TransformPoint(interactable.InteractionPointOffset);
             if (!interactable.IsVisible)
             {
                 return false;
@@ -422,7 +423,9 @@ namespace MyTownProject.Interaction
             RaycastHit hit;
             if (Physics.Linecast(transform.position + _playerRayPoint, targetPos, out hit))
             {
-                if (!hit.transform.CompareTag("NPC")) return true;
+                //print(hit.collider.name);
+                //Debug.DrawLine(transform.position + _playerRayPoint, targetPos);
+                if (!hit.transform.CompareTag(_npcTag)) return true;
             }
             return false;
         }

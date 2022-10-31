@@ -1675,9 +1675,11 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  _downCastOffset: {x: 0, y: 3, z: 0.6}
+  _downCastOffset: {x: 0, y: 2, z: 0.6}
   _endOffset: {x: 0, y: 0, z: 0.2}
   _hangOffset: {x: 0, y: -1.5, z: -0.3}
+  _maxClimbHeight: 2
+  _maxLedgeGrabHeight: 1.8
   _overPassHeight: 1.8
   _downRaycastHitDis: 0
   _groudAngleMax: 60
