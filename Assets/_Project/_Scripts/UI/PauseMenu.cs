@@ -18,6 +18,10 @@ namespace MyTownProject.UI
         private NewControls _inputActions;
         private InputAction exit;
         private InputAction submit;
+        private InputAction leftTrigger;
+        private InputAction rightTrigger;
+
+        bool _paused;
         private void OnEnable()
         {
             GameStateManager.OnGameStateChanged += ChangedGameState;
@@ -25,12 +29,17 @@ namespace MyTownProject.UI
             _inputActions = InputManager.inputActions;
             exit = _inputActions.UI.Exit;
             submit = _inputActions.UI.Submit;
-            
+            leftTrigger = _inputActions.UI.LeftTrigger;
+            rightTrigger = _inputActions.UI.RightTrigger;
+
+
             exit.performed += StartButtonPressed;
             submit.performed += SubmitButtonPressed;
+            leftTrigger.performed += LeftTriggerReleased;
+            rightTrigger.performed += RightTriggerReleased;
+
 
             MainEventChannelSO.OnGamePaused += Pause;
-            MainEventChannelSO.OnGameUnPaused += Resume;
         }
         private void OnDisable()
         {
@@ -38,9 +47,10 @@ namespace MyTownProject.UI
 
             exit.performed -= StartButtonPressed;
             submit.performed -= SubmitButtonPressed;
-            
+            leftTrigger.performed -= LeftTriggerReleased;
+            rightTrigger.performed -= RightTriggerReleased;
+
             MainEventChannelSO.OnGamePaused -= Pause;
-            MainEventChannelSO.OnGameUnPaused -= Resume;
         }
         private void ChangedGameState(GameState state)
         {
@@ -64,21 +74,34 @@ namespace MyTownProject.UI
         }
         private void StartButtonPressed(InputAction.CallbackContext obj)
         {
-            if(currentGameState == GameState.GAME_PAUSED)
-                MainEventChannelSO.RaiseEventUnPaused();
+            if (currentGameState == GameState.GAME_PAUSED)
+                Resume();
         }
         private void SubmitButtonPressed(InputAction.CallbackContext obj)
         {
             print("Submit Pressed");
         }
+        private void LeftTriggerReleased(InputAction.CallbackContext obj)
+        {
+            print("Left Trigger Release");
+        }
+        private void RightTriggerReleased(InputAction.CallbackContext obj)
+        {
+            print("Right Trigger Released");
+        }
         private void Pause()
         {
+            _paused = true;
             StartCoroutine(SetFirstSelection());
+            StartCoroutine(CheckInputs());
             if (!pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(true);
         }
-        private void Resume()
+        public void Resume()
         {
+            _paused = false;
+            StopCoroutine(CheckInputs());
+            MainEventChannelSO.RaiseEventUnPaused();
             if (pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(false);
         }
@@ -88,6 +111,17 @@ namespace MyTownProject.UI
             EventSystem.current.SetSelectedGameObject(null);
             yield return new WaitForEndOfFrame();
             EventSystem.current.SetSelectedGameObject(firstButton);
+            yield break;
+        }
+
+        IEnumerator CheckInputs()
+        {
+            while (_paused)
+            {
+                //if(leftTrigger.ReadValue<float>() == 0)
+                //print(leftTrigger.ReadValue<float>());
+                yield return null;
+            }
             yield break;
         }
     }

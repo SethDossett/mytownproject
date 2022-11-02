@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 6849086178455057009}
   - component: {fileID: 6912896202184273920}
   - component: {fileID: 9069941180342851778}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 5184474175071266737}
   - component: {fileID: 395267068701834434}
   - component: {fileID: 6151137597850053819}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 4498967160927448332}
   - component: {fileID: 2820977124497371642}
   - component: {fileID: 7192475956513775037}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Cube (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483,7 +483,7 @@ GameObject:
   - component: {fileID: 6538388173846948575}
   - component: {fileID: 6468996897763572274}
   - component: {fileID: 3632585657745721384}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Cube (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -578,7 +578,7 @@ GameObject:
   - component: {fileID: 7224187670999100551}
   - component: {fileID: 1367598038662713800}
   - component: {fileID: 8497923962451343039}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -706,7 +706,7 @@ GameObject:
   - component: {fileID: 6765298552592672265}
   - component: {fileID: 1127516053297923617}
   - component: {fileID: 3432194616371315010}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1380,7 +1380,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 3634065607003665308}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
@@ -1563,6 +1563,7 @@ MonoBehaviour:
   CrouchedCapsuleHeight: 0.95
   _talkingRotSpeed: 500
   _moveInputVector: {x: 0, y: 0, z: 0}
+  _shouldBeCrouching: 0
   _isCrouching: 0
   _cannotTarget: 0
   _accelerateCurve:
@@ -2786,7 +2787,7 @@ GameObject:
   - component: {fileID: 1324632089663637392}
   - component: {fileID: 5045680481875600782}
   - component: {fileID: 5080051736804407291}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Cube (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2881,7 +2882,7 @@ GameObject:
   - component: {fileID: 2430047399038018859}
   - component: {fileID: 6012689392852144288}
   - component: {fileID: 503592310030311360}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2973,7 +2974,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2673123549438635570}
-  m_Layer: 7
+  m_Layer: 28
   m_Name: FallOffPreventors
   m_TagString: Untagged
   m_Icon: {fileID: 0}

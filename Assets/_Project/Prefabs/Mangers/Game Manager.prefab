@@ -518,18 +518,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5921723070736460642 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5921723072225357402, guid: 2c7826f9464f4b740b72c530af750d9b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1799439672}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &5921723072219855679 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5921723070756126215, guid: 2c7826f9464f4b740b72c530af750d9b,
@@ -563,6 +551,18 @@ MonoBehaviour:
 --- !u!114 &5921723072413190245 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5921723070680993117, guid: 2c7826f9464f4b740b72c530af750d9b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1799439672}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5921723070736460642 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5921723072225357402, guid: 2c7826f9464f4b740b72c530af750d9b,
     type: 3}
   m_PrefabInstance: {fileID: 1799439672}
   m_PrefabAsset: {fileID: 0}
@@ -836,6 +836,36 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1211421773933848697, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7488616882506500790}
+    - target: {fileID: 1211421773933848697, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 1211421773933848697, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MyTownProject.UI.PauseMenu, Project
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399515899168810331, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7488616882506500790}
+    - target: {fileID: 1399515899168810331, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399515899168810331, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MyTownProject.UI.PauseMenu, Project
+      objectReference: {fileID: 0}
     - target: {fileID: 1399515899168810332, guid: 6c2a807f435add247b92a737c64ae4f0,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -991,6 +1021,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3248075219060557796, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7488616882506500790}
+    - target: {fileID: 3248075219060557796, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 3248075219060557796, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MyTownProject.UI.PauseMenu, Project
+      objectReference: {fileID: 0}
     - target: {fileID: 5540741542293719300, guid: 6c2a807f435add247b92a737c64ae4f0,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1016,6 +1061,21 @@ PrefabInstance:
       propertyPath: firstButton
       value: 
       objectReference: {fileID: 2652450169315723119}
+    - target: {fileID: 6066839187116596834, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7488616882506500790}
+    - target: {fileID: 6066839187116596834, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 6066839187116596834, guid: 6c2a807f435add247b92a737c64ae4f0,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MyTownProject.UI.PauseMenu, Project
+      objectReference: {fileID: 0}
     - target: {fileID: 7566553743056129075, guid: 6c2a807f435add247b92a737c64ae4f0,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -1044,6 +1104,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4009172525824795186}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7488616882506500790 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5787011495724443780, guid: 6c2a807f435add247b92a737c64ae4f0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4009172525824795186}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2652450170219537948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae40dc3a7ec35ce4a9e2f575f130cffd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4320976999051325410 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 888405963556294096, guid: 6c2a807f435add247b92a737c64ae4f0,

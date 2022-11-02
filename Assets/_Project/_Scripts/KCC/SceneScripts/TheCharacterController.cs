@@ -168,7 +168,7 @@ namespace KinematicCharacterController.Examples
         private float _timeSinceLastAbleToJump = 0f;
         private Vector3 _internalVelocityAdd = Vector3.zero;
         private bool _canCrouch = false;
-        private bool _shouldBeCrouching = false;
+        public bool _shouldBeCrouching = false;
         public bool _isCrouching = false;
         public bool _cannotTarget = false;
 
@@ -291,7 +291,6 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Crawling:
                     {
                         fallOffPrevention.enabled = true;
-                        _canCrouch = false;
                         _moveBackwards = false;
                         OrientationSharpness = _crawlRotationSpeed;
                         break;
@@ -505,18 +504,19 @@ namespace KinematicCharacterController.Examples
                         // Move and look inputs
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
 
-                        // Camera Recenter while Moving
-                        if (_moveInputVector.magnitude > 0 && _moveBackwards == false)
-                            RecenterCamX.ThreeFloats(0, 2f, 0);
-                        else// need to turn off once but not over and over
-                            DisableRecentering.RaiseEvent();
-
                         // If player presses opposite direction crawl backwards
                         float dot = Vector3.Dot(_moveInputVector, transform.forward);
                         if (dot <= -0.9f)
                             _moveBackwards = true;
                         else
                             _moveBackwards = false;
+
+                        // Camera Recenter while Moving
+                        if (_moveInputVector.sqrMagnitude > 0 && _moveBackwards == false)
+                            RecenterCamX.ThreeFloats(0, 2f, 0);
+                        else// need to turn off once but not over and over
+                            DisableRecentering.RaiseEvent();
+
 
                         switch (OrientationMethod)
                         {
@@ -527,11 +527,12 @@ namespace KinematicCharacterController.Examples
                                 _lookInputVector = _moveInputVector.normalized;
                                 break;
                         }
-
+                        
                         if (inputs.CrouchUp)
-                        {
                             _shouldBeCrouching = false;
-                        }
+
+                        if(inputs.CrouchDown)
+                            _shouldBeCrouching = true;
                         break;
                     }
             }
@@ -1336,7 +1337,7 @@ namespace KinematicCharacterController.Examples
                                 QueryTriggerInteraction.Ignore) > 0)
                             {
                                 // If obstructions, just stick to crouching dimensions
-                                Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
+                                Motor.SetCapsuleDimensions(0.44f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
                             }
                             else
                             {

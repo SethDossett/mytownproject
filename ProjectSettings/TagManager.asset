@@ -39,7 +39,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - PlayerCollisionOnly
   - UIPrompts
   - 
   - Post Processing

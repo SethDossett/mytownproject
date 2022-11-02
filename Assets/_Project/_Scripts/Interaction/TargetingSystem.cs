@@ -87,15 +87,15 @@ namespace MyTownProject.Interaction
             _interact = _inputActions.GamePlay.Interact;
             _cameraInput = _inputActions.GamePlay.Camera;
             _LeftTriggerInput = _inputActions.GamePlay.LeftTrigger;
-            _LeftTriggerInput.performed += CheckForRecenterInput;
-            _LeftTriggerInput.canceled += CheckForInputRelease;
+            _LeftTriggerInput.performed += LeftTriggerInput;
+            //_LeftTriggerInput.canceled += LeftTriggerInput;
         }
         private void OnDisable()
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             TheCharacterController.OnPlayerStateChanged -= CheckPlayerState;
-            _LeftTriggerInput.canceled -= CheckForRecenterInput;
-            _LeftTriggerInput.canceled -= CheckForInputRelease;
+            _LeftTriggerInput.performed -= LeftTriggerInput;
+            //_LeftTriggerInput.canceled -= LeftTriggerInput;
         }
         private void Awake()
         {
@@ -168,7 +168,7 @@ namespace MyTownProject.Interaction
                     _closestTarget = null;
                 }
             }
-            //Keyboard.current.shiftKey.wasPressedThisFrame
+
             if (_LeftTriggerInput.WasPressedThisFrame())
             {
                 print("Fire");
@@ -200,12 +200,12 @@ namespace MyTownProject.Interaction
 
 
             }
-            //Keyboard.current.shiftKey.wasReleasedThisFrame
-            if (_LeftTriggerInput.WasReleasedThisFrame())
-            {
-                if (currentTarget != null)
-                    _startTimer = true;
-            }
+
+            // if (_LeftTriggerInput.WasReleasedThisFrame())
+            // {
+            //     if (currentTarget != null)
+            //         _startTimer = true;
+            // }
 
             if (!_targetLockedOn)
             {
@@ -741,7 +741,7 @@ namespace MyTownProject.Interaction
             RecenterCamX.ThreeFloats(waitTime, recenteringTime, disableRecenter);
             RecenterCamY.ThreeFloats(waitTime, recenteringTime, disableRecenter);
         }
-        void CheckForRecenterInput(InputAction.CallbackContext ctx)
+        void RecenterPressed()
         {
             if (canRaycast) return;
             //Need a Recenter CoolDown
@@ -754,15 +754,32 @@ namespace MyTownProject.Interaction
             uiEventChannel.RaiseBarsOn(0.1f);
             print("RECENTER");
         }
-        void CheckForInputRelease(InputAction.CallbackContext ctx)
+        void ReleasePressed()
         {
-            if (_targetLockedOn) return;
-            if (currentCharacterState == CharacterState.Targeting)
+            if (_targetLockedOn)
             {
-                CC.TransitionToState(CharacterState.Default);
+                if (currentTarget != null)
+                    _startTimer = true;
             }
-            uiEventChannel.RaiseBarsOff(0.1f);
-            print("RELESE");
+            else
+            {
+                if (currentCharacterState == CharacterState.Targeting)
+                    CC.TransitionToState(CharacterState.Default);
+
+                uiEventChannel.RaiseBarsOff(0.1f);
+                print("RELESE");
+            }
+        }
+        void LeftTriggerInput(InputAction.CallbackContext ctx)
+        {
+            print(ctx.ReadValue<float>() + " Input CTX value");
+            if (ctx.ReadValue<float>() > 0.1f)
+            {
+                RecenterPressed();
+            }
+            else
+                ReleasePressed();
+
         }
         private void OnDrawGizmos()
         {
