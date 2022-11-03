@@ -76,6 +76,7 @@ namespace KinematicCharacterController.Examples{
             TheCharacterController.OnPlayerStateChanged += PlayerStateChange;
         }
         private void OnDisable() {
+            TheCharacterController.OnPlayerStateChanged -= PlayerStateChange;
         }
         void Awake(){
             inputActions = InputManager.inputActions;

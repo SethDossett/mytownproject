@@ -49,18 +49,20 @@ namespace MyTownProject.Interaction
         [SerializeField] bool findByAngle;
         [SerializeField] LayerMask _interactableLayer;
         [SerializeField] int _NPCIndex;
-        public bool _targetLockedOn;
-        bool _isInteracting;
         float currentYOffset;
         [SerializeField] Vector3 pos;
+        public bool _targetLockedOn;
+        bool _isInteracting;
         bool _freeLookCameraOff;
         bool _resettingTarget;
+        bool _nextTargetWindowOpen;
+        bool _foundNextTarget;
+        bool _preventNewLockOn;
         string _npcTag = "NPC";
         Vector3 _npcRayPoint = new Vector3(0, 1.2f, 0);
         Vector3 _playerRayPoint = new Vector3(0, 1.5f, 0);
 
         float _timer = 0;
-        bool _startTimer;
         [Range(0, 0.5f)][SerializeField] float _nextTargetWindow = 0.25f;
         [SerializeField] float dis;
         [Range(0f, 3f)][SerializeField] float _extraRayLength = 0.75f;
@@ -109,25 +111,30 @@ namespace MyTownProject.Interaction
         void SetInitialReferences()
         {
             canRaycast = true;
-            _startTimer = false;
             _isInteracting = false;
+            
         }
         void CheckGameState(GameState state)
         {
             if (state == GameState.GAME_PLAYING)
             {
 
-                print("GAMESTATE CHECK WORKS PLAYING");
+                print($"Input Value {_LeftTriggerInput.ReadValue<float>()} ");
+                if (_targetLockedOn)
+                {
+                    //if (_LeftTriggerInput.ReadValue<float>() <= 0.1f)
+                    //ResetTarget();
+                }
                 canRaycast = true;
             }
             else
             {
-                print("GAMESTATE CHECK WORKS PAUSE/CUTSCENE");
                 canRaycast = false;
             }
         }
         void CheckPlayerState(CharacterState state)
         {
+            print("CALLED");
             currentCharacterState = state;
             if (state == CharacterState.Default)
             {
@@ -155,7 +162,7 @@ namespace MyTownProject.Interaction
             }
 
             IconControl();
-            CheckTimer();
+            //CheckTimer();
             CheckForIInteractable();
 
 
@@ -168,44 +175,6 @@ namespace MyTownProject.Interaction
                     _closestTarget = null;
                 }
             }
-
-            if (_LeftTriggerInput.WasPressedThisFrame())
-            {
-                print("Fire");
-                if (_startTimer == true && remainingTargets.Count > 0)
-                {
-                    if (_timer <= _nextTargetWindow)
-                        StartCoroutine(FindNextTarget());
-                    return;
-                }
-                if (_closestTarget != null)
-                {
-                    pos = _closestTarget.position;
-                    currentTarget = _closestTarget;
-                }
-                if (currentTarget)
-                {
-                    CC._target = currentTarget;
-                    // so we dont lose closest target when switching
-                    if (_targetLockedOn) StartCoroutine(FindNextTarget()); else FoundTarget();
-                }
-                if (currentTarget == null && _closestTarget == null)
-                {
-                    CC.TransitionToState(CharacterState.Targeting);
-                    RecenterCamX.ThreeFloats(0, 0.1f, 1);
-                    RecenterCamY.ThreeFloats(0, 0.1f, 1);
-                    _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
-                    uiEventChannel.RaiseBarsOn(0.1f);
-                }
-
-
-            }
-
-            // if (_LeftTriggerInput.WasReleasedThisFrame())
-            // {
-            //     if (currentTarget != null)
-            //         _startTimer = true;
-            // }
 
             if (!_targetLockedOn)
             {
@@ -221,23 +190,8 @@ namespace MyTownProject.Interaction
             }
 
         }
-        void CheckTimer()
-        {
-            if (_startTimer)
-            {
-                _timer += Time.deltaTime;
-            }
-
-
-            if (_timer > _nextTargetWindow)
-            {
-                uiEventChannel.RaiseBarsOff(0.1f);
-                if (CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
-                ResetTarget();
-            }
-        }
-        [SerializeField] float _ObjectViewAngle;
-        [SerializeField] float _playerViewAngle;
+        [SerializeField] float _objectViewAngle;//Debug tools
+        [SerializeField] float _playerViewAngle;//Debug tools
         void SearchForInteractables()
         {
             nearbyTargets = Physics.OverlapSphere(transform.position, noticeZone, _interactableLayer);
@@ -294,7 +248,7 @@ namespace MyTownProject.Interaction
                         continue;
                     }
                     //Is the angle of our player within our interactables max view?
-                    _ObjectViewAngle = GetAngle(transform.position, interactionPoint, t.forward);
+                    _objectViewAngle = GetAngle(transform.position, interactionPoint, t.forward);
                     if (GetAngle(transform.position, interactionPoint, t.forward) > interactable.MaxNoticeAngle)
                     {
                         AvailableTargets.Remove(t);
@@ -498,6 +452,10 @@ namespace MyTownProject.Interaction
             //turning off to see if i can better camera
             //ChangeCamera(true);
 
+
+            //We Are locked on and have not released off target
+            _preventNewLockOn = true;
+
             _targetLockedOn = true;
             _closestTarget.GetComponent<IInteractable>().SetBeenTargeted(true); //Set NPC as been targeted.
 
@@ -520,7 +478,7 @@ namespace MyTownProject.Interaction
         IEnumerator FindNextTarget()// needs to be reworked with Remaining Targets
         {
             print("FindNext");
-            _startTimer = false;
+            _foundNextTarget = true;
             _timer = 0;
             //HideHover(currentTarget);
             currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(false);
@@ -579,13 +537,13 @@ namespace MyTownProject.Interaction
             currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(false);
             _unTargetingEvent.RaiseEvent();
             //if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
-            _startTimer = false;
             _timer = 0;
 
             //turning off to see if i can better camera
             //ChangeCamera();
             currentTarget = null;
             _closestTarget = null;
+            _preventNewLockOn = false;
             _targetLockedOn = false;
             _NPCIndex = 0;
             BeenTargetedReset();
@@ -736,30 +694,28 @@ namespace MyTownProject.Interaction
 
             }
         }
-        void RecenterCamera(float waitTime, float recenteringTime, float disableRecenter)
+        void LeftTriggerInput(InputAction.CallbackContext ctx)
         {
-            RecenterCamX.ThreeFloats(waitTime, recenteringTime, disableRecenter);
-            RecenterCamY.ThreeFloats(waitTime, recenteringTime, disableRecenter);
-        }
-        void RecenterPressed()
-        {
-            if (canRaycast) return;
-            //Need a Recenter CoolDown
-            if (currentCharacterState == CharacterState.Default)
+            print(ctx.ReadValue<float>() + " Input CTX value");
+            if (ctx.ReadValue<float>() > 0.1f)
             {
-                CC.TransitionToState(CharacterState.Targeting);
+                TriggerInputPressed();
             }
-            RecenterCamera(0, 0.1f, 1);
-            _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
-            uiEventChannel.RaiseBarsOn(0.1f);
-            print("RECENTER");
+            else
+                TriggerInputReleased();
+
         }
-        void ReleasePressed()
+        void TriggerInputPressed()
+        {
+            if (canRaycast) LockOnCalled(); else RecenterCamCheck();
+
+        }
+        void TriggerInputReleased()
         {
             if (_targetLockedOn)
             {
                 if (currentTarget != null)
-                    _startTimer = true;
+                    StartCoroutine(NextTargetWindow());
             }
             else
             {
@@ -770,16 +726,80 @@ namespace MyTownProject.Interaction
                 print("RELESE");
             }
         }
-        void LeftTriggerInput(InputAction.CallbackContext ctx)
+        IEnumerator NextTargetWindow()
         {
-            print(ctx.ReadValue<float>() + " Input CTX value");
-            if (ctx.ReadValue<float>() > 0.1f)
-            {
-                RecenterPressed();
-            }
-            else
-                ReleasePressed();
+            _timer = 0;
+            _preventNewLockOn = false;
+            _foundNextTarget = false;
 
+            while (_timer <= _nextTargetWindow)
+            {
+                _nextTargetWindowOpen = true;
+                _timer += Time.deltaTime;
+                yield return null;
+            }
+
+            _nextTargetWindowOpen = false;
+            yield return new WaitForEndOfFrame();
+            //If we didnt find next Target then ResetTarget
+            if (!_foundNextTarget)
+            {
+                uiEventChannel.RaiseBarsOff(0.1f);
+                if (CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
+                ResetTarget();
+            }
+            yield break;
+        }
+        void LockOnCalled()
+        {
+            print("Fire");
+            if (_preventNewLockOn) return;
+
+            //See if Target has been released, and are still within NextTargetWindow
+            if (_nextTargetWindowOpen && remainingTargets.Count > 0)
+            {
+                StartCoroutine(FindNextTarget());
+                return;
+            }
+            //If not in NextTargetWindow, then check if we have a target to lock on to
+            if (_closestTarget != null)
+            {
+                pos = _closestTarget.position;
+                currentTarget = _closestTarget;
+            }
+            if (currentTarget)
+            {
+                CC._target = currentTarget;
+                //If Target is already locked on, Look for new target//
+                //If not, then we Found Target to Lock on to//
+                if (_targetLockedOn) StartCoroutine(FindNextTarget()); else FoundTarget();
+            }
+
+            //If we press lock on, and there is no target in sight,
+            // we just call to Recenter Camera.
+            if (currentTarget == null && _closestTarget == null)
+            {
+                RecenterCamCheck();
+            }
+        }
+        void RecenterCamCheck()
+        {
+            //Need a Recenter CoolDown
+            // We Also might want this handled in another Script,
+            // and to be able to recenter in other states like Crawling
+            if (currentCharacterState == CharacterState.Default)
+            {
+                CC.TransitionToState(CharacterState.Targeting);
+            }
+            RecenterCamera(0, 0.1f, 1);
+            _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
+            uiEventChannel.RaiseBarsOn(0.1f);
+            print("RECENTER");
+        }
+        void RecenterCamera(float waitTime, float recenteringTime, float disableRecenter)
+        {
+            RecenterCamX.ThreeFloats(waitTime, recenteringTime, disableRecenter);
+            RecenterCamY.ThreeFloats(waitTime, recenteringTime, disableRecenter);
         }
         private void OnDrawGizmos()
         {
