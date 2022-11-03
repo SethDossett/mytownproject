@@ -241,12 +241,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c162dc854d2f24fa639ba0623de5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 32
+  size: 14.28
   spread: 0
   useGlobalAngle: 0
   offsetAngle: 90
   offsetDistance: 12
-  offset: {x: 0.00000071525574, y: -11.999999}
+  offset: {x: 0.00000071525585, y: -12}
   color: {r: 0, g: 0, b: 0, a: 0.6}
   inset: 0
   blendMode: 0
@@ -702,12 +702,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c162dc854d2f24fa639ba0623de5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 32
+  size: 14.28
   spread: 0
   useGlobalAngle: 0
   offsetAngle: 90
   offsetDistance: 12
-  offset: {x: 0.00000071525574, y: -11.999999}
+  offset: {x: 0.00000071525585, y: -12}
   color: {r: 0, g: 0, b: 0, a: 0.6}
   inset: 0
   blendMode: 0
@@ -1053,7 +1053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c162dc854d2f24fa639ba0623de5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 32
+  size: 14.28
   spread: 0
   useGlobalAngle: 0
   offsetAngle: 90
@@ -1380,12 +1380,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c162dc854d2f24fa639ba0623de5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 32
+  size: 14.28
   spread: 0
   useGlobalAngle: 0
   offsetAngle: 90
   offsetDistance: 12
-  offset: {x: 0.00000071525574, y: -11.999999}
+  offset: {x: 0.00000071525585, y: -12}
   color: {r: 0, g: 0, b: 0, a: 0.6}
   inset: 0
   blendMode: 0
