@@ -640,12 +640,12 @@ public partial class @NewControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""LeftTrigger"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""22e5fb26-8b3d-4339-97bb-32d40451bd20"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""RightTrigger"",
