@@ -29,7 +29,11 @@ namespace MyTownProject.UI
         {
             MainMenuManager.OnMenuStateChanged -= StateChanged;
         }
-
+        private void Start()
+        {
+            GameObject buttonSelection = _currentMenuPage.GetComponent<GetButtonSelection>().Button;
+            StartCoroutine(SetFirstSelection(buttonSelection));
+        }
         void StateChanged(MainMenuState newState, MainMenuState prevState)
         {
             int prevStateIndex = (int)prevState;
@@ -38,12 +42,11 @@ namespace MyTownProject.UI
             _prevMenuPage = pages[prevStateIndex];
             _currentMenuPage = pages[_currentMenuIndex];
 
-            GameObject buttonSelection = _currentMenuPage.GetComponent<GetButtonSelection>().Button;
-            StartCoroutine(SetFirstSelection(buttonSelection));
         }
 
         public void MovePage(int direction)
         {
+            EventSystem.current.currentInputModule.enabled = false;
             _currentMenuPage.SetActive(true);
             _currentMenuPage.transform.localPosition = new Vector2(1200f * direction, 0f);
             StartCoroutine(TweenPage(-direction, 0.75f));
@@ -62,16 +65,20 @@ namespace MyTownProject.UI
 
         void DisableInputs()
         {
-            if(!InputDisabled){
+            if (!InputDisabled)
+            {
                 InputDisabled = true;
                 _triggerButtonL.DOFade(0.3f, 0.3f);
                 _triggerButtonR.DOFade(0.3f, 0.3f);
             }
-            else{
+            else
+            {
                 InputDisabled = false;
                 _triggerButtonL.DOFade(1f, 0.3f);
                 _triggerButtonR.DOFade(1f, 0.3f);
-
+                GameObject buttonSelection = _currentMenuPage.GetComponent<GetButtonSelection>().Button;
+                StartCoroutine(SetFirstSelection(buttonSelection));
+                EventSystem.current.currentInputModule.enabled = true;
             }
         }
         IEnumerator SetFirstSelection(GameObject selection)

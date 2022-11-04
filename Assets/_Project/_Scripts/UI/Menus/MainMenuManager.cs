@@ -25,6 +25,8 @@ namespace MyTownProject.UI
             InputManager.ToggleActionMap(_inputActions.UI);
             _inputActions.UI.LeftTrigger.performed += LeftTriggerInput;
             _inputActions.UI.RightTrigger.performed += RightTriggerInput;
+
+            TransitionToState(MainMenuState.Front);
         }
         private void OnDestroy()
         {
