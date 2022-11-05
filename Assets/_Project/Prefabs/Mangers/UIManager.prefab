@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8719128350330041270}
   - component: {fileID: 8719128350330041268}
-  - component: {fileID: 8719128350330041259}
   - component: {fileID: 8719128350330041258}
   - component: {fileID: 8719128350330041257}
   m_Layer: 0
@@ -46,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc940b8ef813bb54db9804cfd1c8dd7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uIEventChannel: {fileID: 0}
-  mainEventChannel: {fileID: 0}
+  uIEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  mainEventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _gameUI: {fileID: 0}
   _clock: {fileID: 0}
@@ -55,22 +54,23 @@ MonoBehaviour:
   _dialogue: {fileID: 0}
   _interactionText: {fileID: 0}
   _cycleLength: 0.3
---- !u!114 &8719128350330041259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8719128350330041271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae40dc3a7ec35ce4a9e2f575f130cffd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MainEventChannelSO: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
-  StateChanger: {fileID: 0}
-  pauseMenu: {fileID: 0}
-  firstButton: {fileID: 0}
+  _currentPrompt:
+    name: 0
+    priority: 0
+    text: 
+  prompts:
+  - name: 0
+    priority: 1
+    text: 
+  - name: 1
+    priority: 0
+    text: Open
+  - name: 2
+    priority: 0
+    text: Talk
+  - name: 3
+    priority: 0
+    text: Crouch
 --- !u!114 &8719128350330041258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,17 +89,82 @@ MonoBehaviour:
   Season: {fileID: 0}
   Week: {fileID: 0}
   weatherSprite: {fileID: 0}
-  weatherSprites: []
-  sunlight: {fileID: 0}
-  nightIntensity: 0
-  dayIntensity: 0
-  dayColor: {r: 0, g: 0, b: 0, a: 0}
-  rainyDayColor: {r: 0, g: 0, b: 0, a: 0}
-  nightColor: {r: 0, g: 0, b: 0, a: 0}
-  fireflies: {fileID: 0}
+  weatherSprites:
+  - {fileID: 21300000, guid: a1e09fb444a171640ab1707480bc6a0c, type: 3}
+  - {fileID: 21300000, guid: e04edccba208deb46bda3229ad0d5d1c, type: 3}
+  nightIntensity: 0.5
+  dayIntensity: 1.35
+  dayColor: {r: 1, g: 0.9921569, b: 0.9294118, a: 0}
+  rainyDayColor: {r: 0.70980394, g: 0.7490196, b: 0.83921576, a: 0}
+  nightColor: {r: 0.5019608, g: 0.41176474, b: 0.9450981, a: 0}
+  fireflies: {fileID: 1080582766124747735, guid: 36fe45f01e6a0e24287be89e3333b668,
+    type: 3}
   dayNightCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.15806825
+      outSlope: -0.15806825
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.11259508
+      value: 0.9822023
+      inSlope: -0.59589785
+      outSlope: -0.59589785
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.30238944
+    - serializedVersion: 3
+      time: 0.40929002
+      value: 0.0040582716
+      inSlope: -0.053380355
+      outSlope: -0.053380355
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.4994018
+      value: -0.00040999427
+      inSlope: 0.00068093906
+      outSlope: 0.00068093906
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.31054893
+    - serializedVersion: 3
+      time: 0.6010142
+      value: 0.0060892515
+      inSlope: 0.08050498
+      outSlope: 0.08050498
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.68195087
+    - serializedVersion: 3
+      time: 0.86790633
+      value: 0.9728611
+      inSlope: 0.6296746
+      outSlope: 0.6296746
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.6584704
+      outWeight: 0.16526432
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.20545185
+      outSlope: 0.20545185
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

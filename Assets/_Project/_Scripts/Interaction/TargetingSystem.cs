@@ -458,7 +458,7 @@ namespace MyTownProject.Interaction
 
             _targetLockedOn = true;
             _closestTarget.GetComponent<IInteractable>().SetBeenTargeted(true); //Set NPC as been targeted.
-
+            uiEventChannel.OnShowExplaination(new Vector2(250, 50f), 3f, $"Showing The GameObject {currentTarget.gameObject.name}");
             for (int i = 0; i < nearbyTargets.Length; i++)
             {
                 Transform t = nearbyTargets[i].transform;

@@ -552,6 +552,66 @@ PrefabInstance:
       propertyPath: m_Name
       value: Buttons
       objectReference: {fileID: 0}
+    - target: {fileID: 4060565154993847695, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5787011495724443780}
+    - target: {fileID: 4060565154993847695, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060565154993847695, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MyTownProject.UI.PauseMenu, Project
+      objectReference: {fileID: 0}
+    - target: {fileID: 4717735382209733641, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5787011495724443780}
+    - target: {fileID: 4717735382209733641, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 4717735382209733641, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MyTownProject.UI.PauseMenu, Project
+      objectReference: {fileID: 0}
+    - target: {fileID: 8981424267471981460, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5787011495724443780}
+    - target: {fileID: 8981424267471981460, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 8981424267471981460, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MyTownProject.UI.PauseMenu, Project
+      objectReference: {fileID: 0}
+    - target: {fileID: 9153474080556074678, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5787011495724443780}
+    - target: {fileID: 9153474080556074678, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 9153474080556074678, guid: b132a46e38dd24317b41909ef2d36827,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MyTownProject.UI.PauseMenu, Project
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b132a46e38dd24317b41909ef2d36827, type: 3}
 --- !u!224 &7566553743056129075 stripped
@@ -566,3 +626,22 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7812540727958545389}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &174265707
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399515899168810333}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e3c7a43babb8a524f96ecf4c363d8147, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

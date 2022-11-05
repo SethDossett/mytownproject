@@ -3,8 +3,13 @@ using System.Collections;
 
 namespace MyTownProject.Core
 {
+    public enum ControllerType
+    {
+        KeyBoard, GamePad
+    }
     public class GameManager : MonoBehaviour
     {
+        [field:SerializeField] public ControllerType CurrentControllerType {get; set;}
         [SerializeField] bool setFrameRate;
         [SerializeField] int targetFrameRate;
 
