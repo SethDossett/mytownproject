@@ -31,8 +31,12 @@ namespace MyTownProject.UI
         }
         private void Start()
         {
-            GameObject buttonSelection = _currentMenuPage.GetComponent<GetButtonSelection>().Button;
-            StartCoroutine(SetFirstSelection(buttonSelection));
+            GetButtonSelection selection = _currentMenuPage.GetComponent<GetButtonSelection>();
+            if (!selection.IgnoreGetter)
+            {
+                GameObject buttonSelection = selection.Button;
+                StartCoroutine(SetFirstSelection(buttonSelection));
+            }
         }
         void StateChanged(MainMenuState newState, MainMenuState prevState)
         {
@@ -76,8 +80,12 @@ namespace MyTownProject.UI
                 InputDisabled = false;
                 _triggerButtonL.DOFade(1f, 0.3f);
                 _triggerButtonR.DOFade(1f, 0.3f);
-                GameObject buttonSelection = _currentMenuPage.GetComponent<GetButtonSelection>().Button;
-                StartCoroutine(SetFirstSelection(buttonSelection));
+                GetButtonSelection selection = _currentMenuPage.GetComponent<GetButtonSelection>();
+                if (!selection.IgnoreGetter)
+                {
+                    GameObject buttonSelection = selection.Button;
+                    StartCoroutine(SetFirstSelection(buttonSelection));
+                }
                 EventSystem.current.currentInputModule.enabled = true;
             }
         }
