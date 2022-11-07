@@ -8,18 +8,19 @@ using MyTownProject.Events;
 
 namespace MyTownProject.UI
 {
-    public class InsetHoverShadow : MonoBehaviour
+    public class ChangeControllerType : MonoBehaviour
     {
         [Header("Inset")]
         TrueShadow shadow;
         [SerializeField] ControllerType _controllerType;
         [SerializeField] GameObject _keyboardImage;
         [SerializeField] GameObject _gamePadImage;
-        [SerializeField] GameSettingsSO settingsSO;
-        [SerializeField] GeneralEventSO saveControllerType;
+        [SerializeField] GameSettingsSO settings;
+        [SerializeField] UIEventChannelSO changeController;
+
         private void OnEnable()
         {
-            if (_controllerType == settingsSO.controllerType){
+            if (_controllerType == settings.controllerType){
                 StartCoroutine(SetFirstSelection(gameObject));
             }
         }
@@ -32,8 +33,7 @@ namespace MyTownProject.UI
             if (value == 1)
             {
                 SetImage();
-                settingsSO.controllerType = _controllerType;
-                saveControllerType.RaiseEvent();
+                changeController.ChangeController(_controllerType);
             }
         }
         void SetAllOpacity(int value)
@@ -41,11 +41,11 @@ namespace MyTownProject.UI
 
             if (value == 1)
             {
-                shadow.Inset = false;
+                shadow.Inset = true;
             }
             else
             {
-                shadow.Inset = true;
+                shadow.Inset = false;
             }
 
         }

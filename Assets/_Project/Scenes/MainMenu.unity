@@ -4231,8 +4231,8 @@ MonoBehaviour:
   _controllerType: 0
   _keyboardImage: {fileID: 727075319}
   _gamePadImage: {fileID: 526852764}
-  settingsSO: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
-  saveControllerType: {fileID: 11400000, guid: c424a86c68b7d46d69f0d32466a51f7a, type: 2}
+  settings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
+  changeController: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
 --- !u!222 &7907355408910682757
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4435,8 +4435,8 @@ MonoBehaviour:
   _controllerType: 1
   _keyboardImage: {fileID: 727075319}
   _gamePadImage: {fileID: 526852764}
-  settingsSO: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
-  saveControllerType: {fileID: 11400000, guid: c424a86c68b7d46d69f0d32466a51f7a, type: 2}
+  settings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
+  changeController: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
 --- !u!1 &9153474080049813711 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7907355408697508970, guid: 37da48698319445909f62e6c27ef68b2,

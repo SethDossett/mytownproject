@@ -1,7 +1,8 @@
 using UnityEngine;
-using System.Collections;
 using System;
 using MyTownProject.Core;
+using MyTownProject.Events;
+using MyTownProject.SO;
 using UnityEngine.InputSystem;
 
 namespace MyTownProject.UI
@@ -18,6 +19,9 @@ namespace MyTownProject.UI
         public MainMenuState CurrentMenuState { get; private set; }
         public static event Action<MainMenuState, MainMenuState> OnMenuStateChanged;
         [SerializeField] MenuController controller;
+        [SerializeField] GameSettingsSO settings;
+        [SerializeField] UIEventChannelSO UIEvents;
+        [SerializeField] GeneralEventSO saveControllerType;
 
         private void Awake()
         {
@@ -25,6 +29,7 @@ namespace MyTownProject.UI
             InputManager.ToggleActionMap(_inputActions.UI);
             _inputActions.UI.LeftTrigger.performed += LeftTriggerInput;
             _inputActions.UI.RightTrigger.performed += RightTriggerInput;
+            UIEvents.OnChangeControllerType += ChangeController;
 
             TransitionToState(MainMenuState.Front);
         }
@@ -32,6 +37,7 @@ namespace MyTownProject.UI
         {
             _inputActions.UI.LeftTrigger.performed -= LeftTriggerInput;
             _inputActions.UI.RightTrigger.performed -= RightTriggerInput;
+            UIEvents.OnChangeControllerType -= ChangeController;
         }
         public void EnterGame()
         {
@@ -41,10 +47,10 @@ namespace MyTownProject.UI
         }
         void LeftTriggerInput(InputAction.CallbackContext ctx)
         {
-            if(controller.InputDisabled) return;
+            if (controller.InputDisabled) return;
             print("LeftTriggerPerformed");
             int index = (int)CurrentMenuState - 1;
-            if(index < 0) index = 3;
+            if (index < 0) index = 3;
 
             MainMenuState nextState = (MainMenuState)index;
             TransitionToState(nextState);
@@ -52,10 +58,10 @@ namespace MyTownProject.UI
         }
         void RightTriggerInput(InputAction.CallbackContext ctx)
         {
-            if(controller.InputDisabled) return;
+            if (controller.InputDisabled) return;
             print("RightTriggerPerformed");
             int index = (int)CurrentMenuState + 1;
-            if(index > 3) index = 0;
+            if (index > 3) index = 0;
 
             MainMenuState nextState = (MainMenuState)index;
             TransitionToState(nextState);
@@ -72,11 +78,15 @@ namespace MyTownProject.UI
             OnMenuStateChanged?.Invoke(newState, tmpInitialState);
         }
 
-        private void OnStateEnter(MainMenuState toState, MainMenuState fromState)
+        void OnStateEnter(MainMenuState toState, MainMenuState fromState)
         {
 
         }
 
-        
+        void ChangeController(ControllerType controllerType)
+        {
+            settings.controllerType = controllerType;
+            saveControllerType.RaiseEvent();
+        }
     }
 }
