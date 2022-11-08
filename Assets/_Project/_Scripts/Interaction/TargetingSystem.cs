@@ -89,6 +89,7 @@ namespace MyTownProject.Interaction
             _interact = _inputActions.GamePlay.Interact;
             _cameraInput = _inputActions.GamePlay.Camera;
             _LeftTriggerInput = _inputActions.GamePlay.LeftTrigger;
+            _LeftTriggerInput.started += CheckInputs;
             _LeftTriggerInput.performed += LeftTriggerInput;
             //_LeftTriggerInput.canceled += LeftTriggerInput;
         }
@@ -96,6 +97,7 @@ namespace MyTownProject.Interaction
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             TheCharacterController.OnPlayerStateChanged -= CheckPlayerState;
+            _LeftTriggerInput.started -= CheckInputs;
             _LeftTriggerInput.performed -= LeftTriggerInput;
             //_LeftTriggerInput.canceled -= LeftTriggerInput;
         }
@@ -104,22 +106,18 @@ namespace MyTownProject.Interaction
             CC = GetComponent<TheCharacterController>();
             cam = Camera.main.transform;
         }
-        private void Start()
-        {
-
-        }
         void SetInitialReferences()
         {
             canRaycast = true;
             _isInteracting = false;
-            
+            //CheckInputs();
+
         }
         void CheckGameState(GameState state)
         {
             if (state == GameState.GAME_PLAYING)
             {
 
-                print($"Input Value {_LeftTriggerInput.ReadValue<float>()} ");
                 if (_targetLockedOn)
                 {
                     //if (_LeftTriggerInput.ReadValue<float>() <= 0.1f)
@@ -145,6 +143,17 @@ namespace MyTownProject.Interaction
                 canRaycast = true;
             else
                 canRaycast = false;
+        }
+
+        void CheckInputs(InputAction.CallbackContext ctx)
+        {
+                print("Started");
+                print(ctx.ReadValue<float>());
+                if (_targetLockedOn)
+                {
+                    if (_LeftTriggerInput.ReadValue<float>() > 0f)
+                        print("Works");
+                }
         }
         public void TransitionCharacterState(CharacterState newState) => CC.TransitionToState(newState);
         private void Update()

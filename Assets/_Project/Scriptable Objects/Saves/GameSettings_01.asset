@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4ff8e188beb7d84082b86d7b9eeb05c, type: 3}
   m_Name: GameSettings_01
   m_EditorClassIdentifier: 
-  controllerType: 1
+  ControllerType: 0
+  CurrentScene: {fileID: 11400000, guid: 32b2cf3f9bddd4efbb991a67c2dda2da, type: 2}

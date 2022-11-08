@@ -21,6 +21,7 @@ namespace MyTownProject.Cameras
         [SerializeField] DialogueEventsSO dialogueEvents;
         [SerializeField] TransformEventSO _targetingEvent;
         [SerializeField] GeneralEventSO _unTargetingEvent;
+        [SerializeField] GeneralEventSO _startOfGame;
         [SerializeField] ActionSO OpenDoor;
 
 
@@ -43,6 +44,7 @@ namespace MyTownProject.Cameras
         private void OnEnable()
         {
             OpenDoor.OnOpenDoor += DoorView;
+            _startOfGame.OnRaiseEvent += InitialGameStartingCamera;
             dialogueEvents.onEnter += EnterDialogue;
             dialogueEvents.onExit += ExitDialogue;
             GameStateManager.OnGameStateChanged += CheckGameState;
@@ -52,6 +54,7 @@ namespace MyTownProject.Cameras
         private void OnDisable()
         {
             OpenDoor.OnOpenDoor -= DoorView;
+            _startOfGame.OnRaiseEvent -= InitialGameStartingCamera;
             dialogueEvents.onEnter -= EnterDialogue;
             dialogueEvents.onExit -= ExitDialogue;
             GameStateManager.OnGameStateChanged -= CheckGameState;
@@ -61,6 +64,10 @@ namespace MyTownProject.Cameras
         void Start()
         {
             _animator = GetComponent<Animator>();
+            SwitchToFreeLook();
+        }
+        void InitialGameStartingCamera()
+        {
             SwitchToFreeLook();
         }
 

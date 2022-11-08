@@ -17,7 +17,7 @@ namespace MyTownProject.SaveLoadSystem
 
         public override string SaveState()
         {
-            saveState.controllerType = settings.controllerType;
+            saveState.controllerType = settings.ControllerType;
 
 
             return JsonUtility.ToJson(saveState);
@@ -27,12 +27,12 @@ namespace MyTownProject.SaveLoadSystem
         {
             saveState = JsonUtility.FromJson<GameSettings>(loadedJSON);
 
-            settings.controllerType = saveState.controllerType;
+            settings.ControllerType = saveState.controllerType;
         }
 
         public override bool ShouldSave()
         {
-            if(saveState.controllerType == settings.controllerType)
+            if(saveState.controllerType == settings.ControllerType)
                 return false;
 
 

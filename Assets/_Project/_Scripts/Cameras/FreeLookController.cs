@@ -11,6 +11,7 @@ namespace MyTownProject.Cameras{
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
         [SerializeField] GeneralEventSO DisableRecenterCam;
+        [SerializeField] GeneralEventSO StartOfGame;
         [SerializeField] DialogueEventsSO DialogueEvents;
         [SerializeField] TransformEventSO TargetingEvent;
         [SerializeField] GeneralEventSO UntargetEvent;
@@ -29,6 +30,7 @@ namespace MyTownProject.Cameras{
         {
             cam = GetComponent<CinemachineFreeLook>();
             PlayerReference.OnRaiseEvent += GetPlayerReference;
+            StartOfGame.OnRaiseEvent += InitialGameStartingCamera;
             DialogueEvents.onEnter += TalkingToNPC;
             DialogueEvents.onExit += BackToPlayerView;
             TargetingEvent.OnRaiseEvent += Target;
@@ -40,6 +42,7 @@ namespace MyTownProject.Cameras{
         void OnDisable()
         {
             PlayerReference.OnRaiseEvent -= GetPlayerReference;
+            StartOfGame.OnRaiseEvent += InitialGameStartingCamera;
             DialogueEvents.onEnter -= TalkingToNPC;
             DialogueEvents.onExit -= BackToPlayerView;
             TargetingEvent.OnRaiseEvent += Target;
@@ -51,6 +54,11 @@ namespace MyTownProject.Cameras{
         void GetPlayerReference(Transform player)
         {
             CC = player.GetComponent<TheCharacterController>();
+        }
+        void InitialGameStartingCamera()
+        {
+            RX(0,0.1f,1);
+            RY(0,0.1f,1);
         }
         void TalkingToNPC(GameObject go, TextAsset text)
         {

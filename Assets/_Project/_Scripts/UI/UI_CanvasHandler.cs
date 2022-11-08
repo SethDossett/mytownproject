@@ -19,6 +19,7 @@ namespace MyTownProject.UI
         [Header("UI Objects")]
         [SerializeField] private GameObject _gameUI;
         [SerializeField] private GameObject _clock;
+        [SerializeField] private GameObject _fullClock;
         [SerializeField] private GameObject _buttons;
         [SerializeField] private GameObject _dialogue;
         [SerializeField] private GameObject _explaination;
@@ -83,11 +84,13 @@ namespace MyTownProject.UI
         public void UI_HideAll()
         {
             _buttons.transform.DOLocalMoveY(275f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
+            _fullClock.transform.DOLocalMoveY(455f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
             _clock.transform.DOLocalMoveY(-470f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
         }
         public void UI_UnhideAll()
         {
             _buttons.transform.DOLocalMoveY(0f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
+            _fullClock.transform.DOLocalMoveY(180f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
             _clock.transform.DOLocalMoveY(-195f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
         }
         public void UI_FadeAll()

@@ -868,7 +868,6 @@ GameObject:
   - component: {fileID: 7907355408697508972}
   - component: {fileID: 4861510360020718362}
   - component: {fileID: 7706580124593710852}
-  - component: {fileID: 1349740635373924759}
   - component: {fileID: 1349740635373924754}
   m_Layer: 0
   m_Name: PlayButton
@@ -978,7 +977,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7907355408697508973}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &4861510360020718362
 Animator:
   serializedVersion: 3
@@ -1018,29 +1029,6 @@ MonoBehaviour:
       Data3: 834543515
       Data4: -1656785144
     Path: event:/UI/Navagate
---- !u!114 &1349740635373924759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7907355408697508970}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b6bd66378f54ffc974312b194733dd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  smoothTime: 0.05
-  autoDeselect: 1
-  selectedSize: 32
-  hoverSize: 52
-  clickedSize: 40
-  selectedDistance: 12
-  hoverDistance: 18
-  clickedDistance: 15
-  selectedColor: {r: 0, g: 0, b: 0, a: 0.6}
-  hoverColor: {r: 0.075, g: 0.075, b: 0.075, a: 0.58500004}
-  clickedColor: {r: 0.125, g: 0.125, b: 0.125, a: 0.57500005}
 --- !u!114 &1349740635373924754
 MonoBehaviour:
   m_ObjectHideFlags: 0

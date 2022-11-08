@@ -1,19 +1,18 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using UnityEngine.Events;
 using MyTownProject.Events;
-using MyTownProject.UI;
 using MyTownProject.SO;
 using System.Collections;
-using KinematicCharacterController.Examples;
 
 namespace MyTownProject.Core
 {
-    public enum CurrentScene{
-        CityScene, Hospital, TerrainConept, TestScene
-    }
-    public class SceneController: MonoBehaviour
+    public enum CurrentScene
     {
+        MainMenu, CityScene, Hospital, TerrainConept, TestScene
+    }
+    public class SceneController : MonoBehaviour
+    {
+        public static SceneController instance;
         public CurrentScene GamesCurrentScene;
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] UIEventChannelSO uIEventChannel;
@@ -22,32 +21,43 @@ namespace MyTownProject.Core
 
 
         private void OnEnable()
-        {   SceneManager.activeSceneChanged += SceneChanged;
+        {
+            SceneManager.activeSceneChanged += SceneChanged;
             mainEventChannel.OnChangeScene += SwitchScene;
         }
         private void OnDisable()
-        {   
+        {
             SceneManager.activeSceneChanged -= SceneChanged;
             mainEventChannel.OnChangeScene -= SwitchScene;
         }
-
-        private void Start()
+        private void Awake()
         {
-            
+            if(instance != null && instance != this)
+                Destroy(gameObject);
+            else
+                instance = this;
+
+            DontDestroyOnLoad(gameObject);
         }
         void SwitchScene(SceneSO sceneSO)
         {
             teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
 
             var progress = SceneManager.LoadSceneAsync(sceneSO.sceneIndex, LoadSceneMode.Single);
-            
+
             progress.completed += op => StartCoroutine(EnterScene());
 
         }
 
         IEnumerator EnterScene()
         {
+            //Reset Scene Event, to recenter camera, slide in UI, etc.
+            print("Completed Eneter Scene");
+            stateChangerEvent.RaiseEventGame(GameState.CUTSCENE);
+            Time.timeScale = 1;
+            // If CutScene to be played Play now.
             yield return new WaitForSecondsRealtime(1f);
+            Time.timeScale = 0;
             uIEventChannel.RaiseFadeIn(Color.black, 1f);
             yield return new WaitForSecondsRealtime(0.25f);
             uIEventChannel.RaiseBarsOff(2f);
@@ -55,8 +65,9 @@ namespace MyTownProject.Core
             stateChangerEvent.RaiseEventGame(GameState.GAME_PLAYING);
             yield break;
         }
-        
-        void SceneChanged(Scene previous, Scene current){
+
+        void SceneChanged(Scene previous, Scene current)
+        {
             GamesCurrentScene = (CurrentScene)current.buildIndex;
         }
     }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections;
 using MyTownProject.Core;
 using MyTownProject.Events;
 using MyTownProject.SO;
@@ -22,6 +23,8 @@ namespace MyTownProject.UI
         [SerializeField] GameSettingsSO settings;
         [SerializeField] UIEventChannelSO UIEvents;
         [SerializeField] GeneralEventSO saveControllerType;
+        [SerializeField] MainEventChannelSO sceneController;
+        [SerializeField] UIEventChannelSO uIEventChannel;
 
         private void Awake()
         {
@@ -42,8 +45,16 @@ namespace MyTownProject.UI
         public void EnterGame()
         {
             lastCurrentScene = 0;
+            StartCoroutine(ChangeScenes());
+        }
 
-            //SceneController.SwitchScene(lastCurrentScene);
+        IEnumerator ChangeScenes()
+        {
+            uIEventChannel.RaiseFadeOut(Color.black, 1f);
+            yield return new WaitForSecondsRealtime(1f);
+
+            sceneController.RaiseEventChangeScene(settings.CurrentScene);
+            yield break;
         }
         void LeftTriggerInput(InputAction.CallbackContext ctx)
         {
@@ -85,7 +96,7 @@ namespace MyTownProject.UI
 
         void ChangeController(ControllerType controllerType)
         {
-            settings.controllerType = controllerType;
+            settings.ControllerType = controllerType;
             saveControllerType.RaiseEvent();
         }
     }

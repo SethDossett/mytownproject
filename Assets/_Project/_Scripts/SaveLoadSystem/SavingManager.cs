@@ -21,7 +21,7 @@ namespace MyTownProject.SaveLoadSystem
         private void OnDisable()
         {
             saveGameEvent.OnRaiseEvent -= StartSave;
-            loadGameEvent.OnRaiseEvent += Load;
+            loadGameEvent.OnRaiseEvent -= Load;
 
         }
         private void Awake()

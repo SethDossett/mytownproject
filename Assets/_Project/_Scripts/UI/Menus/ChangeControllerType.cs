@@ -20,7 +20,7 @@ namespace MyTownProject.UI
 
         private void OnEnable()
         {
-            if (_controllerType == settings.controllerType){
+            if (_controllerType == settings.ControllerType){
                 StartCoroutine(SetFirstSelection(gameObject));
             }
         }

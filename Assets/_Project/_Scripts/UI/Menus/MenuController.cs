@@ -16,6 +16,7 @@ namespace MyTownProject.UI
         public bool InputDisabled;
         [SerializeField] List<GameObject> pages = new List<GameObject>();
         [SerializeField] MainMenuManager manager;
+        [SerializeField] PageMenuBase menuBase;
 
         [SerializeField] Image _triggerButtonL;
         [SerializeField] Image _triggerButtonR;

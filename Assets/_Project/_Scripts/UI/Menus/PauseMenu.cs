@@ -2,8 +2,9 @@ using UnityEngine;
 using System.Collections;
 using MyTownProject.Events;
 using MyTownProject.Core;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using System;
 
 namespace MyTownProject.UI
 {
@@ -14,6 +15,9 @@ namespace MyTownProject.UI
         [SerializeField] GameObject pauseMenu;
         [SerializeField] GameObject firstButton;
         GameState currentGameState;
+        [SerializeField] MenuController controller;
+        public MainMenuState CurrentMenuState { get; private set; }
+        public static event Action<MainMenuState, MainMenuState> OnPauseMenuStateChanged;
 
         private NewControls _inputActions;
         private InputAction exit;
@@ -83,24 +87,49 @@ namespace MyTownProject.UI
         }
         private void LeftTriggerReleased(InputAction.CallbackContext obj)
         {
-            print("Left Trigger Release");
+            if (controller.InputDisabled) return;
+            print("LeftTriggerPerformed");
+            int index = (int)CurrentMenuState - 1;
+            if (index < 0) index = 3;
+
+            MainMenuState nextState = (MainMenuState)index;
+            TransitionToState(nextState);
+            controller.MovePage(-1);
         }
         private void RightTriggerReleased(InputAction.CallbackContext obj)
         {
-            print("Right Trigger Released");
+            if (controller.InputDisabled) return;
+            print("RightTriggerPerformed");
+            int index = (int)CurrentMenuState + 1;
+            if (index > 3) index = 0;
+
+            MainMenuState nextState = (MainMenuState)index;
+            TransitionToState(nextState);
+            controller.MovePage(1);
+        }
+        public void TransitionToState(MainMenuState newState)
+        {
+            MainMenuState tmpInitialState = CurrentMenuState;
+            CurrentMenuState = newState;
+            OnStateEnter(newState, tmpInitialState);
+            print("Transition to " + newState);
+
+            OnPauseMenuStateChanged?.Invoke(newState, tmpInitialState);
+        }
+        void OnStateEnter(MainMenuState toState, MainMenuState fromState)
+        {
+
         }
         private void Pause()
         {
             _paused = true;
             StartCoroutine(SetFirstSelection());
-            StartCoroutine(CheckInputs());
             if (!pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(true);
         }
         public void Resume()
         {
             _paused = false;
-            StopCoroutine(CheckInputs());
             MainEventChannelSO.RaiseEventUnPaused();
             if (pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(false);

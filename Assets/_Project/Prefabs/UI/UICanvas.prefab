@@ -3001,10 +3001,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 13.55
-  m_fontSizeBase: 36
+  m_fontSize: 13.5
+  m_fontSizeBase: 13.5
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 5.5
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -3054,6 +3054,7 @@ GameObject:
   - component: {fileID: 685996743844208912}
   - component: {fileID: 4454683563412925550}
   - component: {fileID: 8640453753358897444}
+  - component: {fileID: 1766737985}
   m_Layer: 5
   m_Name: ExplanationBubble
   m_TagString: Untagged
@@ -3119,6 +3120,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
+--- !u!225 &1766737985
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8576117309370497926}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &4390761240198774913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3173,21 +3186,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5921723071963932910, guid: 2c7826f9464f4b740b72c530af750d9b,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.13
-      objectReference: {fileID: 0}
-    - target: {fileID: 5921723071963932910, guid: 2c7826f9464f4b740b72c530af750d9b,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.13
-      objectReference: {fileID: 0}
-    - target: {fileID: 5921723071963932910, guid: 2c7826f9464f4b740b72c530af750d9b,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.13
-      objectReference: {fileID: 0}
-    - target: {fileID: 5921723071963932910, guid: 2c7826f9464f4b740b72c530af750d9b,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -3224,7 +3222,7 @@ PrefabInstance:
     - target: {fileID: 5921723071963932910, guid: 2c7826f9464f4b740b72c530af750d9b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -109.64
+      value: -110
       objectReference: {fileID: 0}
     - target: {fileID: 5921723071963932910, guid: 2c7826f9464f4b740b72c530af750d9b,
         type: 3}
@@ -3250,11 +3248,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FullClock
-      objectReference: {fileID: 0}
-    - target: {fileID: 8282627248316015534, guid: 2c7826f9464f4b740b72c530af750d9b,
-        type: 3}
-      propertyPath: sunlight
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c7826f9464f4b740b72c530af750d9b, type: 3}

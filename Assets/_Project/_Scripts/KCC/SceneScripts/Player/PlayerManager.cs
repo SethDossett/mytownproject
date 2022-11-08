@@ -76,7 +76,9 @@ namespace KinematicCharacterController.Examples
             {
                 if (cc)
                 {
-                    cc.Motor.SetPositionAndRotation(location, rotation);
+                    //cc.Motor.SetPositionAndRotation(location, rotation);
+                    cc.Motor.SetPosition(location);
+                    cc.Motor.SetRotation(rotation);
 
                     if (OnCharacterTeleport != null)
                     {
