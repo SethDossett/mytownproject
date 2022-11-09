@@ -6166,7 +6166,7 @@ PrefabInstance:
     - target: {fileID: 1915983586688620744, guid: 138de60d71534ce48a116521bd6ed4a1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1915983586688620759, guid: 138de60d71534ce48a116521bd6ed4a1,
         type: 3}
@@ -6326,7 +6326,7 @@ PrefabInstance:
     - target: {fileID: 6122740616570091012, guid: e8018f9325be08e4e8c655632f764761,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.019582327
+      value: 0.019582326
       objectReference: {fileID: 0}
     - target: {fileID: 6122740616570091012, guid: e8018f9325be08e4e8c655632f764761,
         type: 3}
@@ -6870,6 +6870,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CM StateDrivenCamera1
       objectReference: {fileID: 0}
+    - target: {fileID: 2225100305299879352, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: AutoEnableInputs
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2225100305299879353, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_XAxis.Value
@@ -6879,6 +6884,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_YAxis.Value
       value: 0.38094935
+      objectReference: {fileID: 0}
+    - target: {fileID: 2225100305299879355, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_CameraRadius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2225100305299879355, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_DampingWhenOccluded
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2225100305299879355, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_CollideAgainst.m_Bits
+      value: 320
       objectReference: {fileID: 0}
     - target: {fileID: 2225100305299879358, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
@@ -6915,6 +6935,21 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.007965965
       objectReference: {fileID: 0}
+    - target: {fileID: 2225100305723742234, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_CameraRadius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2225100305723742234, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_DampingWhenOccluded
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2225100305723742234, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_CollideAgainst.m_Bits
+      value: 320
+      objectReference: {fileID: 0}
     - target: {fileID: 2240999074113368797, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_XAxis.Value
@@ -6933,12 +6968,12 @@ PrefabInstance:
     - target: {fileID: 4668670240595197075, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000004292467
+      value: -0.0000000042924664
       objectReference: {fileID: 0}
     - target: {fileID: 4668670240595197075, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 2.8009733e-10
+      value: -2.800973e-10
       objectReference: {fileID: 0}
     - target: {fileID: 5131291260123057512, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
@@ -6983,7 +7018,7 @@ PrefabInstance:
     - target: {fileID: 5448634131278590545, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.000000013038516
+      value: 0.0000000018626451
       objectReference: {fileID: 0}
     - target: {fileID: 5448634131278590545, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
@@ -6993,7 +7028,7 @@ PrefabInstance:
     - target: {fileID: 5448634131278590545, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -9.313226e-10
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5987886186406964643, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
@@ -7004,6 +7039,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.x
       value: -3.3756486e-10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7187971302526239719, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_CameraRadius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7187971302526239719, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_DampingWhenOccluded
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7187971302526239719, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_CollideAgainst.m_Bits
+      value: 320
+      objectReference: {fileID: 0}
+    - target: {fileID: 7872751220938853108, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_Damping
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7872751220938853108, guid: 8589c0168af87c648af7559b8d31df59,
+        type: 3}
+      propertyPath: m_CollideAgainst.m_Bits
+      value: 320
       objectReference: {fileID: 0}
     - target: {fileID: 8032030792300261862, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
@@ -7028,7 +7088,7 @@ PrefabInstance:
     - target: {fileID: 8873238637098366430, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0000000018626451
+      value: -0.000000013038516
       objectReference: {fileID: 0}
     - target: {fileID: 8873238637098366430, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
@@ -7038,7 +7098,7 @@ PrefabInstance:
     - target: {fileID: 8873238637098366430, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -9.313226e-10
       objectReference: {fileID: 0}
     - target: {fileID: 9048631744016693036, guid: 8589c0168af87c648af7559b8d31df59,
         type: 3}

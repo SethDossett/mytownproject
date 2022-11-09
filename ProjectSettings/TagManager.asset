@@ -10,6 +10,7 @@ TagManager:
   - Sand
   - ShallowWater
   - Wood
+  - Interactable
   layers:
   - Default
   - TransparentFX

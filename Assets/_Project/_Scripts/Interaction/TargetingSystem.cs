@@ -59,6 +59,7 @@ namespace MyTownProject.Interaction
         bool _foundNextTarget;
         bool _preventNewLockOn;
         string _npcTag = "NPC";
+        string _interactableTag = "Interactable";
         Vector3 _npcRayPoint = new Vector3(0, 1.2f, 0);
         Vector3 _playerRayPoint = new Vector3(0, 1.5f, 0);
 
@@ -418,7 +419,9 @@ namespace MyTownProject.Interaction
             {
                 //print(hit.collider.name);
                 //Debug.DrawLine(transform.position + _playerRayPoint, targetPos);
-                if (!hit.transform.CompareTag(_npcTag)) return true;
+                string tag = hit.transform.tag;
+                if(tag != _npcTag && tag != _interactableTag) return true;
+                //if (!hit.transform.CompareTag(_npcTag)) return true;
             }
             return false;
         }

@@ -44,7 +44,7 @@ namespace MyTownProject.Core
         {
             if (settings.StartOfGame)
             {
-                settings.StartOfGame = false;
+                //settings.StartOfGame = false;
                 StartOfGame.RaiseEvent();
                 print("START OF GAME");
             }

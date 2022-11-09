@@ -2,9 +2,11 @@ using System.Collections;
 using KinematicCharacterController.Examples;
 using UnityEngine;
 using MyTownProject.Events;
+using MyTownProject.Core;
 using Cinemachine;
 
-namespace MyTownProject.Cameras{
+namespace MyTownProject.Cameras
+{
 
     public class FreeLookController : MonoBehaviour
     {
@@ -19,6 +21,7 @@ namespace MyTownProject.Cameras{
         CinemachineFreeLook cam;
         [SerializeField] CinemachineTargetGroup _targetGroup;
         TheCharacterController CC;
+        CinemachineInputProvider CameraInputs;
 
         [Range(0.1f, 2f)][SerializeField] float _lensZoomInSpeed = 0.2f;
         [Range(0.1f, 5f)][SerializeField] float _lensZoomOutSpeed = 0.6f;
@@ -29,6 +32,8 @@ namespace MyTownProject.Cameras{
         void OnEnable()
         {
             cam = GetComponent<CinemachineFreeLook>();
+            CameraInputs = GetComponent<CinemachineInputProvider>();
+            GameStateManager.OnGameStateChanged += CheckGameState;
             PlayerReference.OnRaiseEvent += GetPlayerReference;
             StartOfGame.OnRaiseEvent += InitialGameStartingCamera;
             DialogueEvents.onEnter += TalkingToNPC;
@@ -41,8 +46,9 @@ namespace MyTownProject.Cameras{
         }
         void OnDisable()
         {
+            GameStateManager.OnGameStateChanged -= CheckGameState;
             PlayerReference.OnRaiseEvent -= GetPlayerReference;
-            StartOfGame.OnRaiseEvent += InitialGameStartingCamera;
+            StartOfGame.OnRaiseEvent -= InitialGameStartingCamera;
             DialogueEvents.onEnter -= TalkingToNPC;
             DialogueEvents.onExit -= BackToPlayerView;
             TargetingEvent.OnRaiseEvent += Target;
@@ -57,8 +63,22 @@ namespace MyTownProject.Cameras{
         }
         void InitialGameStartingCamera()
         {
-            RX(0,0.1f,1);
-            RY(0,0.1f,1);
+            RX(0, 0.1f, 1);
+            RY(0, 0.1f, 1);
+        }
+
+        void CheckGameState(GameState state)
+        {
+            if (state == GameState.GAME_PLAYING)
+            {
+                CameraInputs.XYAxis.action.Enable();
+                print("CAMERA INPUTS ON");
+            }
+            else
+            {
+                CameraInputs.XYAxis.action.Disable();
+                print("CAMERA INPUTS OFF");
+            }
         }
         void TalkingToNPC(GameObject go, TextAsset text)
         {

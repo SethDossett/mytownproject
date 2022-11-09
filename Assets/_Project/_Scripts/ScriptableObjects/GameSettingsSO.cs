@@ -9,6 +9,7 @@ namespace MyTownProject.SO
         public ControllerType ControllerType;
         public SceneSO CurrentScene;
         public bool StartOfGame;
+        [Range(0f, 1f)] public float MasterVolume;
 
     }
 }
