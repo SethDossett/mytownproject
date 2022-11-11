@@ -7,7 +7,7 @@ namespace MyTownProject.SO
     public class GameSettingsSO : ScriptableObject
     {
         public ControllerType ControllerType;
-        public SceneSO CurrentScene;
+        public SceneSO SceneToEnterIn;
         public bool StartOfGame;
         [Range(0f, 1f)] public float MasterVolume;
 

@@ -4,11 +4,15 @@ using MyTownProject.Events;
 using MyTownProject.Core;
 using MyTownProject.SO;
 using MyTownProject.UI;
-using KinematicCharacterController;
 using MyTownProject.Enviroment;
+using KinematicCharacterController;
 
 namespace MyTownProject.Interaction
 {
+    public enum DoorPatnerIndex
+    {
+        NULL, TestCity, TestTerrain, TestHouse 
+    }
     public class Door : MonoBehaviour, IInteractable
     {
         [field: SerializeField] public bool IsVisible { get; set; }
@@ -31,8 +35,11 @@ namespace MyTownProject.Interaction
         [SerializeField] bool _locked = false;
         [SerializeField] Vector3 _centerStandingPoint;
         public Transform CameraPosition;
+        public DoorPatnerIndex DoorIndex;
         //public Transform LookAtPoint { get { return _lookAtPosition; } set { _lookAtPosition = value; } }
         public Transform LookAtPosition;
+        [SerializeField] Vector3 nextScenePos;
+        [SerializeField] Quaternion nextSceneRot;
 
         [Header("Event References")]
         [SerializeField] MainEventChannelSO mainEventChannel;
@@ -131,6 +138,10 @@ namespace MyTownProject.Interaction
             yield return new WaitForSecondsRealtime(1f);
 
             _hasInteracted = true;
+            nextScene.playerLocation = nextScenePos;
+            nextScene.playerRotation = nextSceneRot;
+            nextScene.EnteredThroughDoor = true;
+            nextScene.DoorIndex = DoorIndex;
             mainEventChannel.RaiseEventChangeScene(nextScene);
             //KinematicCharacterSystem.Settings.AutoSimulation = true;
 

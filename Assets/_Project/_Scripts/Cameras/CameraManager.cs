@@ -23,6 +23,7 @@ namespace MyTownProject.Cameras
         [SerializeField] GeneralEventSO _unTargetingEvent;
         [SerializeField] GeneralEventSO _startOfGame;
         [SerializeField] ActionSO OpenDoor;
+        [SerializeField] TransformEventSO EnteredNewScene;
 
 
         #region Animations
@@ -44,6 +45,7 @@ namespace MyTownProject.Cameras
         private void OnEnable()
         {
             OpenDoor.OnOpenDoor += DoorView;
+            EnteredNewScene.OnRaiseEvent += DoorViewExit;
             _startOfGame.OnRaiseEvent += InitialGameStartingCamera;
             dialogueEvents.onEnter += EnterDialogue;
             dialogueEvents.onExit += ExitDialogue;
@@ -54,6 +56,7 @@ namespace MyTownProject.Cameras
         private void OnDisable()
         {
             OpenDoor.OnOpenDoor -= DoorView;
+            EnteredNewScene.OnRaiseEvent -= DoorViewExit;
             _startOfGame.OnRaiseEvent -= InitialGameStartingCamera;
             dialogueEvents.onEnter -= EnterDialogue;
             dialogueEvents.onExit -= ExitDialogue;
@@ -88,11 +91,15 @@ namespace MyTownProject.Cameras
         {
             SwitchToDoor();
         }
+        void DoorViewExit(Transform t)
+        {
+            SwitchToDoor();
+        }
         void CheckGameState(GameState state)
         {
             if (state == GameState.GAME_PLAYING)
             {
-                //SwitchToFreeLook();
+                SwitchToFreeLook();
             }
         }
     }

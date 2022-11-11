@@ -15,6 +15,7 @@ namespace MyTownProject.Cameras
         [SerializeField] TransformEventSO playerRef;
         [SerializeField] TransformEventSO _targetingEvent;
         [SerializeField] TransformEventSO _changeToNextTarget;
+        [SerializeField] TransformEventSO EnteredNewScene;
         [SerializeField] GeneralEventSO _unTargetingEvent;
         [SerializeField] ActionSO _openDoorEvent;
         CinemachineTargetGroup targetGroup;
@@ -37,6 +38,7 @@ namespace MyTownProject.Cameras
             _changeToNextTarget.OnRaiseEvent += ChangeTarget;
             _unTargetingEvent.OnRaiseEvent += BackToPlayerView;
             _openDoorEvent.OnOpenDoor += OpeningDoor;
+            EnteredNewScene.OnRaiseEvent += ExitingDoor;
         }
         void OnDisable()
         {
@@ -46,6 +48,7 @@ namespace MyTownProject.Cameras
             _changeToNextTarget.OnRaiseEvent = ChangeTarget;
             _unTargetingEvent.OnRaiseEvent -= BackToPlayerView;
             _openDoorEvent.OnOpenDoor -= OpeningDoor;
+            EnteredNewScene.OnRaiseEvent -= ExitingDoor;
         }
 
         void SetPlayerReference(Transform player)
@@ -89,7 +92,11 @@ namespace MyTownProject.Cameras
             RemoveTargets();
             AddingMember(door.GetComponent<Door>().LookAtPosition, 1, 3);
         }
-
+        void ExitingDoor(Transform door)
+        {
+            RemoveTargets();
+            AddingMember(door.gameObject.GetComponent<Door>().LookAtPosition, 1, 3);
+        }
         void BackToPlayerView()
         {
             RemoveTargets();

@@ -822,6 +822,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainPage
       objectReference: {fileID: 0}
+    - target: {fileID: 2516305416501238372, guid: 8611c96cc81894dcfa8ee2e49bbe7b41,
+        type: 3}
+      propertyPath: manager
+      value: 
+      objectReference: {fileID: 652889699}
+    - target: {fileID: 2516305416501238372, guid: 8611c96cc81894dcfa8ee2e49bbe7b41,
+        type: 3}
+      propertyPath: _currentMenuPage
+      value: 
+      objectReference: {fileID: 1783569689}
     - target: {fileID: 2516305416606674194, guid: 8611c96cc81894dcfa8ee2e49bbe7b41,
         type: 3}
       propertyPath: m_RootOrder
@@ -892,11 +902,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 652889699}
-    - target: {fileID: 6767813323952075087, guid: 8611c96cc81894dcfa8ee2e49bbe7b41,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: EnterGame
-      objectReference: {fileID: 0}
     - target: {fileID: 6767813324146343117, guid: 8611c96cc81894dcfa8ee2e49bbe7b41,
         type: 3}
       propertyPath: m_RootOrder
@@ -927,7 +932,8 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1035066003, guid: 8611c96cc81894dcfa8ee2e49bbe7b41, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8611c96cc81894dcfa8ee2e49bbe7b41, type: 3}
 --- !u!224 &1035066000 stripped
 RectTransform:
@@ -1076,6 +1082,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1783569689 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2516305416548451981, guid: 8611c96cc81894dcfa8ee2e49bbe7b41,
+    type: 3}
+  m_PrefabInstance: {fileID: 1035065999}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1847105221
 GameObject:
   m_ObjectHideFlags: 0

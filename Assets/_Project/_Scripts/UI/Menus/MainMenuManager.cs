@@ -53,7 +53,11 @@ namespace MyTownProject.UI
             uIEventChannel.RaiseFadeOut(Color.black, 1f);
             yield return new WaitForSecondsRealtime(1f);
 
-            sceneController.RaiseEventChangeScene(settings.CurrentScene);
+            //This is just for now, so that start of game is not coming out of door, 
+            //need this to change if we want to start game coming out of last door
+            settings.SceneToEnterIn.EnteredThroughDoor = false;
+
+            sceneController.RaiseEventChangeScene(settings.SceneToEnterIn);
             yield break;
         }
         void LeftTriggerInput(InputAction.CallbackContext ctx)
