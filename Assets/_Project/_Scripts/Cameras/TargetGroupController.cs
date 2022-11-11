@@ -6,6 +6,7 @@ using KinematicCharacterController.Examples;
 using MyTownProject.NPC;
 using MyTownProject.Enviroment;
 using MyTownProject.Interaction;
+using MyTownProject.Core;
 
 namespace MyTownProject.Cameras
 {
@@ -20,6 +21,7 @@ namespace MyTownProject.Cameras
         [SerializeField] ActionSO _openDoorEvent;
         CinemachineTargetGroup targetGroup;
         [SerializeField] GameObject _player;
+        [SerializeField] PlayerManager _playerManager;
         void Awake()
         {
             print($"awake {gameObject.name}");
@@ -32,6 +34,7 @@ namespace MyTownProject.Cameras
         void OnEnable()
         {
             targetGroup = GetComponent<CinemachineTargetGroup>();
+            GameStateManager.OnGameStateChanged += CheckState;
             DialogueEvents.onEnter += TalkingToNPC;
             DialogueEvents.onExit += BackToPlayerView;
             _targetingEvent.OnRaiseEvent += Targeting;
@@ -42,6 +45,7 @@ namespace MyTownProject.Cameras
         }
         void OnDisable()
         {
+            GameStateManager.OnGameStateChanged -= CheckState;
             DialogueEvents.onEnter -= TalkingToNPC;
             DialogueEvents.onExit -= BackToPlayerView;
             _targetingEvent.OnRaiseEvent -= Targeting;
@@ -55,17 +59,26 @@ namespace MyTownProject.Cameras
         {
             _player = player.gameObject;
             print($"Got Ref {gameObject.name}");
+            _playerManager = _player.GetComponent<PlayerManager>();
             RemoveTargets();
             AddPlayer();
         }
 
-        void Start()
+        void CheckState(GameState state)
         {
+            if (state == GameState.GAME_PLAYING)
+            {
+                if (_playerManager.CurrentCharacterState == CharacterState.Default)
+                {
+                    RemoveTargets();
+                    AddPlayer();
+                }
+            }
         }
 
         void AddPlayer()
         {
-            Transform lookAtPoint = _player.GetComponent<PlayerManager>()._LookAtPoint;
+            Transform lookAtPoint = _playerManager._LookAtPoint;
             AddingMember(lookAtPoint, 1, 3);
         }
 

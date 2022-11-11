@@ -56,7 +56,7 @@ namespace MyTownProject.UI
             //This is just for now, so that start of game is not coming out of door, 
             //need this to change if we want to start game coming out of last door
             settings.SceneToEnterIn.EnteredThroughDoor = false;
-
+            settings.StartOfGame = true;
             sceneController.RaiseEventChangeScene(settings.SceneToEnterIn);
             yield break;
         }

@@ -15,6 +15,7 @@ namespace MyTownProject.Core
 
         [SerializeField] GameSettingsSO settings;
         [SerializeField] GeneralEventSO StartOfGame;
+        [SerializeField] StateChangerEventSO StateChanger;
         [SerializeField] bool setFrameRate;
         [SerializeField] int targetFrameRate;
 
@@ -44,12 +45,13 @@ namespace MyTownProject.Core
         {
             if (settings.StartOfGame)
             {
-                //settings.StartOfGame = false;
+                settings.StartOfGame = false;
                 StartOfGame.RaiseEvent();
                 print("START OF GAME");
             }
             // if has cutscene play,
             // after return to play mode
+
             yield break;
 
         }

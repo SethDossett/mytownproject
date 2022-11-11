@@ -11,7 +11,7 @@ namespace KinematicCharacterController.Examples
     {
         [Header("References")]
         public Transform _LookAtPoint;
-        [SerializeField] CharacterState CurrentCharacterState;
+        public CharacterState CurrentCharacterState;
         Animator _animator;
         TheCharacterController cc;
 
@@ -66,7 +66,7 @@ namespace KinematicCharacterController.Examples
         {
             //Calls Event to pass a refence to player to other scripts
             //Other Scripts are subscribed in Awake()
-            print("Start Event Called");
+            print("Pass Player Reference Out");
             PlayerRef.RaiseEvent(transform);
 
         }

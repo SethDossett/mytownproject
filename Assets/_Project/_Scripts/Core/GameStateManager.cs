@@ -52,7 +52,7 @@ namespace MyTownProject.Core
         }
         private void Start()
         {
-            UpdateState(GameState.GAME_PAUSED);
+            //UpdateState(GameState.GAME_PLAYING);
         }
 
         private void HandleCutscene()
@@ -85,8 +85,10 @@ namespace MyTownProject.Core
         [SerializeField] StateChangerEventSO stateChanger;
         [SerializeField] DialogueEventsSO dialogueEvents;
         [SerializeField] MainEventChannelSO mainEventChannel;
+        [SerializeField] GeneralEventSO StartOfGame;
         void OnEnable()
         {
+            StartOfGame.OnRaiseEvent += EnterCutsceneState; // Probably should be changed to event fired when cutscene should be triggered
             stateChanger.OnGameState += UpdateState;
             dialogueEvents.onEnter += EnteringDialogue;
             dialogueEvents.onExit += EnterGamePlayingState;
@@ -95,6 +97,7 @@ namespace MyTownProject.Core
         }
         void OnDisable()
         {
+            StartOfGame.OnRaiseEvent -= EnterCutsceneState;
             stateChanger.OnGameState -= UpdateState;
             dialogueEvents.onEnter -= EnteringDialogue;
             dialogueEvents.onExit -= EnterGamePlayingState;
