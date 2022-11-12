@@ -1609,7 +1609,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
-  dialogueEventsSO: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
   RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
   _targetingEvent: {fileID: 11400000, guid: 19ba727a84981854098021012cba9753, type: 2}

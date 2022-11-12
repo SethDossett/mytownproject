@@ -32,8 +32,8 @@ namespace MyTownProject.Interaction
         [SerializeField] Transform _closestTarget = null;
         [SerializeField] TheCharacterController CC;
         private IInteractable _interactable;
-        Transform cam;
-        CharacterState currentCharacterState;
+        Transform _cam;
+        CharacterState _currentCharacterState;
 
         [Header("Settings")]
         [SerializeField] bool zeroVert_Look;
@@ -58,6 +58,7 @@ namespace MyTownProject.Interaction
         bool _nextTargetWindowOpen;
         bool _foundNextTarget;
         bool _preventNewLockOn;
+        bool _releasingTargeting;
         string _npcTag = "NPC";
         string _interactableTag = "Interactable";
         Vector3 _npcRayPoint = new Vector3(0, 1.2f, 0);
@@ -105,7 +106,7 @@ namespace MyTownProject.Interaction
         private void Awake()
         {
             CC = GetComponent<TheCharacterController>();
-            cam = Camera.main.transform;
+            _cam = Camera.main.transform;
         }
         void SetInitialReferences()
         {
@@ -134,7 +135,7 @@ namespace MyTownProject.Interaction
         void CheckPlayerState(CharacterState state)
         {
             print("CALLED");
-            currentCharacterState = state;
+            _currentCharacterState = state;
             if (state == CharacterState.Default)
             {
                 if (_targetLockedOn) ResetTarget();
@@ -148,13 +149,13 @@ namespace MyTownProject.Interaction
 
         void CheckInputs(InputAction.CallbackContext ctx)
         {
-                print("Started");
-                print(ctx.ReadValue<float>());
-                if (_targetLockedOn)
-                {
-                    if (_LeftTriggerInput.ReadValue<float>() > 0f)
-                        print("Works");
-                }
+            print("Started");
+            print(ctx.ReadValue<float>());
+            if (_targetLockedOn)
+            {
+                if (_LeftTriggerInput.ReadValue<float>() > 0f)
+                    print("Works");
+            }
         }
         public void TransitionCharacterState(CharacterState newState) => CC.TransitionToState(newState);
         private void Update()
@@ -420,7 +421,7 @@ namespace MyTownProject.Interaction
                 //print(hit.collider.name);
                 //Debug.DrawLine(transform.position + _playerRayPoint, targetPos);
                 string tag = hit.transform.tag;
-                if(tag != _npcTag && tag != _interactableTag) return true;
+                if (tag != _npcTag && tag != _interactableTag) return true;
                 //if (!hit.transform.CompareTag(_npcTag)) return true;
             }
             return false;
@@ -694,20 +695,22 @@ namespace MyTownProject.Interaction
             if (!targetingCam)
             {
                 _freeLookCameraOff = false;
-                cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
-                cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
+                _cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
+                _cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
 
             }
             else
             {
                 _freeLookCameraOff = true;
-                cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false;
-                cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
+                _cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false;
+                _cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
 
             }
         }
         void LeftTriggerInput(InputAction.CallbackContext ctx)
         {
+            if(_releasingTargeting) return;
+
             print(ctx.ReadValue<float>() + " Input CTX value");
             if (ctx.ReadValue<float>() > 0.1f)
             {
@@ -731,11 +734,12 @@ namespace MyTownProject.Interaction
             }
             else
             {
-                if (currentCharacterState == CharacterState.Targeting)
-                    CC.TransitionToState(CharacterState.Default);
+                StartCoroutine(ReleaseTargeting());
+                // if (currentCharacterState == CharacterState.Targeting)
+                //     CC.TransitionToState(CharacterState.Default);
 
-                uiEventChannel.RaiseBarsOff(0.1f);
-                print("RELESE");
+                // uiEventChannel.RaiseBarsOff(0.1f);
+                // print("RELESE");
             }
         }
         IEnumerator NextTargetWindow()
@@ -756,10 +760,25 @@ namespace MyTownProject.Interaction
             //If we didnt find next Target then ResetTarget
             if (!_foundNextTarget)
             {
-                uiEventChannel.RaiseBarsOff(0.1f);
-                if (CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
-                ResetTarget();
+                StartCoroutine(ReleaseTargeting());
+                // uiEventChannel.RaiseBarsOff(0.1f);
+                // if (CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
+                // ResetTarget();
             }
+            yield break;
+        }
+        IEnumerator ReleaseTargeting()
+        {
+            print("RELESE");
+            _releasingTargeting = true;
+            uiEventChannel.RaiseBarsOff(0.1f);
+            if (_currentCharacterState == CharacterState.Targeting) CC.TransitionToState(CharacterState.Default);
+
+            if (_targetLockedOn)
+                ResetTarget();
+
+            yield return new WaitForSeconds(0.1f);
+            _releasingTargeting = false;
             yield break;
         }
         void LockOnCalled()
@@ -776,6 +795,14 @@ namespace MyTownProject.Interaction
             //If not in NextTargetWindow, then check if we have a target to lock on to
             if (_closestTarget != null)
             {
+                // If closest Target is not a targetable then just recenter
+                if (!_closestTarget.GetComponent<IInteractable>().CanBeTargeted)
+                {
+                    print("IGNORE Lock-On");
+                    RecenterCamCheck();
+                    return;
+                }
+
                 pos = _closestTarget.position;
                 currentTarget = _closestTarget;
             }
@@ -799,7 +826,7 @@ namespace MyTownProject.Interaction
             //Need a Recenter CoolDown
             // We Also might want this handled in another Script,
             // and to be able to recenter in other states like Crawling
-            if (currentCharacterState == CharacterState.Default)
+            if (_currentCharacterState == CharacterState.Default)
             {
                 CC.TransitionToState(CharacterState.Targeting);
             }

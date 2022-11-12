@@ -70,6 +70,16 @@ namespace KinematicCharacterController.Examples
             PlayerRef.RaiseEvent(transform);
 
         }
+        bool _movePlayerWhileTalking;
+        void Update()
+        {
+            if (!_movePlayerWhileTalking) return;
+            print("MOVING");
+
+            transform.position += Vector3.back * 2f * Time.unscaledDeltaTime;
+            
+
+        }
         private void TeleportPlayer(Vector3 location, Quaternion rotation)
         {
             if (!isBeingTeleportedTo)
@@ -164,7 +174,7 @@ namespace KinematicCharacterController.Examples
         }
         void DefaultState()
         {
-
+            _movePlayerWhileTalking = false;
             if (cc.CurrentCharacterState != _default)
                 cc.TransitionToState(_default);
 
@@ -180,7 +190,7 @@ namespace KinematicCharacterController.Examples
         }
         void TalkingState()
         {
-
+            _movePlayerWhileTalking = true;
 
         }
         void CrawlingState()
