@@ -76,8 +76,9 @@ namespace KinematicCharacterController.Examples
             if (!_movePlayerWhileTalking) return;
             print("MOVING");
 
-            transform.position += Vector3.back * 2f * Time.unscaledDeltaTime;
-            
+            //transform.position += Vector3.back * 2f * Time.unscaledDeltaTime;
+            //Rigidbody body = GetComponent<Rigidbody>();
+            //body.MovePosition(body.position + Vector3.right * 2f * Time.unscaledDeltaTime);
 
         }
         private void TeleportPlayer(Vector3 location, Quaternion rotation)

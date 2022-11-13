@@ -11,7 +11,7 @@ namespace MyTownProject.Interaction
 {
     public enum DoorPatnerIndex
     {
-        NULL, TestCity, TestTerrain, TestHouse 
+        NULL, TestCity, TestTerrain, TestHouse
     }
     public class Door : MonoBehaviour, IInteractable
     {
@@ -157,23 +157,37 @@ namespace MyTownProject.Interaction
             Vector3 dampPos;
             Quaternion lerpRot;
 
-
+            KinematicCharacterSystem.Settings.AutoSimulation = false;
             while (_moveValue < 1)
             {
 
                 _moveValue = Mathf.MoveTowards(_moveValue, 1, 2f * Time.unscaledDeltaTime);
-                dampPos = Vector3.SmoothDamp(_player.transform.position, newPos, ref _currentVelocity, 5f * Time.unscaledDeltaTime, 10f);
-                lerpRot = Quaternion.Slerp(_player.transform.rotation, lookRot, _moveValue);
-                //Vector3 lerpPosition = Vector3.Lerp(_player.transform.position, newPos, _moveValue);
-                motor.SetPosition(dampPos);
-                motor.SetRotation(lerpRot);
-                //motor.LerpPosition(transform.position + _centerStandingPoint, 0.5f);
+                // dampPos = Vector3.SmoothDamp(_player.transform.position, newPos, ref _currentVelocity, 5f * Time.unscaledDeltaTime, 10f);
+                // lerpRot = Quaternion.Slerp(_player.transform.rotation, lookRot, _moveValue);
+                // //Vector3 lerpPosition = Vector3.Lerp(_player.transform.position, newPos, _moveValue);
+                // motor.SetPosition(dampPos);
+                // motor.SetRotation(lerpRot);
+                // //motor.LerpPosition(transform.position + _centerStandingPoint, 0.5f);
+
+
+
+                yield return new WaitForSecondsRealtime(0.05f);
+                //Tick();
+
+
                 yield return null;
             }
 
             _moveValue = 0;
             print("DoneLerping");
             yield break;
+        }
+
+        void Tick()
+        {
+            KinematicCharacterSystem.PreSimulationInterpolationUpdate(1 / 50);
+            KinematicCharacterSystem.Simulate(1 / 50, KinematicCharacterSystem.CharacterMotors, KinematicCharacterSystem.PhysicsMovers);
+            KinematicCharacterSystem.PostSimulationInterpolationUpdate(1 / 50);
         }
         private void DoLockedDoor()
         {
