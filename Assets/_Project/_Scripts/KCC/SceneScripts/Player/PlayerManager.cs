@@ -11,7 +11,7 @@ namespace KinematicCharacterController.Examples
     {
         [Header("References")]
         public Transform _LookAtPoint;
-        [SerializeField] CharacterState CurrentCharacterState;
+        public CharacterState CurrentCharacterState;
         Animator _animator;
         TheCharacterController cc;
 
@@ -66,8 +66,19 @@ namespace KinematicCharacterController.Examples
         {
             //Calls Event to pass a refence to player to other scripts
             //Other Scripts are subscribed in Awake()
-            print("Start Event Called");
+            print("Pass Player Reference Out");
             PlayerRef.RaiseEvent(transform);
+
+        }
+        bool _movePlayerWhileTalking;
+        void Update()
+        {
+            if (!_movePlayerWhileTalking) return;
+            print("MOVING");
+
+            //transform.position += Vector3.back * 2f * Time.unscaledDeltaTime;
+            //Rigidbody body = GetComponent<Rigidbody>();
+            //body.MovePosition(body.position + Vector3.right * 2f * Time.unscaledDeltaTime);
 
         }
         private void TeleportPlayer(Vector3 location, Quaternion rotation)
@@ -76,7 +87,9 @@ namespace KinematicCharacterController.Examples
             {
                 if (cc)
                 {
-                    cc.Motor.SetPositionAndRotation(location, rotation);
+                    //cc.Motor.SetPositionAndRotation(location, rotation);
+                    cc.Motor.SetPosition(location);
+                    cc.Motor.SetRotation(rotation);
 
                     if (OnCharacterTeleport != null)
                     {
@@ -162,7 +175,7 @@ namespace KinematicCharacterController.Examples
         }
         void DefaultState()
         {
-
+            _movePlayerWhileTalking = false;
             if (cc.CurrentCharacterState != _default)
                 cc.TransitionToState(_default);
 
@@ -178,7 +191,7 @@ namespace KinematicCharacterController.Examples
         }
         void TalkingState()
         {
-
+            _movePlayerWhileTalking = true;
 
         }
         void CrawlingState()

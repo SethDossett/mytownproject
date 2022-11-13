@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using MyTownProject.Core;
 using MyTownProject.Events;
 using KinematicCharacterController.Examples;
 
@@ -59,14 +58,8 @@ namespace MyTownProject.Enviroment{
 
         [SerializeField] float inputMag;
 
-        private void OnEnable() {
-            inputActions.GamePlay.Enable();
-        }
-        private void OnDisable() {
-            inputActions.GamePlay.Enable();
-        }
         private void Awake() {
-            inputActions = new NewControls();
+            inputActions = InputManager.inputActions;
             _ladderCollider = GetComponent<BoxCollider>();
             
         }

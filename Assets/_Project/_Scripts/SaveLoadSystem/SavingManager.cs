@@ -1,4 +1,5 @@
 using UnityEngine.InputSystem;
+using MyTownProject.Events;
 using System.Collections;
 using UnityEngine;
 using System.IO;
@@ -8,7 +9,22 @@ namespace MyTownProject.SaveLoadSystem
 {
     public class SavingManager : MonoBehaviour
     {
-        private void Start()
+        [SerializeField] GeneralEventSO saveGameEvent;
+        [SerializeField] GeneralEventSO loadGameEvent;
+        bool _isSaving;
+
+        private void OnEnable()
+        {
+            saveGameEvent.OnRaiseEvent += StartSave;
+            loadGameEvent.OnRaiseEvent += Load;
+        }
+        private void OnDisable()
+        {
+            saveGameEvent.OnRaiseEvent -= StartSave;
+            loadGameEvent.OnRaiseEvent -= Load;
+
+        }
+        private void Awake()
         {
             Load();
             Debug.Log("Loaded States");
@@ -18,17 +34,27 @@ namespace MyTownProject.SaveLoadSystem
             if (Keyboard.current.kKey.wasPressedThisFrame)
             {
                 StartCoroutine(Save());
-                Debug.Log("Saved States");
             }
             if (Keyboard.current.lKey.wasPressedThisFrame)
             {
                 Load();
-                Debug.Log("Loaded States");
+
             }
+        }
+        void StartSave()
+        {
+            if (_isSaving)
+            {
+                Debug.LogWarning("Trying To Call Save() Multiple Times");
+                return;
+            }
+            StartCoroutine(Save());
         }
 
         IEnumerator Save()
         {
+            _isSaving = true;
+            Debug.Log("Save States");
             foreach (State_Save state in GameObject.FindObjectsOfType<State_Save>())
             {
                 if (state.ShouldSave())
@@ -42,6 +68,7 @@ namespace MyTownProject.SaveLoadSystem
                     yield return new WaitForEndOfFrame();
                 }
             }
+            _isSaving = false;
         }
 
         public async Task WriteFileAsync(string path, string json)
@@ -54,6 +81,7 @@ namespace MyTownProject.SaveLoadSystem
 
         void Load()
         {
+            Debug.Log("Load States");
             foreach (State_Save state in GameObject.FindObjectsOfType<State_Save>())
             {
                 if (state.ShouldLoad())

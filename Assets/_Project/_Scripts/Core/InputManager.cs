@@ -1,55 +1,17 @@
 using System;
-using UnityEngine;
 using UnityEngine.InputSystem;
-using MyTownProject.Events;
 
 namespace MyTownProject.Core
 {
-    public class InputManager : MonoBehaviour
+    public static class InputManager
     {
         public static NewControls inputActions = new NewControls();
         public static event Action<InputActionMap> actionMapChange;
 
-        [SerializeField] GeneralEventSO _enableControls;
-        [SerializeField] GeneralEventSO _disableControls;
 
-        private void OnEnable()
-        {
-            GameStateManager.OnGameStateChanged += ChangedGameState;
-            _disableControls.OnRaiseEvent += DisableControls;
-            _enableControls.OnRaiseEvent += EnableControls;
-        }
-        private void OnDisable()
-        {
-            GameStateManager.OnGameStateChanged -= ChangedGameState;
-            _disableControls.OnRaiseEvent -= DisableControls;
-            _enableControls.OnRaiseEvent -= EnableControls;
-        }
-        void EnableControls() => inputActions.Enable();
-       
-        void DisableControls() => inputActions.Disable();
-        
-        private void ChangedGameState(GameState state)
-        {
-            if (state == GameState.GAME_PLAYING)
-            { print("TOggle gamplay");
-                inputActions.UI.Disable();
-                inputActions.GamePlay.Enable();
-                ToggleActionMap(inputActions.GamePlay);
-            }
-            else if (state == GameState.GAME_PAUSED)
-            {print("TOggle Paues");
-                inputActions.GamePlay.Disable();
-                inputActions.UI.Enable();
-                ToggleActionMap(inputActions.UI);
-            }
-            else if (state == GameState.CUTSCENE)
-            {print("TOggle UI");
-                inputActions.GamePlay.Disable();
-                inputActions.UI.Enable();
-                ToggleActionMap(inputActions.UI);
-            }
-        }
+        public static void EnableControls() => inputActions.Enable();
+
+        public static void DisableControls() => inputActions.Disable();
 
         public static void ToggleActionMap(InputActionMap actionMap)
         {

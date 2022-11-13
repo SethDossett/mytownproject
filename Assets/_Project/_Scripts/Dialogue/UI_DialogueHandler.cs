@@ -47,11 +47,13 @@ namespace MyTownProject.Dialogue
         [SerializeField] EventReference cancelSFX;
 
         [Header("Input")]
+        private NewControls _inputActions;
         private InputAction submit;
 
         private void OnEnable()
         {
-            submit = InputManager.inputActions.UI.Submit;
+            _inputActions = InputManager.inputActions;
+            submit = _inputActions.UI.Submit;
 
             submit.performed += SubmitButton;
 

@@ -5,6 +5,7 @@ using TMPro;
 using MyTownProject.Events;
 using MyTownProject.Core;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace MyTownProject.UI
 {
@@ -18,9 +19,12 @@ namespace MyTownProject.UI
         [Header("UI Objects")]
         [SerializeField] private GameObject _gameUI;
         [SerializeField] private GameObject _clock;
+        [SerializeField] private GameObject _fullClock;
         [SerializeField] private GameObject _buttons;
         [SerializeField] private GameObject _dialogue;
+        [SerializeField] private GameObject _explaination;
         [SerializeField] private TextMeshProUGUI _interactionText;
+        [SerializeField] private TextMeshProUGUI _explainationText;
 
         [Header("Tween Values")]
         [SerializeField] private float _cycleLength = 2f;
@@ -40,6 +44,7 @@ namespace MyTownProject.UI
             uIEventChannel.OnShowTextInteract += ShowInteractionText;
             uIEventChannel.OnHideTextInteract += HideInteractionText;
             uIEventChannel.OnChangePrompt += ChangePromptPriority;
+            uIEventChannel.OnShowExplaination += Bubble;
 
         }
         private void OnDisable()
@@ -51,9 +56,11 @@ namespace MyTownProject.UI
             uIEventChannel.OnShowTextInteract -= ShowInteractionText;
             uIEventChannel.OnHideTextInteract -= HideInteractionText;
             uIEventChannel.OnChangePrompt -= ChangePromptPriority;
+            uIEventChannel.OnShowExplaination -= Bubble;
         }
 
-        void Awake(){
+        void Awake()
+        {
             ChangePromptPriority(PromptName.Null, 1);
         }
         private void CheckGameState(GameState state)
@@ -77,11 +84,13 @@ namespace MyTownProject.UI
         public void UI_HideAll()
         {
             _buttons.transform.DOLocalMoveY(275f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
+            _fullClock.transform.DOLocalMoveY(455f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
             _clock.transform.DOLocalMoveY(-470f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
         }
         public void UI_UnhideAll()
         {
             _buttons.transform.DOLocalMoveY(0f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
+            _fullClock.transform.DOLocalMoveY(180f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
             _clock.transform.DOLocalMoveY(-195f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
         }
         public void UI_FadeAll()
@@ -104,7 +113,7 @@ namespace MyTownProject.UI
         }
         private void HideInteractionText()
         {
-            if(_interactionText.text != "")
+            if (_interactionText.text != "")
                 _interactionText.text = "";
         }
         #endregion
@@ -129,33 +138,62 @@ namespace MyTownProject.UI
 
 
         #endregion
-        
-        void ChangePromptPriority(PromptName name, int priority){
+
+        void ChangePromptPriority(PromptName name, int priority)
+        {
             int currentHighestPriority = _highestPriority;
             Prompt topPrompt = null;
             //Go Through Every prompt we have in Enum List
-            foreach(Prompt prompt in prompts){
+            foreach (Prompt prompt in prompts)
+            {
                 //Change Priority Value
-                if(prompt.name == name){
+                if (prompt.name == name)
+                {
                     //If trying to change priority but its already the same then return out of function;
-                    if(priority == prompt.priority) return;
+                    if (priority == prompt.priority) return;
                     prompt.priority = priority;
                 }
                 //Find which prompt we should show
-                if(prompt.priority > currentHighestPriority){
+                if (prompt.priority > currentHighestPriority)
+                {
                     topPrompt = prompt;
                     currentHighestPriority = prompt.priority;
-                }    
+                }
             }
             //Show Top Priority
-            if(topPrompt != _currentPrompt){
+            if (topPrompt != _currentPrompt)
+            {
                 _currentPrompt = topPrompt;
                 SetPrompt();
             }
         }
 
-        void SetPrompt(){
+        void SetPrompt()
+        {
             _interactionText.text = _currentPrompt.text;
+        }
+
+        bool _bubbleOnScreen;
+        Tween _fadeTween;
+        void Bubble(Vector2 screenPos, float duration, string message)
+        {
+            if(_bubbleOnScreen) return;
+            StartCoroutine(ShowExplainationBubble(screenPos, duration, message));
+        }
+        IEnumerator ShowExplainationBubble(Vector2 screenPos, float duration, string message)
+        {
+            print("SHOW BUBBLE");
+            if(_fadeTween != null) _fadeTween.Kill();
+
+            _bubbleOnScreen = true;
+            _explaination.transform.localPosition = screenPos;
+            _explainationText.text = message;
+            _explaination.GetComponent<CanvasGroup>().DOFade(0.9f, 1f).SetUpdate(true);
+
+            yield return new WaitForSecondsRealtime(duration);
+            _explaination.GetComponent<CanvasGroup>().DOFade(0f, 1f).SetUpdate(true);
+            _bubbleOnScreen = false;
+            yield break;
         }
     }
 }

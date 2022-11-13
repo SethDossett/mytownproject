@@ -5,6 +5,8 @@ using MyTownProject.Events;
 using KinematicCharacterController.Examples;
 using MyTownProject.NPC;
 using MyTownProject.Enviroment;
+using MyTownProject.Interaction;
+using MyTownProject.Core;
 
 namespace MyTownProject.Cameras
 {
@@ -14,10 +16,12 @@ namespace MyTownProject.Cameras
         [SerializeField] TransformEventSO playerRef;
         [SerializeField] TransformEventSO _targetingEvent;
         [SerializeField] TransformEventSO _changeToNextTarget;
+        [SerializeField] TransformEventSO EnteredNewScene;
         [SerializeField] GeneralEventSO _unTargetingEvent;
         [SerializeField] ActionSO _openDoorEvent;
         CinemachineTargetGroup targetGroup;
         [SerializeField] GameObject _player;
+        [SerializeField] PlayerManager _playerManager;
         void Awake()
         {
             print($"awake {gameObject.name}");
@@ -30,37 +34,51 @@ namespace MyTownProject.Cameras
         void OnEnable()
         {
             targetGroup = GetComponent<CinemachineTargetGroup>();
+            GameStateManager.OnGameStateChanged += CheckState;
             DialogueEvents.onEnter += TalkingToNPC;
             DialogueEvents.onExit += BackToPlayerView;
             _targetingEvent.OnRaiseEvent += Targeting;
             _changeToNextTarget.OnRaiseEvent += ChangeTarget;
             _unTargetingEvent.OnRaiseEvent += BackToPlayerView;
             _openDoorEvent.OnOpenDoor += OpeningDoor;
+            EnteredNewScene.OnRaiseEvent += ExitingDoor;
         }
         void OnDisable()
         {
+            GameStateManager.OnGameStateChanged -= CheckState;
             DialogueEvents.onEnter -= TalkingToNPC;
             DialogueEvents.onExit -= BackToPlayerView;
             _targetingEvent.OnRaiseEvent -= Targeting;
             _changeToNextTarget.OnRaiseEvent = ChangeTarget;
             _unTargetingEvent.OnRaiseEvent -= BackToPlayerView;
             _openDoorEvent.OnOpenDoor -= OpeningDoor;
+            EnteredNewScene.OnRaiseEvent -= ExitingDoor;
         }
 
         void SetPlayerReference(Transform player)
         {
             _player = player.gameObject;
             print($"Got Ref {gameObject.name}");
+            _playerManager = _player.GetComponent<PlayerManager>();
+            RemoveTargets();
             AddPlayer();
         }
 
-        void Start()
+        void CheckState(GameState state)
         {
+            if (state == GameState.GAME_PLAYING)
+            {
+                if (_playerManager.CurrentCharacterState == CharacterState.Default)
+                {
+                    RemoveTargets();
+                    AddPlayer();
+                }
+            }
         }
 
         void AddPlayer()
         {
-            Transform lookAtPoint = _player.GetComponent<PlayerManager>()._LookAtPoint;
+            Transform lookAtPoint = _playerManager._LookAtPoint;
             AddingMember(lookAtPoint, 1, 3);
         }
 
@@ -85,9 +103,13 @@ namespace MyTownProject.Cameras
         void OpeningDoor(DoorType doorType, GameObject door)
         {
             RemoveTargets();
-            AddingMember(door.transform, 1, 3);
+            AddingMember(door.GetComponent<Door>().LookAtPosition, 1, 3);
         }
-
+        void ExitingDoor(Transform door)
+        {
+            RemoveTargets();
+            AddingMember(door.gameObject.GetComponent<Door>().LookAtPosition, 1, 3);
+        }
         void BackToPlayerView()
         {
             RemoveTargets();

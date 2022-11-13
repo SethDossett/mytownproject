@@ -52,14 +52,14 @@ namespace MyTownProject.Core
         }
         private void Start()
         {
-            //playerInput = myPlayerInput.GetComponent<PlayerInput>();
-            UpdateState(GameState.GAME_PAUSED);
+            //UpdateState(GameState.GAME_PLAYING);
         }
 
         private void HandleCutscene()
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 0f;
+            InputManager.ToggleActionMap(InputManager.inputActions.UI);
             //myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
@@ -67,6 +67,7 @@ namespace MyTownProject.Core
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 0f;
+            InputManager.ToggleActionMap(InputManager.inputActions.UI);
             //myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
@@ -74,6 +75,7 @@ namespace MyTownProject.Core
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 1f;
+            InputManager.ToggleActionMap(InputManager.inputActions.GamePlay);
             //myPlayerInput.GetComponent<ExamplePlayer>().enabled = true; //Turning on ExamplePlayerScript
         }
         #endregion
@@ -83,8 +85,10 @@ namespace MyTownProject.Core
         [SerializeField] StateChangerEventSO stateChanger;
         [SerializeField] DialogueEventsSO dialogueEvents;
         [SerializeField] MainEventChannelSO mainEventChannel;
+        [SerializeField] GeneralEventSO StartOfGame;
         void OnEnable()
         {
+            StartOfGame.OnRaiseEvent += EnterCutsceneState; // Probably should be changed to event fired when cutscene should be triggered
             stateChanger.OnGameState += UpdateState;
             dialogueEvents.onEnter += EnteringDialogue;
             dialogueEvents.onExit += EnterGamePlayingState;
@@ -93,6 +97,7 @@ namespace MyTownProject.Core
         }
         void OnDisable()
         {
+            StartOfGame.OnRaiseEvent -= EnterCutsceneState;
             stateChanger.OnGameState -= UpdateState;
             dialogueEvents.onEnter -= EnteringDialogue;
             dialogueEvents.onExit -= EnterGamePlayingState;

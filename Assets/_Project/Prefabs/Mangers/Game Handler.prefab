@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 3020702988202320618}
   - component: {fileID: 3020702988202320619}
   - component: {fileID: 8262727831412473721}
+  - component: {fileID: 601996409}
+  - component: {fileID: 1562224768}
+  - component: {fileID: 8089074973115438412}
   m_Layer: 0
   m_Name: Game Handler
   m_TagString: Untagged
@@ -68,3 +71,46 @@ MonoBehaviour:
   minutes: 30
   TickMinutesIncreased: 10
   TimeBetweenTicks: 1
+--- !u!114 &601996409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3020702988202320617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b611ce13f09e6994b8c4298bb2c48fb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GamesCurrentScene: 0
+  mainEventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  uIEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  stateChangerEvent: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
+  teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
+--- !u!114 &1562224768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3020702988202320617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7e877f2cf984d443be97ab2f25bc6e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rainParticles: {fileID: 6786705842089900703, guid: fd47d73d1c2d3ae4dbc8e4b6620fee61,
+    type: 3}
+--- !u!114 &8089074973115438412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3020702988202320617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1e29bef9110b634e858ec187e64532b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

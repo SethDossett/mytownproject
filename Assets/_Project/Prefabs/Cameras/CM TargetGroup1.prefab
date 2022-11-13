@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9023857825524559348}
   - component: {fileID: 9023857825524559349}
-  - component: {fileID: 6650432471007822404}
+  - component: {fileID: 1746540292}
   m_Layer: 0
   m_Name: CM TargetGroup1
   m_TagString: Untagged
@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9023857825524559338}
-  m_LocalRotation: {x: -0, y: -0.5, z: -0, w: 0.8660254}
+  m_LocalRotation: {x: 0, y: -0.5, z: 0, w: 0.8660254}
   m_LocalPosition: {x: 88.77682, y: 3.7407267, z: 115.77047}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -60, z: 0}
 --- !u!114 &9023857825524559349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,14 +47,8 @@ MonoBehaviour:
   m_PositionMode: 0
   m_RotationMode: 1
   m_UpdateMethod: 2
-  m_Targets:
-  - target: {fileID: 0}
-    weight: 0.9
-    radius: 1
-  - target: {fileID: 0}
-    weight: 0.45
-    radius: 1
---- !u!114 &6650432471007822404
+  m_Targets: []
+--- !u!114 &1746540292
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -72,4 +66,5 @@ MonoBehaviour:
   _changeToNextTarget: {fileID: 11400000, guid: 9923ca68d96e1c94cab833e062b6b065,
     type: 2}
   _unTargetingEvent: {fileID: 11400000, guid: 454e58523e9a6f746bb1e7e80849934e, type: 2}
+  _openDoorEvent: {fileID: 11400000, guid: 831079ef99d5c4a739e4b5f9efd7cbbc, type: 2}
   _player: {fileID: 0}

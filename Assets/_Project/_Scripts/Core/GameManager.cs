@@ -1,10 +1,21 @@
 using UnityEngine;
+using MyTownProject.Events;
+using MyTownProject.SO;
 using System.Collections;
 
 namespace MyTownProject.Core
 {
+    public enum ControllerType
+    {
+        KeyBoard, GamePad
+    }
     public class GameManager : MonoBehaviour
     {
+        [field: SerializeField] public ControllerType CurrentControllerType { get; set; }
+
+        [SerializeField] GameSettingsSO settings;
+        [SerializeField] GeneralEventSO StartOfGame;
+        [SerializeField] StateChangerEventSO StateChanger;
         [SerializeField] bool setFrameRate;
         [SerializeField] int targetFrameRate;
 
@@ -32,8 +43,15 @@ namespace MyTownProject.Core
 
         IEnumerator EnterScene()
         {
+            if (settings.StartOfGame)
+            {
+                settings.StartOfGame = false;
+                StartOfGame.RaiseEvent();
+                print("START OF GAME");
+            }
             // if has cutscene play,
             // after return to play mode
+
             yield break;
 
         }

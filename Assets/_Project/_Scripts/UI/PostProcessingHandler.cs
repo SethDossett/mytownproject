@@ -18,7 +18,7 @@ namespace MyTownProject.UI
         private void Awake()
         {
             volume = GetComponent<Volume>();
-            //vignette = GetComponent<Vignette>();
+            vignette = GetComponent<Vignette>();
         }
         private void Start()
         {

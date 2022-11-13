@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using MyTownProject.Core;
 
 namespace KinematicCharacterController.Examples{
     public class PlayerClimb : MonoBehaviour
@@ -13,7 +14,9 @@ namespace KinematicCharacterController.Examples{
 
         [Header("Raycast Checks")]
         [SerializeField] LayerMask _groundLayer;
+        //If _downcastOffset.y = 2.5f, his max climb up will be 2.5f.
         [SerializeField] Vector3 _downCastOffset;
+        Vector3 _downLedgeCastRayOffset = new Vector3(0, 1.8f, 0.6f);
         Vector3 _forwardCastOffset;
         Vector3 _overPassCastOffset;
         float _downCastRayLength = 1.5f;
@@ -29,6 +32,8 @@ namespace KinematicCharacterController.Examples{
         RaycastHit _overPassHitInfo;
 
         [Header("Values")]
+        [SerializeField] float _maxClimbHeight = 2.5f;
+        [SerializeField] float _maxLedgeGrabHeight = 2f;
         [SerializeField] float _overPassHeight;
         float _climbHeight;
         public float _downRaycastHitDis;
@@ -41,6 +46,7 @@ namespace KinematicCharacterController.Examples{
         [SerializeField] [Range(0f,0.6f)] float _climbBufferTime = 0.3f;
         float timer = 0;
         float _climbingTimer = 0;
+
 
         [Header("Checks")]
         public bool _isClimbing;
@@ -67,14 +73,13 @@ namespace KinematicCharacterController.Examples{
         int anim_GrabLedge = Animator.StringToHash("GrabLedge");
 
         private void OnEnable() {
-            inputActions.GamePlay.Enable();
             TheCharacterController.OnPlayerStateChanged += PlayerStateChange;
         }
         private void OnDisable() {
-            inputActions.GamePlay.Disable();
+            TheCharacterController.OnPlayerStateChanged -= PlayerStateChange;
         }
         void Awake(){
-            inputActions = new NewControls();
+            inputActions = InputManager.inputActions;
         }
         void Start(){
             _animator = GetComponent<Animator>();
@@ -163,7 +168,7 @@ namespace KinematicCharacterController.Examples{
             _forwardDirectionXZ = Vector3.ProjectOnPlane(transform.forward,Vector3.up);
             if(!ForwardCast()) return false;
             _climbHeight = _downHitInfo.point.y - transform.position.y;    
-            if(_climbHeight <= 0.4f) return false; // so that we dont try to climb if object is less than step height
+            if(_climbHeight <= 0.4f || _climbHeight > _maxClimbHeight) return false; // so that we dont try to climb if object is less than step height
             if(OverPassCast() || _climbHeight < _overPassHeight){
                 
                 _forwardNormalXZ = Vector3.ProjectOnPlane(_forwardHitInfo.normal, Vector3.up);
@@ -300,8 +305,9 @@ namespace KinematicCharacterController.Examples{
         void DetectLedge(){ //stops working after climbUp maybe doclimb etc.
             if(!CC._isFalling) return;
             //downcast if there is a ledge infront of player
-            //_downOrigin = downOrigin;
-            _downOrigin = transform.TransformPoint(_downCastOffset);
+            //Could Lower on Y, so how doesnt grab ledge when it is over his head/arm length, so it looks more natural.
+            // This will bring his max grab height down. At Down Cast Y = 1.8, he can grab 2.5f above Ground sometimes.
+            _downOrigin = transform.TransformPoint(_downLedgeCastRayOffset);
             if(!DownCast()) return;
 
             //Send forwardcast to see what angle player is facing
@@ -314,7 +320,8 @@ namespace KinematicCharacterController.Examples{
            
             //check distance from players feet to ledge
             _downRaycastHitDis = _downHitInfo.point.y - transform.position.y;
-            if(_downRaycastHitDis > 0.5f){
+            if(_downRaycastHitDis > _maxLedgeGrabHeight) return;
+            if(_downRaycastHitDis > 0.6f){
                 print("grab ledge");
                 Quaternion ledgeNormalRot = FindLedgeNormal(_forwardHitInfo);
                 GrabLedge(ledgeNormalRot);
@@ -328,7 +335,7 @@ namespace KinematicCharacterController.Examples{
             _isClimbing = true;
             _matchTargetPosition = transform.TransformPoint(0, _downRaycastHitDis - 1.21f, amount);
             CC.CapsuleEnable(false);
-            StartCoroutine(DoClimb(0, 1, _matchTargetPosition, wallRotation, 10));
+            StartCoroutine(DoClimb(0, 1, _matchTargetPosition, wallRotation, 3f));
             _animator.CrossFadeInFixedTime(anim_GrabLedge, .25f, 0);
             CC._isHanging = true;
         }

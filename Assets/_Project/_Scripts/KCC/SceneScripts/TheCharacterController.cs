@@ -168,7 +168,7 @@ namespace KinematicCharacterController.Examples
         private float _timeSinceLastAbleToJump = 0f;
         private Vector3 _internalVelocityAdd = Vector3.zero;
         private bool _canCrouch = false;
-        private bool _shouldBeCrouching = false;
+        public bool _shouldBeCrouching = false;
         public bool _isCrouching = false;
         public bool _cannotTarget = false;
 
@@ -276,6 +276,10 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Talking:
                     {
+                        
+                        _animator.SetFloat(anim_moving, 0, 0f, Time.deltaTime);
+                        _animator.SetFloat(anim_horizontal, 0, 0.1f, Time.deltaTime);
+                        _animator.SetFloat(anim_vertical, 0, 0.1f, Time.deltaTime);
                         _animator.CrossFadeInFixedTime(_talkState, 0.25f, 0);
                         Quaternion lookRot = Quaternion.LookRotation(_target.position - transform.position, Vector3.up);
                         lookRot.z = 0;
@@ -287,7 +291,6 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Crawling:
                     {
                         fallOffPrevention.enabled = true;
-                        _canCrouch = false;
                         _moveBackwards = false;
                         OrientationSharpness = _crawlRotationSpeed;
                         break;
@@ -493,6 +496,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Talking:
                     {
+                        _moveInputVector = Vector3.zero;
                         break;
                     }
                 case CharacterState.Crawling:
@@ -500,18 +504,19 @@ namespace KinematicCharacterController.Examples
                         // Move and look inputs
                         _moveInputVector = cameraPlanarRotation * moveInputVector;
 
-                        // Camera Recenter while Moving
-                        if (_moveInputVector.magnitude > 0 && _moveBackwards == false)
-                            RecenterCamX.ThreeFloats(0, 2f, 0);
-                        else// need to turn off once but not over and over
-                            DisableRecentering.RaiseEvent();
-
                         // If player presses opposite direction crawl backwards
                         float dot = Vector3.Dot(_moveInputVector, transform.forward);
                         if (dot <= -0.9f)
                             _moveBackwards = true;
                         else
                             _moveBackwards = false;
+
+                        // Camera Recenter while Moving
+                        if (_moveInputVector.sqrMagnitude > 0 && _moveBackwards == false)
+                            RecenterCamX.ThreeFloats(0, 2f, 0);
+                        else// need to turn off once but not over and over
+                            DisableRecentering.RaiseEvent();
+
 
                         switch (OrientationMethod)
                         {
@@ -522,11 +527,12 @@ namespace KinematicCharacterController.Examples
                                 _lookInputVector = _moveInputVector.normalized;
                                 break;
                         }
-
+                        
                         if (inputs.CrouchUp)
-                        {
                             _shouldBeCrouching = false;
-                        }
+
+                        if(inputs.CrouchDown)
+                            _shouldBeCrouching = true;
                         break;
                     }
             }
@@ -763,7 +769,7 @@ namespace KinematicCharacterController.Examples
                             {
                                 if (MaxStableMoveSpeed >= MaxSpeed)
                                 {
-                                    if (dot < -0.92f)
+                                    if (dot < -0.96f)
                                     {
                                         _restrictJumping = true;
                                         changingDirection = true;
@@ -1199,11 +1205,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Talking:
                     {
-                        float currentVelocityMagnitude = currentVelocity.magnitude;
                         currentVelocity = Vector3.zero;
-                        _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
-                        _animator.SetFloat(anim_horizontal, currentVelocity.x, 0.1f, Time.deltaTime);
-                        _animator.SetFloat(anim_vertical, currentVelocity.y, 0.1f, Time.deltaTime);
                         break;
                     }
                 case CharacterState.Crawling:
@@ -1315,9 +1317,8 @@ namespace KinematicCharacterController.Examples
 
                         break;
                     }
-                case CharacterState.Climbing:
+                case CharacterState.Talking:
                     {
-
                         break;
                     }
                 case CharacterState.Crawling:
@@ -1336,7 +1337,7 @@ namespace KinematicCharacterController.Examples
                                 QueryTriggerInteraction.Ignore) > 0)
                             {
                                 // If obstructions, just stick to crouching dimensions
-                                Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
+                                Motor.SetCapsuleDimensions(0.44f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
                             }
                             else
                             {
@@ -1462,6 +1463,11 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Jumping:
                     {
+                        break;
+                    }
+                case CharacterState.Targeting:
+                    {
+                        
                         break;
                     }
 

@@ -10,6 +10,7 @@ TagManager:
   - Sand
   - ShallowWater
   - Wood
+  - Interactable
   layers:
   - Default
   - TransparentFX
@@ -39,7 +40,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - PlayerCollisionOnly
   - UIPrompts
   - 
   - Post Processing

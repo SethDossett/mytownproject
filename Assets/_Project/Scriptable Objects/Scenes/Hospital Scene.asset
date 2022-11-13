@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLocation: {x: 0, y: 0, z: -7.3}
   playerRotation: {x: 0, y: 0, z: 0, w: 1}
-  sceneIndex: 1
+  sceneIndex: 2

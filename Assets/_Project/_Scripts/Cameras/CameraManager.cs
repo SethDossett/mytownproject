@@ -21,7 +21,9 @@ namespace MyTownProject.Cameras
         [SerializeField] DialogueEventsSO dialogueEvents;
         [SerializeField] TransformEventSO _targetingEvent;
         [SerializeField] GeneralEventSO _unTargetingEvent;
+        [SerializeField] GeneralEventSO _startOfGame;
         [SerializeField] ActionSO OpenDoor;
+        [SerializeField] TransformEventSO EnteredNewScene;
 
 
         #region Animations
@@ -43,7 +45,10 @@ namespace MyTownProject.Cameras
         private void OnEnable()
         {
             OpenDoor.OnOpenDoor += DoorView;
+            EnteredNewScene.OnRaiseEvent += DoorViewExit;
+            _startOfGame.OnRaiseEvent += InitialGameStartingCamera;
             dialogueEvents.onEnter += EnterDialogue;
+            dialogueEvents.onExit += ExitDialogue;
             GameStateManager.OnGameStateChanged += CheckGameState;
             _targetingEvent.OnRaiseEvent += EnterTargeting;
             _unTargetingEvent.OnRaiseEvent += SwitchToFreeLook;
@@ -51,20 +56,32 @@ namespace MyTownProject.Cameras
         private void OnDisable()
         {
             OpenDoor.OnOpenDoor -= DoorView;
+            EnteredNewScene.OnRaiseEvent -= DoorViewExit;
+            _startOfGame.OnRaiseEvent -= InitialGameStartingCamera;
             dialogueEvents.onEnter -= EnterDialogue;
+            dialogueEvents.onExit -= ExitDialogue;
             GameStateManager.OnGameStateChanged -= CheckGameState;
             _targetingEvent.OnRaiseEvent -= EnterTargeting;
             _unTargetingEvent.OnRaiseEvent -= SwitchToFreeLook;
         }
-        private void Start()
+        void Start()
         {
             _animator = GetComponent<Animator>();
+            SwitchToFreeLook();
+        }
+        void InitialGameStartingCamera()
+        {
+            SwitchToFreeLook();
         }
 
-        private void EnterDialogue(GameObject npc, TextAsset inkJSON)
+        void EnterDialogue(GameObject npc, TextAsset inkJSON)
         {
             print("dialogue camera");
             SwitchToDialogue();
+        }
+        void ExitDialogue()
+        {
+            SwitchToFreeLook();
         }
         void EnterTargeting(Transform t)
         {
@@ -74,14 +91,16 @@ namespace MyTownProject.Cameras
         {
             SwitchToDoor();
         }
-        private void CheckGameState(GameState state)
+        void DoorViewExit(Transform t)
+        {
+            SwitchToDoor();
+        }
+        void CheckGameState(GameState state)
         {
             if (state == GameState.GAME_PLAYING)
             {
-                print("freelook");
                 SwitchToFreeLook();
             }
         }
-
     }
 }

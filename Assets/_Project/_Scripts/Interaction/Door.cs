@@ -1,13 +1,18 @@
 using System.Collections;
 using UnityEngine;
 using MyTownProject.Events;
+using MyTownProject.Core;
 using MyTownProject.SO;
 using MyTownProject.UI;
-using KinematicCharacterController;
 using MyTownProject.Enviroment;
+using KinematicCharacterController;
 
 namespace MyTownProject.Interaction
 {
+    public enum DoorPatnerIndex
+    {
+        NULL, TestCity, TestTerrain, TestHouse
+    }
     public class Door : MonoBehaviour, IInteractable
     {
         [field: SerializeField] public bool IsVisible { get; set; }
@@ -29,6 +34,12 @@ namespace MyTownProject.Interaction
         [Header("Door Specific")]
         [SerializeField] bool _locked = false;
         [SerializeField] Vector3 _centerStandingPoint;
+        public Transform CameraPosition;
+        public DoorPatnerIndex DoorIndex;
+        //public Transform LookAtPoint { get { return _lookAtPosition; } set { _lookAtPosition = value; } }
+        public Transform LookAtPosition;
+        [SerializeField] Vector3 nextScenePos;
+        [SerializeField] Quaternion nextSceneRot;
 
         [Header("Event References")]
         [SerializeField] MainEventChannelSO mainEventChannel;
@@ -110,7 +121,7 @@ namespace MyTownProject.Interaction
         IEnumerator Teleport()
         {
             //DisableControls.RaiseEvent();
-            //stateChangerEvent.RaiseEventGame(GameStateManager.GameState.CUTSCENE);
+            stateChangerEvent.RaiseEventGame(GameState.CUTSCENE);
             StartCoroutine(SimulateMovement());
             _doorAnimator.PlayDoorAnimation();
             openDoorEvent.OpenDoor(_doorAnimator.CurrentDoorType, gameObject);
@@ -120,13 +131,17 @@ namespace MyTownProject.Interaction
             uIEventChannel.RaiseBarsOn(2f);
 
             //_player.transform.position = _player.transform.position + Vector3.forward * 2f;
-            yield return new WaitForSecondsRealtime(0.5f);
+            yield return new WaitForSecondsRealtime(1f);
             //_animatorRight.Play(crackdoorR);
             //_animatorLeft.Play(crackdoorL);
             uIEventChannel.RaiseFadeOut(Color.black, 0.5f);
             yield return new WaitForSecondsRealtime(1f);
 
             _hasInteracted = true;
+            nextScene.playerLocation = nextScenePos;
+            nextScene.playerRotation = nextSceneRot;
+            nextScene.EnteredThroughDoor = true;
+            nextScene.DoorIndex = DoorIndex;
             mainEventChannel.RaiseEventChangeScene(nextScene);
             //KinematicCharacterSystem.Settings.AutoSimulation = true;
 
@@ -139,23 +154,40 @@ namespace MyTownProject.Interaction
             Vector3 newPos = transform.position + _centerStandingPoint;
             Quaternion lookRot = Quaternion.LookRotation(-transform.forward, Vector3.up);
             KinematicCharacterMotor motor = _player.GetComponent<KinematicCharacterController.Examples.TheCharacterController>().Motor;
+            Vector3 dampPos;
+            Quaternion lerpRot;
 
+            KinematicCharacterSystem.Settings.AutoSimulation = false;
             while (_moveValue < 1)
             {
 
                 _moveValue = Mathf.MoveTowards(_moveValue, 1, 2f * Time.unscaledDeltaTime);
-                Vector3 dampPos = Vector3.SmoothDamp(_player.transform.position, newPos, ref _currentVelocity, 5f * Time.unscaledDeltaTime, 10f);
-                Quaternion lerpRot = Quaternion.Slerp(_player.transform.rotation, lookRot, _moveValue);
-                //Vector3 lerpPosition = Vector3.Lerp(_player.transform.position, newPos, _moveValue);
-                motor.SetPosition(dampPos);
-                motor.SetRotation(lerpRot);
-                //motor.LerpPosition(transform.position + _centerStandingPoint, 0.5f);
+                // dampPos = Vector3.SmoothDamp(_player.transform.position, newPos, ref _currentVelocity, 5f * Time.unscaledDeltaTime, 10f);
+                // lerpRot = Quaternion.Slerp(_player.transform.rotation, lookRot, _moveValue);
+                // //Vector3 lerpPosition = Vector3.Lerp(_player.transform.position, newPos, _moveValue);
+                // motor.SetPosition(dampPos);
+                // motor.SetRotation(lerpRot);
+                // //motor.LerpPosition(transform.position + _centerStandingPoint, 0.5f);
+
+
+
+                yield return new WaitForSecondsRealtime(0.05f);
+                //Tick();
+
+
                 yield return null;
             }
 
             _moveValue = 0;
             print("DoneLerping");
             yield break;
+        }
+
+        void Tick()
+        {
+            KinematicCharacterSystem.PreSimulationInterpolationUpdate(1 / 50);
+            KinematicCharacterSystem.Simulate(1 / 50, KinematicCharacterSystem.CharacterMotors, KinematicCharacterSystem.PhysicsMovers);
+            KinematicCharacterSystem.PostSimulationInterpolationUpdate(1 / 50);
         }
         private void DoLockedDoor()
         {

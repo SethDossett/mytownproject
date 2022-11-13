@@ -1,40 +1,38 @@
 using UnityEngine;
 using Cinemachine;
+using MyTownProject.SO;
+using MyTownProject.Enviroment;
 
 public class CinemachineNewPosition : CinemachineExtension
 {
     Vector3 newPos;
     Quaternion newRot;
-    [SerializeField] Transform target;
-    [SerializeField] Transform player;
-    [SerializeField] Camera mainCam;
+
+    CinemachineVirtualCamera cam;
+    [SerializeField] GameObject door;
     
-    
-    private void Update()
+    void Start()
     {
-        
-        Vector3 dir = target.position - mainCam.transform.position;
-        dir.Normalize();
-        dir.y = 0;
-
-        Quaternion targetRotation = Quaternion.LookRotation(dir);
-        //player.rotation = targetRotation;
-
-
-        //targetRotation = Quaternion.LookRotation(dir);
-        Vector3 eulerAngle = targetRotation.eulerAngles;
-        eulerAngle.y = 0;
-        //mainCam.transform.localEulerAngles = eulerAngle;
-        newRot = targetRotation;
+        cam = GetComponent<CinemachineVirtualCamera>();
+        Quaternion rot = door.transform.rotation;
     }
- 
+
+
+    Vector3 SetCameraPosition()
+    {
+        Vector3 offset = door.transform.rotation * new Vector3(20f, 0, 15f);
+        Vector3 pos = door.transform.position + offset;
+        
+        return pos;
+    }
+
     protected override void PostPipelineStageCallback(
         CinemachineVirtualCameraBase vcam,
         CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
     {
         if (stage == CinemachineCore.Stage.Body)
         {
-            //state.PositionCorrection = mainCam.transform.position;
+            state.PositionCorrection = SetCameraPosition();
             state.OrientationCorrection = newRot; // could be +=?
         }
     }
