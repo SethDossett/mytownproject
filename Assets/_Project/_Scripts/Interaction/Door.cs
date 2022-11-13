@@ -157,7 +157,7 @@ namespace MyTownProject.Interaction
             Vector3 dampPos;
             Quaternion lerpRot;
 
-            KinematicCharacterSystem.Settings.AutoSimulation = false;
+            //KinematicCharacterSystem.Settings.AutoSimulation = false;
             while (_moveValue < 1)
             {
 
