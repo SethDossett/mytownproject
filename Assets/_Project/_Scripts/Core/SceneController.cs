@@ -55,8 +55,6 @@ namespace MyTownProject.Core
 
         IEnumerator EnterScene(SceneSO sceneSO)
         {
-            stateChangerEvent.RaiseEventGame(GameState.CUTSCENE);
-            
             if (sceneSO.EnteredThroughDoor)
             {
                 GameObject obj = GameObject.Find("DoorsInScene");
