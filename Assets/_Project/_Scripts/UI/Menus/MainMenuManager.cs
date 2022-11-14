@@ -57,7 +57,10 @@ namespace MyTownProject.UI
             //need this to change if we want to start game coming out of last door
             settings.SceneToEnterIn.EnteredThroughDoor = false;
             settings.StartOfGame = true;
-            sceneController.RaiseEventChangeScene(settings.SceneToEnterIn);
+            SceneSO scene = settings.SceneToEnterIn;
+            scene.playerLocation = scene.NoDoorStartPos;
+            scene.playerRotation = scene.NoDoorStartRot;
+            sceneController.RaiseEventChangeScene(scene);
             yield break;
         }
         void LeftTriggerInput(InputAction.CallbackContext ctx)

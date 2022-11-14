@@ -11,7 +11,11 @@ namespace MyTownProject.SO
         public Quaternion playerRotation;
         public int sceneIndex;
 
-        [Header("If Passing Through Door")]
+        [Header("Not Passing Through Door")]
+        public Vector3 NoDoorStartPos;
+        public Quaternion NoDoorStartRot;
+
+        [Header("Passing Through Door")]
         public bool EnteredThroughDoor;
         public DoorPatnerIndex DoorIndex;
 

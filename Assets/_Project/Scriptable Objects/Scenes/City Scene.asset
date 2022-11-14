@@ -15,6 +15,8 @@ MonoBehaviour:
   playerLocation: {x: 0, y: 0, z: 0}
   playerRotation: {x: 0, y: 0, z: 0, w: 1}
   sceneIndex: 1
+  NoDoorStartPos: {x: 96.16, y: 2, z: 88.25}
+  NoDoorStartRot: {x: 0, y: 0, z: 0, w: 0}
   EnteredThroughDoor: 0
   DoorIndex: 0
   DoorsInScene: []

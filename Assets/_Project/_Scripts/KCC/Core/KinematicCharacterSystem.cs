@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -119,7 +119,24 @@ namespace KinematicCharacterController
         {
             _instance = this;
         }
-        
+
+        public void TimeScaleZeroTick() => StartCoroutine(_instance.Tick());
+
+        IEnumerator Tick()
+        {
+            float fixedDeltaTime = Time.fixedUnscaledDeltaTime;
+            while (!Settings.AutoSimulation)
+            {
+                yield return new WaitForSecondsRealtime(0.05f);
+                PreSimulationInterpolationUpdate(fixedDeltaTime);
+                Simulate(fixedDeltaTime, CharacterMotors, PhysicsMovers);
+                PostSimulationInterpolationUpdate(fixedDeltaTime);
+                print("Ticking");
+            }
+            print("TickDone");
+            yield break;
+        }
+
         private void FixedUpdate()
         {
             if (Settings.AutoSimulation)
@@ -277,7 +294,7 @@ namespace KinematicCharacterController
             for (int i = 0; i < PhysicsMovers.Count; i++)
             {
                 PhysicsMover mover = PhysicsMovers[i];
-                
+
                 mover.Transform.SetPositionAndRotation(
                     Vector3.Lerp(mover.InitialTickPosition, mover.TransientPosition, interpolationFactor),
                     Quaternion.Slerp(mover.InitialTickRotation, mover.TransientRotation, interpolationFactor));

@@ -145,7 +145,10 @@ MonoBehaviour:
   _locked: 0
   _centerStandingPoint: {x: 0.5, y: 0, z: 0.75}
   CameraPosition: {fileID: 1102899614}
+  DoorIndex: 0
   LookAtPosition: {fileID: 3406886692127073143}
+  nextScenePos: {x: 0, y: 0, z: 0}
+  nextSceneRot: {x: 0, y: 0, z: 0, w: 0}
   mainEventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   openDoorEvent: {fileID: 11400000, guid: 831079ef99d5c4a739e4b5f9efd7cbbc, type: 2}
   uIEventChannel: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
@@ -153,6 +156,8 @@ MonoBehaviour:
   stateChangerEvent: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   SetPlayerPosRot: {fileID: 11400000, guid: 2058ea3555ec84235b1a641170ecfa8c, type: 2}
   DisableControls: {fileID: 11400000, guid: 1f9619156896d6a468b85690b3ab4d6d, type: 2}
+  ToggleTimeScaleZeroTick: {fileID: 11400000, guid: 51e37663df3b8444d8bed47601ddf72f,
+    type: 2}
 --- !u!114 &1747190274
 MonoBehaviour:
   m_ObjectHideFlags: 0

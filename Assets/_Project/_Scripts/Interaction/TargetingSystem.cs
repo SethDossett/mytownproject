@@ -91,7 +91,6 @@ namespace MyTownProject.Interaction
             _interact = _inputActions.GamePlay.Interact;
             _cameraInput = _inputActions.GamePlay.Camera;
             _LeftTriggerInput = _inputActions.GamePlay.LeftTrigger;
-            _LeftTriggerInput.started += CheckInputs;
             _LeftTriggerInput.performed += LeftTriggerInput;
             //_LeftTriggerInput.canceled += LeftTriggerInput;
         }
@@ -99,7 +98,6 @@ namespace MyTownProject.Interaction
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             TheCharacterController.OnPlayerStateChanged -= CheckPlayerState;
-            _LeftTriggerInput.started -= CheckInputs;
             _LeftTriggerInput.performed -= LeftTriggerInput;
             //_LeftTriggerInput.canceled -= LeftTriggerInput;
         }
@@ -124,6 +122,7 @@ namespace MyTownProject.Interaction
                 {
                     //if (_LeftTriggerInput.ReadValue<float>() <= 0.1f)
                     //ResetTarget();
+                    Invoke("CheckInputs", 0.1f);
                 }
                 canRaycast = true;
             }
@@ -153,7 +152,8 @@ namespace MyTownProject.Interaction
             print(ctx.ReadValue<float>());
             if (_targetLockedOn)
             {
-                if (_LeftTriggerInput.ReadValue<float>() > 0f)
+                print("Pre");
+                if (_LeftTriggerInput.ReadValue<float>() == 0f)
                     print("Works");
             }
         }
@@ -167,15 +167,12 @@ namespace MyTownProject.Interaction
             { // might not want, it is janky, transitioning from kcc to freelook cam.
                 if (_cameraInput.ReadValue<Vector2>().magnitude > 0)
                 {
-                    ChangeCamera();
                     RecenterCamera(0, 0.5f, 1);
                 }
             }
 
             IconControl();
-            //CheckTimer();
             CheckForIInteractable();
-
 
             if (_closestTarget != null)
             {
@@ -340,28 +337,7 @@ namespace MyTownProject.Interaction
             //currentYOffset = h - half_h;
             //if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
             //Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
-            //if(Blocked(closestTarget.position + _npcRayPoint)){
-            //    closestTarget.gameObject.GetComponent<IInteractable>().SetHovered(false);
-            //    if(_closestTarget){
-            //        _closestTarget = null;
-            //        ResetTarget();
-            //    }
-            //    return;
-            //} 
-            //if(GetDistance(transform.position, closestTarget.position) > closestTarget.GetComponent<IInteractable>().MaxNoticeRange){
-            //    //print(GetDistance(transform, closestTarget));
-            //    _closestTarget = null;
-            //    return; // not working right with findByAngle
-            //}
-            //if(GetAngle(closestTarget.position,transform.position,transform.forward) > maxNoticeAngle){
-            //    //print(GetAngle(closestTarget.position,transform.position,transform.forward, 0));
-            //    _closestTarget = null;
-            //    return;
-            //}
-
-
-            //_closestTarget = closestTarget;
-            //_closestTarget.gameObject.GetComponent<IInteractable>().SetHovered(true);
+            
 
         }
 
@@ -461,11 +437,6 @@ namespace MyTownProject.Interaction
             //HideHover(currentTarget);
             //currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true)(); //Make Events that fire for UI Targeted
 
-
-            //turning off to see if i can better camera
-            //ChangeCamera(true);
-
-
             //We Are locked on and have not released off target
             _preventNewLockOn = true;
 
@@ -552,8 +523,6 @@ namespace MyTownProject.Interaction
             //if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
             _timer = 0;
 
-            //turning off to see if i can better camera
-            //ChangeCamera();
             currentTarget = null;
             _closestTarget = null;
             _preventNewLockOn = false;
@@ -673,10 +642,6 @@ namespace MyTownProject.Interaction
                 _isInteracting = true;
                 CC._target = t;
                 if (currentTarget) ResetTarget();
-
-                //turning off to see if i can better camera
-                //ChangeCamera();
-
                 _interactable.OnInteract(this);
                 _isInteracting = false;
                 return;
@@ -690,26 +655,9 @@ namespace MyTownProject.Interaction
             uiEventChannel.ChangePrompt(PromptName.Talk, 0); //Not Optimal Way to Set, but good for now
             uiEventChannel.ChangePrompt(PromptName.Open, 0);
         }
-        void ChangeCamera(bool targetingCam = false)
-        {
-            if (!targetingCam)
-            {
-                _freeLookCameraOff = false;
-                _cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = true;
-                _cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = false;
-
-            }
-            else
-            {
-                _freeLookCameraOff = true;
-                _cam.gameObject.GetComponent<Cinemachine.CinemachineBrain>().enabled = false;
-                _cam.gameObject.GetComponent<KinematicCharacterController.Examples.ExampleCharacterCamera>().isTargeting = true;
-
-            }
-        }
         void LeftTriggerInput(InputAction.CallbackContext ctx)
         {
-            if(_releasingTargeting) return;
+            if (_releasingTargeting) return;
 
             print(ctx.ReadValue<float>() + " Input CTX value");
             if (ctx.ReadValue<float>() > 0.1f)

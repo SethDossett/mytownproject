@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5baf88f9eb0fd42a3997cf17da0291, type: 3}
   m_Name: TestScene
   m_EditorClassIdentifier: 
-  playerLocation: {x: 100.972, y: 2, z: 93.447}
-  playerRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  playerLocation: {x: 96.16, y: 2, z: 88.25}
+  playerRotation: {x: 0, y: 0, z: 0, w: 0}
   sceneIndex: 4
+  NoDoorStartPos: {x: 96.16, y: 2, z: 88.25}
+  NoDoorStartRot: {x: 0, y: 0, z: 0, w: 0}
+  EnteredThroughDoor: 0
+  DoorIndex: 3
+  DoorsInScene: []

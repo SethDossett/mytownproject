@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using KinematicCharacterController.Examples;
 using MyTownProject.Events;
 
 namespace MyTownProject.Core

@@ -88,7 +88,6 @@ namespace MyTownProject.Core
         private void FixedUpdate()
         {
             currentTimeBetweenTicks += Time.fixedDeltaTime;
-
         }
         private void Update()
         {

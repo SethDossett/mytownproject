@@ -55,6 +55,8 @@ namespace MyTownProject.Core
 
         IEnumerator EnterScene(SceneSO sceneSO)
         {
+            stateChangerEvent.RaiseEventGame(GameState.CUTSCENE);
+            
             if (sceneSO.EnteredThroughDoor)
             {
                 GameObject obj = GameObject.Find("DoorsInScene");
@@ -81,19 +83,16 @@ namespace MyTownProject.Core
                     Vector3 offset = exitedDoorScript.InteractionPointOffset;
                     sceneSO.playerLocation = exitedDoor.TransformPoint(new Vector3(offset.x, 0, 0.3f));
                     sceneSO.playerRotation = exitedDoor.rotation;
-                    teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
                 }
             }
 
+            teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
 
             //Reset Scene Event, to recenter camera, slide in UI, etc.
             print("Completed Eneter Scene");
 
-            //stateChangerEvent.RaiseEventGame(GameState.CUTSCENE);
-            Time.timeScale = 1;
             // If CutScene to be played Play now.
             yield return new WaitForSecondsRealtime(1f);
-            Time.timeScale = 0;
             uIEventChannel.RaiseFadeIn(Color.black, 1f);
             yield return new WaitForSecondsRealtime(0.25f);
             uIEventChannel.RaiseBarsOff(2f);

@@ -2,6 +2,7 @@ using UnityEngine;
 using MyTownProject.Events;
 using MyTownProject.SO;
 using System.Collections;
+using KinematicCharacterController;
 
 namespace MyTownProject.Core
 {
@@ -15,7 +16,11 @@ namespace MyTownProject.Core
 
         [SerializeField] GameSettingsSO settings;
         [SerializeField] GeneralEventSO StartOfGame;
+        [SerializeField] GeneralEventSO TurnOnTimeScaleZeroTick;
         [SerializeField] StateChangerEventSO StateChanger;
+
+        KinematicCharacterSystem _kccSystem;
+
         [SerializeField] bool setFrameRate;
         [SerializeField] int targetFrameRate;
 
@@ -28,16 +33,45 @@ namespace MyTownProject.Core
         private void Awake()
         {
             if (GameObject.Find("New Game Manager")) Destroy(gameObject);
+
+            CheckFrameRate();
+        }
+        private void OnEnable()
+        {
+            TurnOnTimeScaleZeroTick.OnRaiseEvent += CheckTimeScale;
+        }
+        private void OnDisable()
+        {
+            TurnOnTimeScaleZeroTick.OnRaiseEvent -= CheckTimeScale;
+        }
+        void CheckFrameRate()
+        {
             if (setFrameRate)
                 Application.targetFrameRate = targetFrameRate;
             else
                 Application.targetFrameRate = -1;
         }
+        void CheckTimeScale()
+        {
+            _kccSystem = KinematicCharacterSystem.GetInstance();
 
+            if (KinematicCharacterSystem.Settings.AutoSimulation)
+            {
+                KinematicCharacterSystem.Settings.AutoSimulation = false;
+                _kccSystem.TimeScaleZeroTick();
+            }
+            else
+            {
+                KinematicCharacterSystem.Settings.AutoSimulation = true;
+            }
+            print($"Auto Simulation {KinematicCharacterSystem.Settings.AutoSimulation}");
+        }
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
             gameObject.name = "New Game Manager";
+
+
             StartCoroutine(EnterScene());
         }
 

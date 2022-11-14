@@ -49,8 +49,10 @@ namespace MyTownProject.Interaction
         [SerializeField] StateChangerEventSO stateChangerEvent;
         [SerializeField] ActionSO SetPlayerPosRot;
         [SerializeField] GeneralEventSO DisableControls;
+        [SerializeField] GeneralEventSO ToggleTimeScaleZeroTick;
 
         [Header("References")]
+        KinematicCharacterSystem KCCSystem;
         DoorAnimator _doorAnimator;
 
         [Header("Values")]
@@ -69,6 +71,7 @@ namespace MyTownProject.Interaction
         int closeWide = Animator.StringToHash("CloseWide");
         private void Start()
         {
+            KCCSystem = KinematicCharacterSystem.GetInstance();
             _doorAnimator = GetComponent<DoorAnimator>();
         }
         public void OnFocus(string interactionName)
@@ -138,8 +141,8 @@ namespace MyTownProject.Interaction
             yield return new WaitForSecondsRealtime(1f);
 
             _hasInteracted = true;
-            nextScene.playerLocation = nextScenePos;
-            nextScene.playerRotation = nextSceneRot;
+            //nextScene.playerLocation = nextScenePos;
+            //nextScene.playerRotation = nextSceneRot;
             nextScene.EnteredThroughDoor = true;
             nextScene.DoorIndex = DoorIndex;
             mainEventChannel.RaiseEventChangeScene(nextScene);
@@ -151,43 +154,33 @@ namespace MyTownProject.Interaction
         IEnumerator SimulateMovement()
         {
             _moveValue = 0;
-            Vector3 newPos = transform.position + _centerStandingPoint;
+            _centerStandingPoint = new Vector3(InteractionPointOffset.x, 0, 0.3f);
+            Vector3 newPos = transform.TransformPoint(_centerStandingPoint);
             Quaternion lookRot = Quaternion.LookRotation(-transform.forward, Vector3.up);
             KinematicCharacterMotor motor = _player.GetComponent<KinematicCharacterController.Examples.TheCharacterController>().Motor;
             Vector3 dampPos;
             Quaternion lerpRot;
 
-            KinematicCharacterSystem.Settings.AutoSimulation = false;
+            ToggleTimeScaleZeroTick.RaiseEvent();
+            
             while (_moveValue < 1)
             {
-
+                
                 _moveValue = Mathf.MoveTowards(_moveValue, 1, 2f * Time.unscaledDeltaTime);
-                // dampPos = Vector3.SmoothDamp(_player.transform.position, newPos, ref _currentVelocity, 5f * Time.unscaledDeltaTime, 10f);
-                // lerpRot = Quaternion.Slerp(_player.transform.rotation, lookRot, _moveValue);
-                // //Vector3 lerpPosition = Vector3.Lerp(_player.transform.position, newPos, _moveValue);
-                // motor.SetPosition(dampPos);
-                // motor.SetRotation(lerpRot);
-                // //motor.LerpPosition(transform.position + _centerStandingPoint, 0.5f);
-
-
-
-                yield return new WaitForSecondsRealtime(0.05f);
-                //Tick();
-
+                Vector3 lerpPosition = Vector3.Lerp(motor.TransientPosition, newPos, _moveValue);
+                //dampPos = Vector3.SmoothDamp(_player.transform.position, newPos, ref _currentVelocity, 5f * Time.unscaledDeltaTime, 10f);
+                lerpRot = Quaternion.Slerp(_player.transform.rotation, lookRot, _moveValue);
+                motor.SetPosition(lerpPosition);
+                motor.SetRotation(lerpRot);
+                //motor.LerpPosition(newPos, 0.5f);
 
                 yield return null;
             }
 
+            ToggleTimeScaleZeroTick.RaiseEvent();
             _moveValue = 0;
             print("DoneLerping");
             yield break;
-        }
-
-        void Tick()
-        {
-            KinematicCharacterSystem.PreSimulationInterpolationUpdate(1 / 50);
-            KinematicCharacterSystem.Simulate(1 / 50, KinematicCharacterSystem.CharacterMotors, KinematicCharacterSystem.PhysicsMovers);
-            KinematicCharacterSystem.PostSimulationInterpolationUpdate(1 / 50);
         }
         private void DoLockedDoor()
         {
