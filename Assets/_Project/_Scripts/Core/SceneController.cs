@@ -22,6 +22,9 @@ namespace MyTownProject.Core
         [SerializeField] StateChangerEventSO stateChangerEvent;
         [SerializeField] ActionSO teleportPlayer;
         [SerializeField] TransformEventSO EnteredNewScene;
+        [SerializeField] GeneralEventSO ToggleTimeScaleZeroTick;
+
+        Coroutine _walkCoroutine;
 
 
         private void OnEnable()
@@ -55,10 +58,14 @@ namespace MyTownProject.Core
 
         IEnumerator EnterScene(SceneSO sceneSO)
         {
-            if (sceneSO.EnteredThroughDoor)
+            stateChangerEvent.RaiseEventGame(GameState.CUTSCENE);
+            bool enteredThroughDoor = sceneSO.EnteredThroughDoor;
+            if (enteredThroughDoor)
             {
-                GameObject obj = GameObject.Find("DoorsInScene");
-                obj.GetComponent<DoorsInScene>().FindAllDoorsInScene();
+                //GameObject obj = GameObject.Find("DoorsInScene");
+                GameObject.FindObjectOfType<DoorsInScene>().FindAllDoorsInScene();
+
+                //obj.GetComponent<DoorsInScene>().FindAllDoorsInScene();
                 yield return new WaitForEndOfFrame();
                 print("2nd");
                 Transform exitedDoor = null;
@@ -92,11 +99,24 @@ namespace MyTownProject.Core
             // If CutScene to be played Play now.
             yield return new WaitForSecondsRealtime(1f);
             uIEventChannel.RaiseFadeIn(Color.black, 1f);
+            if(enteredThroughDoor) ToggleTimeScaleZeroTick.RaiseEvent();
+            //_walkCoroutine = StartCoroutine(WallkIntoPosition());
             yield return new WaitForSecondsRealtime(0.25f);
             uIEventChannel.RaiseBarsOff(2f);
             yield return new WaitForSecondsRealtime(1f);
+            //StopCoroutine(_walkCoroutine);
+            if(enteredThroughDoor) ToggleTimeScaleZeroTick.RaiseEvent();
             stateChangerEvent.RaiseEventGame(GameState.GAME_PLAYING);
             yield break;
+        }
+        IEnumerator WallkIntoPosition()
+        {
+            while (true)
+            {
+                //print("Walking into Position");
+                
+                yield return null;
+            }
         }
 
         void SceneChanged(Scene previous, Scene current)

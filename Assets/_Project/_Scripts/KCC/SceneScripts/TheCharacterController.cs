@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyTownProject.Core;
 using MyTownProject.Events;
 using MyTownProject.SO;
 using MyTownProject.UI;
@@ -12,7 +13,7 @@ namespace KinematicCharacterController.Examples
     #region Stucts and Enums
     public enum CharacterState
     {
-        Default, Climbing, Talking, ClimbLadder, Targeting, Crawling, Jumping
+        Default, Climbing, Talking, ClimbLadder, Targeting, Crawling, Jumping, CutsceneControl
     }
     public enum GroundType
     {
@@ -143,12 +144,14 @@ namespace KinematicCharacterController.Examples
         int anim_talking = Animator.StringToHash("isTalking");
         int anim_horizontal = Animator.StringToHash("Horizontal");
         int anim_vertical = Animator.StringToHash("Vertical");
+        int anim_SpeedMultiplier = Animator.StringToHash("SpeedMultiplier");
         //Climb States
         int anim_Hang = Animator.StringToHash("Hang");
         int anim_DropToHang = Animator.StringToHash("DropToHang");
         int anim_ClimbUp = Animator.StringToHash("ClimbUp");
         int anim_FreeHangDrop = Animator.StringToHash("FreeHangDrop");
 
+        public GameState CurrentGameState { get; private set; }
         public CharacterState CurrentCharacterState { get; private set; }
         public GroundType CurrentGroundType { get; private set; }
 
@@ -202,11 +205,13 @@ namespace KinematicCharacterController.Examples
 
         private void OnEnable()
         {
+            GameStateManager.OnGameStateChanged += CheckGameState;
             SetPlayerPosRot.OnSetPosRot += SetTransientPosRot;
             dialogueEvent.onEnter += (GameObject npc, TextAsset inkFile) => _target = npc.transform;
         }
         private void OnDisable()
         {
+            GameStateManager.OnGameStateChanged -= CheckGameState;
             SetPlayerPosRot.OnSetPosRot -= SetTransientPosRot;
             dialogueEvent.onEnter -= (GameObject npc, TextAsset inkFile) => _target = npc.transform;
         }
@@ -214,11 +219,25 @@ namespace KinematicCharacterController.Examples
         {
             SetInitialReferences();
             // Handle initial state
-            TransitionToState(CharacterState.Default);
+            //TransitionToState(CharacterState.Default);
 
             // Assign the characterController to the motor
             Motor.CharacterController = this;
 
+        }
+        void CheckGameState(GameState state)
+        {
+            CurrentGameState = state;
+
+            if (state == GameState.GAME_PLAYING)
+            {
+                TransitionToState(CharacterState.Default);
+                print("HERE");
+            }
+            else if (state == GameState.CUTSCENE)
+            {
+                TransitionToState(CharacterState.CutsceneControl);
+            }
         }
         private void Update()
         {
@@ -246,6 +265,7 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Default:
                     {
                         Gravity = new Vector3(0, -30f, 0);
+                        _animator.SetFloat(anim_SpeedMultiplier, 2.5f, 0.1f, Time.unscaledDeltaTime);
                         //_animator.CrossFadeInFixedTime(_idleState, 0.2f, 0);
                         //MaxStableMoveSpeed = 0; // think it might look better to be able to run out of climbing.
                         break;
@@ -265,6 +285,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.ClimbLadder:
                     {
+                        CapsuleEnable(false);
                         playerClimb._isClimbing = true;
                         _animator.CrossFadeInFixedTime(_climbState, 0.2f, 0);
                         break;
@@ -276,7 +297,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Talking:
                     {
-                        
+
                         _animator.SetFloat(anim_moving, 0, 0f, Time.deltaTime);
                         _animator.SetFloat(anim_horizontal, 0, 0.1f, Time.deltaTime);
                         _animator.SetFloat(anim_vertical, 0, 0.1f, Time.deltaTime);
@@ -331,6 +352,7 @@ namespace KinematicCharacterController.Examples
                         print("EXIT LADDER");
                         _animator.CrossFadeInFixedTime(_idleState, 0, 0);
                         playerClimb._isClimbing = false;
+                        CapsuleEnable(true);
                         break;
                     }
                 case CharacterState.Targeting:
@@ -527,11 +549,11 @@ namespace KinematicCharacterController.Examples
                                 _lookInputVector = _moveInputVector.normalized;
                                 break;
                         }
-                        
+
                         if (inputs.CrouchUp)
                             _shouldBeCrouching = false;
 
-                        if(inputs.CrouchDown)
+                        if (inputs.CrouchDown)
                             _shouldBeCrouching = true;
                         break;
                     }
@@ -1009,7 +1031,7 @@ namespace KinematicCharacterController.Examples
                             // Drag
                             currentVelocity *= (1f / (1f + (Drag * deltaTime)));
 
-                            if(currentVelocity.y >= 0) _isFalling = false;
+                            if (currentVelocity.y >= 0) _isFalling = false;
                             else _isFalling = true;
                         }
                         break;
@@ -1273,6 +1295,39 @@ namespace KinematicCharacterController.Examples
                         _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.deltaTime);
                         break;
                     }
+                case CharacterState.CutsceneControl:
+                    {
+                        print("WalkingForward");
+
+                        float currentVelocityMagnitude = currentVelocity.magnitude;
+
+                        Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
+                        if (currentVelocityMagnitude > 0f && Motor.GroundingStatus.SnappingPrevented)
+                        {
+                            // Take the normal from where we're coming from
+                            Vector3 groundPointToCharacter = Motor.TransientPosition - Motor.GroundingStatus.GroundPoint;
+                            if (Vector3.Dot(currentVelocity, groundPointToCharacter) >= 0f)
+                            {
+                                effectiveGroundNormal = Motor.GroundingStatus.OuterGroundNormal;
+                            }
+                            else
+                            {
+                                effectiveGroundNormal = Motor.GroundingStatus.InnerGroundNormal;
+                            }
+                        }
+                        MaxStableMoveSpeed = 1f;
+
+                        Vector3 targetMovementVelocity = transform.forward * MaxStableMoveSpeed;
+
+                        currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
+
+                        currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+
+                        _animator.SetFloat(anim_moving, currentVelocityMagnitude, 0f, Time.unscaledDeltaTime);
+                        _animator.SetFloat(anim_SpeedMultiplier, 1.5f, 0.1f, Time.unscaledDeltaTime);
+
+                        break;
+                    }
             }
         }
 
@@ -1442,7 +1497,9 @@ namespace KinematicCharacterController.Examples
             _isFalling = false;
             _timeFallingInAir = 0f;
             _startFallingTimer = false;
-            TransitionToState(CharacterState.Default); // could make bool for landing
+            if(CurrentGameState == GameState.GAME_PLAYING) {
+                print("Here2");
+                TransitionToState(CharacterState.Default); }// could make bool for landing
         }
 
         protected void OnLeaveStableGround()
@@ -1467,7 +1524,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Targeting:
                     {
-                        
+
                         break;
                     }
 
@@ -1484,9 +1541,9 @@ namespace KinematicCharacterController.Examples
         }
         void SetTransientPosRot(Vector3 loc, float lerpSpeed, Quaternion rot, bool LerpPosition)
         {
-            if(LerpPosition)// Does Not work while Time.TimeScale = 0.
+            if (LerpPosition)// Does Not work while Time.TimeScale = 0.
                 Motor.SetTransientPosition(loc, true, lerpSpeed);
-                //Motor.LerpPosition(loc, 5f);
+            //Motor.LerpPosition(loc, 5f);
             else
                 Motor.SetPosition(loc, false);
 

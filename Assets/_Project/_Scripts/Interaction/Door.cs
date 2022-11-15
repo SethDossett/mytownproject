@@ -52,7 +52,6 @@ namespace MyTownProject.Interaction
         [SerializeField] GeneralEventSO ToggleTimeScaleZeroTick;
 
         [Header("References")]
-        KinematicCharacterSystem KCCSystem;
         DoorAnimator _doorAnimator;
 
         [Header("Values")]
@@ -71,7 +70,6 @@ namespace MyTownProject.Interaction
         int closeWide = Animator.StringToHash("CloseWide");
         private void Start()
         {
-            KCCSystem = KinematicCharacterSystem.GetInstance();
             _doorAnimator = GetComponent<DoorAnimator>();
         }
         public void OnFocus(string interactionName)

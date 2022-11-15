@@ -68,7 +68,7 @@ namespace MyTownProject.Cameras
         {
             if (state == GameState.GAME_PLAYING)
             {
-                if (_playerManager.CurrentCharacterState == CharacterState.Default)
+                if (_playerManager.CurrentCharacterState != CharacterState.Targeting)
                 {
                     RemoveTargets();
                     AddPlayer();

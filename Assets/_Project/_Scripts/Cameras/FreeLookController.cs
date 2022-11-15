@@ -69,7 +69,7 @@ namespace MyTownProject.Cameras
 
         void CheckGameState(GameState state)
         {
-            if (state == GameState.GAME_PLAYING)
+            if (state != GameState.GAME_PAUSED)
             {
                 CameraInputs.XYAxis.action.Enable();
                 print("CAMERA INPUTS ON");
