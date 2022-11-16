@@ -1652,9 +1652,6 @@ namespace KinematicCharacterController.Examples
             {
                 _hardLanding = true;
             }
-
-
-
         }
 
         public void OnDiscreteCollisionDetected(Collider hitCollider)

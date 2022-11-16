@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using MyTownProject.Core;
 using MyTownProject.Events;
 using KinematicCharacterController.Examples;
@@ -15,6 +16,7 @@ namespace MyTownProject.Enviroment
         [SerializeField] GeneralEventSO EnableControls;
         [SerializeField] GeneralEventSO DisableControls;
         private NewControls inputActions;
+        InputAction _cameraInput;
         GameObject _player;
         TheCharacterController CC;
 
@@ -63,6 +65,12 @@ namespace MyTownProject.Enviroment
         {
             inputActions = InputManager.inputActions;
             _ladderCollider = GetComponent<BoxCollider>();
+            _cameraInput = inputActions.GamePlay.Camera;
+            _cameraInput.performed += (InputAction.CallbackContext ctx) =>
+            {
+                if (_onLadder)
+                    DisableCamRecter.RaiseEvent();
+            };
 
         }
         private void Start()
@@ -82,18 +90,13 @@ namespace MyTownProject.Enviroment
         }
         private void Update()
         {
-            inputMag = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
+            //inputMag = inputActions.GamePlay.Move.ReadValue<Vector2>().magnitude;
             if (!_checkForPlayer) return;
 
             if (!_onLadder)
                 NotOnLadder();
             else
                 OnLadder();
-
-            if (inputActions.GamePlay.Camera.ReadValue<Vector2>() != Vector2.zero)
-            {
-                DisableCamRecter.RaiseEvent();
-            }
 
 
             //print(inputActions.GamePlay.Move.ReadValue<Vector2>());
@@ -155,7 +158,7 @@ namespace MyTownProject.Enviroment
         }
         void OnLadder()
         {
-            if(CC.CurrentCharacterState == CharacterState.Default) SwitchToDefaltState();
+            if (CC.CurrentCharacterState == CharacterState.Default) SwitchToDefaltState();
             if (!_onLadder) return;
             if (_exitLadderCalled) return;
             _heightOnLadder = _player.transform.position.y - _startHeight;
@@ -216,7 +219,7 @@ namespace MyTownProject.Enviroment
         }
         void SwitchToDefaltState()
         {
-            if(CC.CurrentCharacterState != CharacterState.Default) CC.TransitionToState(CharacterState.Default);
+            if (CC.CurrentCharacterState != CharacterState.Default) CC.TransitionToState(CharacterState.Default);
             _onLadder = false;
             _heightOnLadder = 0;
             _ladderCollider.enabled = true;

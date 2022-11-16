@@ -162,10 +162,9 @@ namespace MyTownProject.Interaction
         {
             if (!canRaycast) return;
 
-            CC._hasTargetToLockOn = _targetLockedOn;
             if (currentTarget && _freeLookCameraOff)
             { // might not want, it is janky, transitioning from kcc to freelook cam.
-                if (_cameraInput.ReadValue<Vector2>().magnitude > 0)
+                if (_cameraInput.ReadValue<Vector2>().sqrMagnitude > 0)
                 {
                     RecenterCamera(0, 0.5f, 1);
                 }
@@ -432,6 +431,7 @@ namespace MyTownProject.Interaction
             _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
             _targetingEvent.RaiseEvent(currentTarget);
             uiEventChannel.RaiseBarsOn(0.1f);
+            CC._hasTargetToLockOn = true;
             CC.TransitionToState(CharacterState.Targeting);
             currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true);
             //HideHover(currentTarget);
@@ -523,6 +523,7 @@ namespace MyTownProject.Interaction
             //if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
             _timer = 0;
 
+            CC._hasTargetToLockOn = false;
             currentTarget = null;
             _closestTarget = null;
             _preventNewLockOn = false;

@@ -1552,7 +1552,7 @@ MonoBehaviour:
   _hasTargetToLockOn: 0
   _crawlSpeed: 2
   _timeFallingInAir: 0
-  _timetotriggerHardLanding: 0.5
+  _timetotriggerHardLanding: 0.85
   _isFalling: 0
   IgnoredColliders: []
   BonusOrientationMethod: 0
