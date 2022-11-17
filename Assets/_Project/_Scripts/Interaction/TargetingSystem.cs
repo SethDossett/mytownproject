@@ -376,7 +376,7 @@ namespace MyTownProject.Interaction
                 interactable.SetHovered(false);
                 return false;
             }
-            if (GetAngle(t.position, interactionPoint, transform.forward) > maxNoticeAngle)
+            if (GetAngle(interactionPoint, transform.position, transform.forward) > maxNoticeAngle)
             {
                 return false;
             }

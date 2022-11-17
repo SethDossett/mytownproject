@@ -14,7 +14,7 @@ namespace MyTownProject.UI
         [SerializeField] GameObject _prevMenuPage;
         int _currentMenuIndex;
         public bool InputDisabled;
-        [SerializeField] List<GameObject> pages = new List<GameObject>();
+        public List<GameObject> pages = new List<GameObject>();
         [SerializeField] MainMenuManager manager;
         [SerializeField] PageMenuBase menuBase;
 
@@ -24,11 +24,11 @@ namespace MyTownProject.UI
 
         private void OnEnable()
         {
-            MainMenuManager.OnMenuStateChanged += StateChanged;
+            //PageMenuBase.OnMenuStateChanged += StateChanged;
         }
         private void OnDisable()
         {
-            MainMenuManager.OnMenuStateChanged -= StateChanged;
+            //PageMenuBase.OnMenuStateChanged -= StateChanged;
         }
         private void Start()
         {

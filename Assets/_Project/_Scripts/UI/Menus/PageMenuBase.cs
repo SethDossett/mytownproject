@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections;
 using MyTownProject.Core;
 using MyTownProject.Events;
 using MyTownProject.SO;
@@ -11,20 +12,22 @@ namespace MyTownProject.UI
     {
         Front, Options, Controls, Settings
     }
-    public class PageMenuBase : MonoBehaviour
+    public abstract class PageMenuBase : MonoBehaviour
     {
 
         NewControls _inputActions;
-        int lastCurrentScene;
+        int _pageCount;
         [SerializeField] GameObject firstButton;
-        public MenuState CurrentMenuState { get; private set; }
+        [field:SerializeField] public MenuState CurrentMenuState { get; private set; }
         public static event Action<MenuState, MenuState> OnMenuStateChanged;
         [SerializeField] MenuController controller;
-        [SerializeField] GameSettingsSO settings;
-        [SerializeField] UIEventChannelSO UIEvents;
-        [SerializeField] GeneralEventSO saveControllerType;
+        public GameSettingsSO GameSettings;
+        public UIEventChannelSO UIEvents;
+        public GeneralEventSO SaveControllerType;
+        public MainEventChannelSO SceneController;
+        public UIEventChannelSO UIEventChannel;
 
-        private void Awake()
+        public virtual void Awake()
         {
             _inputActions = InputManager.inputActions;
             InputManager.ToggleActionMap(_inputActions.UI);
@@ -33,25 +36,21 @@ namespace MyTownProject.UI
             UIEvents.OnChangeControllerType += ChangeController;
 
             TransitionToState(MenuState.Front);
+            _pageCount = controller.pages.Count;
         }
-        private void OnDestroy()
+        public virtual void OnDestroy()
         {
             _inputActions.UI.LeftTrigger.performed -= LeftTriggerInput;
             _inputActions.UI.RightTrigger.performed -= RightTriggerInput;
             UIEvents.OnChangeControllerType -= ChangeController;
         }
-        public void EnterGame()
-        {
-            lastCurrentScene = 0;
 
-            //SceneController.SwitchScene(lastCurrentScene);
-        }
         public virtual void LeftTriggerInput(InputAction.CallbackContext ctx)
         {
             if (controller.InputDisabled) return;
             print("LeftTriggerPerformed");
             int index = (int)CurrentMenuState - 1;
-            if (index < 0) index = 3;
+            if (index < 0) index = _pageCount - 1;
 
             MenuState nextState = (MenuState)index;
             TransitionToState(nextState);
@@ -62,7 +61,7 @@ namespace MyTownProject.UI
             if (controller.InputDisabled) return;
             print("RightTriggerPerformed");
             int index = (int)CurrentMenuState + 1;
-            if (index > 3) index = 0;
+            if (index > _pageCount - 1) index = 0;
 
             MenuState nextState = (MenuState)index;
             TransitionToState(nextState);
@@ -79,15 +78,33 @@ namespace MyTownProject.UI
             OnMenuStateChanged?.Invoke(newState, tmpInitialState);
         }
 
-        void OnStateEnter(MenuState toState, MenuState fromState)
+        public virtual void OnStateEnter(MenuState toState, MenuState fromState)
         {
 
         }
 
-        void ChangeController(ControllerType controllerType)
+        public virtual void ChangeController(ControllerType controllerType)
         {
-            settings.ControllerType = controllerType;
-            saveControllerType.RaiseEvent();
+            GameSettings.ControllerType = controllerType;
+            SaveControllerType.RaiseEvent();
+        }
+
+
+        public virtual void QuitGame()
+        {
+            // save any game data here
+#if UNITY_EDITOR
+            // Application.Quit() does not work in the editor so
+            // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+         Application.Quit();
+#endif
+        }
+
+        public virtual void OnApplicationQuit()
+        {
+            print("QUIT GAME");
         }
     }
 }
