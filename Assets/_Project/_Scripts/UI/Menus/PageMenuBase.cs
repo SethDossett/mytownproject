@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using System.Collections;
 using MyTownProject.Core;
 using MyTownProject.Events;
 using MyTownProject.SO;
@@ -14,19 +13,20 @@ namespace MyTownProject.UI
     }
     public abstract class PageMenuBase : MonoBehaviour
     {
+        [field:SerializeField] public MenuState CurrentMenuState { get; private set; }
+        [SerializeField] GameObject firstButton;
+        [SerializeField] MenuController controller;
+        [SerializeField] protected GameSettingsSO GameSettings;
+        [SerializeField] protected UIEventChannelSO UIEvents;
+        [SerializeField] protected GeneralEventSO SaveControllerType;
+        [SerializeField] protected MainEventChannelSO SceneController;
+        [SerializeField] protected UIEventChannelSO UIEventChannel;
 
+        public static event Action<MenuState, MenuState> OnMenuStateChanged;
+        
         NewControls _inputActions;
         int _pageCount;
-        [SerializeField] GameObject firstButton;
-        [field:SerializeField] public MenuState CurrentMenuState { get; private set; }
-        public static event Action<MenuState, MenuState> OnMenuStateChanged;
-        [SerializeField] MenuController controller;
-        public GameSettingsSO GameSettings;
-        public UIEventChannelSO UIEvents;
-        public GeneralEventSO SaveControllerType;
-        public MainEventChannelSO SceneController;
-        public UIEventChannelSO UIEventChannel;
-
+       
         public virtual void Awake()
         {
             _inputActions = InputManager.inputActions;

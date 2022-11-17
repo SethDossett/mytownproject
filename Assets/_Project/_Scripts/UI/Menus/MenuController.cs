@@ -39,7 +39,7 @@ namespace MyTownProject.UI
                 StartCoroutine(SetFirstSelection(buttonSelection));
             }
         }
-        void StateChanged(MainMenuState newState, MainMenuState prevState)
+        void StateChanged(MenuState newState, MenuState prevState)
         {
             int prevStateIndex = (int)prevState;
             _currentMenuIndex = (int)newState;

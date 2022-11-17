@@ -8,19 +8,16 @@ using UnityEngine.InputSystem;
 
 namespace MyTownProject.UI
 {
-    public enum MainMenuState
-    {
-        Front, Options, Controls, Settings
-    }
     public class MainMenuManager : PageMenuBase
     {
-        int lastCurrentScene;
+        [Header("Main Menu Variables")]
         [SerializeField] GameSettingsSO menuGameSettings;
         [SerializeField] UIEventChannelSO uIEvents;
         [SerializeField] GeneralEventSO saveControllerType;
         [SerializeField] MainEventChannelSO sceneController;
         [SerializeField] UIEventChannelSO uIEventChannel;
 
+        int lastCurrentScene;
         
         public void EnterGame()
         {
@@ -43,7 +40,9 @@ namespace MyTownProject.UI
             sceneController.RaiseEventChangeScene(scene);
             yield break;
         }
-        
+        public override void Awake() {
+            base.Awake();
+        }
 
         
     }

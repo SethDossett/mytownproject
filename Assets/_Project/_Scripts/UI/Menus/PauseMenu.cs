@@ -11,6 +11,7 @@ namespace MyTownProject.UI
 {
     public class PauseMenu : PageMenuBase
     {
+        [Header("Pause Menu Variables")]
         [SerializeField] MainEventChannelSO MainEventChannelSO;
         [SerializeField] StateChangerEventSO StateChanger;
         [SerializeField] GameSettingsSO pauseGameSettings;
