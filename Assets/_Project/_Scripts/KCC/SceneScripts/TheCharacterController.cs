@@ -266,6 +266,7 @@ namespace KinematicCharacterController.Examples
                     {
                         Gravity = new Vector3(0, -30f, 0);
                         _animator.SetFloat(anim_SpeedMultiplier, 2.5f, 0.1f, Time.unscaledDeltaTime);
+                        _lookInputVector = Vector3.zero;
                         //_animator.CrossFadeInFixedTime(_idleState, 0.2f, 0);
                         //MaxStableMoveSpeed = 0; // think it might look better to be able to run out of climbing.
                         break;
@@ -314,6 +315,11 @@ namespace KinematicCharacterController.Examples
                         fallOffPrevention.enabled = true;
                         _moveBackwards = false;
                         OrientationSharpness = _crawlRotationSpeed;
+                        break;
+                    }
+                case CharacterState.CutsceneControl:
+                    {
+                        MaxStableMoveSpeed = 1f;
                         break;
                     }
 
@@ -1315,7 +1321,7 @@ namespace KinematicCharacterController.Examples
                                 effectiveGroundNormal = Motor.GroundingStatus.InnerGroundNormal;
                             }
                         }
-                        MaxStableMoveSpeed = 1f;
+
 
                         Vector3 targetMovementVelocity = transform.forward * MaxStableMoveSpeed;
 
@@ -1497,9 +1503,11 @@ namespace KinematicCharacterController.Examples
             _isFalling = false;
             _timeFallingInAir = 0f;
             _startFallingTimer = false;
-            if(CurrentGameState == GameState.GAME_PLAYING) {
+            if (CurrentGameState == GameState.GAME_PLAYING)
+            {
                 print("Here2");
-                TransitionToState(CharacterState.Default); }// could make bool for landing
+                TransitionToState(CharacterState.Default);
+            }// could make bool for landing
         }
 
         protected void OnLeaveStableGround()

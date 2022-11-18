@@ -1312,10 +1312,14 @@ MonoBehaviour:
   _LookAtPoint: {fileID: 6875040720797426742}
   CurrentCharacterState: 0
   PlayerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
-  stateChangedEvent: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
+  changeState: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
   OpenDoorEvent: {fileID: 11400000, guid: 831079ef99d5c4a739e4b5f9efd7cbbc, type: 2}
   DialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
+  FellOffLedge: {fileID: 11400000, guid: 3e49724741d5b43fc80a973967176fb3, type: 2}
+  TurnOnTimeScaleZeroTick: {fileID: 11400000, guid: 51e37663df3b8444d8bed47601ddf72f,
+    type: 2}
+  UIEvents: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
   GamePlayingAction:
     m_PersistentCalls:
       m_Calls:

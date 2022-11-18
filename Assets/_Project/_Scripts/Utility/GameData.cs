@@ -14,38 +14,38 @@ public class GameData : MonoBehaviour
     [SerializeField] GameSettingsSO[] _allGameSettings;
     [SerializeField] GeneralEventSO[] _allGeneralEvents;
     [SerializeField] SceneAsset[] _allSceneAssets;
-    public static SceneSO[] AllScenes => Instance._allScenes;
-    public static ActionSO[] AllActions => Instance._allActions;
-    public static NPC_ScriptableObject[] AllNPCs => Instance._allNPCs;
-    public static GameSettingsSO[] AllGameSettings => Instance._allGameSettings;
-    public static GeneralEventSO[] AllGeneralEvents => Instance._allGeneralEvents;
-    public static SceneAsset[] AllSceneAssets => Instance._allSceneAssets;
+    // public static SceneSO[] AllScenes => Instance._allScenes;
+    // public static ActionSO[] AllActions => Instance._allActions;
+    // public static NPC_ScriptableObject[] AllNPCs => Instance._allNPCs;
+    // public static GameSettingsSO[] AllGameSettings => Instance._allGameSettings;
+    // public static GeneralEventSO[] AllGeneralEvents => Instance._allGeneralEvents;
+    // public static SceneAsset[] AllSceneAssets => Instance._allSceneAssets;
 
-    void Awake() => _instance = this;
+    //void Awake() => _instance = this;
     static GameData _instance;
 
 
-    public static GameData Instance
-    {
-        get
-        {
-            if (_instance == null)
-                _instance = FindObjectOfType<GameData>();
-            return _instance;
-        }
-    }
+    // public static GameData Instance
+    // {
+    //     get
+    //     {
+    //         if (_instance == null)
+    //             _instance = FindObjectOfType<GameData>();
+    //         return _instance;
+    //     }
+    // }
 
 #if UNITY_EDITOR
-    void OnValidate()
-    {
-        _allScenes = GetAllInstancesSO<SceneSO>();
-        _allActions = GetAllInstancesSO<ActionSO>();
-        _allNPCs = GetAllInstancesSO<NPC_ScriptableObject>();
-        _allGameSettings = GetAllInstancesSO<GameSettingsSO>();
-        _allGeneralEvents = GetAllInstancesSO<GeneralEventSO>();
+    // void OnValidate()
+    // {
+    //     _allScenes = GetAllInstancesSO<SceneSO>();
+    //     _allActions = GetAllInstancesSO<ActionSO>();
+    //     _allNPCs = GetAllInstancesSO<NPC_ScriptableObject>();
+    //     _allGameSettings = GetAllInstancesSO<GameSettingsSO>();
+    //     _allGeneralEvents = GetAllInstancesSO<GeneralEventSO>();
 
-        _allSceneAssets = GetAllObjects<SceneAsset>();
-    }
+    //     _allSceneAssets = GetAllObjects<SceneAsset>();
+    // }
 
 
     public static T[] GetAllObjects<T>(string searchPath = null) where T : UnityEngine.Object

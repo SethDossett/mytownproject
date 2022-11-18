@@ -135,7 +135,7 @@ namespace MyTownProject.Interaction
             yield return new WaitForSecondsRealtime(1f);
             //_animatorRight.Play(crackdoorR);
             //_animatorLeft.Play(crackdoorL);
-            uIEventChannel.RaiseFadeOut(Color.black, 0.5f);
+            uIEventChannel.FadeTo(Color.black, 0.5f);
             yield return new WaitForSecondsRealtime(1f);
 
             _hasInteracted = true;

@@ -4,6 +4,7 @@ using MyTownProject.SO;
 using MyTownProject.Events;
 using MyTownProject.Core;
 using MyTownProject.Enviroment;
+using System.Collections;
 
 namespace KinematicCharacterController.Examples
 {
@@ -17,10 +18,15 @@ namespace KinematicCharacterController.Examples
 
         [Header("Events")]
         [SerializeField] TransformEventSO PlayerRef;
-        [SerializeField] StateChangerEventSO stateChangedEvent;
+        [SerializeField] StateChangerEventSO changeState;
         [SerializeField] ActionSO teleportPlayer;
         [SerializeField] ActionSO OpenDoorEvent;
         [SerializeField] DialogueEventsSO DialogueEvent;
+        [SerializeField] GeneralEventSO FellOffLedge;
+        [SerializeField] GeneralEventSO TurnOnTimeScaleZeroTick;
+        [SerializeField] UIEventChannelSO UIEvents;
+
+        [Header("Unity Events")]
         [SerializeField] UnityEvent GamePlayingAction;
         [SerializeField] UnityEvent GamePausedAction;
         [SerializeField] UnityEvent CutSceneAction;
@@ -35,6 +41,7 @@ namespace KinematicCharacterController.Examples
 
         public bool isBeingTeleportedTo { get; set; }
 
+        int _anim_Idle = Animator.StringToHash("Idle");
         int _anim_PullOpenR = Animator.StringToHash("PullDoorOpenR");
         int _anim_PullOpenL = Animator.StringToHash("PullDoorOpenL");
         int _anim_PushOpenR = Animator.StringToHash("PushDoorOpenR");
@@ -46,6 +53,7 @@ namespace KinematicCharacterController.Examples
             DialogueEvent.onExit += DefaultState;
             teleportPlayer.OnTeleport += TeleportPlayer;
             OpenDoorEvent.OnOpenDoor += OpenDoorAnimation;
+            FellOffLedge.OnRaiseEvent += Fell;
             TheCharacterController.OnPlayerStateChanged += StateChange;
             GameStateManager.OnGameStateChanged += GameStateChanged;
         }
@@ -54,6 +62,7 @@ namespace KinematicCharacterController.Examples
             DialogueEvent.onExit -= DefaultState;
             teleportPlayer.OnTeleport -= TeleportPlayer;
             OpenDoorEvent.OnOpenDoor -= OpenDoorAnimation;
+            FellOffLedge.OnRaiseEvent -= Fell;
             TheCharacterController.OnPlayerStateChanged -= StateChange;
             GameStateManager.OnGameStateChanged -= GameStateChanged;
         }
@@ -138,6 +147,8 @@ namespace KinematicCharacterController.Examples
                 _animator.updateMode = AnimatorUpdateMode.UnscaledTime;
             }
         }
+
+        #region Player State Logic
         void StateChange(CharacterState state)
         {
             CurrentCharacterState = state;
@@ -185,6 +196,26 @@ namespace KinematicCharacterController.Examples
         void CrawlingState()
         {
 
+        }
+        #endregion
+       
+        void Fell() => StartCoroutine(ResetPosition());
+        IEnumerator ResetPosition(){
+            UIEvents.OnFadeTo(Color.white, 1.5f);
+            yield return new WaitForSecondsRealtime(1.5f);
+            TurnOnTimeScaleZeroTick.RaiseEvent();
+            changeState.RaiseEventGame(GameState.CUTSCENE);
+            Vector3 resetPos = SceneController.CurrentSceneSO.NoDoorStartPos;
+            Quaternion resetRot = SceneController.CurrentSceneSO.NoDoorStartRot;
+            TeleportPlayer(resetPos, resetRot);
+            cc.MaxStableMoveSpeed = 0;
+            yield return new WaitForSecondsRealtime(1.5f);
+            _animator.CrossFadeInFixedTime(_anim_Idle, 0 , 0);
+            TurnOnTimeScaleZeroTick.RaiseEvent();
+            UIEvents.OnFadeFrom(Color.white, 1.5f);
+            yield return new WaitForSecondsRealtime(1.5f);
+            changeState.RaiseEventGame(GameState.GAME_PLAYING);
+            yield break;
         }
 
     }

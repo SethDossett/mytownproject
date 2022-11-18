@@ -16,7 +16,8 @@ namespace MyTownProject.Core
     public class SceneController : MonoBehaviour
     {
         public static SceneController instance;
-        public CurrentScene GamesCurrentScene;
+        public CurrentScene GamesCurrentScene { get; private set; }
+        public static SceneSO CurrentSceneSO { get; private set; }
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] UIEventChannelSO uIEventChannel;
         [SerializeField] StateChangerEventSO stateChangerEvent;
@@ -58,6 +59,7 @@ namespace MyTownProject.Core
 
         IEnumerator EnterScene(SceneSO sceneSO)
         {
+            CurrentSceneSO = sceneSO;
             stateChangerEvent.RaiseEventGame(GameState.CUTSCENE);
             bool enteredThroughDoor = sceneSO.EnteredThroughDoor;
             if (enteredThroughDoor)
@@ -98,14 +100,14 @@ namespace MyTownProject.Core
 
             // If CutScene to be played Play now.
             yield return new WaitForSecondsRealtime(1f);
-            uIEventChannel.RaiseFadeIn(Color.black, 1f);
-            if(enteredThroughDoor) ToggleTimeScaleZeroTick.RaiseEvent();
+            uIEventChannel.FadeFrom(Color.black, 1f);
+            if (enteredThroughDoor) ToggleTimeScaleZeroTick.RaiseEvent();
             //_walkCoroutine = StartCoroutine(WallkIntoPosition());
             yield return new WaitForSecondsRealtime(0.25f);
             uIEventChannel.RaiseBarsOff(2f);
             yield return new WaitForSecondsRealtime(1f);
             //StopCoroutine(_walkCoroutine);
-            if(enteredThroughDoor) ToggleTimeScaleZeroTick.RaiseEvent();
+            if (enteredThroughDoor) ToggleTimeScaleZeroTick.RaiseEvent();
             stateChangerEvent.RaiseEventGame(GameState.GAME_PLAYING);
             yield break;
         }
@@ -114,7 +116,7 @@ namespace MyTownProject.Core
             while (true)
             {
                 //print("Walking into Position");
-                
+
                 yield return null;
             }
         }

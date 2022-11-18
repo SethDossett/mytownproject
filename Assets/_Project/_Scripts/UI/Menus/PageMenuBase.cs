@@ -13,20 +13,20 @@ namespace MyTownProject.UI
     }
     public abstract class PageMenuBase : MonoBehaviour
     {
-        [field:SerializeField] public MenuState CurrentMenuState { get; private set; }
+        [field: SerializeField] public MenuState CurrentMenuState { get; private set; }
         [SerializeField] GameObject firstButton;
         [SerializeField] MenuController controller;
         [SerializeField] protected GameSettingsSO GameSettings;
         [SerializeField] protected UIEventChannelSO UIEvents;
         [SerializeField] protected GeneralEventSO SaveControllerType;
         [SerializeField] protected MainEventChannelSO SceneController;
-        [SerializeField] protected UIEventChannelSO UIEventChannel;
 
         public static event Action<MenuState, MenuState> OnMenuStateChanged;
-        
-        NewControls _inputActions;
+
         int _pageCount;
-       
+        NewControls _inputActions;
+        public NewControls InputActions { get { return _inputActions; } private set {_inputActions = value; } }
+
         public virtual void Awake()
         {
             _inputActions = InputManager.inputActions;

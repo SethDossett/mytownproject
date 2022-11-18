@@ -17,13 +17,13 @@ namespace MyTownProject.UI
 
         private void OnEnable()
         {
-            regularFade.OnFadeOut += FadeOut;
-            regularFade.OnFadeIn += FadeIn;
+            regularFade.OnFadeTo += FadeOut;
+            regularFade.OnFadeFrom += FadeIn;
         }
         private void OnDisable()
         {
-            regularFade.OnFadeOut -= FadeOut;
-            regularFade.OnFadeIn -= FadeIn;
+            regularFade.OnFadeTo -= FadeOut;
+            regularFade.OnFadeFrom -= FadeIn;
         }
         private void Awake()
         {

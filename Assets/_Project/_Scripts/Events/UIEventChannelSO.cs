@@ -9,13 +9,13 @@ namespace MyTownProject.Events
     public class UIEventChannelSO : ScriptableObject
     {
         #region Fader
-        public UnityAction<Color, float> OnFadeOut;
-        public UnityAction<Color, float> OnFadeIn;
+        public UnityAction<Color, float> OnFadeTo;
+        public UnityAction<Color, float> OnFadeFrom;
 
-        public void RaiseFadeOut(Color color, float duration) => OnFadeOut?.Invoke(color, duration);
-        // Fade out to Black
-        public void RaiseFadeIn(Color color, float duration) => OnFadeIn?.Invoke(color, duration);
-        // Fade in from Black
+        public void FadeTo(Color color, float duration) => OnFadeTo?.Invoke(color, duration);
+        // Fade out to Color
+        public void FadeFrom(Color color, float duration) => OnFadeFrom?.Invoke(color, duration);
+        // Fade in from Color
         #endregion
 
         #region Cinematic Bars

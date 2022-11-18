@@ -1,24 +1,17 @@
 using UnityEngine;
-using System.Collections;
 using MyTownProject.Events;
 using MyTownProject.Core;
-using MyTownProject.SO;
 using UnityEngine.InputSystem;
-using UnityEngine.EventSystems;
-using System;
 
 namespace MyTownProject.UI
 {
     public class PauseMenu : PageMenuBase
     {
         [Header("Pause Menu Variables")]
-        [SerializeField] MainEventChannelSO MainEventChannelSO;
         [SerializeField] StateChangerEventSO StateChanger;
-        [SerializeField] GameSettingsSO pauseGameSettings;
         [SerializeField] GameObject pauseMenu;
         GameState currentGameState;
 
-        private NewControls _pauseMenuActions;
         private InputAction exit;
         private InputAction submit;
 
@@ -27,17 +20,15 @@ namespace MyTownProject.UI
         {
             GameStateManager.OnGameStateChanged += ChangedGameState;
 
-            _pauseMenuActions = InputManager.inputActions;
-            exit = _pauseMenuActions.UI.Exit;
-            submit = _pauseMenuActions.UI.Submit;
+            exit = InputActions.UI.Exit;
+            submit = InputActions.UI.Submit;
             
-
 
             exit.performed += StartButtonPressed;
             submit.performed += SubmitButtonPressed;
             
 
-            MainEventChannelSO.OnGamePaused += Pause;
+            SceneController.OnGamePaused += Pause;
         }
         private void OnDisable()
         {
@@ -47,7 +38,7 @@ namespace MyTownProject.UI
             submit.performed -= SubmitButtonPressed;
             
 
-            MainEventChannelSO.OnGamePaused -= Pause;
+            SceneController.OnGamePaused -= Pause;
         }
         private void ChangedGameState(GameState state)
         {
@@ -88,7 +79,7 @@ namespace MyTownProject.UI
         public void Resume()
         {
             _paused = false;
-            MainEventChannelSO.RaiseEventUnPaused();
+            SceneController.RaiseEventUnPaused();
             if (pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(false);
         }
