@@ -337,6 +337,7 @@ namespace KinematicCharacterController.Examples
             {
                 case CharacterState.Default:
                     {
+                        UIText.ChangePrompt(PromptName.Crouch, 0);
                         break;
                     }
                 case CharacterState.Jumping:
@@ -1561,6 +1562,7 @@ namespace KinematicCharacterController.Examples
         void HangingChecks()
         { // make a coroutine possibly
             //if (_moveInputVector.sqrMagnitude <= 0) return;
+            UIText.ChangePrompt(PromptName.Drop, 20);
 
             float dot = Vector3.Dot(_moveInputVector, transform.forward.normalized);
             Quaternion rot = Quaternion.Euler(transform.forward.normalized);
@@ -1573,6 +1575,7 @@ namespace KinematicCharacterController.Examples
                     _climbTimer = 0;
                     _animator.CrossFadeInFixedTime(anim_ClimbUp, 0.1f, 0);
                     //StartCoroutine(ClimbBackUp(rot));
+                    UIText.ChangePrompt(PromptName.Drop, 0);
                     playerClimb.ClimbBackUp();
                 }
             }
@@ -1584,6 +1587,7 @@ namespace KinematicCharacterController.Examples
             //Pressed Interact Btn to drop
             if (_dropDownRequested)
             {
+                UIText.ChangePrompt(PromptName.Drop, 0);
                 _startFallingTimer = true;
                 _dropDownRequested = false;
                 CapsuleEnable(true);

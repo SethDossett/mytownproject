@@ -837,6 +837,7 @@ GameObject:
   - component: {fileID: 2516305415906357025}
   - component: {fileID: 2516305415906357039}
   - component: {fileID: 2516305415906357038}
+  - component: {fileID: 1035066006}
   m_Layer: 5
   m_Name: LeftArrowText
   m_TagString: Untagged
@@ -960,6 +961,26 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1035066006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2516305415906357024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87adb9c0d10334c5591ff980fa702271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameSettingsSO: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
+  changeController: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  _spriteKeyboard: {fileID: 0}
+  _spritGamePad: {fileID: 0}
+  _textKeyboard: Shift
+  _textGamepad: LT
+  _changeImage: 0
+  _changeText: 1
 --- !u!1 &2516305416059863626
 GameObject:
   m_ObjectHideFlags: 0
@@ -2197,6 +2218,7 @@ GameObject:
   - component: {fileID: 2516305417543243619}
   - component: {fileID: 2516305417543243617}
   - component: {fileID: 2516305417543243616}
+  - component: {fileID: 1035066004}
   m_Layer: 5
   m_Name: RightArrowText
   m_TagString: Untagged
@@ -2320,6 +2342,26 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1035066004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2516305417543243618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87adb9c0d10334c5591ff980fa702271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameSettingsSO: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
+  changeController: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
+  _spriteKeyboard: {fileID: 0}
+  _spritGamePad: {fileID: 0}
+  _textKeyboard: C
+  _textGamepad: RT
+  _changeImage: 0
+  _changeText: 1
 --- !u!1 &2975510871897275760
 GameObject:
   m_ObjectHideFlags: 0

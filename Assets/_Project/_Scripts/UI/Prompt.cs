@@ -1,7 +1,7 @@
 namespace MyTownProject.UI
 {
     public enum PromptName{
-        Null, Open, Talk, Crouch
+        Null, Open, Talk, Crouch, Drop
     }
     [System.Serializable]
     public class Prompt

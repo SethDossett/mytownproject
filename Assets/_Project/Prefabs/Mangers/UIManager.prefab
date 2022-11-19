@@ -50,9 +50,12 @@ MonoBehaviour:
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   _gameUI: {fileID: 0}
   _clock: {fileID: 0}
+  _fullClock: {fileID: 0}
   _buttons: {fileID: 0}
   _dialogue: {fileID: 0}
+  _explaination: {fileID: 0}
   _interactionText: {fileID: 0}
+  _explainationText: {fileID: 0}
   _cycleLength: 0.3
   _currentPrompt:
     name: 0
@@ -71,6 +74,9 @@ MonoBehaviour:
   - name: 3
     priority: 0
     text: Crouch
+  - name: 4
+    priority: 0
+    text: Drop
 --- !u!114 &8719128350330041258
 MonoBehaviour:
   m_ObjectHideFlags: 0
