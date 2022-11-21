@@ -25,6 +25,8 @@ namespace KinematicCharacterController.Examples
         [SerializeField] GeneralEventSO FellOffLedge;
         [SerializeField] GeneralEventSO TurnOnTimeScaleZeroTick;
         [SerializeField] UIEventChannelSO UIEvents;
+        [SerializeField] FloatEventSO RecenterCamX;
+        [SerializeField] FloatEventSO RecenterCamY;
 
         [Header("Unity Events")]
         [SerializeField] UnityEvent GamePlayingAction;
@@ -42,6 +44,7 @@ namespace KinematicCharacterController.Examples
         public bool isBeingTeleportedTo { get; set; }
 
         int _anim_Idle = Animator.StringToHash("Idle");
+        int _anim_GetUp = Animator.StringToHash("GetUp");
         int _anim_PullOpenR = Animator.StringToHash("PullDoorOpenR");
         int _anim_PullOpenL = Animator.StringToHash("PullDoorOpenL");
         int _anim_PushOpenR = Animator.StringToHash("PushDoorOpenR");
@@ -209,11 +212,13 @@ namespace KinematicCharacterController.Examples
             Quaternion resetRot = SceneController.CurrentSceneSO.NoDoorStartRot;
             TeleportPlayer(resetPos, resetRot);
             cc.MaxStableMoveSpeed = 0;
+            RecenterCamX.ThreeFloats(0, 0.1f, 1);
+            RecenterCamY.ThreeFloats(0, 0.1f, 1);
             yield return new WaitForSecondsRealtime(1.5f);
-            _animator.CrossFadeInFixedTime(_anim_Idle, 0 , 0);
             TurnOnTimeScaleZeroTick.RaiseEvent();
             UIEvents.OnFadeFrom(Color.white, 1.5f);
-            yield return new WaitForSecondsRealtime(1.5f);
+            _animator.CrossFadeInFixedTime(_anim_GetUp, 0 , 0);
+            yield return new WaitForSecondsRealtime(2f);
             changeState.RaiseEventGame(GameState.GAME_PLAYING);
             yield break;
         }

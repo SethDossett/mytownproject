@@ -1038,7 +1038,7 @@ namespace KinematicCharacterController.Examples
                             // Drag
                             currentVelocity *= (1f / (1f + (Drag * deltaTime)));
 
-                            if (currentVelocity.y >= 0) _isFalling = false;
+                            if (currentVelocity.y >= 0) _isFalling = false; //Could Make this into falling state
                             else _isFalling = true;
                         }
                         break;
@@ -1489,7 +1489,7 @@ namespace KinematicCharacterController.Examples
         }
 
         protected void OnLanded()
-        {   //I dont want player to ground self if decided to Hang
+        {   //Prevent player to ground self if decided to Hang
             if (_isHanging) return;
 
             if (_hardLanding) // Need a delay to input and climbability after hard landing.
@@ -1654,7 +1654,7 @@ namespace KinematicCharacterController.Examples
             yield break;
         }
 
-        void FallingCheck()
+        void FallingCheck() // make into coroutine
         {
             if (!_startFallingTimer) return;
 

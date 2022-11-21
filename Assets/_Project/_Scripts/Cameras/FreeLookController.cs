@@ -18,7 +18,6 @@ namespace MyTownProject.Cameras
         [SerializeField] TransformEventSO TargetingEvent;
         [SerializeField] GeneralEventSO UntargetEvent;
         [SerializeField] TransformEventSO PlayerReference;
-        [SerializeField] GeneralEventSO FellOffLedge;
         CinemachineFreeLook cam;
         [SerializeField] CinemachineTargetGroup _targetGroup;
         TheCharacterController CC;
@@ -37,7 +36,6 @@ namespace MyTownProject.Cameras
             GameStateManager.OnGameStateChanged += CheckGameState;
             PlayerReference.OnRaiseEvent += GetPlayerReference;
             StartOfGame.OnRaiseEvent += InitialGameStartingCamera;
-            FellOffLedge.OnRaiseEvent += InitialGameStartingCamera; // this recenters cam too early
             DialogueEvents.onEnter += TalkingToNPC;
             DialogueEvents.onExit += BackToPlayerView;
             TargetingEvent.OnRaiseEvent += Target;
@@ -51,7 +49,6 @@ namespace MyTownProject.Cameras
             GameStateManager.OnGameStateChanged -= CheckGameState;
             PlayerReference.OnRaiseEvent -= GetPlayerReference;
             StartOfGame.OnRaiseEvent -= InitialGameStartingCamera;
-            FellOffLedge.OnRaiseEvent -= InitialGameStartingCamera;
             DialogueEvents.onEnter -= TalkingToNPC;
             DialogueEvents.onExit -= BackToPlayerView;
             TargetingEvent.OnRaiseEvent += Target;
