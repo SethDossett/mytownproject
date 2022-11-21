@@ -24,9 +24,9 @@ namespace MyTownProject.Core
         [SerializeField] ActionSO teleportPlayer;
         [SerializeField] TransformEventSO EnteredNewScene;
         [SerializeField] GeneralEventSO ToggleTimeScaleZeroTick;
+        [SerializeField] GameSettingsSO gameSettings;
 
         Coroutine _walkCoroutine;
-
 
         private void OnEnable()
         {
@@ -92,8 +92,17 @@ namespace MyTownProject.Core
                     sceneSO.playerRotation = exitedDoor.rotation;
                 }
             }
+            else
+            {
+                sceneSO.playerLocation = sceneSO.NoDoorStartPos;
+                sceneSO.playerRotation = sceneSO.NoDoorStartRot;
+            }
 
-            teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
+            if(gameSettings.UseDebugSpawnPosition){
+                Transform spawnT = GameObject.Find("DebugSpawnPoint").transform;
+                teleportPlayer.TeleportObject(spawnT.position, spawnT.rotation);
+            }
+            else teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
 
             //Reset Scene Event, to recenter camera, slide in UI, etc.
             print("Completed Eneter Scene");

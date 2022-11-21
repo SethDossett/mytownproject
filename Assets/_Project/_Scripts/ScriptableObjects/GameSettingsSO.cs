@@ -9,6 +9,7 @@ namespace MyTownProject.SO
         public ControllerType ControllerType;
         public SceneSO SceneToEnterIn;
         public bool StartOfGame;
+        public bool UseDebugSpawnPosition;
         [Range(0f, 1f)] public float MasterVolume;
 
     }

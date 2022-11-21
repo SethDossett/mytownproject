@@ -208,9 +208,8 @@ namespace KinematicCharacterController.Examples
             yield return new WaitForSecondsRealtime(1.5f);
             TurnOnTimeScaleZeroTick.RaiseEvent();
             changeState.RaiseEventGame(GameState.CUTSCENE);
-            Vector3 resetPos = SceneController.CurrentSceneSO.NoDoorStartPos;
-            Quaternion resetRot = SceneController.CurrentSceneSO.NoDoorStartRot;
-            TeleportPlayer(resetPos, resetRot);
+            TeleportPlayer(cc.LastGroundedPosition, cc.LastGroundedRotation);
+            GetComponent<FallOffPrevention>().enabled = true;
             cc.MaxStableMoveSpeed = 0;
             RecenterCamX.ThreeFloats(0, 0.1f, 1);
             RecenterCamY.ThreeFloats(0, 0.1f, 1);
@@ -218,6 +217,7 @@ namespace KinematicCharacterController.Examples
             TurnOnTimeScaleZeroTick.RaiseEvent();
             UIEvents.OnFadeFrom(Color.white, 1.5f);
             _animator.CrossFadeInFixedTime(_anim_GetUp, 0 , 0);
+            GetComponent<FallOffPrevention>().enabled = false;
             yield return new WaitForSecondsRealtime(2f);
             changeState.RaiseEventGame(GameState.GAME_PLAYING);
             yield break;

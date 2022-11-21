@@ -63,6 +63,7 @@ namespace KinematicCharacterController.Examples
         {
             if (state == GameState.GAME_PLAYING)
             {
+                print("Crouch input = " + crouch.ReadValue<float>());
                 if (crouch.ReadValue<float>() <= 0.1f)
                     CC._shouldBeCrouching = false;
             }
@@ -71,6 +72,8 @@ namespace KinematicCharacterController.Examples
 
             }
         }
+        
+
         private void OnDestroy()
         {
             playerReference.OnRaiseEvent -= GetPlayerReference;

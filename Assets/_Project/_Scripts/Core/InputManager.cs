@@ -9,9 +9,9 @@ namespace MyTownProject.Core
         public static event Action<InputActionMap> actionMapChange;
 
 
-        public static void EnableControls() => inputActions.Enable();
+        public static void EnableControls(InputActionMap actionMap) => actionMap.Enable();
 
-        public static void DisableControls() => inputActions.Disable();
+        public static void DisableControls(InputActionMap actionMap) => actionMap.Disable();
 
         public static void ToggleActionMap(InputActionMap actionMap)
         {

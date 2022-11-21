@@ -155,7 +155,7 @@ namespace KinematicCharacterController.Examples
         public CharacterState CurrentCharacterState { get; private set; }
         public GroundType CurrentGroundType { get; private set; }
 
-        private HitStabilityReport CurrentHitStabilityReport;
+        public HitStabilityReport CurrentHitStabilityReport { get; private set; }
         public static event Action<CharacterState> OnPlayerStateChanged;
 
         private Collider[] _probedColliders = new Collider[8];
@@ -253,6 +253,8 @@ namespace KinematicCharacterController.Examples
             CurrentCharacterState = newState;
             OnStateEnter(newState, tmpInitialState);
             print("Transition to " + newState);
+
+            OnPlayerStateChanged?.Invoke(newState);
         }
 
         /// <summary>
@@ -324,7 +326,7 @@ namespace KinematicCharacterController.Examples
                     }
 
             }
-            OnPlayerStateChanged?.Invoke(state);
+            
 
         }
 
@@ -1453,6 +1455,9 @@ namespace KinematicCharacterController.Examples
 
         public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
         {
+            LastGroundedPosition = hitPoint - (hitStabilityReport.LedgeFacingDirection.normalized);
+            LastGroundedRotation = Motor.TransientRotation;
+
             int tagIndex = _groundTypeTags.IndexOf(hitCollider.tag);
             if (tagIndex == _currentTagIndex) return;
             CurrentGroundType = (GroundType)tagIndex;
@@ -1482,10 +1487,13 @@ namespace KinematicCharacterController.Examples
                     }
             }
         }
-
+        public Vector3 LastGroundedPosition { get; private set; }
+        public Quaternion LastGroundedRotation { get; private set; }
         public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport)
         {
             CurrentHitStabilityReport = hitStabilityReport;
+            
+
         }
 
         protected void OnLanded()

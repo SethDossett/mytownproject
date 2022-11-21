@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using MyTownProject.Core;
 using MyTownProject.SO;
+using UnityEngine.EventSystems;
 
 namespace MyTownProject.UI
 {
@@ -12,6 +14,8 @@ namespace MyTownProject.UI
         
         public void EnterGame()
         {
+            InputManager.DisableControls(InputManager.inputActions.UI);
+            EventSystem.current.currentInputModule.enabled = false;
             lastCurrentScene = 0;
             StartCoroutine(ChangeScenes());
         }
