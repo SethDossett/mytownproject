@@ -98,9 +98,10 @@ namespace MyTownProject.Core
                 sceneSO.playerRotation = sceneSO.NoDoorStartRot;
             }
 
-            if(gameSettings.UseDebugSpawnPosition){
+            if(gameSettings.UseDebugSpawnPosition && !enteredThroughDoor){
                 Transform spawnT = GameObject.Find("DebugSpawnPoint").transform;
-                teleportPlayer.TeleportObject(spawnT.position, spawnT.rotation);
+                if(spawnT) teleportPlayer.TeleportObject(spawnT.position, spawnT.rotation);
+                else teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
             }
             else teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
 

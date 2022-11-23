@@ -9,6 +9,10 @@ using System.Collections;
 
 namespace MyTownProject.UI
 {
+    public enum HudElement
+    {
+        LeftTrigger, RightTrigger, InteractPrompt
+    }
     public class UI_CanvasHandler : MonoBehaviour
     {
         [Header("Events Channels")]
@@ -23,8 +27,9 @@ namespace MyTownProject.UI
         [SerializeField] private GameObject _buttons;
         [SerializeField] private GameObject _dialogue;
         [SerializeField] private GameObject _explaination;
-        [SerializeField] private TextMeshProUGUI _interactionText;
-        [SerializeField] private TextMeshProUGUI _explainationText;
+        [SerializeField] private GameObject _interactionPrompt;
+        [SerializeField] private GameObject _rightTriggerPrompt;
+        [SerializeField] private TextMeshProUGUI _interactionText, _interactionPromptText, _rightTriggerText, _explainationText;
 
         [Header("Tween Values")]
         [SerializeField] private float _cycleLength = 2f;
@@ -41,8 +46,8 @@ namespace MyTownProject.UI
             dialogueEvents.onEnter += TalkingWithNPC;
             mainEventChannel.OnGameUnPaused += ExitDialogue;
             mainEventChannel.OnSubmit += ContinueIconSubmit;
-            uIEventChannel.OnShowTextInteract += ShowInteractionText;
-            uIEventChannel.OnHideTextInteract += HideInteractionText;
+            uIEventChannel.OnShowButtonText += ShowHudElementText;
+            uIEventChannel.OnHideButtonText += HideHudElementText;
             uIEventChannel.OnChangePrompt += ChangePromptPriority;
             uIEventChannel.OnShowExplaination += Bubble;
 
@@ -53,8 +58,8 @@ namespace MyTownProject.UI
             dialogueEvents.onEnter -= TalkingWithNPC;
             mainEventChannel.OnGameUnPaused -= ExitDialogue;
             mainEventChannel.OnSubmit += ContinueIconSubmit;
-            uIEventChannel.OnShowTextInteract -= ShowInteractionText;
-            uIEventChannel.OnHideTextInteract -= HideInteractionText;
+            uIEventChannel.OnShowButtonText -= ShowHudElementText;
+            uIEventChannel.OnHideButtonText -= HideHudElementText;
             uIEventChannel.OnChangePrompt -= ChangePromptPriority;
             uIEventChannel.OnShowExplaination -= Bubble;
         }
@@ -68,14 +73,13 @@ namespace MyTownProject.UI
             if (state == GameState.GAME_PLAYING)
             {
                 UI_UnhideAll();
-                if (_dialogue.activeInHierarchy)
-                    _dialogue.SetActive(false);
-                return;
+                CheckCurrentPrompt();
+                _dialogue.SetActive(false);
+                _dialogue.GetComponent<CanvasGroup>().alpha = 0;
             }
             else
             {
                 UI_HideAll();
-                return;
             }
 
 
@@ -84,13 +88,13 @@ namespace MyTownProject.UI
         public void UI_HideAll()
         {
             _buttons.transform.DOLocalMoveY(275f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
-            _fullClock.transform.DOLocalMoveY(455f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
+            _fullClock.transform.DOLocalMoveY(443f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
             _clock.transform.DOLocalMoveY(-470f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
         }
         public void UI_UnhideAll()
         {
             _buttons.transform.DOLocalMoveY(0f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
-            _fullClock.transform.DOLocalMoveY(180f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
+            _fullClock.transform.DOLocalMoveY(172f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
             _clock.transform.DOLocalMoveY(-195f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
         }
         public void UI_FadeAll()
@@ -105,26 +109,26 @@ namespace MyTownProject.UI
         }
         #endregion
 
-        #region Control Individual UI Elements
-        private void ShowInteractionText(string interactionName)
-        {
-            if (_interactionText.text != interactionName)
-                _interactionText.text = interactionName;
-        }
-        private void HideInteractionText()
-        {
-            if (_interactionText.text != "")
-                _interactionText.text = "";
-        }
-        #endregion
 
         #region Talking
         void TalkingWithNPC(GameObject npc, TextAsset inkJSON)
         {
-            if (!_dialogue.activeInHierarchy)
-                _dialogue.SetActive(true);
+            StartCoroutine(StartDialogueUI());
 
             uIEventChannel.RaiseBarsOff(0.1f);
+        }
+        IEnumerator StartDialogueUI()
+        {
+            yield return _interactionPrompt.transform.DOPunchScale(Vector3.one * 1.5f, 0.3f).SetUpdate(true).WaitForCompletion();
+
+            yield return _interactionPrompt.GetComponent<CanvasGroup>().DOFade(0, 0.5f).SetUpdate(true);
+
+            _interactionPrompt.SetActive(false);
+            _dialogue.SetActive(true);
+            _dialogue.GetComponent<CanvasGroup>().DOFade(1, 0.7f).SetUpdate(true);
+
+            print("Done with Coroutine");
+            yield break;
         }
         void ContinueIconSubmit()
         {
@@ -132,13 +136,25 @@ namespace MyTownProject.UI
         }
         void ExitDialogue() // migth not need
         {
-            //if (_dialogue.activeInHierarchy)
-            //_dialogue.SetActive(false);
         }
 
 
         #endregion
 
+        #region Control Individual UI Elements
+        private void ShowHudElementText(HudElement hudElement, string text)
+        {
+            if (hudElement == HudElement.RightTrigger)
+                _rightTriggerText.text = text;
+        }
+        private void HideHudElementText(HudElement hudElement)
+        {
+            if (hudElement == HudElement.RightTrigger)
+                _rightTriggerText.text = _empty;
+        }
+        #endregion
+
+        // Move to PromptHandler
         void ChangePromptPriority(PromptName name, int priority)
         {
             int currentHighestPriority = _highestPriority;
@@ -164,26 +180,54 @@ namespace MyTownProject.UI
             if (topPrompt != _currentPrompt)
             {
                 _currentPrompt = topPrompt;
-                SetPrompt();
+                SetPrompt(_currentPrompt.name);
             }
         }
 
-        void SetPrompt()
+        void SetPrompt(PromptName name)
         {
+            if (name == PromptName.Null)
+            {
+                if (_interactionPrompt.activeInHierarchy)
+                {
+                    _interactionPrompt.SetActive(false);
+                }
+            }
+            else
+            {
+                if (!_interactionPrompt.activeInHierarchy)
+                {
+                    _interactionPrompt.transform.localScale = Vector3.one * 1.5f;
+                    _interactionPrompt.SetActive(true);
+                    _interactionPrompt.transform.DOScale(Vector3.one, 0.5f); //can make anim curve
+                }
+            }
+
             _interactionText.text = _currentPrompt.text;
+            _interactionPromptText.text = _currentPrompt.text;
+        }
+        void CheckCurrentPrompt()
+        {
+            print("check prompt " + _currentPrompt.name);
+            if (_currentPrompt.name != PromptName.Null)
+            {
+
+                _interactionPrompt.SetActive(true);
+                _interactionPrompt.GetComponent<CanvasGroup>().alpha = 1;
+            }
         }
 
         bool _bubbleOnScreen;
         Tween _fadeTween;
         void Bubble(Vector2 screenPos, float duration, string message)
         {
-            if(_bubbleOnScreen) return;
+            if (_bubbleOnScreen) return;
             StartCoroutine(ShowExplainationBubble(screenPos, duration, message));
         }
         IEnumerator ShowExplainationBubble(Vector2 screenPos, float duration, string message)
         {
             print("SHOW BUBBLE");
-            if(_fadeTween != null) _fadeTween.Kill();
+            if (_fadeTween != null) _fadeTween.Kill();
 
             _bubbleOnScreen = true;
             _explaination.transform.localPosition = screenPos;

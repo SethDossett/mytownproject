@@ -54,7 +54,10 @@ MonoBehaviour:
   _buttons: {fileID: 0}
   _dialogue: {fileID: 0}
   _explaination: {fileID: 0}
+  _interactionPrompt: {fileID: 0}
+  _rightTriggerPrompt: {fileID: 0}
   _interactionText: {fileID: 0}
+  _rightTriggerText: {fileID: 0}
   _explainationText: {fileID: 0}
   _cycleLength: 0.3
   _currentPrompt:

@@ -265,7 +265,7 @@ namespace KinematicCharacterController.Examples
             {
                 //_matchTargetPosition = _forwardHitInfo.point + _forwardNormalXZRotation * _hangOffset;
                 _matchTargetPosition = transform.TransformPoint(0, climbHeight - 1.21f, amount);
-                StartCoroutine(DoClimb(0.4f, 1, _matchTargetPosition, _matchTargetRotation, 2.5f, true));
+                StartCoroutine(DoClimb(0.4f, 0.6f, _matchTargetPosition, _matchTargetRotation, 2.5f, true));
                 _animator.CrossFadeInFixedTime(anim_JumpToHang, .25f, 0);
                 CC._isHanging = true;
                 //_animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.Root, _weightMask, 0.14f, 0.25f);
@@ -369,7 +369,7 @@ namespace KinematicCharacterController.Examples
             _isClimbing = true;
             _matchTargetPosition = transform.TransformPoint(0, _downRaycastHitDis - 1.21f, amount);
             CC.CapsuleEnable(false);
-            StartCoroutine(DoClimb(0, 1, _matchTargetPosition, wallRotation, 3f));
+            StartCoroutine(DoClimb(0, 0.5f, _matchTargetPosition, wallRotation, 3f));
             _animator.CrossFadeInFixedTime(anim_GrabLedge, .25f, 0);
             CC._isHanging = true;
         }

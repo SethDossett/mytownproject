@@ -340,6 +340,7 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Default:
                     {
                         UIText.ChangePrompt(PromptName.Crouch, 0);
+                        UIText.HideButtonText(HudElement.RightTrigger);
                         break;
                     }
                 case CharacterState.Jumping:
@@ -378,7 +379,8 @@ namespace KinematicCharacterController.Examples
                     {
                         fallOffPrevention.enabled = false;
                         DisableRecentering.RaiseEvent();
-                        UIText.ChangePrompt(PromptName.Crouch, 0);
+                        //UIText.ChangePrompt(PromptName.Crouch, 0);
+                        UIText.HideButtonText(HudElement.RightTrigger);
                         OrientationSharpness = _defaultOrientationSharpness;
                         _hasFinishedCrouch = false;
 
@@ -447,8 +449,10 @@ namespace KinematicCharacterController.Examples
                         }
 
                         //Show or hide UI Text for Crouch
-                        if (_canCrouch) UIText.ChangePrompt(PromptName.Crouch, 5);
-                        else UIText.ChangePrompt(PromptName.Crouch, 0);
+                        //if (_canCrouch) UIText.ChangePrompt(PromptName.Crouch, 5);
+                        //else UIText.ChangePrompt(PromptName.Crouch, 0);
+                        if(_canCrouch) UIText.ShowButtonText(HudElement.RightTrigger,"Crouch");
+                        else UIText.HideButtonText(HudElement.RightTrigger);
 
                         // Crouching input
                         if (inputs.CrouchDown && _canCrouch)
@@ -1059,7 +1063,6 @@ namespace KinematicCharacterController.Examples
                             HangingChecks();
                         }
 
-
                         break;
                     }
                 case CharacterState.ClimbLadder:
@@ -1626,7 +1629,7 @@ namespace KinematicCharacterController.Examples
             TransitionToState(CharacterState.Climbing);
 
             float timer = 0;
-            while (timer < 1)
+            while (timer < 0.6f)
             {
                 timer += Time.deltaTime;
                 Motor.SetTransientPosition(goalPos, true, 5);

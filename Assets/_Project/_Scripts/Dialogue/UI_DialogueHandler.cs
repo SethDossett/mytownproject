@@ -265,6 +265,7 @@ namespace MyTownProject.Dialogue
             _dialogueText.text = "";
             _dialogueVariables.StopListening(currentStory);
             DialogueEvents.Exit();
+            print("ExitDialogueMode");
         }
     }
 }

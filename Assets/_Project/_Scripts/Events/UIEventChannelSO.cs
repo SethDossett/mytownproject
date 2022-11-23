@@ -27,21 +27,16 @@ namespace MyTownProject.Events
         #endregion
 
         #region Interact Text
-        public UnityAction<string> OnShowTextInteract;
-        public UnityAction OnHideTextInteract;
+        public UnityAction<HudElement, string> OnShowButtonText;
+        public UnityAction<HudElement> OnHideButtonText;
 
-        public void ShowTextInteract(string text) => OnShowTextInteract?.Invoke(text);
-        public void HideTextInteract() => OnHideTextInteract?.Invoke();
+        public void ShowButtonText(HudElement hudElement, string text) => OnShowButtonText?.Invoke(hudElement ,text);
+        public void HideButtonText(HudElement hudElement) => OnHideButtonText?.Invoke(hudElement);
         #endregion
 
         #region Interact Prompt
-        public UnityAction<Transform> OnShowPrompt;
-        public UnityAction OnHidePrompt;
         public UnityAction<PromptName, int> OnChangePrompt;
-        const string _empty = "";
 
-        public void ShowPromptInteract(Transform pos) => OnShowPrompt?.Invoke(pos);
-        public void HidePromptInteract() => OnHidePrompt?.Invoke();
         public void ChangePrompt(PromptName name, int priority) => OnChangePrompt?.Invoke(name, priority);
         
         #endregion

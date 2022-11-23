@@ -83,7 +83,7 @@ namespace MyTownProject.Cameras
         void TalkingToNPC(GameObject go, TextAsset text)
         {
             //StartCoroutine(ChangeLens(25, _lensZoomInSpeed, _ZoomIncurve));
-            CameraInputs.XYAxis.action.Enable();
+            CameraInputs.XYAxis.action.Enable(); // Getting called too early.
 
         }
         void BackToPlayerView()
