@@ -3,7 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using MyTownProject.Events;
+using MyTownProject.Enviroment;
 using MyTownProject.Core;
+using MyTownProject.SO;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -15,21 +17,19 @@ namespace MyTownProject.UI
     }
     public class UI_CanvasHandler : MonoBehaviour
     {
+        #region  UI Elements
+        [SerializeField] private GameObject _gameUI, _debugClock, _clock, _buttons,
+         _dialogue, _explaination, _interactionPrompt, _rightTriggerPrompt;
+        [SerializeField] private TextMeshProUGUI _interactionText, _interactionPromptText,
+         _rightTriggerText, _explainationText;
+        private CanvasGroup _promptCG, _dialogueCG, _explainationCG;
+        #endregion
+
         [Header("Events Channels")]
         [SerializeField] UIEventChannelSO uIEventChannel;
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] DialogueEventsSO dialogueEvents;
-
-        [Header("UI Objects")]
-        [SerializeField] private GameObject _gameUI;
-        [SerializeField] private GameObject _clock;
-        [SerializeField] private GameObject _fullClock;
-        [SerializeField] private GameObject _buttons;
-        [SerializeField] private GameObject _dialogue;
-        [SerializeField] private GameObject _explaination;
-        [SerializeField] private GameObject _interactionPrompt;
-        [SerializeField] private GameObject _rightTriggerPrompt;
-        [SerializeField] private TextMeshProUGUI _interactionText, _interactionPromptText, _rightTriggerText, _explainationText;
+        [SerializeField] ActionSO openDoorEvent;
 
         [Header("Tween Values")]
         [SerializeField] private float _cycleLength = 2f;
@@ -50,6 +50,7 @@ namespace MyTownProject.UI
             uIEventChannel.OnHideButtonText += HideHudElementText;
             uIEventChannel.OnChangePrompt += ChangePromptPriority;
             uIEventChannel.OnShowExplaination += Bubble;
+            openDoorEvent.OnOpenDoor += OpenDoor;
 
         }
         private void OnDisable()
@@ -62,20 +63,25 @@ namespace MyTownProject.UI
             uIEventChannel.OnHideButtonText -= HideHudElementText;
             uIEventChannel.OnChangePrompt -= ChangePromptPriority;
             uIEventChannel.OnShowExplaination -= Bubble;
+            openDoorEvent.OnOpenDoor -= OpenDoor;
         }
 
         void Awake()
         {
             ChangePromptPriority(PromptName.Null, 1);
+            SetInitialReferences();
+        }
+        void SetInitialReferences(){
+            _promptCG = _interactionPrompt.GetComponent<CanvasGroup>();
+            _dialogueCG = _dialogue.GetComponent<CanvasGroup>();
+            _explainationCG = _explaination.GetComponent<CanvasGroup>();
         }
         private void CheckGameState(GameState state)
         {
             if (state == GameState.GAME_PLAYING)
             {
-                UI_UnhideAll();
-                CheckCurrentPrompt();
-                _dialogue.SetActive(false);
-                _dialogue.GetComponent<CanvasGroup>().alpha = 0;
+                // Might need to go under exit dialogue, so this is not called when not exiting.
+                StartCoroutine(ExitDialogueUI());
             }
             else
             {
@@ -88,14 +94,14 @@ namespace MyTownProject.UI
         public void UI_HideAll()
         {
             _buttons.transform.DOLocalMoveY(275f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
-            _fullClock.transform.DOLocalMoveY(443f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
-            _clock.transform.DOLocalMoveY(-470f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
+            _clock.transform.DOLocalMoveY(455f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
+            _debugClock.transform.DOLocalMoveY(-470f, _cycleLength).SetEase(Ease.InSine).SetUpdate(true);
         }
         public void UI_UnhideAll()
         {
             _buttons.transform.DOLocalMoveY(0f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
-            _fullClock.transform.DOLocalMoveY(172f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
-            _clock.transform.DOLocalMoveY(-195f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
+            _clock.transform.DOLocalMoveY(180f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
+            _debugClock.transform.DOLocalMoveY(-195f, _cycleLength).SetEase(Ease.OutSine).SetUpdate(true);
         }
         public void UI_FadeAll()
         {
@@ -109,6 +115,12 @@ namespace MyTownProject.UI
         }
         #endregion
 
+        #region Actions
+        void OpenDoor(DoorType doorType, GameObject obj)
+        {
+            StartCoroutine(InteractedWithPrompt());
+        }
+        #endregion
 
         #region Talking
         void TalkingWithNPC(GameObject npc, TextAsset inkJSON)
@@ -119,15 +131,22 @@ namespace MyTownProject.UI
         }
         IEnumerator StartDialogueUI()
         {
-            yield return _interactionPrompt.transform.DOPunchScale(Vector3.one * 1.5f, 0.3f).SetUpdate(true).WaitForCompletion();
+            yield return InteractedWithPrompt();
 
-            yield return _interactionPrompt.GetComponent<CanvasGroup>().DOFade(0, 0.5f).SetUpdate(true);
-
-            _interactionPrompt.SetActive(false);
             _dialogue.SetActive(true);
-            _dialogue.GetComponent<CanvasGroup>().DOFade(1, 0.7f).SetUpdate(true);
+            _dialogueCG.DOFade(1, 0.3f).SetUpdate(true);
 
             print("Done with Coroutine");
+            yield break;
+        }
+        IEnumerator ExitDialogueUI()
+        {
+            // cashe canvas groups
+            yield return _dialogueCG.DOFade(0, 0.3f).SetUpdate(true).WaitForCompletion();
+            UI_UnhideAll();
+            CheckCurrentPrompt();
+            _dialogue.SetActive(false);
+
             yield break;
         }
         void ContinueIconSubmit()
@@ -206,6 +225,16 @@ namespace MyTownProject.UI
             _interactionText.text = _currentPrompt.text;
             _interactionPromptText.text = _currentPrompt.text;
         }
+        IEnumerator InteractedWithPrompt()
+        {
+            yield return _interactionPrompt.transform.DOPunchScale(Vector3.one * 1.5f, 0.3f).SetUpdate(true).WaitForCompletion();
+
+            yield return _promptCG.DOFade(0, 0.5f).SetUpdate(true);
+
+            _interactionPrompt.SetActive(false);
+
+            yield break;
+        }
         void CheckCurrentPrompt()
         {
             print("check prompt " + _currentPrompt.name);
@@ -213,7 +242,7 @@ namespace MyTownProject.UI
             {
 
                 _interactionPrompt.SetActive(true);
-                _interactionPrompt.GetComponent<CanvasGroup>().alpha = 1;
+                _promptCG.alpha = 1;
             }
         }
 
@@ -232,10 +261,10 @@ namespace MyTownProject.UI
             _bubbleOnScreen = true;
             _explaination.transform.localPosition = screenPos;
             _explainationText.text = message;
-            _explaination.GetComponent<CanvasGroup>().DOFade(0.9f, 1f).SetUpdate(true);
+            _explainationCG.DOFade(0.9f, 1f).SetUpdate(true);
 
             yield return new WaitForSecondsRealtime(duration);
-            _explaination.GetComponent<CanvasGroup>().DOFade(0f, 1f).SetUpdate(true);
+            _explainationCG.DOFade(0f, 1f).SetUpdate(true);
             _bubbleOnScreen = false;
             yield break;
         }

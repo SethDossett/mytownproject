@@ -4,7 +4,6 @@ using MyTownProject.Events;
 using MyTownProject.SO;
 using MyTownProject.Interaction;
 using MyTownProject.Enviroment;
-using System.Collections.Generic;
 using System.Collections;
 
 namespace MyTownProject.Core

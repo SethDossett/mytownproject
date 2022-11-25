@@ -14,18 +14,18 @@ namespace MyTownProject.UI
     public abstract class PageMenuBase : MonoBehaviour
     {
         [field: SerializeField] public MenuState CurrentMenuState { get; private set; }
+        [field: SerializeField] public MenuController Controller { get; private set; }
         [SerializeField] GameObject firstButton;
-        [SerializeField] MenuController controller;
         [SerializeField] protected GameSettingsSO GameSettings;
         [SerializeField] protected UIEventChannelSO UIEvents;
         [SerializeField] protected GeneralEventSO SaveControllerType;
-        [SerializeField] protected MainEventChannelSO SceneController;
+        [SerializeField] protected MainEventChannelSO MainEventsChannel;
 
         public static event Action<MenuState, MenuState> OnMenuStateChanged;
 
         int _pageCount;
         NewControls _inputActions;
-        public NewControls InputActions { get { return _inputActions; } private set {_inputActions = value; } }
+        public NewControls InputActions { get { return _inputActions; } private set { _inputActions = value; } }
 
         public virtual void Awake()
         {
@@ -36,7 +36,7 @@ namespace MyTownProject.UI
             UIEvents.OnChangeControllerType += ChangeController;
 
             TransitionToState(MenuState.Front);
-            _pageCount = controller.pages.Count;
+            _pageCount = Controller.pages.Count;
         }
         public virtual void OnDestroy()
         {
@@ -47,25 +47,25 @@ namespace MyTownProject.UI
 
         public virtual void LeftTriggerInput(InputAction.CallbackContext ctx)
         {
-            if (controller.InputDisabled) return;
+            if (Controller.InputDisabled) return;
             print("LeftTriggerPerformed");
             int index = (int)CurrentMenuState - 1;
             if (index < 0) index = _pageCount - 1;
 
             MenuState nextState = (MenuState)index;
             TransitionToState(nextState);
-            controller.MovePage(-1);
+            Controller.MovePage(-1);
         }
         public virtual void RightTriggerInput(InputAction.CallbackContext ctx)
         {
-            if (controller.InputDisabled) return;
+            if (Controller.InputDisabled) return;
             print("RightTriggerPerformed");
             int index = (int)CurrentMenuState + 1;
             if (index > _pageCount - 1) index = 0;
 
             MenuState nextState = (MenuState)index;
             TransitionToState(nextState);
-            controller.MovePage(1);
+            Controller.MovePage(1);
         }
 
         public virtual void TransitionToState(MenuState newState)

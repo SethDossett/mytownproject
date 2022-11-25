@@ -32,7 +32,7 @@ namespace MyTownProject.UI
             SceneSO scene = GameSettings.SceneToEnterIn;
             scene.playerLocation = scene.NoDoorStartPos;
             scene.playerRotation = scene.NoDoorStartRot;
-            SceneController.RaiseEventChangeScene(scene);
+            MainEventsChannel.RaiseEventChangeScene(scene);
             yield break;
         }
         public override void Awake() {

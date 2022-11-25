@@ -31,6 +31,10 @@ namespace MyTownProject.UI
         }
         private void Start()
         {
+            SelectButton();
+        }
+        public void SelectButton()
+        {
             GetButtonSelection selection = _currentMenuPage.GetComponent<GetButtonSelection>();
             if (!selection.IgnoreGetter)
             {

@@ -1354,14 +1354,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3868269018046185123, guid: 2f1575c1b40f242bda552434e77cd38f,
         type: 3}
-      propertyPath: controller
-      value: 
-      objectReference: {fileID: 1035066002}
-    - target: {fileID: 3868269018046185123, guid: 2f1575c1b40f242bda552434e77cd38f,
-        type: 3}
       propertyPath: firstButton
       value: 
       objectReference: {fileID: 1035066001}
+    - target: {fileID: 3868269018046185123, guid: 2f1575c1b40f242bda552434e77cd38f,
+        type: 3}
+      propertyPath: <Controller>k__BackingField
+      value: 
+      objectReference: {fileID: 1035066002}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f1575c1b40f242bda552434e77cd38f, type: 3}
 --- !u!1001 &8277173420443723384

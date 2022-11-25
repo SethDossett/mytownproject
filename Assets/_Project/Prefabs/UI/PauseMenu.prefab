@@ -642,12 +642,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <CurrentMenuState>k__BackingField: 0
+  <Controller>k__BackingField: {fileID: 2516305416543283058}
   firstButton: {fileID: 6767813324011146335}
-  controller: {fileID: 2516305416543283058}
   GameSettings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
   UIEvents: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
   SaveControllerType: {fileID: 11400000, guid: c424a86c68b7d46d69f0d32466a51f7a, type: 2}
-  SceneController: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
+  MainEventsChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   StateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   pauseMenu: {fileID: 9052139323242417443}
 --- !u!1 &1547790523556750368

@@ -28,7 +28,7 @@ MonoBehaviour:
     m_To: PlayerFreeLook01
     m_Blend:
       m_Style: 1
-      m_Time: 0.5
+      m_Time: 0.7
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []

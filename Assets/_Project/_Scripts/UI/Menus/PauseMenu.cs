@@ -28,7 +28,7 @@ namespace MyTownProject.UI
             submit.performed += SubmitButtonPressed;
             
 
-            SceneController.OnGamePaused += Pause;
+            MainEventsChannel.OnGamePaused += Pause;
         }
         private void OnDisable()
         {
@@ -38,7 +38,7 @@ namespace MyTownProject.UI
             submit.performed -= SubmitButtonPressed;
             
 
-            SceneController.OnGamePaused -= Pause;
+            MainEventsChannel.OnGamePaused -= Pause;
         }
         private void ChangedGameState(GameState state)
         {
@@ -75,11 +75,13 @@ namespace MyTownProject.UI
             _paused = true;
             if (!pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(true);
+            
+            Controller.SelectButton();
         }
         public void Resume()
         {
             _paused = false;
-            SceneController.RaiseEventUnPaused();
+            MainEventsChannel.RaiseEventUnPaused();
             if (pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(false);
         }

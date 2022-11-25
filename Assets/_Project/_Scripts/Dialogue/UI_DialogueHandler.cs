@@ -28,6 +28,7 @@ namespace MyTownProject.Dialogue
         Animator _animator;
 
         [Header("Values")]
+        [SerializeField] bool _dialogueRunning;
         [SerializeField] float typingSpeed = 0.05f;
         bool _displayingLine = false;
         bool _skipToEndOfLine = false;
@@ -54,7 +55,6 @@ namespace MyTownProject.Dialogue
         {
             _inputActions = InputManager.inputActions;
             submit = _inputActions.UI.Submit;
-
             submit.performed += SubmitButton;
 
             DialogueEvents.onEnter += EnterDialogueMode;
@@ -69,10 +69,10 @@ namespace MyTownProject.Dialogue
         private void Start()
         {
             SetUpReferences();
-
         }
         private void SetUpReferences()
         {
+            _dialogueRunning = false;
             _choicesText = new TextMeshProUGUI[_choices.Length];
             int index = 0;
             foreach (GameObject choice in _choices)
@@ -83,6 +83,8 @@ namespace MyTownProject.Dialogue
         }
         void EnterDialogueMode(GameObject npc, TextAsset inkJSON)
         {
+            _dialogueRunning = true;
+
             currentStory = new Story(inkJSON.text);
 
             _dialogueVariables.StartListening(currentStory);
@@ -104,7 +106,10 @@ namespace MyTownProject.Dialogue
 
         void SubmitButton(InputAction.CallbackContext obj)
         {
-            print("shadfjkasdfhjk");
+            // If we are not in dialogue then ignore sumbit button.
+            if(!_dialogueRunning) return;
+
+            print("Dialogue Submit Pressed");
             if (_displayingLine == true)
             {
                 _skipToEndOfLine = true;
@@ -265,6 +270,7 @@ namespace MyTownProject.Dialogue
             _dialogueText.text = "";
             _dialogueVariables.StopListening(currentStory);
             DialogueEvents.Exit();
+            _dialogueRunning = false;
             print("ExitDialogueMode");
         }
     }

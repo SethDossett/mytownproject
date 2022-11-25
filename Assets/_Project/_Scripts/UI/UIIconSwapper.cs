@@ -26,12 +26,9 @@ namespace MyTownProject.UI
             _image = GetComponent<Image>();
             _text = GetComponent<TextMeshProUGUI>();
             ControllerTypeChanged(gameSettingsSO.ControllerType);
-        }
-        private void OnEnable()
-        {
             changeController.OnChangeControllerType += ControllerTypeChanged;
         }
-        private void OnDisable()
+        private void OnDestroy()
         {
             changeController.OnChangeControllerType -= ControllerTypeChanged;
         }
