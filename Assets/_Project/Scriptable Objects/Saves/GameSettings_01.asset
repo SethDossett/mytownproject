@@ -17,3 +17,5 @@ MonoBehaviour:
   StartOfGame: 0
   UseDebugSpawnPosition: 0
   MasterVolume: 0
+  MusicVolume: 0.38
+  SFXVolume: 0

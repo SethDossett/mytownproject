@@ -51,7 +51,7 @@ namespace MyTownProject.UI
             _currentMenuPage = pages[_currentMenuIndex];
 
         }
-
+        
         public void MovePage(int direction)
         {
             EventSystem.current.currentInputModule.enabled = false;

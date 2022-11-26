@@ -20,6 +20,7 @@ namespace MyTownProject.UI
         [SerializeField] protected UIEventChannelSO UIEvents;
         [SerializeField] protected GeneralEventSO SaveControllerType;
         [SerializeField] protected MainEventChannelSO MainEventsChannel;
+        [SerializeField] protected GeneralEventSO UpdateSettings;
 
         public static event Action<MenuState, MenuState> OnMenuStateChanged;
 
@@ -31,6 +32,7 @@ namespace MyTownProject.UI
         {
             _inputActions = InputManager.inputActions;
             InputManager.ToggleActionMap(_inputActions.UI);
+            _inputActions.UI.Navigate.performed += NaviagtionInput;
             _inputActions.UI.LeftTrigger.performed += LeftTriggerInput;
             _inputActions.UI.RightTrigger.performed += RightTriggerInput;
             UIEvents.OnChangeControllerType += ChangeController;
@@ -40,11 +42,16 @@ namespace MyTownProject.UI
         }
         public virtual void OnDestroy()
         {
+            _inputActions.UI.Navigate.performed -= NaviagtionInput;
             _inputActions.UI.LeftTrigger.performed -= LeftTriggerInput;
             _inputActions.UI.RightTrigger.performed -= RightTriggerInput;
             UIEvents.OnChangeControllerType -= ChangeController;
         }
 
+        public virtual void NaviagtionInput(InputAction.CallbackContext ctx)
+        {
+
+        }
         public virtual void LeftTriggerInput(InputAction.CallbackContext ctx)
         {
             if (Controller.InputDisabled) return;
@@ -89,7 +96,14 @@ namespace MyTownProject.UI
             SaveControllerType.RaiseEvent();
         }
 
+        public virtual void ResetGameSettings()
+        {
+            GameSettings.MasterVolume = 1;
+            GameSettings.MusicVolume = 1;
+            GameSettings.SFXVolume = 1;
 
+            UpdateSettings.RaiseEvent();
+        }
         public virtual void QuitGame()
         {
             // save any game data here

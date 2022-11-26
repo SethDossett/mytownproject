@@ -71,7 +71,8 @@ namespace MyTownProject.UI
             ChangePromptPriority(PromptName.Null, 1);
             SetInitialReferences();
         }
-        void SetInitialReferences(){
+        void SetInitialReferences()
+        {
             _promptCG = _interactionPrompt.GetComponent<CanvasGroup>();
             _dialogueCG = _dialogue.GetComponent<CanvasGroup>();
             _explainationCG = _explaination.GetComponent<CanvasGroup>();

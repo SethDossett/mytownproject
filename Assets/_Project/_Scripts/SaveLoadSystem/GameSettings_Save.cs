@@ -11,6 +11,11 @@ namespace MyTownProject.SaveLoadSystem
         public struct GameSettings
         {
             public ControllerType controllerType;
+            public SceneSO SceneToEnterIn;
+            public bool StartOfGame;
+            public float MasterVolume;
+            public float MusicVolume;
+            public float SFXVolume;
         }
 
         public GameSettings saveState = new GameSettings();
@@ -18,6 +23,11 @@ namespace MyTownProject.SaveLoadSystem
         public override string SaveState()
         {
             saveState.controllerType = settings.ControllerType;
+            saveState.SceneToEnterIn = settings.SceneToEnterIn;
+            saveState.StartOfGame = settings.StartOfGame;
+            saveState.MasterVolume = settings.MasterVolume;
+            saveState.MusicVolume = settings.MusicVolume;
+            saveState.SFXVolume = settings.SFXVolume;
 
 
             return JsonUtility.ToJson(saveState);
@@ -28,15 +38,11 @@ namespace MyTownProject.SaveLoadSystem
             saveState = JsonUtility.FromJson<GameSettings>(loadedJSON);
 
             settings.ControllerType = saveState.controllerType;
-        }
-
-        public override bool ShouldSave()
-        {
-            if(saveState.controllerType == settings.ControllerType)
-                return false;
-
-
-            return true;
+            settings.SceneToEnterIn = saveState.SceneToEnterIn;
+            settings.StartOfGame = saveState.StartOfGame;
+            settings.MasterVolume = saveState.MasterVolume;
+            settings.MusicVolume = saveState.MusicVolume;
+            settings.SFXVolume = saveState.SFXVolume;
         }
     }
 }

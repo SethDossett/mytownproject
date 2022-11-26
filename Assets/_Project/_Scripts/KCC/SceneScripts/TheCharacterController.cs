@@ -317,6 +317,7 @@ namespace KinematicCharacterController.Examples
                         fallOffPrevention.enabled = true;
                         _moveBackwards = false;
                         OrientationSharpness = _crawlRotationSpeed;
+                        UIText.ChangePrompt(PromptName.Null, 100);
                         break;
                     }
                 case CharacterState.CutsceneControl:
@@ -388,6 +389,7 @@ namespace KinematicCharacterController.Examples
                             _animator.speed = 1f;
 
                         _canCrouch = true;
+                        UIText.ChangePrompt(PromptName.Null, 1);
                         break;
                     }
             }

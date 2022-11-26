@@ -41,7 +41,7 @@ namespace MyTownProject.SaveLoadSystem
 
             }
         }
-        void StartSave()
+        public void StartSave()
         {
             if (_isSaving)
             {
