@@ -17,6 +17,7 @@ namespace MyTownProject.UI
         [field: SerializeField] public MenuController Controller { get; private set; }
         [SerializeField] GameObject firstButton;
         [SerializeField] protected GameSettingsSO GameSettings;
+        [SerializeField] protected GameSettingsSO DefaultGameSettings;
         [SerializeField] protected UIEventChannelSO UIEvents;
         [SerializeField] protected GeneralEventSO SaveControllerType;
         [SerializeField] protected MainEventChannelSO MainEventsChannel;
@@ -98,9 +99,9 @@ namespace MyTownProject.UI
 
         public virtual void ResetGameSettings()
         {
-            GameSettings.MasterVolume = 1;
-            GameSettings.MusicVolume = 1;
-            GameSettings.SFXVolume = 1;
+            GameSettings.MasterVolume = DefaultGameSettings.MasterVolume;
+            GameSettings.MusicVolume = DefaultGameSettings.MusicVolume;
+            GameSettings.SFXVolume = DefaultGameSettings.SFXVolume;
 
             UpdateSettings.RaiseEvent();
         }

@@ -27,7 +27,6 @@ namespace MyTownProject.SaveLoadSystem
         private void Awake()
         {
             Load();
-            Debug.Log("Loaded States");
         }
         void Update()
         {
@@ -63,9 +62,13 @@ namespace MyTownProject.SaveLoadSystem
 
                     string json = state.SaveState();
 
-                    WriteFileAsync(Application.persistentDataPath + "/" + state.GetUID() + ".save", json);
+                    var dir = Application.persistentDataPath + "/" + state.GetUID() + ".save";
+
+                    yield return WriteFileAsync(dir, json);
 
                     yield return new WaitForEndOfFrame();
+
+                    GUIUtility.systemCopyBuffer = dir;
                 }
             }
             _isSaving = false;
@@ -92,6 +95,11 @@ namespace MyTownProject.SaveLoadSystem
                     {
                         string json = File.ReadAllText(expectedFileLocation);
                         state.LoadState(json);
+                    }
+                    else
+                    {
+                        Debug.LogError($"{state.gameObject.name} save file does not exist!");
+                        state.NoSaveFile();
                     }
                 }
             }

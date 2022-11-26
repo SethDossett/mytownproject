@@ -29,9 +29,13 @@ namespace MyTownProject.UI
 
             //This is just for now, so that start of game is not coming out of door, 
             //need this to change if we want to start game coming out of last door
-            GameSettings.SceneToEnterIn.EnteredThroughDoor = false;
             GameSettings.StartOfGame = true;
             SceneSO scene = GameSettings.SceneToEnterIn;
+            if(scene == null){
+                print("No Saved Scene, Using Default Scene");
+                scene = DefaultGameSettings.SceneToEnterIn;
+            }
+            scene.EnteredThroughDoor = false;
             scene.playerLocation = scene.NoDoorStartPos;
             scene.playerRotation = scene.NoDoorStartRot;
             MainEventsChannel.RaiseEventChangeScene(scene);

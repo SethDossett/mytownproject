@@ -1,5 +1,6 @@
 using MyTownProject.SO;
 using MyTownProject.Core;
+using MyTownProject.Events;
 using UnityEngine;
 
 namespace MyTownProject.SaveLoadSystem
@@ -7,6 +8,8 @@ namespace MyTownProject.SaveLoadSystem
     public class GameSettings_Save : State_Save
     {
         [SerializeField] GameSettingsSO settings;
+        [SerializeField] GameSettingsSO DefaultSettings;
+        [SerializeField] GeneralEventSO UpdateSettings;
 
         public struct GameSettings
         {
@@ -16,6 +19,7 @@ namespace MyTownProject.SaveLoadSystem
             public float MasterVolume;
             public float MusicVolume;
             public float SFXVolume;
+
         }
 
         public GameSettings saveState = new GameSettings();
@@ -28,6 +32,7 @@ namespace MyTownProject.SaveLoadSystem
             saveState.MasterVolume = settings.MasterVolume;
             saveState.MusicVolume = settings.MusicVolume;
             saveState.SFXVolume = settings.SFXVolume;
+
 
 
             return JsonUtility.ToJson(saveState);
@@ -43,6 +48,17 @@ namespace MyTownProject.SaveLoadSystem
             settings.MasterVolume = saveState.MasterVolume;
             settings.MusicVolume = saveState.MusicVolume;
             settings.SFXVolume = saveState.SFXVolume;
+        }
+
+        public override void NoSaveFile()
+        {
+            settings.ControllerType = DefaultSettings.ControllerType;
+            settings.SceneToEnterIn = DefaultSettings.SceneToEnterIn;
+            settings.MasterVolume = DefaultSettings.MasterVolume;
+            settings.MusicVolume = DefaultSettings.MusicVolume;
+            settings.SFXVolume = DefaultSettings.SFXVolume;
+
+            UpdateSettings.RaiseEvent();
         }
     }
 }

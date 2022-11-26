@@ -30,5 +30,10 @@ namespace MyTownProject.SaveLoadSystem
         {
             return true;
         }
+
+        public virtual void NoSaveFile()
+        {
+
+        }
     }
 }
