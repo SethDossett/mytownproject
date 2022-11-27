@@ -882,7 +882,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 62%
+  m_text: 100%
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1091,7 +1091,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 97%
+  m_text: 100%
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1658,6 +1658,7 @@ MonoBehaviour:
   <SelectedSettingToChange>k__BackingField: 2
   gameSettings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
   UpdateSettings: {fileID: 11400000, guid: a9fff7be647664f689a7da757faa8c98, type: 2}
+  UpdateBus: {fileID: 11400000, guid: cd0ba991b806c49159c4a64e1cc40e93, type: 2}
   _slider: {fileID: 6995201849125414369}
   _percentage: {fileID: 8296218931272677120}
 --- !u!1 &1257258534626540092
@@ -4878,7 +4879,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 32%
+  m_text: 100%
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5825,6 +5826,7 @@ MonoBehaviour:
   <SelectedSettingToChange>k__BackingField: 0
   gameSettings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
   UpdateSettings: {fileID: 11400000, guid: a9fff7be647664f689a7da757faa8c98, type: 2}
+  UpdateBus: {fileID: 11400000, guid: cd0ba991b806c49159c4a64e1cc40e93, type: 2}
   _slider: {fileID: 3294190897245050967}
   _percentage: {fileID: 7004683995005504756}
 --- !u!1 &6316751202306105913
@@ -6076,6 +6078,7 @@ MonoBehaviour:
   <SelectedSettingToChange>k__BackingField: 1
   gameSettings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
   UpdateSettings: {fileID: 11400000, guid: a9fff7be647664f689a7da757faa8c98, type: 2}
+  UpdateBus: {fileID: 11400000, guid: cd0ba991b806c49159c4a64e1cc40e93, type: 2}
   _slider: {fileID: 7989769897320834092}
   _percentage: {fileID: 7599826669145013794}
 --- !u!1 &6773601349336510632

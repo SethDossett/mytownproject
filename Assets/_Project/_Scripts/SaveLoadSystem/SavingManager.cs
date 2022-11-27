@@ -11,22 +11,20 @@ namespace MyTownProject.SaveLoadSystem
     {
         [SerializeField] GeneralEventSO saveGameEvent;
         [SerializeField] GeneralEventSO loadGameEvent;
+        [SerializeField] GeneralEventSO GameSaved;
+        [SerializeField] GeneralEventSO GameLoaded;
         bool _isSaving;
 
-        private void OnEnable()
+        private void Awake()
         {
             saveGameEvent.OnRaiseEvent += StartSave;
             loadGameEvent.OnRaiseEvent += Load;
         }
-        private void OnDisable()
+        private void OnDestroy()
         {
             saveGameEvent.OnRaiseEvent -= StartSave;
             loadGameEvent.OnRaiseEvent -= Load;
 
-        }
-        private void Awake()
-        {
-            Load();
         }
         void Update()
         {
@@ -72,6 +70,7 @@ namespace MyTownProject.SaveLoadSystem
                 }
             }
             _isSaving = false;
+            GameSaved.RaiseEvent();
         }
 
         public async Task WriteFileAsync(string path, string json)
@@ -103,6 +102,8 @@ namespace MyTownProject.SaveLoadSystem
                     }
                 }
             }
+
+            GameLoaded.RaiseEvent();
         }
     }
 }

@@ -1,8 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using System.Collections;
 using MyTownProject.Core;
+using MyTownProject.Events;
 using MyTownProject.SO;
 using UnityEngine.EventSystems;
 
@@ -13,6 +12,12 @@ namespace MyTownProject.UI
         [Header("Main Menu Variables")]
 
         int lastCurrentScene;
+        [SerializeField] GeneralEventSO _loadGameEvent;
+
+        public  void Start()
+        {
+            _loadGameEvent.RaiseEvent();
+        }
 
         public void EnterGame()
         {
@@ -41,26 +46,6 @@ namespace MyTownProject.UI
             MainEventsChannel.RaiseEventChangeScene(scene);
             yield break;
         }
-        public override void NaviagtionInput(InputAction.CallbackContext ctx)
-        {
-            Vector2 inputValue = ctx.ReadValue<Vector2>();
-            GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
-            Slider slider = currentSelected.GetComponentInChildren<Slider>();
-
-            if (slider)
-            {
-                if (inputValue.x >= 0.5f)
-                {
-                    slider.value = Mathf.Min(slider.value + 0.05f, 1);
-                }
-                else if (inputValue.x <= -0.5f)
-                {
-                    slider.value = Mathf.Max(slider.value - 0.05f, 0);
-                }
-            }
-
-        }
-
 
     }
 }

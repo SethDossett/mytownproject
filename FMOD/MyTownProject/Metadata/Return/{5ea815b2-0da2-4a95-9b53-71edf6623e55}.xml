@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="MixerReturn" id="{5ea815b2-0da2-4a95-9b53-71edf6623e55}">
+		<property name="name">
+			<value>LowPass</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{fd59e765-7811-4710-b21d-a010ec0bbaf9}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{35de0215-f4ad-4382-b1e9-3eba01f19d09}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{85a952c6-310b-4db9-9e24-45dbc10a8637}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{fd59e765-7811-4710-b21d-a010ec0bbaf9}">
+		<relationship name="effects">
+			<destination>{90af73ae-cad0-44e7-92f4-2ec7873b5d45}</destination>
+			<destination>{de74c711-bfb5-4d92-88cb-6e4f8e20655c}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{35de0215-f4ad-4382-b1e9-3eba01f19d09}" />
+	<object class="MultibandEqEffect" id="{90af73ae-cad0-44e7-92f4-2ec7873b5d45}" />
+	<object class="MixerBusFader" id="{de74c711-bfb5-4d92-88cb-6e4f8e20655c}" />
+</objects>

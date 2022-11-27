@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 232052389345190687}
   - component: {fileID: 232052389345190689}
   - component: {fileID: 232052389345190690}
+  - component: {fileID: 1989784163}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -124,3 +125,18 @@ MonoBehaviour:
   - Master
   CollisionTag: 
   PreloadSamples: 0
+--- !u!114 &1989784163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 232052389345190685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91abc51f92c174610bfba8335f5f6137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _updateBus: {fileID: 11400000, guid: cd0ba991b806c49159c4a64e1cc40e93, type: 2}
+  _updateSettings: {fileID: 11400000, guid: a9fff7be647664f689a7da757faa8c98, type: 2}
+  _gameSettings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}

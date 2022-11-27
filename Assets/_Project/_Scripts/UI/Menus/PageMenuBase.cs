@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System;
 using MyTownProject.Core;
 using MyTownProject.Events;
@@ -51,7 +53,21 @@ namespace MyTownProject.UI
 
         public virtual void NaviagtionInput(InputAction.CallbackContext ctx)
         {
+            Vector2 inputValue = ctx.ReadValue<Vector2>();
+            GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
+            Slider slider = currentSelected.GetComponentInChildren<Slider>();
 
+            if (slider)
+            {
+                if (inputValue.x >= 0.5f)
+                {
+                    slider.value = Mathf.Min(slider.value + 0.05f, 1);
+                }
+                else if (inputValue.x <= -0.5f)
+                {
+                    slider.value = Mathf.Max(slider.value - 0.05f, 0);
+                }
+            }
         }
         public virtual void LeftTriggerInput(InputAction.CallbackContext ctx)
         {

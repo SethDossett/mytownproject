@@ -55,6 +55,7 @@ MonoBehaviour:
   SaveControllerType: {fileID: 11400000, guid: c424a86c68b7d46d69f0d32466a51f7a, type: 2}
   MainEventsChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   UpdateSettings: {fileID: 11400000, guid: a9fff7be647664f689a7da757faa8c98, type: 2}
+  _loadGameEvent: {fileID: 11400000, guid: 7b7d516cf22554e65a5f2d5f0e78791a, type: 2}
 --- !u!114 &3868269018046185124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,3 +85,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveGameEvent: {fileID: 11400000, guid: c424a86c68b7d46d69f0d32466a51f7a, type: 2}
   loadGameEvent: {fileID: 11400000, guid: 7b7d516cf22554e65a5f2d5f0e78791a, type: 2}
+  GameSaved: {fileID: 11400000, guid: ac75ecc83bcb444c8940517a64ef4aa3, type: 2}
+  GameLoaded: {fileID: 11400000, guid: 06b0b92cb8fc34614b2580461ce6df44, type: 2}

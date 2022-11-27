@@ -18,9 +18,11 @@ namespace MyTownProject.UI
     public class UI_CanvasHandler : MonoBehaviour
     {
         #region  UI Elements
-        [SerializeField] private GameObject _gameUI, _debugClock, _clock, _buttons,
+        [SerializeField]
+        private GameObject _gameUI, _debugClock, _clock, _buttons,
          _dialogue, _explaination, _interactionPrompt, _rightTriggerPrompt;
-        [SerializeField] private TextMeshProUGUI _interactionText, _interactionPromptText,
+        [SerializeField]
+        private TextMeshProUGUI _interactionText, _interactionPromptText,
          _rightTriggerText, _explainationText;
         private CanvasGroup _promptCG, _dialogueCG, _explainationCG;
         #endregion
@@ -145,7 +147,10 @@ namespace MyTownProject.UI
             // cashe canvas groups
             yield return _dialogueCG.DOFade(0, 0.3f).SetUpdate(true).WaitForCompletion();
             UI_UnhideAll();
-            CheckCurrentPrompt();
+            if (_currentPrompt.name != PromptName.Null)
+            {
+                EnablePrompt();
+            }
             _dialogue.SetActive(false);
 
             yield break;
@@ -218,7 +223,7 @@ namespace MyTownProject.UI
                 if (!_interactionPrompt.activeInHierarchy)
                 {
                     _interactionPrompt.transform.localScale = Vector3.one * 1.5f;
-                    _interactionPrompt.SetActive(true);
+                    EnablePrompt();
                     _interactionPrompt.transform.DOScale(Vector3.one, 0.5f); //can make anim curve
                 }
             }
@@ -236,15 +241,10 @@ namespace MyTownProject.UI
 
             yield break;
         }
-        void CheckCurrentPrompt()
+        void EnablePrompt()
         {
-            print("check prompt " + _currentPrompt.name);
-            if (_currentPrompt.name != PromptName.Null)
-            {
-
-                _interactionPrompt.SetActive(true);
-                _promptCG.alpha = 1;
-            }
+            _interactionPrompt.SetActive(true);
+            _promptCG.alpha = 1;
         }
 
         bool _bubbleOnScreen;
