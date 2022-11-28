@@ -42,6 +42,8 @@ namespace MyTownProject.UI
 
             TransitionToState(MenuState.Front);
             _pageCount = Controller.pages.Count;
+            print("Awake Base Called");
+
         }
         public virtual void OnDestroy()
         {
@@ -69,27 +71,38 @@ namespace MyTownProject.UI
                 }
             }
         }
-        public virtual void LeftTriggerInput(InputAction.CallbackContext ctx)
-        {
-            if (Controller.InputDisabled) return;
-            print("LeftTriggerPerformed");
-            int index = (int)CurrentMenuState - 1;
-            if (index < 0) index = _pageCount - 1;
-
-            MenuState nextState = (MenuState)index;
-            TransitionToState(nextState);
-            Controller.MovePage(-1);
-        }
         public virtual void RightTriggerInput(InputAction.CallbackContext ctx)
         {
             if (Controller.InputDisabled) return;
             print("RightTriggerPerformed");
-            int index = (int)CurrentMenuState + 1;
-            if (index > _pageCount - 1) index = 0;
+            MoveStateAndPage(true);
+        }
+        public virtual void LeftTriggerInput(InputAction.CallbackContext ctx)
+        {
+            if (Controller.InputDisabled) return;
+            print("LeftTriggerPerformed");
+            MoveStateAndPage(false);
+        }
+        public virtual void MoveStateAndPage(bool right)
+        {
+            int index;
+            int pageDirection;
+            if (right)
+            {
+                index = (int)CurrentMenuState + 1;
+                if (index > _pageCount - 1) index = 0;
+                pageDirection = 1;
+            }
+            else
+            {
+                index = (int)CurrentMenuState - 1;
+                if (index < 0) index = _pageCount - 1;
+                pageDirection = -1;
+            }
 
             MenuState nextState = (MenuState)index;
             TransitionToState(nextState);
-            Controller.MovePage(1);
+            Controller.MovePage(pageDirection);
         }
 
         public virtual void TransitionToState(MenuState newState)
@@ -120,6 +133,9 @@ namespace MyTownProject.UI
             GameSettings.SFXVolume = DefaultGameSettings.SFXVolume;
 
             UpdateSettings.RaiseEvent();
+        }
+        public virtual void ChangeScene()
+        {
         }
         public virtual void QuitGame()
         {

@@ -171,7 +171,7 @@ namespace MyTownProject.Interaction
             }
 
             IconControl();
-            CheckForIInteractable();
+            if(!_isInteracting)CheckForIInteractable();
 
             if (_closestTarget != null)
             {
@@ -594,7 +594,6 @@ namespace MyTownProject.Interaction
         }
         void CheckForIInteractable()
         {
-
             if (currentTarget == null)
             {
                 if (_closestTarget == null)

@@ -15,7 +15,7 @@ namespace MyTownProject.Core
     public class SceneController : MonoBehaviour
     {
         public static SceneController instance;
-        public CurrentScene GamesCurrentScene { get; private set; }
+        public static CurrentScene GamesCurrentScene { get; private set; }
         public static SceneSO CurrentSceneSO { get; private set; }
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] UIEventChannelSO uIEventChannel;
@@ -58,6 +58,7 @@ namespace MyTownProject.Core
 
         IEnumerator EnterScene(SceneSO sceneSO)
         {
+            uIEventChannel.FadeFrom(Color.black, 0);
             CurrentSceneSO = sceneSO;
             stateChangerEvent.RaiseEventGame(GameState.CUTSCENE);
             bool enteredThroughDoor = sceneSO.EnteredThroughDoor;

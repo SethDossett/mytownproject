@@ -2,6 +2,9 @@ using UnityEngine;
 using MyTownProject.Events;
 using MyTownProject.Core;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using System.Collections;
+using MyTownProject.SO;
 
 namespace MyTownProject.UI
 {
@@ -9,6 +12,7 @@ namespace MyTownProject.UI
     {
         [Header("Pause Menu Variables")]
         [SerializeField] StateChangerEventSO StateChanger;
+        [SerializeField] SceneSO MainMenuScene;
         [SerializeField] GameObject pauseMenu;
         GameState currentGameState;
 
@@ -60,6 +64,21 @@ namespace MyTownProject.UI
                 submit.Enable();
             }
         }
+        public override void ChangeScene()
+        {
+            InputManager.DisableControls(InputManager.inputActions.UI);
+            EventSystem.current.currentInputModule.enabled = false;
+            StartCoroutine(ChangeScenes());
+        }
+
+        IEnumerator ChangeScenes()
+        {
+            UIEvents.FadeTo(Color.black, 1f);
+            yield return new WaitForSecondsRealtime(1f);
+ 
+            MainEventsChannel.RaiseEventChangeScene(MainMenuScene);
+            yield break;
+        }
         private void StartButtonPressed(InputAction.CallbackContext obj)
         {
             if (currentGameState == GameState.GAME_PAUSED)
@@ -85,7 +104,10 @@ namespace MyTownProject.UI
             if (pauseMenu.activeInHierarchy)
                 pauseMenu.SetActive(false);
         }
-
+        public void SaveGame()
+        {
+            SaveControllerType.RaiseEvent();
+        }
         
     }
 }

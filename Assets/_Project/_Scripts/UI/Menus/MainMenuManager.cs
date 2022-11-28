@@ -11,19 +11,28 @@ namespace MyTownProject.UI
     {
         [Header("Main Menu Variables")]
 
-        int lastCurrentScene;
         [SerializeField] GeneralEventSO _loadGameEvent;
+        [SerializeField] CanvasGroup _canvasGroup;
+        [SerializeField] SceneSO MainMenuScene;
 
-        public  void Start()
+
+        public override void Awake()
+        {
+            base.Awake();
+            GameManager obj = GameObject.FindObjectOfType<GameManager>();
+            if (obj) Destroy(obj.gameObject);
+
+            //_canvasGroup.alpha = 1;
+        }
+        public void Start()
         {
             _loadGameEvent.RaiseEvent();
         }
 
-        public void EnterGame()
+        public override void ChangeScene()
         {
             InputManager.DisableControls(InputManager.inputActions.UI);
             EventSystem.current.currentInputModule.enabled = false;
-            lastCurrentScene = 0;
             StartCoroutine(ChangeScenes());
         }
 
@@ -36,7 +45,8 @@ namespace MyTownProject.UI
             //need this to change if we want to start game coming out of last door
             GameSettings.StartOfGame = true;
             SceneSO scene = GameSettings.SceneToEnterIn;
-            if(scene == null){
+            if (scene == null)
+            {
                 print("No Saved Scene, Using Default Scene");
                 scene = DefaultGameSettings.SceneToEnterIn;
             }

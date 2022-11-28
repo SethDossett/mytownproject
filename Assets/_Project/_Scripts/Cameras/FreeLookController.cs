@@ -66,10 +66,11 @@ namespace MyTownProject.Cameras
             RX(0, 0.1f, 1);
             RY(0, 0.1f, 1);
         }
-
-        void CheckGameState(GameState state)
+        IEnumerator EnableCameraInputs(bool enable, float waitTime = 0)
         {
-            if (state == GameState.GAME_PLAYING)
+            yield return new WaitForSecondsRealtime(waitTime);
+
+            if (enable)
             {
                 CameraInputs.XYAxis.action.Enable();
                 print("CAMERA INPUTS ON");
@@ -79,11 +80,24 @@ namespace MyTownProject.Cameras
                 CameraInputs.XYAxis.action.Disable();
                 print("CAMERA INPUTS OFF");
             }
+            yield break;
+        }
+
+        void CheckGameState(GameState state)
+        {
+            if (state == GameState.GAME_PLAYING)
+            {
+                StartCoroutine(EnableCameraInputs(true));
+            }
+            else
+            {
+                StartCoroutine(EnableCameraInputs(false));
+            }
         }
         void TalkingToNPC(GameObject go, TextAsset text)
         {
             //StartCoroutine(ChangeLens(25, _lensZoomInSpeed, _ZoomIncurve));
-            CameraInputs.XYAxis.action.Enable(); // Getting called too early.
+             StartCoroutine(EnableCameraInputs(true, 0.2f)); 
 
         }
         void BackToPlayerView()

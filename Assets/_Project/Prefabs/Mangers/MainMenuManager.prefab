@@ -56,6 +56,8 @@ MonoBehaviour:
   MainEventsChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   UpdateSettings: {fileID: 11400000, guid: a9fff7be647664f689a7da757faa8c98, type: 2}
   _loadGameEvent: {fileID: 11400000, guid: 7b7d516cf22554e65a5f2d5f0e78791a, type: 2}
+  _canvasGroup: {fileID: 0}
+  MainMenuScene: {fileID: 11400000, guid: f9906f26142b047bb9ff7e487ea8ed13, type: 2}
 --- !u!114 &3868269018046185124
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using UnityEngine;
 using MyTownProject.Events;
 using MyTownProject.SO;
+using MyTownProject.UI;
 using System.Collections;
 using KinematicCharacterController;
 
@@ -30,12 +31,6 @@ namespace MyTownProject.Core
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-        private void Awake()
-        {
-            if (GameObject.Find("New Game Manager")) Destroy(gameObject);
-
-            CheckFrameRate();
-        }
         private void OnEnable()
         {
             TurnOnTimeScaleZeroTick.OnRaiseEvent += CheckTimeScale;
@@ -44,12 +39,25 @@ namespace MyTownProject.Core
         {
             TurnOnTimeScaleZeroTick.OnRaiseEvent -= CheckTimeScale;
         }
+        private void Awake()
+        {
+            if (GameObject.Find("New Game Manager")) Destroy(gameObject);
+
+            CheckFrameRate();
+        }
         void CheckFrameRate()
         {
             if (setFrameRate)
                 Application.targetFrameRate = targetFrameRate;
             else
                 Application.targetFrameRate = -1;
+        }
+        private void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+            gameObject.name = "New Game Manager";
+
+            StartCoroutine(EnterScene());
         }
         void CheckTimeScale()
         {
@@ -65,14 +73,6 @@ namespace MyTownProject.Core
                 KinematicCharacterSystem.Settings.AutoSimulation = true;
             }
             print($"Auto Simulation {KinematicCharacterSystem.Settings.AutoSimulation}");
-        }
-        private void Start()
-        {
-            DontDestroyOnLoad(gameObject);
-            gameObject.name = "New Game Manager";
-
-
-            StartCoroutine(EnterScene());
         }
 
         IEnumerator EnterScene()

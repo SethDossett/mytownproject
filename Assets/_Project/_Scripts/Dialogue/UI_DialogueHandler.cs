@@ -32,6 +32,7 @@ namespace MyTownProject.Dialogue
         [SerializeField] float typingSpeed = 0.05f;
         bool _displayingLine = false;
         bool _skipToEndOfLine = false;
+        bool _exitingDialogue;
 
         [Header("Tags")]
         private const string SPEAKER_TAG = "speaker";
@@ -73,6 +74,7 @@ namespace MyTownProject.Dialogue
         private void SetUpReferences()
         {
             _dialogueRunning = false;
+            _exitingDialogue = false;
             _choicesText = new TextMeshProUGUI[_choices.Length];
             int index = 0;
             foreach (GameObject choice in _choices)
@@ -83,6 +85,8 @@ namespace MyTownProject.Dialogue
         }
         void EnterDialogueMode(GameObject npc, TextAsset inkJSON)
         {
+            if(_exitingDialogue) return;
+
             _dialogueRunning = true;
 
             currentStory = new Story(inkJSON.text);
@@ -108,6 +112,7 @@ namespace MyTownProject.Dialogue
         {
             // If we are not in dialogue then ignore sumbit button.
             if(!_dialogueRunning) return;
+            if(_exitingDialogue) return;
 
             print("Dialogue Submit Pressed");
             if (_displayingLine == true)
@@ -137,6 +142,7 @@ namespace MyTownProject.Dialogue
             }
             else
             {
+                _exitingDialogue = true;
                 StartCoroutine(ExitDialogueMode());
             }
         }
@@ -271,6 +277,7 @@ namespace MyTownProject.Dialogue
             _dialogueVariables.StopListening(currentStory);
             DialogueEvents.Exit();
             _dialogueRunning = false;
+            _exitingDialogue = false;
             print("ExitDialogueMode");
         }
     }

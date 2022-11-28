@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using MyTownProject.Events;
 
 namespace MyTownProject.Core
@@ -17,12 +17,13 @@ namespace MyTownProject.Core
 
         public void UpdateState(GameState newState)
         {
+            StopAllCoroutines();
             gameState = newState;
 
             switch (newState)
             {
                 case GameState.GAME_PLAYING:
-                    HandleGamePlaying();
+                    StartCoroutine(HandleGamePlaying());
                     break;
                 case GameState.GAME_PAUSED:
                     HandleGamePaused();
@@ -43,8 +44,6 @@ namespace MyTownProject.Core
         #region State Logic
 
         public static GameStateManager instance;
-        private PlayerInput playerInput;
-        [SerializeField] GameObject myPlayerInput;
         private void Awake()
         {
             instance = this;
@@ -70,12 +69,14 @@ namespace MyTownProject.Core
             //myPlayerInput.GetComponent<ExamplePlayer>().enabled = false; //Turning off ExamplePlayerScript
         }
 
-        private void HandleGamePlaying()
+        IEnumerator HandleGamePlaying()
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 1f;
+            yield return new WaitForSecondsRealtime(0.4f);
             InputManager.ToggleActionMap(InputManager.inputActions.GamePlay);
             //myPlayerInput.GetComponent<ExamplePlayer>().enabled = true; //Turning on ExamplePlayerScript
+            yield break;
         }
         #endregion
 

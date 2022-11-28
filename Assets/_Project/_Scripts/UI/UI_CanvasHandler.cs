@@ -84,7 +84,7 @@ namespace MyTownProject.UI
             if (state == GameState.GAME_PLAYING)
             {
                 // Might need to go under exit dialogue, so this is not called when not exiting.
-                StartCoroutine(ExitDialogueUI());
+                StartCoroutine(ExitCuscene());
             }
             else
             {
@@ -142,16 +142,18 @@ namespace MyTownProject.UI
             print("Done with Coroutine");
             yield break;
         }
-        IEnumerator ExitDialogueUI()
+        IEnumerator ExitCuscene()
         {
             // cashe canvas groups
             yield return _dialogueCG.DOFade(0, 0.3f).SetUpdate(true).WaitForCompletion();
             UI_UnhideAll();
+            yield return new WaitForSecondsRealtime(_cycleLength);
             if (_currentPrompt.name != PromptName.Null)
             {
                 EnablePrompt();
             }
             _dialogue.SetActive(false);
+            
 
             yield break;
         }
