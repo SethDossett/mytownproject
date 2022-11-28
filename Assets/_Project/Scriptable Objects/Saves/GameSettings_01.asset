@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4ff8e188beb7d84082b86d7b9eeb05c, type: 3}
   m_Name: GameSettings_01
   m_EditorClassIdentifier: 
-  ControllerType: 1
-  SceneToEnterIn: {fileID: 0}
+  ControllerType: 0
+  SceneToEnterIn: {fileID: 11400000, guid: 32b2cf3f9bddd4efbb991a67c2dda2da, type: 2}
   StartOfGame: 0
   UseDebugSpawnPosition: 0
-  MasterVolume: 0.79999995
-  MusicVolume: 0.6499999
+  MasterVolume: 1
+  MusicVolume: 1
   SFXVolume: 1

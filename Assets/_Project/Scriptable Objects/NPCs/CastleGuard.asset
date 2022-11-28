@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 1
   currentState: 0
-  currentPosition: {x: 108, y: 2, z: 87.1}
-  currentRotation: {x: 0, y: -0.4935143, z: 0, w: 0.86973774}
+  currentPosition: {x: 110.13, y: 2, z: 80.74}
+  currentRotation: {x: 0, y: -0.48263055, z: 0, w: 0.87582403}
   currentScene: 4
   moveTowardsDestination: 0
   atDestination: 0
   returnToStandingRotation: 0
-  shouldBeStandingRotation: {x: -0, y: 0.78580636, z: -0, w: 0.61847264}
+  shouldBeStandingRotation: {x: -0, y: -0.4935143, z: -0, w: 0.86973774}
   currentDestinationIndex: 0
   destinationPaths: []
