@@ -231,7 +231,8 @@ namespace KinematicCharacterController.Examples
 
             if (state == GameState.GAME_PLAYING)
             {
-                TransitionToState(CharacterState.Default);
+                if(!_shouldBeCrouching && !_hasTargetToLockOn)
+                    TransitionToState(CharacterState.Default);
                 print("HERE");
             }
             else if (state == GameState.CUTSCENE)

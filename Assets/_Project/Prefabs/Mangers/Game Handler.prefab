@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8262727831412473721}
   - component: {fileID: 1562224768}
   - component: {fileID: 8089074973115438412}
+  - component: {fileID: 7344374844471500043}
   m_Layer: 0
   m_Name: Game Handler
   m_TagString: Untagged
@@ -47,7 +48,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: 0
-  myPlayerInput: {fileID: 0}
   stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   mainEventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
@@ -99,3 +99,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveGameEvent: {fileID: 11400000, guid: c424a86c68b7d46d69f0d32466a51f7a, type: 2}
   loadGameEvent: {fileID: 11400000, guid: 7b7d516cf22554e65a5f2d5f0e78791a, type: 2}
+  GameSaved: {fileID: 11400000, guid: ac75ecc83bcb444c8940517a64ef4aa3, type: 2}
+  GameLoaded: {fileID: 11400000, guid: 06b0b92cb8fc34614b2580461ce6df44, type: 2}
+--- !u!114 &7344374844471500043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3020702988202320617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a67fe0b96e3bc4a7c90ecc81458d9cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
+  DefaultSettings: {fileID: 11400000, guid: 8540f3dbea37a489aba6ac9134790ec4, type: 2}
+  UpdateSettings: {fileID: 11400000, guid: a9fff7be647664f689a7da757faa8c98, type: 2}

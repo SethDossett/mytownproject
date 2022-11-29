@@ -73,6 +73,8 @@ namespace MyTownProject.Core
         {
             Debug.Log($"State = {gameState}");
             Time.timeScale = 1f;
+            // I want it to change over to Gameplay, but wait a few moments before being able to enter dialogue, or retarget or pause.
+            // event to re enable the inputs that needed a delay.
             yield return new WaitForSecondsRealtime(0.4f);
             InputManager.ToggleActionMap(InputManager.inputActions.GamePlay);
             //myPlayerInput.GetComponent<ExamplePlayer>().enabled = true; //Turning on ExamplePlayerScript

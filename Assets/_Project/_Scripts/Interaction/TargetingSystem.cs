@@ -59,6 +59,7 @@ namespace MyTownProject.Interaction
         bool _foundNextTarget;
         bool _preventNewLockOn;
         bool _releasingTargeting;
+        bool _triggerInputDown;
         string _npcTag = "NPC";
         string _interactableTag = "Interactable";
         Vector3 _npcRayPoint = new Vector3(0, 1.2f, 0);
@@ -92,14 +93,12 @@ namespace MyTownProject.Interaction
             _cameraInput = _inputActions.GamePlay.Camera;
             _LeftTriggerInput = _inputActions.GamePlay.LeftTrigger;
             _LeftTriggerInput.performed += LeftTriggerInput;
-            //_LeftTriggerInput.canceled += LeftTriggerInput;
         }
         private void OnDisable()
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             TheCharacterController.OnPlayerStateChanged -= CheckPlayerState;
             _LeftTriggerInput.performed -= LeftTriggerInput;
-            //_LeftTriggerInput.canceled -= LeftTriggerInput;
         }
         private void Awake()
         {
@@ -110,19 +109,15 @@ namespace MyTownProject.Interaction
         {
             canRaycast = true;
             _isInteracting = false;
-            //CheckInputs();
 
         }
         void CheckGameState(GameState state)
         {
             if (state == GameState.GAME_PLAYING)
             {
-
                 if (_targetLockedOn)
                 {
-                    //if (_LeftTriggerInput.ReadValue<float>() <= 0.1f)
-                    //ResetTarget();
-                    Invoke("CheckInputs", 0.1f);
+                    StartCoroutine(CheckInputs());
                 }
                 canRaycast = true;
             }
@@ -146,16 +141,17 @@ namespace MyTownProject.Interaction
                 canRaycast = false;
         }
 
-        void CheckInputs(InputAction.CallbackContext ctx)
+        IEnumerator CheckInputs()
         {
-            print("Started");
-            print(ctx.ReadValue<float>());
-            if (_targetLockedOn)
+            yield return new WaitForSecondsRealtime(0.4f);
+            print("Targeting input = " + _LeftTriggerInput.ReadValue<float>());
+            if (!_triggerInputDown)
             {
-                print("Pre");
-                if (_LeftTriggerInput.ReadValue<float>() == 0f)
-                    print("Works");
+                ResetTarget();
+                if (_currentCharacterState == CharacterState.Targeting) CC.TransitionToState(CharacterState.Default);
             }
+
+            yield break;
         }
         public void TransitionCharacterState(CharacterState newState) => CC.TransitionToState(newState);
         private void Update()
@@ -171,7 +167,7 @@ namespace MyTownProject.Interaction
             }
 
             IconControl();
-            if(!_isInteracting)CheckForIInteractable();
+            if (!_isInteracting) CheckForIInteractable();
 
             if (_closestTarget != null)
             {
@@ -199,6 +195,7 @@ namespace MyTownProject.Interaction
         }
         [SerializeField] float _objectViewAngle;//Debug tools
         [SerializeField] float _playerViewAngle;//Debug tools
+
         void SearchForInteractables()
         {
             nearbyTargets = Physics.OverlapSphere(transform.position, noticeZone, _interactableLayer);
@@ -336,7 +333,7 @@ namespace MyTownProject.Interaction
             //currentYOffset = h - half_h;
             //if (zeroVert_Look && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
             //Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
-            
+
 
         }
 
@@ -670,6 +667,7 @@ namespace MyTownProject.Interaction
         }
         void TriggerInputPressed()
         {
+            _triggerInputDown = true;
             if (canRaycast) LockOnCalled(); else RecenterCamCheck();
 
         }
@@ -718,6 +716,7 @@ namespace MyTownProject.Interaction
         IEnumerator ReleaseTargeting()
         {
             print("RELESE");
+            _triggerInputDown = false;
             _releasingTargeting = true;
             uiEventChannel.RaiseBarsOff(0.1f);
             if (_currentCharacterState == CharacterState.Targeting) CC.TransitionToState(CharacterState.Default);

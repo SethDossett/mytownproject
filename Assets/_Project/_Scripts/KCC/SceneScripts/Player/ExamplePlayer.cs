@@ -1,6 +1,7 @@
 ﻿using MyTownProject.Events;
 using MyTownProject.Core;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.InputSystem;
 
 namespace KinematicCharacterController.Examples
@@ -63,16 +64,23 @@ namespace KinematicCharacterController.Examples
         {
             if (state == GameState.GAME_PLAYING)
             {
-                print("Crouch input = " + crouch.ReadValue<float>());
-                if (crouch.ReadValue<float>() <= 0.1f)
-                    CC._shouldBeCrouching = false;
+                StartCoroutine(CheckCrouchInput());
             }
             else
             {
 
             }
         }
-        
+
+        IEnumerator CheckCrouchInput()
+        {
+            yield return new WaitForSecondsRealtime(0.4f);
+            print("Crouch input = " + crouch.ReadValue<float>());
+            if (crouch.ReadValue<float>() <= 0.1f)
+                CC._shouldBeCrouching = false;
+
+            yield break;
+        }
 
         private void OnDestroy()
         {

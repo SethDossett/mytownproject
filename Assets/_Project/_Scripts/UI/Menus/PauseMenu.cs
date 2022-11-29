@@ -12,6 +12,7 @@ namespace MyTownProject.UI
     {
         [Header("Pause Menu Variables")]
         [SerializeField] StateChangerEventSO StateChanger;
+        [SerializeField] GeneralEventSO GameSaved;
         [SerializeField] SceneSO MainMenuScene;
         [SerializeField] GameObject pauseMenu;
         GameState currentGameState;
@@ -33,6 +34,7 @@ namespace MyTownProject.UI
             
 
             MainEventsChannel.OnGamePaused += Pause;
+            GameSaved.OnRaiseEvent += () => print("Game Actually Saved");
         }
         private void OnDisable()
         {
@@ -43,6 +45,7 @@ namespace MyTownProject.UI
             
 
             MainEventsChannel.OnGamePaused -= Pause;
+            GameSaved.OnRaiseEvent -= () => print("Game Actually Saved");
         }
         private void ChangedGameState(GameState state)
         {

@@ -42,7 +42,6 @@ namespace MyTownProject.UI
 
             TransitionToState(MenuState.Front);
             _pageCount = Controller.pages.Count;
-            print("Awake Base Called");
 
         }
         public virtual void OnDestroy()
