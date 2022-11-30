@@ -59,7 +59,7 @@ namespace MyTownProject.Interaction
         bool _foundNextTarget;
         bool _preventNewLockOn;
         bool _releasingTargeting;
-        bool _triggerInputDown;
+        [SerializeField] bool _shouldReleaseTargeting;
         string _npcTag = "NPC";
         string _interactableTag = "Interactable";
         Vector3 _npcRayPoint = new Vector3(0, 1.2f, 0);
@@ -110,6 +110,11 @@ namespace MyTownProject.Interaction
             canRaycast = true;
             _isInteracting = false;
 
+            if (_targetLockedOn)
+            {
+                StartCoroutine(CheckInputs());
+            }
+
         }
         void CheckGameState(GameState state)
         {
@@ -123,6 +128,8 @@ namespace MyTownProject.Interaction
             }
             else
             {
+                print("Turn on");
+                _shouldReleaseTargeting = true;
                 canRaycast = false;
             }
         }
@@ -143,9 +150,9 @@ namespace MyTownProject.Interaction
 
         IEnumerator CheckInputs()
         {
-            yield return new WaitForSecondsRealtime(0.4f);
-            print("Targeting input = " + _LeftTriggerInput.ReadValue<float>());
-            if (!_triggerInputDown)
+            yield return new WaitForSecondsRealtime(0.5f);
+            print("Checking Inputs");
+            if (_shouldReleaseTargeting)
             {
                 ResetTarget();
                 if (_currentCharacterState == CharacterState.Targeting) CC.TransitionToState(CharacterState.Default);
@@ -439,7 +446,7 @@ namespace MyTownProject.Interaction
 
             _targetLockedOn = true;
             _closestTarget.GetComponent<IInteractable>().SetBeenTargeted(true); //Set NPC as been targeted.
-            uiEventChannel.OnShowExplaination(new Vector2(250, 50f), 3f, $"Showing The GameObject {currentTarget.gameObject.name}");
+            //uiEventChannel.OnShowExplaination(new Vector2(250, 50f), 3f, $"Showing The GameObject {currentTarget.gameObject.name}");
             for (int i = 0; i < nearbyTargets.Length; i++)
             {
                 Transform t = nearbyTargets[i].transform;
@@ -667,7 +674,8 @@ namespace MyTownProject.Interaction
         }
         void TriggerInputPressed()
         {
-            _triggerInputDown = true;
+             print("Turn off");
+            _shouldReleaseTargeting = false;
             if (canRaycast) LockOnCalled(); else RecenterCamCheck();
 
         }
@@ -716,7 +724,6 @@ namespace MyTownProject.Interaction
         IEnumerator ReleaseTargeting()
         {
             print("RELESE");
-            _triggerInputDown = false;
             _releasingTargeting = true;
             uiEventChannel.RaiseBarsOff(0.1f);
             if (_currentCharacterState == CharacterState.Targeting) CC.TransitionToState(CharacterState.Default);

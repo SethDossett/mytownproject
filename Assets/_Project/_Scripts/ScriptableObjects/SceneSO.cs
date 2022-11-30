@@ -7,6 +7,7 @@ namespace MyTownProject.SO
     [CreateAssetMenu(menuName = "ScriptableObject/Scene")]
     public class SceneSO : ScriptableObject
     {
+        public string SceneName;
         public Vector3 playerLocation;
         public Quaternion playerRotation;
         public int sceneIndex;

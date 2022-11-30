@@ -264,7 +264,7 @@ namespace MyTownProject.UI
             _bubbleOnScreen = true;
             _explaination.transform.localPosition = screenPos;
             _explainationText.text = message;
-            _explainationCG.DOFade(0.9f, 1f).SetUpdate(true);
+            _explainationCG.DOFade(1f, 1f).SetUpdate(true);
 
             yield return new WaitForSecondsRealtime(duration);
             _explainationCG.DOFade(0f, 1f).SetUpdate(true);

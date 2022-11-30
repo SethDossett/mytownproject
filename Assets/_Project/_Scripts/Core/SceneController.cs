@@ -119,6 +119,11 @@ namespace MyTownProject.Core
             //StopCoroutine(_walkCoroutine);
             if (enteredThroughDoor) ToggleTimeScaleZeroTick.RaiseEvent();
             stateChangerEvent.RaiseEventGame(GameState.GAME_PLAYING);
+
+            string sceneName = sceneSO.name;
+            print(sceneName);
+            if(sceneName != "TestScene" && sceneName != "MainMenu")
+                uIEventChannel.OnShowExplaination(new Vector2(250, 50f), 5f, "This Scene is Empty");
             yield break;
         }
         IEnumerator WallkIntoPosition()
