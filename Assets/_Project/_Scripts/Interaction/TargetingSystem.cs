@@ -59,7 +59,7 @@ namespace MyTownProject.Interaction
         bool _foundNextTarget;
         bool _preventNewLockOn;
         bool _releasingTargeting;
-        [SerializeField] bool _shouldReleaseTargeting;
+        bool _shouldReleaseTargeting;
         string _npcTag = "NPC";
         string _interactableTag = "Interactable";
         Vector3 _npcRayPoint = new Vector3(0, 1.2f, 0);

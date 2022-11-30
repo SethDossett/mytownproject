@@ -1,7 +1,7 @@
 using UnityEngine;
 using MyTownProject.Events;
 using MyTownProject.SO;
-using MyTownProject.UI;
+using UnityEngine.InputSystem;
 using System.Collections;
 using KinematicCharacterController;
 
@@ -24,6 +24,7 @@ namespace MyTownProject.Core
 
         [SerializeField] bool setFrameRate;
         [SerializeField] int targetFrameRate;
+        InputAction action;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
         static void OnBeforeSplashScreen()
@@ -58,6 +59,14 @@ namespace MyTownProject.Core
             gameObject.name = "New Game Manager";
 
             StartCoroutine(EnterScene());
+        }
+        void Update()
+        {
+            if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
         void CheckTimeScale()
         {

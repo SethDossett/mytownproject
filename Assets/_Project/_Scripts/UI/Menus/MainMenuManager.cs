@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections;
 using MyTownProject.Core;
 using MyTownProject.Events;
@@ -22,11 +23,19 @@ namespace MyTownProject.UI
             GameManager obj = GameObject.FindObjectOfType<GameManager>();
             if (obj) Destroy(obj.gameObject);
 
-            //_canvasGroup.alpha = 1;
+            Cursor.visible = true;
         }
         public void Start()
         {
             _loadGameEvent.RaiseEvent();
+        }
+        void Update()
+        {
+            if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
 
         public override void ChangeScene()
