@@ -66,6 +66,9 @@ namespace MyTownProject.Core
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+
+                if(Screen.fullScreen)
+                    Screen.fullScreen = false;
             }
         }
         void CheckTimeScale()

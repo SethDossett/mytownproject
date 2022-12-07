@@ -186,7 +186,6 @@ namespace MyTownProject.Enviroment
                 Vector2 value = inputActions.GamePlay.Move.ReadValue<Vector2>().normalized;
                 if (value.y > 0.95f)
                 {
-
                     _exitLadderCalled = true;
                     StartCoroutine(GetOffLadderTop());
                 }
@@ -238,18 +237,15 @@ namespace MyTownProject.Enviroment
             yield return new WaitForEndOfFrame();
             SwitchToClimbingState(false);
             _player.GetComponent<Animator>().CrossFadeInFixedTime(_anim_GetOnTop, 0.2f, 0);
-            yield return new WaitForEndOfFrame();
-
             _onLadder = true;
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSecondsRealtime(0.2f);
             RecenterCamX.ThreeFloats(0, 0.35f, 1);
             RecenterCamY.ThreeFloats(0, 0.35f, 1);
-            yield return new WaitForSecondsRealtime(0.45f);
+            //yield return new WaitForSecondsRealtime(0.35f);
             _exitLadderCalled = false;
             inputActions.Enable();
             EnableControls.RaiseEvent();
-            yield return null;
-
+            yield break;
         }
         IEnumerator GetOffLadderTop()
         {

@@ -15,9 +15,11 @@ namespace MyTownProject.UI
     public class SettingsController : MonoBehaviour
     {
         NewControls _inputActions;
+        [SerializeField] bool _forceFixedResolutions;
         public List<ResItem> Resolutions = new List<ResItem>();
         [SerializeField] int _selectedResolution;
         [SerializeField] bool _isFullScreen;
+        bool _foundResolution;
         Slider _currentSlider;
 
         [SerializeField] TextMeshProUGUI _resolutionsLabel;
@@ -25,14 +27,42 @@ namespace MyTownProject.UI
 
         private void OnEnable()
         {
-            _isFullScreen = Screen.fullScreen;
-            UpdateResLabel();
+            InitializeResolution();
+            // change this to event of starting up game
             _inputActions = InputManager.inputActions;
             _inputActions.UI.Navigate.performed += NavigateInput;
         }
         private void OnDisable()
         {
             _inputActions.UI.Navigate.performed -= NavigateInput;
+        }
+        void InitializeResolution()
+        {
+            _isFullScreen = Screen.fullScreen;
+            _foundResolution = false;
+            for (int i = 0; i < Resolutions.Count; i++)
+            {
+                if (Screen.width == Resolutions[i].Horizontal && Screen.height == Resolutions[i].Vertical)
+                {
+                    _foundResolution = true;
+                    _selectedResolution = i;
+                    UpdateResLabel();
+                    break;
+                }
+            }
+            if (!_forceFixedResolutions)
+            {
+                if (!_foundResolution)
+                {
+                    ResItem newRes = new ResItem();
+                    newRes.Horizontal = Screen.width;
+                    newRes.Vertical = Screen.height;
+
+                    Resolutions.Add(newRes);
+                    _selectedResolution = Resolutions.Count - 1;
+                    UpdateResLabel();
+                }
+            }
         }
         public void NavigateInput(InputAction.CallbackContext ctx)
         {

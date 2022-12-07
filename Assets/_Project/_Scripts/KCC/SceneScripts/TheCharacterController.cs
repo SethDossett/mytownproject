@@ -231,9 +231,9 @@ namespace KinematicCharacterController.Examples
 
             if (state == GameState.GAME_PLAYING)
             {
-                if(!_shouldBeCrouching && !_hasTargetToLockOn)
-                    TransitionToState(CharacterState.Default);
-                print("HERE");
+                //if(!_shouldBeCrouching && !_hasTargetToLockOn)
+                    //TransitionToState(CharacterState.Default);
+                // I dont want to switch after pausing
             }
             else if (state == GameState.CUTSCENE)
             {
@@ -1070,6 +1070,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.ClimbLadder:
                     {
+                        
                         if (_gettingOnOffObstacle)
                         {
                             currentVelocity = Vector3.zero;

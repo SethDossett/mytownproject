@@ -30,11 +30,14 @@ namespace MyTownProject.UI
             _loadGameEvent.RaiseEvent();
         }
         void Update()
-        {
+        { // need new input action for this
             if (Keyboard.current.escapeKey.wasPressedThisFrame)
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+
+                if (Screen.fullScreen)
+                    Screen.fullScreen = false;
             }
         }
 
