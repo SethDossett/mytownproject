@@ -10,6 +10,7 @@ namespace MyTownProject.SO
         public UnityAction<Vector3, Quaternion> OnTeleport;
         public UnityAction<Vector3, float, Quaternion, bool> OnSetPosRot;
         public UnityAction<DoorType, GameObject> OnOpenDoor;
+        public UnityAction<float, bool> OnTimeScaleZeroTick;
 
         public void TeleportObject(Vector3 loc, Quaternion rot)
         {
@@ -24,6 +25,11 @@ namespace MyTownProject.SO
         public void OpenDoor(DoorType doorType, GameObject door)
         {
             OnOpenDoor?.Invoke(doorType, door);
+        }
+
+        public void TimeScaleZeroTick(float duration, bool loop)
+        {
+            OnTimeScaleZeroTick?.Invoke(duration, loop);
         }
     }
 }

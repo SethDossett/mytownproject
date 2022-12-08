@@ -49,7 +49,7 @@ namespace MyTownProject.Interaction
         [SerializeField] StateChangerEventSO stateChangerEvent;
         [SerializeField] ActionSO SetPlayerPosRot;
         [SerializeField] GeneralEventSO DisableControls;
-        [SerializeField] GeneralEventSO ToggleTimeScaleZeroTick;
+        [SerializeField] ActionSO ToggleTimeScaleZeroTick;
 
         [Header("References")]
         DoorAnimator _doorAnimator;
@@ -159,7 +159,7 @@ namespace MyTownProject.Interaction
             Vector3 dampPos;
             Quaternion lerpRot;
 
-            ToggleTimeScaleZeroTick.RaiseEvent();
+            ToggleTimeScaleZeroTick.TimeScaleZeroTick(0, true);
             
             while (_moveValue < 1)
             {
@@ -175,7 +175,7 @@ namespace MyTownProject.Interaction
                 yield return null;
             }
 
-            ToggleTimeScaleZeroTick.RaiseEvent();
+            ToggleTimeScaleZeroTick.TimeScaleZeroTick(0, false);
             _moveValue = 0;
             print("DoneLerping");
             yield break;

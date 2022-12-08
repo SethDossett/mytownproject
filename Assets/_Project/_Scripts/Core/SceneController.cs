@@ -22,7 +22,7 @@ namespace MyTownProject.Core
         [SerializeField] StateChangerEventSO stateChangerEvent;
         [SerializeField] ActionSO teleportPlayer;
         [SerializeField] TransformEventSO EnteredNewScene;
-        [SerializeField] GeneralEventSO ToggleTimeScaleZeroTick;
+        [SerializeField] ActionSO ToggleTimeScaleZeroTick;
         [SerializeField] GameSettingsSO gameSettings;
 
         Coroutine _walkCoroutine;
@@ -111,19 +111,19 @@ namespace MyTownProject.Core
             // If CutScene to be played Play now.
             yield return new WaitForSecondsRealtime(1f);
             uIEventChannel.FadeFrom(Color.black, 1f);
-            if (enteredThroughDoor) ToggleTimeScaleZeroTick.RaiseEvent();
+            if (enteredThroughDoor) ToggleTimeScaleZeroTick.TimeScaleZeroTick(0, true);
             //_walkCoroutine = StartCoroutine(WallkIntoPosition());
             yield return new WaitForSecondsRealtime(0.25f);
             uIEventChannel.RaiseBarsOff(2f);
             yield return new WaitForSecondsRealtime(1f);
             //StopCoroutine(_walkCoroutine);
-            if (enteredThroughDoor) ToggleTimeScaleZeroTick.RaiseEvent();
+            if (enteredThroughDoor) ToggleTimeScaleZeroTick.TimeScaleZeroTick(0, false);
             stateChangerEvent.RaiseEventGame(GameState.GAME_PLAYING);
 
             string sceneName = sceneSO.name;
             print(sceneName);
             if(sceneName != "TestScene" && sceneName != "MainMenu")
-                uIEventChannel.OnShowExplaination(new Vector2(250, 50f), 5f, "This Scene is Empty");
+                uIEventChannel.ShowExplaination(new Vector2(250, 50f), 5f, "This Scene is Empty");
             yield break;
         }
         IEnumerator WallkIntoPosition()

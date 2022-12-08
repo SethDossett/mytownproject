@@ -1317,7 +1317,7 @@ MonoBehaviour:
   OpenDoorEvent: {fileID: 11400000, guid: 831079ef99d5c4a739e4b5f9efd7cbbc, type: 2}
   DialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   FellOffLedge: {fileID: 11400000, guid: 3e49724741d5b43fc80a973967176fb3, type: 2}
-  TurnOnTimeScaleZeroTick: {fileID: 11400000, guid: 51e37663df3b8444d8bed47601ddf72f,
+  TurnOnTimeScaleZeroTick: {fileID: 11400000, guid: 93af479098c934e0a88986d2e614efca,
     type: 2}
   UIEvents: {fileID: 11400000, guid: fab8c6de80a331c428103c2708a8a11f, type: 2}
   RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
@@ -1602,6 +1602,8 @@ MonoBehaviour:
   EnableControls: {fileID: 11400000, guid: e0d754fc0fbdb564d9a419d976d7238c, type: 2}
   DisableControls: {fileID: 11400000, guid: 1f9619156896d6a468b85690b3ab4d6d, type: 2}
   SetPlayerPosRot: {fileID: 11400000, guid: 2058ea3555ec84235b1a641170ecfa8c, type: 2}
+  TurnOnTimeScaleZeroTick: {fileID: 11400000, guid: 93af479098c934e0a88986d2e614efca,
+    type: 2}
 --- !u!114 &5606128506353790698
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -23,7 +23,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] ActionSO OpenDoorEvent;
         [SerializeField] DialogueEventsSO DialogueEvent;
         [SerializeField] GeneralEventSO FellOffLedge;
-        [SerializeField] GeneralEventSO TurnOnTimeScaleZeroTick;
+        [SerializeField] ActionSO TurnOnTimeScaleZeroTick;
         [SerializeField] UIEventChannelSO UIEvents;
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
@@ -206,7 +206,7 @@ namespace KinematicCharacterController.Examples
         IEnumerator ResetPosition(){
             UIEvents.OnFadeTo(Color.white, 1.5f);
             yield return new WaitForSecondsRealtime(1.5f);
-            TurnOnTimeScaleZeroTick.RaiseEvent();
+            TurnOnTimeScaleZeroTick.TimeScaleZeroTick(0, true);
             changeState.RaiseEventGame(GameState.CUTSCENE);
             TeleportPlayer(cc.LastGroundedPosition, cc.LastGroundedRotation);
             GetComponent<FallOffPrevention>().enabled = true;
@@ -214,7 +214,7 @@ namespace KinematicCharacterController.Examples
             RecenterCamX.ThreeFloats(0, 0.1f, 1);
             RecenterCamY.ThreeFloats(0, 0.1f, 1);
             yield return new WaitForSecondsRealtime(1.5f);
-            TurnOnTimeScaleZeroTick.RaiseEvent();
+            TurnOnTimeScaleZeroTick.TimeScaleZeroTick(0, false);
             UIEvents.OnFadeFrom(Color.white, 1.5f);
             _animator.CrossFadeInFixedTime(_anim_GetUp, 0 , 0);
             GetComponent<FallOffPrevention>().enabled = false;

@@ -262,12 +262,14 @@ namespace MyTownProject.UI
             if (_fadeTween != null) _fadeTween.Kill();
 
             _bubbleOnScreen = true;
+            _explaination.SetActive(true);
             _explaination.transform.localPosition = screenPos;
             _explainationText.text = message;
             _explainationCG.DOFade(1f, 1f).SetUpdate(true);
 
             yield return new WaitForSecondsRealtime(duration);
-            _explainationCG.DOFade(0f, 1f).SetUpdate(true);
+            yield return _explainationCG.DOFade(0f, 1f).SetUpdate(true).WaitForCompletion();
+            _explaination.SetActive(false);
             _bubbleOnScreen = false;
             yield break;
         }

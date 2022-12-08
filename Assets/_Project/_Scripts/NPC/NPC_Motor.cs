@@ -132,7 +132,6 @@ namespace MyTownProject.NPC
             {
                 NPC.currentRotation = Quaternion.RotateTowards(NPC.currentRotation, rotation, _rotSpeed * Time.unscaledDeltaTime);
                 
-                
                 yield return null;
             }
             yield break;

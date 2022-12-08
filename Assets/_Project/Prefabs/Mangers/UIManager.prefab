@@ -199,6 +199,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   loadGlobalsJSON: {fileID: 4900000, guid: c00a0c87a31256e45b5828511e51ef30, type: 3}
+  _dialogueRunning: 0
   typingSpeed: 0.05
   SelectGeneric:
     Guid:

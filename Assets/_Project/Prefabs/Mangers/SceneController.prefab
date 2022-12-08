@@ -48,6 +48,6 @@ MonoBehaviour:
   stateChangerEvent: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
   EnteredNewScene: {fileID: 11400000, guid: e3057ea816add452a96a8c996bf3682a, type: 2}
-  ToggleTimeScaleZeroTick: {fileID: 11400000, guid: 51e37663df3b8444d8bed47601ddf72f,
+  ToggleTimeScaleZeroTick: {fileID: 11400000, guid: 93af479098c934e0a88986d2e614efca,
     type: 2}
   gameSettings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}

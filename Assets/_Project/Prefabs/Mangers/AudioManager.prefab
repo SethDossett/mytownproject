@@ -139,4 +139,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _updateBus: {fileID: 11400000, guid: cd0ba991b806c49159c4a64e1cc40e93, type: 2}
   _updateSettings: {fileID: 11400000, guid: a9fff7be647664f689a7da757faa8c98, type: 2}
+  _gameLoaded: {fileID: 11400000, guid: 06b0b92cb8fc34614b2580461ce6df44, type: 2}
   _gameSettings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}

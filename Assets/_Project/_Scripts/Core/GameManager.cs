@@ -17,10 +17,11 @@ namespace MyTownProject.Core
 
         [SerializeField] GameSettingsSO settings;
         [SerializeField] GeneralEventSO StartOfGame;
-        [SerializeField] GeneralEventSO TurnOnTimeScaleZeroTick;
+        [SerializeField] ActionSO TurnOnTimeScaleZeroTick;
+        [SerializeField] UIEventChannelSO UIEvents;
         [SerializeField] StateChangerEventSO StateChanger;
 
-        KinematicCharacterSystem _kccSystem;
+        KinematicCharacterSystem _kccSystem = null;
 
         [SerializeField] bool setFrameRate;
         [SerializeField] int targetFrameRate;
@@ -34,11 +35,11 @@ namespace MyTownProject.Core
         }
         private void OnEnable()
         {
-            TurnOnTimeScaleZeroTick.OnRaiseEvent += CheckTimeScale;
+            TurnOnTimeScaleZeroTick.OnTimeScaleZeroTick += CheckTimeScale;
         }
         private void OnDisable()
         {
-            TurnOnTimeScaleZeroTick.OnRaiseEvent -= CheckTimeScale;
+            TurnOnTimeScaleZeroTick.OnTimeScaleZeroTick -= CheckTimeScale;
         }
         private void Awake()
         {
@@ -67,24 +68,34 @@ namespace MyTownProject.Core
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
 
-                if(Screen.fullScreen)
+                if (Screen.fullScreen)
                     Screen.fullScreen = false;
             }
         }
-        void CheckTimeScale()
+        void CheckTimeScale(float duration, bool loop)
         {
-            _kccSystem = KinematicCharacterSystem.GetInstance();
+            if (!_kccSystem) _kccSystem = KinematicCharacterSystem.GetInstance();
 
             if (KinematicCharacterSystem.Settings.AutoSimulation)
             {
                 KinematicCharacterSystem.Settings.AutoSimulation = false;
                 _kccSystem.TimeScaleZeroTick();
+
+                if (loop) return;
+                else StartCoroutine(HandleTick(duration));
             }
             else
             {
                 KinematicCharacterSystem.Settings.AutoSimulation = true;
             }
             print($"Auto Simulation {KinematicCharacterSystem.Settings.AutoSimulation}");
+        }
+        IEnumerator HandleTick(float duration)
+        {
+            yield return new WaitForSecondsRealtime(duration);
+            KinematicCharacterSystem.Settings.AutoSimulation = true;
+            print($"Auto Simulation {KinematicCharacterSystem.Settings.AutoSimulation}");
+            yield break;
         }
 
         IEnumerator EnterScene()
@@ -94,6 +105,8 @@ namespace MyTownProject.Core
                 settings.StartOfGame = false;
                 StartOfGame.RaiseEvent();
                 print("START OF GAME");
+
+                UIEvents.ShowExplaination(new Vector2(250, 50f), 5f, "Controls are in the Pause Menu, Press E or Start for Menu");
             }
             // if has cutscene play,
             // after return to play mode

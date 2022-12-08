@@ -193,6 +193,7 @@ namespace KinematicCharacterController.Examples
         [Range(0f, 0.7f)][SerializeField] float _slideDuration = 0.15f;
         bool changingDirection = false;
 
+        [Header("Event References")]
         [SerializeField] DialogueEventsSO dialogueEvent;
         [SerializeField] FloatEventSO RecenterCamX;
         [SerializeField] FloatEventSO RecenterCamY;
@@ -201,6 +202,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] GeneralEventSO EnableControls;
         [SerializeField] GeneralEventSO DisableControls;
         [SerializeField] ActionSO SetPlayerPosRot;
+        [SerializeField] ActionSO TurnOnTimeScaleZeroTick;
 
 
         private void OnEnable()
@@ -234,10 +236,13 @@ namespace KinematicCharacterController.Examples
                 //if(!_shouldBeCrouching && !_hasTargetToLockOn)
                     //TransitionToState(CharacterState.Default);
                 // I dont want to switch after pausing
+                if(CurrentCharacterState == CharacterState.CutsceneControl)
+                    TransitionToState(CharacterState.Default);
             }
             else if (state == GameState.CUTSCENE)
             {
-                TransitionToState(CharacterState.CutsceneControl);
+                if(CurrentCharacterState != CharacterState.Talking)
+                    TransitionToState(CharacterState.CutsceneControl);
             }
         }
         private void Update()
@@ -301,7 +306,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Talking:
                     {
-
+                        TurnOnTimeScaleZeroTick.TimeScaleZeroTick(1f, false);
                         _animator.SetFloat(anim_moving, 0, 0f, Time.deltaTime);
                         _animator.SetFloat(anim_horizontal, 0, 0.1f, Time.deltaTime);
                         _animator.SetFloat(anim_vertical, 0, 0.1f, Time.deltaTime);
@@ -374,7 +379,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.Talking:
                     {
-                        _animator.CrossFadeInFixedTime(_idleState, 0.2f, 0);
+                        _animator.CrossFadeInFixedTime(_idleState, 0.4f, 0);
                         break;
                     }
                 case CharacterState.Crawling:
@@ -691,7 +696,6 @@ namespace KinematicCharacterController.Examples
                         lookRot.z = 0;
                         lookRot.x = 0;
                         currentRotation = Quaternion.RotateTowards(transform.rotation, lookRot, _talkingRotSpeed * Time.unscaledDeltaTime);
-                        print("shoudldnt WOrk?");
                         break;
                     }
                 case CharacterState.Crawling:
