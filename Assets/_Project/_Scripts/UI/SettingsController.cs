@@ -54,9 +54,7 @@ namespace MyTownProject.UI
             {
                 if (!_foundResolution)
                 {
-                    ResItem newRes = new ResItem();
-                    newRes.Horizontal = Screen.width;
-                    newRes.Vertical = Screen.height;
+                    ResItem newRes = new ResItem(Screen.width, Screen.height);
 
                     Resolutions.Add(newRes);
                     _selectedResolution = Resolutions.Count - 1;
@@ -141,6 +139,12 @@ namespace MyTownProject.UI
         public struct ResItem
         {
             public int Horizontal, Vertical;
+
+            public ResItem(int horizontal, int vertical)
+            {
+                this.Horizontal = horizontal;
+                this.Vertical = vertical;
+            }
         }
 
     }

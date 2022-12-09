@@ -11,9 +11,9 @@ namespace MyTownProject.UI
         public string text;
 
         public Prompt(){
-            name = new PromptName();
-            priority = new int();
-            text = "";
+            this.name = new PromptName();
+            this.priority = new int();
+            this.text = "";
         }
     }
 
