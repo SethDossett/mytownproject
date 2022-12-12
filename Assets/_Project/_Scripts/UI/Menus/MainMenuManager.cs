@@ -16,14 +16,14 @@ namespace MyTownProject.UI
         [SerializeField] CanvasGroup _canvasGroup;
         [SerializeField] SceneSO MainMenuScene;
 
-
         public override void Awake()
         {
             base.Awake();
             GameManager obj = GameObject.FindObjectOfType<GameManager>();
             if (obj) Destroy(obj.gameObject);
 
-            Cursor.visible = true;
+            //Hack Set Up just for Build, needs to be redone
+            Cursor.visible = false;
         }
         public void Start()
         {
@@ -31,6 +31,7 @@ namespace MyTownProject.UI
         }
         void Update()
         { // need new input action for this
+            //Hack Set Up just for Build, needs to be redone
             if (Keyboard.current.escapeKey.wasPressedThisFrame)
             {
                 Cursor.lockState = CursorLockMode.None;

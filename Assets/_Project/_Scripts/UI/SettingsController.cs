@@ -10,7 +10,7 @@ namespace MyTownProject.UI
 {
     public enum SelectedObjectType
     {
-        Resolution, Vsync, Brightness, MasterVolume, MusicVolume, SFXVolume
+        FullScreen, Resolution, Vsync, Brightness, MasterVolume, MusicVolume, SFXVolume
     }
     public class SettingsController : MonoBehaviour
     {
@@ -22,6 +22,7 @@ namespace MyTownProject.UI
         bool _foundResolution;
         Slider _currentSlider;
 
+        [SerializeField] Toggle _toggle;
         [SerializeField] TextMeshProUGUI _resolutionsLabel;
         [SerializeField] GameObject _currentSelectedGameObject;
 
@@ -39,6 +40,7 @@ namespace MyTownProject.UI
         void InitializeResolution()
         {
             _isFullScreen = Screen.fullScreen;
+            _toggle.isOn = _isFullScreen;
             _foundResolution = false;
             for (int i = 0; i < Resolutions.Count; i++)
             {
@@ -71,12 +73,18 @@ namespace MyTownProject.UI
 
             Vector2 value = ctx.ReadValue<Vector2>();
             // Put these else ifs in the same order on canvas, so it checks them in order
-            if (type == SelectedObjectType.Resolution) ResolutionSelected(value.x);
+            if (type == SelectedObjectType.FullScreen) FullScreenSelected();
+            else if (type == SelectedObjectType.Resolution) ResolutionSelected(value.x);
             else if (type == SelectedObjectType.Vsync) VsyncSelected(value.x);
             else if (type == SelectedObjectType.Brightness) BrightnessSelected(value.x);
             else VolumeSelected(type, value.x);
         }
-
+        void FullScreenSelected() { }
+        public void UpdateFullScreen()
+        {
+            _isFullScreen = _toggle.isOn;
+            Screen.fullScreen = _isFullScreen;
+        }
         void ResolutionSelected(float xInput)
         {
             print("Resolution Selected");

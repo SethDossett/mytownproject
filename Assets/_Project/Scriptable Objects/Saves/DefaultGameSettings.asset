@@ -15,6 +15,7 @@ MonoBehaviour:
   ControllerType: 0
   SceneToEnterIn: {fileID: 11400000, guid: 32b2cf3f9bddd4efbb991a67c2dda2da, type: 2}
   StartOfGame: 0
+  FullScreen: 1
   UseDebugSpawnPosition: 0
   MasterVolume: 1
   MusicVolume: 1
