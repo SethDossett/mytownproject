@@ -2167,6 +2167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670b66ae2d266f3468e6644b79a1b162, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <SaveLocation>k__BackingField: NPCData
   NPC: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
 --- !u!1 &6392871650551071180
 GameObject:

@@ -8276,11 +8276,6 @@ PrefabInstance:
       propertyPath: _resolutionsLabel
       value: 
       objectReference: {fileID: 386141358}
-    - target: {fileID: 3868269018555150530, guid: 2f1575c1b40f242bda552434e77cd38f,
-        type: 3}
-      propertyPath: _forceFixedResolutions
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f1575c1b40f242bda552434e77cd38f, type: 3}
 --- !u!222 &3900768522420910089

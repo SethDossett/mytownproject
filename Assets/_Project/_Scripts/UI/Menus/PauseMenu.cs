@@ -34,7 +34,7 @@ namespace MyTownProject.UI
             
 
             MainEventsChannel.OnGamePaused += Pause;
-            GameSaved.OnRaiseEvent += () => print("Game Actually Saved");
+            GameSaved.OnRaiseEvent += () => print($"Game Actually Saved {name}");
         }
         private void OnDisable()
         {

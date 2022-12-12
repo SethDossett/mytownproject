@@ -71,6 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67fe0b96e3bc4a7c90ecc81458d9cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <SaveLocation>k__BackingField: GameSettingsData
   settings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
   DefaultSettings: {fileID: 11400000, guid: 8540f3dbea37a489aba6ac9134790ec4, type: 2}
   UpdateSettings: {fileID: 11400000, guid: a9fff7be647664f689a7da757faa8c98, type: 2}

@@ -1,6 +1,8 @@
 using UnityEngine.InputSystem;
 using MyTownProject.Events;
 using System.Collections;
+using System.Collections.Generic;
+using System;
 using UnityEngine;
 using System.IO;
 using System.Threading.Tasks;
@@ -14,6 +16,8 @@ namespace MyTownProject.SaveLoadSystem
         [SerializeField] GeneralEventSO GameSaved;
         [SerializeField] GeneralEventSO GameLoaded;
         bool _isSaving;
+
+        List<NPCTransformValues> _stateList = new List<NPCTransformValues>();
 
         private void Awake()
         {
@@ -60,13 +64,22 @@ namespace MyTownProject.SaveLoadSystem
 
                     string json = state.SaveState();
 
-                    var dir = Application.persistentDataPath + "/" + state.GetUID() + ".save";
+                    string path = null;
 
-                    yield return WriteFileAsync(dir, json);
+                    //var dir = Application.persistentDataPath + "/" + state.GetUID() + ".save";
+                    //path = Application.persistentDataPath + "/" + state.SaveLocation + ".save";
+                    path = Path.Combine(Application.persistentDataPath, state.GetUID()+ ".save");
+#if UNITY_EDITOR
+                    //var assetFolderPath = Application.dataPath + Path.AltDirectorySeparatorChar + "/SaveFolder" + state.SaveLocation + ".save";
+                    //path = "Assets/Resources/SaveFolder/" + state.SaveLocation + ".save";
+#endif
+
+                    yield return WriteFileAsync(path, json);
 
                     yield return new WaitForEndOfFrame();
 
-                    GUIUtility.systemCopyBuffer = dir;
+                    GUIUtility.systemCopyBuffer = path;
+                    print($"Saved {state.gameObject.name} to Path: {path}");
                 }
             }
             _isSaving = false;
@@ -88,7 +101,16 @@ namespace MyTownProject.SaveLoadSystem
             {
                 if (state.ShouldLoad())
                 {
-                    string expectedFileLocation = Application.persistentDataPath + "/" + state.GetUID() + ".save";
+                    string expectedFileLocation = null;
+                    //string expectedFileLocation = Application.persistentDataPath + "/" + state.GetUID() + ".save";
+                    //string expectedFileLocation = Application.persistentDataPath + "/" + state.SaveLocation + ".save";
+                    //string expectedAssetFileLocation = Application.dataPath + Path.AltDirectorySeparatorChar + state.SaveLocation + ".save";
+                    expectedFileLocation = Path.Combine(Application.persistentDataPath, state.GetUID()+ ".save");
+
+#if UNITY_EDITOR
+                    //var assetFolderPath = Application.dataPath + Path.AltDirectorySeparatorChar + "/SaveFolder" + state.SaveLocation + ".save";
+                    //expectedFileLocation = "Assets/Resources/SaveFolder/" + state.SaveLocation + ".save";
+#endif
 
                     if (File.Exists(expectedFileLocation))
                     {
@@ -105,5 +127,34 @@ namespace MyTownProject.SaveLoadSystem
 
             GameLoaded.RaiseEvent();
         }
+
     }
+        public static class JsonHelper
+        {
+            public static T[] FromJson<T>(string json)
+            {
+                Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
+                return wrapper.Items;
+            }
+
+            public static string ToJson<T>(T[] array)
+            {
+                Wrapper<T> wrapper = new Wrapper<T>();
+                wrapper.Items = array;
+                return JsonUtility.ToJson(wrapper);
+            }
+
+            public static string ToJson<T>(T[] array, bool prettyPrint)
+            {
+                Wrapper<T> wrapper = new Wrapper<T>();
+                wrapper.Items = array;
+                return JsonUtility.ToJson(wrapper, prettyPrint);
+            }
+
+            [Serializable]
+            private class Wrapper<T>
+            {
+                public T[] Items;
+            }
+        }
 }

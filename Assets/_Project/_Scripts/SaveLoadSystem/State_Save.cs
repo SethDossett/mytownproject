@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace MyTownProject.SaveLoadSystem
 {
-    public class State_Save : MonoBehaviour
+    public abstract class State_Save : MonoBehaviour
     {
-
+        [field:SerializeField] public string SaveLocation{get; private set;}
+        
         public virtual string SaveState()
         {
             return null;

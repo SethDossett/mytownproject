@@ -1142,6 +1142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670b66ae2d266f3468e6644b79a1b162, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <SaveLocation>k__BackingField: NPCData
   NPC: {fileID: 11400000, guid: 4f8666579793fd14eb257c2947df59d8, type: 2}
 --- !u!114 &5108103891202545035
 MonoBehaviour:

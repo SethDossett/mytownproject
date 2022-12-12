@@ -35,7 +35,7 @@ namespace MyTownProject.SaveLoadSystem
 
 
 
-            return JsonUtility.ToJson(saveState);
+            return JsonUtility.ToJson(saveState, true);
         }
 
         public override void LoadState(string loadedJSON)
@@ -59,6 +59,11 @@ namespace MyTownProject.SaveLoadSystem
             settings.SFXVolume = DefaultSettings.SFXVolume;
 
             UpdateSettings.RaiseEvent();
+        }
+        public override string GetUID()
+        {
+            return ("GameSettings_" + (this.GetType()));
+
         }
     }
 }
