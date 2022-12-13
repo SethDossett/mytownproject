@@ -1683,7 +1683,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a598ff040ab245b2a60b76b336c8f1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _forceFixedResolutions: 0
+  _forceFixedResolutions: 1
   Resolutions:
   - Horizontal: 1920
     Vertical: 1080
