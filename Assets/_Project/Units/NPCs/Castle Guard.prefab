@@ -1095,7 +1095,7 @@ MonoBehaviour:
   _NPCName: {fileID: 5809348893565470639}
   _titleName: {fileID: 5809348893570957670}
   _name: Guard
-  ShowName: 1
+  ShowName: 0
   beenTargeted: 0
 --- !u!114 &5108103891202545032
 MonoBehaviour:

@@ -64,6 +64,20 @@ namespace MyTownProject.UI
                 }
             }
         }
+         void Update()
+        { // need new input action for this
+            //Hack Set Up just for Build, needs to be redone
+            if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+
+                if (Screen.fullScreen){
+                    //Turns off Toggle So, Also Turns off Fullscreen
+                    _toggle.isOn = false;
+                }
+            }
+        }
         public void NavigateInput(InputAction.CallbackContext ctx)
         {
             _currentSelectedGameObject = EventSystem.current.currentSelectedGameObject;

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using System.Collections;
 using MyTownProject.Core;
 using MyTownProject.Events;
@@ -29,22 +28,10 @@ namespace MyTownProject.UI
         {
             _loadGameEvent.RaiseEvent();
         }
-        void Update()
-        { // need new input action for this
-            //Hack Set Up just for Build, needs to be redone
-            if (Keyboard.current.escapeKey.wasPressedThisFrame)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-
-                if (Screen.fullScreen)
-                    Screen.fullScreen = false;
-            }
-        }
 
         public override void ChangeScene()
         {
-            InputManager.DisableControls(InputManager.inputActions.UI);
+            InputManager.DisableControls(InputManager.inputActions.UI); //Does This Actually work?
             EventSystem.current.currentInputModule.enabled = false;
             StartCoroutine(ChangeScenes());
         }
