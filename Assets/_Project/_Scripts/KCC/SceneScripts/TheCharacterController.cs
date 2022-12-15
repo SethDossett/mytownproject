@@ -209,13 +209,13 @@ namespace KinematicCharacterController.Examples
         {
             GameStateManager.OnGameStateChanged += CheckGameState;
             SetPlayerPosRot.OnSetPosRot += SetTransientPosRot;
-            dialogueEvent.onEnter += (GameObject npc, TextAsset inkFile) => _target = npc.transform;
+            dialogueEvent.onEnter += SetTarget;
         }
         private void OnDisable()
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             SetPlayerPosRot.OnSetPosRot -= SetTransientPosRot;
-            dialogueEvent.onEnter -= (GameObject npc, TextAsset inkFile) => _target = npc.transform;
+            dialogueEvent.onEnter -= SetTarget;
         }
         private void Awake()
         {
@@ -234,16 +234,20 @@ namespace KinematicCharacterController.Examples
             if (state == GameState.GAME_PLAYING)
             {
                 //if(!_shouldBeCrouching && !_hasTargetToLockOn)
-                    //TransitionToState(CharacterState.Default);
+                //TransitionToState(CharacterState.Default);
                 // I dont want to switch after pausing
-                if(CurrentCharacterState == CharacterState.CutsceneControl)
+                if (CurrentCharacterState == CharacterState.CutsceneControl)
                     TransitionToState(CharacterState.Default);
             }
             else if (state == GameState.CUTSCENE)
             {
-                if(CurrentCharacterState != CharacterState.Talking)
+                if (CurrentCharacterState != CharacterState.Talking)
                     TransitionToState(CharacterState.CutsceneControl);
             }
+        }
+        void SetTarget(GameObject npc, TextAsset inkFile)
+        {
+            _target = npc.transform;
         }
         private void Update()
         {
@@ -333,7 +337,7 @@ namespace KinematicCharacterController.Examples
                     }
 
             }
-            
+
 
         }
 
@@ -459,7 +463,7 @@ namespace KinematicCharacterController.Examples
                         //Show or hide UI Text for Crouch
                         //if (_canCrouch) UIText.ChangePrompt(PromptName.Crouch, 5);
                         //else UIText.ChangePrompt(PromptName.Crouch, 0);
-                        if(_canCrouch) UIText.ShowButtonText(HudElement.RightTrigger,"Crouch");
+                        if (_canCrouch) UIText.ShowButtonText(HudElement.RightTrigger, "Crouch");
                         else UIText.HideButtonText(HudElement.RightTrigger);
 
                         // Crouching input
@@ -1074,7 +1078,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.ClimbLadder:
                     {
-                        
+
                         if (_gettingOnOffObstacle)
                         {
                             currentVelocity = Vector3.zero;
@@ -1503,7 +1507,7 @@ namespace KinematicCharacterController.Examples
         public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport)
         {
             CurrentHitStabilityReport = hitStabilityReport;
-            
+
 
         }
 

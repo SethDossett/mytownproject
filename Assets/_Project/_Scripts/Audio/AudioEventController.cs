@@ -1,6 +1,7 @@
 using MyTownProject.Events;
 using UnityEngine;
 using FMODUnity;
+using System;
 
 namespace MyTownProject.Audio
 {
@@ -15,27 +16,36 @@ namespace MyTownProject.Audio
         [SerializeField] EventReference pauseGame;
         [SerializeField] EventReference unpauseGame;
 
+        #region Events
         private void OnEnable()
         {   //Calling for one shot to be played.
             audioEventSO.OnRaiseEvent += PlayClip;
             audioEventSO.OnRaiseEvent2 += PlayClipAndPosition;
 
             //Events Called where we want oneshotplayed
-            MainEventChannelSO.OnGamePaused += () => PlayClip(pauseGame);
-            MainEventChannelSO.OnGameUnPaused += () => PlayClip(unpauseGame);
-            _dialogueEvents.onEnter += (GameObject go, TextAsset inkFile) => PlayClip(enterDialogue);
-            _dialogueEvents.onExit += () => PlayClip(exitDialogue);
+            MainEventChannelSO.OnGamePaused += GamePaused;
+            MainEventChannelSO.OnGameUnPaused += GameUnPaused;
+            _dialogueEvents.onEnter += EnteredDialogue;
+            _dialogueEvents.onExit += ExitedDialogue;
         }
+
+
         private void OnDisable()
         {
             audioEventSO.OnRaiseEvent -= PlayClip;
             audioEventSO.OnRaiseEvent2 -= PlayClipAndPosition;
 
-            MainEventChannelSO.OnGamePaused -= () => PlayClip(pauseGame);
-            MainEventChannelSO.OnGameUnPaused -= () => PlayClip(unpauseGame);
-            _dialogueEvents.onEnter -= (GameObject go, TextAsset inkFile) => PlayClip(enterDialogue);
-            _dialogueEvents.onExit -= () => PlayClip(exitDialogue);
+            MainEventChannelSO.OnGamePaused -= GamePaused;
+            MainEventChannelSO.OnGameUnPaused -= GameUnPaused;
+            _dialogueEvents.onEnter -= EnteredDialogue;
+            _dialogueEvents.onExit -= ExitedDialogue;
         }
+        void GamePaused() => PlayClip(pauseGame);
+        private void GameUnPaused() => PlayClip(unpauseGame);
+        private void EnteredDialogue(GameObject arg0, TextAsset arg1) => PlayClip(enterDialogue);
+        private void ExitedDialogue() => PlayClip(exitDialogue);
+
+        #endregion
 
         void PlayClip(EventReference clip)
         {
@@ -50,5 +60,5 @@ namespace MyTownProject.Audio
         }
 
 
-    }   
+    }
 }
