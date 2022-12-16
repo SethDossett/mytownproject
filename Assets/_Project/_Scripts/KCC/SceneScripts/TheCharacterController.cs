@@ -292,7 +292,9 @@ namespace KinematicCharacterController.Examples
                     {
                         Motor.ForceUnground();
                         _climbTimer = 0;
+                        _isFalling = false;
                         _timeFallingInAir = 0f;
+                        _startFallingTimer = false;
 
                         break;
                     }
@@ -332,7 +334,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.CutsceneControl:
                     {
-                        MaxStableMoveSpeed = 1f;
+                        MaxStableMoveSpeed = 1.2f;
                         break;
                     }
 

@@ -127,7 +127,7 @@ namespace KinematicCharacterController
             float fixedDeltaTime = Time.fixedUnscaledDeltaTime;
             while (!Settings.AutoSimulation)
             {
-                yield return new WaitForSecondsRealtime(0.03f);
+                yield return new WaitForSecondsRealtime(0.02f);
                 PreSimulationInterpolationUpdate(fixedDeltaTime);
                 Simulate(fixedDeltaTime, CharacterMotors, PhysicsMovers);
                 PostSimulationInterpolationUpdate(fixedDeltaTime);
