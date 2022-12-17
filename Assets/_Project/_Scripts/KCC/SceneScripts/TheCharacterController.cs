@@ -1469,10 +1469,16 @@ namespace KinematicCharacterController.Examples
         //Need To be In same Order As Enums & Fmod "Surface" Parameter. Also same spelling as Tags in TagManager.
         List<string> _groundTypeTags = new List<string>() { "Grass", "Sand", "Stone", "Wood", "ShallowWater" };
         int _currentTagIndex;
+        float _groundHitTick;
 
         public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
         {
-            LastGroundedPosition = hitPoint - (hitStabilityReport.LedgeFacingDirection.normalized);
+            //Slows the Amount of Calls
+            _groundHitTick += Time.deltaTime;
+            if(_groundHitTick < 0.1f) return;
+            _groundHitTick = 0;
+
+            LastGroundedPosition = Motor.TransientPosition - (hitStabilityReport.LedgeFacingDirection.normalized);
             LastGroundedRotation = Motor.TransientRotation;
 
             int tagIndex = _groundTypeTags.IndexOf(hitCollider.tag);
@@ -1481,7 +1487,6 @@ namespace KinematicCharacterController.Examples
             _currentTagIndex = tagIndex;
 
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName("Surface", (float)_currentTagIndex);
-
         }
 
         public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
