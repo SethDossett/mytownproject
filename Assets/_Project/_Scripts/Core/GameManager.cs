@@ -22,9 +22,6 @@ namespace MyTownProject.Core
         [SerializeField] StateChangerEventSO StateChanger;
 
         KinematicCharacterSystem _kccSystem = null;
-
-        [SerializeField] bool setFrameRate;
-        [SerializeField] int targetFrameRate;
         InputAction action;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
@@ -44,16 +41,8 @@ namespace MyTownProject.Core
         private void Awake()
         {
             if (GameObject.Find("New Game Manager")) Destroy(gameObject);
-
-            CheckFrameRate();
         }
-        void CheckFrameRate()
-        {
-            if (setFrameRate)
-                Application.targetFrameRate = targetFrameRate;
-            else
-                Application.targetFrameRate = -1;
-        }
+        
         private void Start()
         {
             DontDestroyOnLoad(gameObject);

@@ -83,14 +83,12 @@ namespace KinematicCharacterController.Examples
             PlayerRef.RaiseEvent(transform);
 
         }
-        [SerializeField] GameObject obj;
         private void TeleportPlayer(Vector3 location, Quaternion rotation)
         {
             if (!isBeingTeleportedTo)
             {
                 if (cc)
                 {
-                    Instantiate(obj, location,rotation);
                     //If Teleport position is Obstucted Find new Position
                     if (cc.Motor.CharacterOverlap(
                         location,
