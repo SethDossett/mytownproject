@@ -226,11 +226,10 @@ namespace KinematicCharacterController.Examples
             yield return new WaitForSecondsRealtime(1.5f);
 
             //Enable Cutscene Tick & Change to Cutscene State
-            TurnOnTimeScaleZeroTick.TimeScaleZeroTick(0, true);
-            changeState.RaiseEventGame(GameState.CUTSCENE);
-
             //Teleport Player after fade complete, Prevent Player from being on Edge
+            TurnOnTimeScaleZeroTick.TimeScaleZeroTick(0, true);
             TeleportPlayer(cc.LastGroundedPosition, cc.LastGroundedRotation);
+            changeState.RaiseEventGame(GameState.CUTSCENE);
             GetComponent<FallOffPrevention>().enabled = true;
             cc.MaxStableMoveSpeed = 0;
 

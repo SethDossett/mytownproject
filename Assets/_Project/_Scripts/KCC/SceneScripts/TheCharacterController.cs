@@ -113,7 +113,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] float _timeFallingInAir = 0f;
         bool _startFallingTimer = false;
         bool _hardLanding = false;
-        [SerializeField] float _timetotriggerHardLanding = 0.5f;
+        [SerializeField] float _timeToTriggerHardLanding = 0.5f;
         public bool _isFalling;
 
         [Header("Misc")]
@@ -335,6 +335,10 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.CutsceneControl:
                     {
                         MaxStableMoveSpeed = 1.2f;
+                        _isFalling = false;
+                        _timeFallingInAir = 0f;
+                        _startFallingTimer = false;
+                        _hardLanding = false;
                         break;
                     }
 
@@ -1475,7 +1479,7 @@ namespace KinematicCharacterController.Examples
         {
             //Slows the Amount of Calls
             _groundHitTick += Time.deltaTime;
-            if(_groundHitTick < 0.1f) return;
+            if (_groundHitTick < 0.1f) return;
             _groundHitTick = 0;
 
             LastGroundedPosition = Motor.TransientPosition - (hitStabilityReport.LedgeFacingDirection.normalized);
@@ -1690,7 +1694,7 @@ namespace KinematicCharacterController.Examples
 
             _timeFallingInAir += Time.deltaTime;
 
-            if (_timeFallingInAir >= _timetotriggerHardLanding)
+            if (_timeFallingInAir >= _timeToTriggerHardLanding)
             {
                 _hardLanding = true;
             }
