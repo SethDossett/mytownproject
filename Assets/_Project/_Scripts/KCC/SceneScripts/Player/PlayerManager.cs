@@ -98,6 +98,17 @@ namespace KinematicCharacterController.Examples
                         QueryTriggerInteraction.Ignore) > 0)
                     {
                         Debug.LogError("Teleport Aborted, Obstruction in Path, Need To Find New Safe Position");
+                        //cc.Motor.SetPosition(location);
+                        //cc.Motor.SetRotation(rotation);
+                        cc.Motor.SetPositionAndRotation(location, rotation);
+
+                        print("PlayerTeleported");
+
+                        if (OnCharacterTeleport != null)
+                        {
+                            OnCharacterTeleport(cc);
+                        }
+                        this.isBeingTeleportedTo = true;
                     }
                     else
                     {
@@ -222,16 +233,17 @@ namespace KinematicCharacterController.Examples
         IEnumerator ResetPosition()
         {
             //Fade out as player falls
-            UIEvents.OnFadeTo(Color.white, 1.5f);
+            UIEvents.FadeTo(Color.white, 1.5f);
+            //Need to disable controls and change to new falling camera position
             yield return new WaitForSecondsRealtime(1.5f);
 
             //Enable Cutscene Tick & Change to Cutscene State
             //Teleport Player after fade complete, Prevent Player from being on Edge
             TurnOnTimeScaleZeroTick.TimeScaleZeroTick(0, true);
             TeleportPlayer(cc.LastGroundedPosition, cc.LastGroundedRotation);
-            changeState.RaiseEventGame(GameState.CUTSCENE);
             GetComponent<FallOffPrevention>().enabled = true;
             cc.MaxStableMoveSpeed = 0;
+            changeState.RaiseEventGame(GameState.CUTSCENE);
 
             //Recenter Camera
             RecenterCamX.ThreeFloats(0, 0.1f, 1);
@@ -240,7 +252,8 @@ namespace KinematicCharacterController.Examples
             //Wait for Player to be set, then Disable Cutscene Tick & Fade from white
             yield return new WaitForSecondsRealtime(1.5f);
             TurnOnTimeScaleZeroTick.TimeScaleZeroTick(0, false);
-            UIEvents.OnFadeFrom(Color.white, 1.5f);
+            UIEvents.RaiseBarsOn(0.1f);
+            UIEvents.FadeFrom(Color.white, 1.5f);
 
             //Play animation to stand up, disable fall of prevention
             _animator.CrossFadeInFixedTime(_anim_GetUp, 0, 0);
@@ -248,6 +261,7 @@ namespace KinematicCharacterController.Examples
 
             //Everything Done Game Playing State
             yield return new WaitForSecondsRealtime(2f);
+            UIEvents.RaiseBarsOff(0.3f);
             changeState.RaiseEventGame(GameState.GAME_PLAYING);
             yield break;
         }
