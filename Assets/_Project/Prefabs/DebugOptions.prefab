@@ -75,8 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50687ad9b51394668b0d9f899617f53e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setFrameRate: 0
-  targetFrameRate: 0
+  _settings: {fileID: 11400000, guid: 9eab688510f07415899949641adc3275, type: 2}
 --- !u!1 &2496155637783086156
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,7 +169,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.4
+  m_fontSize: 16.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -206,7 +205,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 33.812622, y: 14.305356, z: 55.447334, w: 0}
+  m_margin: {x: 81.36863, y: 31.864492, z: 55.447334, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -224,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e10ac7c618224f4d8c5b663207b3b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _refreshRate: 1
+  _settings: {fileID: 0}
 --- !u!1 &2496155638575826386
 GameObject:
   m_ObjectHideFlags: 0

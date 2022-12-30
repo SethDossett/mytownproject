@@ -1,19 +1,23 @@
 using TMPro;
 using UnityEngine;
 
+
+namespace MyTownProject.Utility{
 public class FPSCounter : MonoBehaviour
 {
     int _frameRate = 0;
     float _frameCount = 0;
     float _timer = 0;
-    [SerializeField] float _refreshRate = 1f;
+    float _refreshRate = 1f;
     TextMeshProUGUI _text;
+    [SerializeField] DebugSettingsSO _settings;
 
-    private void Start()
+    private void OnEnable() 
     {
+        _refreshRate = _settings.FPS_RefreshRate;
         _text = GetComponent<TextMeshProUGUI>();
     }
-
+    
     private void Update()
     {
         _timer += Time.unscaledDeltaTime;
@@ -31,4 +35,5 @@ public class FPSCounter : MonoBehaviour
 
 
     }
+}
 }

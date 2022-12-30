@@ -4761,7 +4761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7013f182c8a6f40d7b1a2deaeebb9ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <objectType>k__BackingField: 5
+  <objectType>k__BackingField: 6
 --- !u!114 &1171011114747072692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5658,16 +5658,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DebugOptions
       objectReference: {fileID: 0}
-    - target: {fileID: 2496155637468678373, guid: 150fb41023178476585eed69b26456d6,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2496155637468678374, guid: 150fb41023178476585eed69b26456d6,
-        type: 3}
-      propertyPath: targetFrameRate
-      value: 33
-      objectReference: {fileID: 0}
     - target: {fileID: 2496155637468678375, guid: 150fb41023178476585eed69b26456d6,
         type: 3}
       propertyPath: m_RootOrder
@@ -5725,24 +5715,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2496155637783086152, guid: 150fb41023178476585eed69b26456d6,
         type: 3}
-      propertyPath: _refreshRate
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2496155637783086158, guid: 150fb41023178476585eed69b26456d6,
-        type: 3}
-      propertyPath: m_fontSize
-      value: 16.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2496155637783086158, guid: 150fb41023178476585eed69b26456d6,
-        type: 3}
-      propertyPath: m_margin.x
-      value: 81.36863
-      objectReference: {fileID: 0}
-    - target: {fileID: 2496155637783086158, guid: 150fb41023178476585eed69b26456d6,
-        type: 3}
-      propertyPath: m_margin.y
-      value: 31.864492
-      objectReference: {fileID: 0}
+      propertyPath: _settings
+      value: 
+      objectReference: {fileID: 11400000, guid: 9eab688510f07415899949641adc3275,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 150fb41023178476585eed69b26456d6, type: 3}
 --- !u!114 &2503524549645558842
@@ -10202,7 +10178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7013f182c8a6f40d7b1a2deaeebb9ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <objectType>k__BackingField: 3
+  <objectType>k__BackingField: 4
 --- !u!222 &5717081858360696239
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11074,7 +11050,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7013f182c8a6f40d7b1a2deaeebb9ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <objectType>k__BackingField: 4
+  <objectType>k__BackingField: 5
 --- !u!1 &6773601350203664935
 GameObject:
   m_ObjectHideFlags: 0

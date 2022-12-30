@@ -1,11 +1,14 @@
 using UnityEngine;
 
+namespace MyTownProject.Utility
+{
+
 public class DebugOptions : MonoBehaviour
 {
     public static DebugOptions Instance;
+    [SerializeField] DebugSettingsSO _settings;
+    FPSCounter _fpsCounter;
 
-    [SerializeField] bool setFrameRate;
-        [SerializeField] int targetFrameRate;
     private void Awake() {
         if(Instance != null){
             Destroy(gameObject);
@@ -15,13 +18,25 @@ public class DebugOptions : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        SetInitialReferences();
         CheckFrameRate();
+    }
+    void SetInitialReferences(){
+        _fpsCounter = GetComponentInChildren<FPSCounter>();
+
+        if(_settings.SetFPS_Counter){
+            _fpsCounter.enabled = true;
+        }
+        else{
+            _fpsCounter.enabled = false;
+        }
     }
     void CheckFrameRate()
         {
-            if (setFrameRate)
-                Application.targetFrameRate = targetFrameRate;
+            if (_settings.SetFrameRate)
+                Application.targetFrameRate = _settings.TargetFrameRate;
             else
                 Application.targetFrameRate = -1;
         }
+}
 }
