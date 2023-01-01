@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2496155637468678375}
   - component: {fileID: 2496155637468678374}
+  - component: {fileID: 2496155637787221694}
   m_Layer: 0
   m_Name: DebugOptions
   m_TagString: Untagged
@@ -76,6 +77,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _settings: {fileID: 11400000, guid: 9eab688510f07415899949641adc3275, type: 2}
+--- !u!114 &2496155637787221694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2496155637468678373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23640e19c22f247ec804460ef6b10786, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugSettings: {fileID: 11400000, guid: 9eab688510f07415899949641adc3275, type: 2}
+  _generalDebugUpdate: {fileID: 11400000, guid: f3124e5f9f78d4f81ba622d8244c509e,
+    type: 2}
 --- !u!1 &2496155637783086156
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e10ac7c618224f4d8c5b663207b3b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _settings: {fileID: 0}
+  _settings: {fileID: 11400000, guid: 9eab688510f07415899949641adc3275, type: 2}
 --- !u!1 &2496155638575826386
 GameObject:
   m_ObjectHideFlags: 0

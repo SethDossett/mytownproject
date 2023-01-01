@@ -16,6 +16,12 @@ public class DebugSettingsSO : ScriptableObject
     public bool SetFPS_Counter;
     public int FPS_RefreshRate;
 
+    [Header("UI/HUD Control")]
+    public bool HudToggle;
+
+    [Header("Scene Updates")]
+    public int DesiredClockTime;
+
 
 }
 }

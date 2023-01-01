@@ -9,11 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f604f09af1bd4da3bb37552c2b6e1cc, type: 3}
-  m_Name: DebugSettings
+  m_Script: {fileID: 11500000, guid: 7324921d7d18c1b4d8871d59b3984a64, type: 3}
+  m_Name: UpdateDebug
   m_EditorClassIdentifier: 
-  SetFrameRate: 0
-  TargetFrameRate: 0
-  SetFPS_Counter: 1
-  FPS_RefreshRate: 1
-  HudToggle: 0
