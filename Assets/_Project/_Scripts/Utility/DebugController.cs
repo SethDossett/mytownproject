@@ -18,6 +18,7 @@ namespace MyTownProject.Utility{
         #region DebugCommands
         public static DebugCommand HUD_TOGGLE;
         public static DebugCommand<int, int> SET_TIME;
+        public static DebugCommand<int> SET_FRAMERATE;
         public static DebugCommand HELP;
 
         #endregion
@@ -34,6 +35,12 @@ namespace MyTownProject.Utility{
                 TimeManager.DateTime = new DateTime(TimeManager.DateTime.Date, hour, minute);
             });
 
+            SET_FRAMERATE = new DebugCommand<int>("set_framerate", " [-1] = Off, [-2] Screen Refresh Rate", "set_framerate <goal_framerate>", (rate) => {
+                if(rate < -2) return;
+                else if(rate == -2) Application.targetFrameRate = Screen.currentResolution.refreshRate;
+                else Application.targetFrameRate = rate; 
+            });
+
             HELP = new DebugCommand("help", "Show Full List of Commands", "help", () => {
                 _showHelp = true;
             });
@@ -41,6 +48,7 @@ namespace MyTownProject.Utility{
             CommandList = new List<object>{
                 HUD_TOGGLE,
                 SET_TIME,
+                SET_FRAMERATE,
                 HELP
             };
         }

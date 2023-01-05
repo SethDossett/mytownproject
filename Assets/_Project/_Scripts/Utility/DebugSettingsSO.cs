@@ -19,9 +19,6 @@ public class DebugSettingsSO : ScriptableObject
     [Header("UI/HUD Control")]
     public bool HudToggle;
 
-    [Header("Scene Updates")]
-    public int DesiredClockTime;
-
 
 }
 }

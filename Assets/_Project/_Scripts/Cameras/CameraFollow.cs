@@ -30,7 +30,7 @@ namespace MyTownProject.Cameras{
         void Update()
         {
             
-            Vector3 target_P= target.position + offset;
+            Vector3 target_P = target.position + offset;
             if(HardFollow){
                 transform.position = target_P;
                 transform.rotation = target.rotation;
