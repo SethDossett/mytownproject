@@ -31,7 +31,8 @@ namespace MyTownProject.Interaction
         [SerializeField] private TextAsset inkJSON;
         //[SerializeField] private CinemachineTargetGroup _targetGroup;
         [SerializeField] private NPC_ScriptableObject npc;
-        [SerializeField] DialogueEventsSO dialogueEvents;
+        [SerializeField] private DialogueEventsSO dialogueEvents;
+        private NPC_StateMachine _npc_StateMachine;
 
 
         #region new variables
@@ -86,7 +87,12 @@ namespace MyTownProject.Interaction
 
         private void Speak()
         {
+            //Send Event to Enter Dialogue Mode
             dialogueEvents.Enter(gameObject, inkJSON);
+
+            // Find StateMachine and tell this game object to enter dialogue mode
+            if (!_npc_StateMachine) _npc_StateMachine = GetComponent<NPC_StateMachine>();
+            _npc_StateMachine.EnterTalkingState(gameObject, inkJSON);
         }
 
         void Start()

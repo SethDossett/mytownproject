@@ -1,7 +1,6 @@
 using MyTownProject.Events;
 using UnityEngine;
 using System.Collections;
-using System;
 
 namespace MyTownProject.NPC
 {
