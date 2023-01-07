@@ -29,7 +29,7 @@ namespace MyTownProject.NPC{
                 _currentSubState.UpdateStates();
             }
         }
-        protected void SwitchStates(NPC_BaseState newState){
+        public void SwitchStates(NPC_BaseState newState){
             ExitState();
 
             newState.EnterState();

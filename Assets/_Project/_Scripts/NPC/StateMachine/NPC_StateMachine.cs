@@ -8,9 +8,15 @@ namespace MyTownProject.NPC
         [field: SerializeField] public NPC_BaseState CurrentState { get; set; }
         private NPC_StateFactory _states;
 
-        [SerializeField] public NPC_ScriptableObject NPC { get; set; }
+        #region References
+        [field: SerializeField] public NPC_ScriptableObject NPC { get; private set; }
+        [SerializeField] public Transform TargetTransform { get; private set; }
+        #endregion
 
-
+        #region Values
+        [field: SerializeField] public float RotSpeed { get; private set; }
+        #endregion
+        
         private void Awake()
         {
             _states = new NPC_StateFactory(this);
@@ -33,13 +39,11 @@ namespace MyTownProject.NPC
         void OnEnable()
         {
             stateChanger.OnNPCStateVoid += ChangeState;
-            dialogueEvents.onEnter += EnterTalkingState;
             dialogueEvents.onExit += ChangeState;
         }
         void OnDisable()
         {
             stateChanger.OnNPCStateVoid -= ChangeState;
-            dialogueEvents.onEnter -= EnterTalkingState;
             dialogueEvents.onExit -= ChangeState;
         }
         void ChangeState()
@@ -55,11 +59,12 @@ namespace MyTownProject.NPC
             // if (npcState != NPCSTATE.WALKING)
             //     UpdateNPCState(NPCSTATE.WALKING);
         }
-        public void EnterTalkingState(GameObject npc, TextAsset inkJSON)
+        public void EnterTalkingState(GameObject npc, Transform target)
         {
             if (this.gameObject != npc) return;
+            TargetTransform = target;
 
-            
+            CurrentState.SwitchStates(_states.Talk());
 
             //if(NPC.currentState != NPCSTATE.TALKING) return;
 
