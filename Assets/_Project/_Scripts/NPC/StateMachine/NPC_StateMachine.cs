@@ -1,35 +1,48 @@
 using UnityEngine;
 using MyTownProject.Events;
+using MyTownProject.SO;
+using Pathfinding;
 
 namespace MyTownProject.NPC
 {
     public class NPC_StateMachine : MonoBehaviour
     {
-        [field: SerializeField] public NPC_BaseState CurrentState { get; set; }
+        [SerializeField] private NPC_BaseState _currentState;
+        public NPC_BaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
         private NPC_StateFactory _states;
 
         #region References
         [field: SerializeField] public NPC_ScriptableObject NPC { get; private set; }
+        public Rigidbody Rb { get; private set; }
+        public Animator NpcAnimator { get; private set; }
+        public IAstarAI AI { get; private set; }
         [SerializeField] public Transform TargetTransform { get; private set; }
+        [field: SerializeField] public PathSO CurrentPath { get; private set; }
         #endregion
 
         #region Values
         [field: SerializeField] public float RotSpeed { get; private set; }
         #endregion
-        
+
+        [Header("Recorded Movement")]
+        public bool IsReplay;
+
         private void Awake()
         {
+            AI = GetComponent<IAstarAI>();
+            Rb = GetComponent<Rigidbody>();
+            NpcAnimator = GetComponent<Animator>();
             _states = new NPC_StateFactory(this);
-            CurrentState = _states.Visible();
-            CurrentState.EnterState();
+            _currentState = _states.Visible();
+            _currentState.EnterState();
         }
         private void Update()
         {
-            CurrentState.UpdateState();
+            _currentState.UpdateState();
         }
         private void FixedUpdate()
         {
-            CurrentState.FixedUpdateState();
+            _currentState.FixedUpdateState();
         }
 
         #region Changing State
@@ -56,25 +69,22 @@ namespace MyTownProject.NPC
 
         void EnterWalkingState()
         {
-            // if (npcState != NPCSTATE.WALKING)
-            //     UpdateNPCState(NPCSTATE.WALKING);
+            _currentState.SwitchStates(_states.Walk());
         }
         public void EnterTalkingState(GameObject npc, Transform target)
         {
             if (this.gameObject != npc) return;
             TargetTransform = target;
 
-            CurrentState.SwitchStates(_states.Talk());
-
-            //if(NPC.currentState != NPCSTATE.TALKING) return;
-
-            // if (npcState != NPCSTATE.TALKING)
-            //     UpdateNPCState(NPCSTATE.TALKING);
+            _currentState.SwitchStates(_states.Talk());
         }
         void ReturnToBaseState()
         {
-            // if (npcState != NPCSTATE.STANDING)
-            //     UpdateNPCState(NPCSTATE.STANDING);
+            _currentState.SwitchStates(_states.Idle());
+        }
+        public void ResetData()
+        {
+            CurrentPath.Records.Clear();
         }
 
 

@@ -16,7 +16,11 @@ public class NPC_IdleState : NPC_BaseState
     }
     public override void FixedUpdateState(){}
     public override void ExitState(){}
-    public override void CheckSwitchStates(){}
+    public override void CheckSwitchStates(){
+        if(!Ctx.AI.reachedEndOfPath && Ctx.AI.canMove){
+            SwitchStates(Factory.Walk());
+        }
+    }
     public override void InitSubState(){}
 }
 }
