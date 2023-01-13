@@ -20,7 +20,7 @@ namespace MyTownProject.NPC
                 _isReplay = true;
             }
 
-            Ctx.NpcAnimator.SetTrigger(_isStanding);
+            //Ctx.NpcAnimator.SetTrigger(_isStanding);
             Ctx.NpcAnimator.SetBool(_isWalking, true);
         }
         public override void UpdateState()
