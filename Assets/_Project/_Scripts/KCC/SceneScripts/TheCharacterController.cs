@@ -113,7 +113,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] float _timeFallingInAir = 0f;
         bool _startFallingTimer = false;
         bool _hardLanding = false;
-        [SerializeField] float _timetotriggerHardLanding = 0.5f;
+        [SerializeField] float _timeToTriggerHardLanding = 0.5f;
         public bool _isFalling;
 
         [Header("Misc")]
@@ -209,13 +209,13 @@ namespace KinematicCharacterController.Examples
         {
             GameStateManager.OnGameStateChanged += CheckGameState;
             SetPlayerPosRot.OnSetPosRot += SetTransientPosRot;
-            dialogueEvent.onEnter += (GameObject npc, TextAsset inkFile) => _target = npc.transform;
+            dialogueEvent.onEnter += SetTarget;
         }
         private void OnDisable()
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             SetPlayerPosRot.OnSetPosRot -= SetTransientPosRot;
-            dialogueEvent.onEnter -= (GameObject npc, TextAsset inkFile) => _target = npc.transform;
+            dialogueEvent.onEnter -= SetTarget;
         }
         private void Awake()
         {
@@ -234,16 +234,20 @@ namespace KinematicCharacterController.Examples
             if (state == GameState.GAME_PLAYING)
             {
                 //if(!_shouldBeCrouching && !_hasTargetToLockOn)
-                    //TransitionToState(CharacterState.Default);
+                //TransitionToState(CharacterState.Default);
                 // I dont want to switch after pausing
-                if(CurrentCharacterState == CharacterState.CutsceneControl)
+                if (CurrentCharacterState == CharacterState.CutsceneControl)
                     TransitionToState(CharacterState.Default);
             }
             else if (state == GameState.CUTSCENE)
             {
-                if(CurrentCharacterState != CharacterState.Talking)
+                if (CurrentCharacterState != CharacterState.Talking)
                     TransitionToState(CharacterState.CutsceneControl);
             }
+        }
+        void SetTarget(GameObject npc, TextAsset inkFile)
+        {
+            _target = npc.transform;
         }
         private void Update()
         {
@@ -288,7 +292,9 @@ namespace KinematicCharacterController.Examples
                     {
                         Motor.ForceUnground();
                         _climbTimer = 0;
+                        _isFalling = false;
                         _timeFallingInAir = 0f;
+                        _startFallingTimer = false;
 
                         break;
                     }
@@ -328,12 +334,16 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.CutsceneControl:
                     {
-                        MaxStableMoveSpeed = 1f;
+                        MaxStableMoveSpeed = 1.2f;
+                        _isFalling = false;
+                        _timeFallingInAir = 0f;
+                        _startFallingTimer = false;
+                        _hardLanding = false;
                         break;
                     }
 
             }
-            
+
 
         }
 
@@ -459,7 +469,7 @@ namespace KinematicCharacterController.Examples
                         //Show or hide UI Text for Crouch
                         //if (_canCrouch) UIText.ChangePrompt(PromptName.Crouch, 5);
                         //else UIText.ChangePrompt(PromptName.Crouch, 0);
-                        if(_canCrouch) UIText.ShowButtonText(HudElement.RightTrigger,"Crouch");
+                        if (_canCrouch) UIText.ShowButtonText(HudElement.RightTrigger, "Crouch");
                         else UIText.HideButtonText(HudElement.RightTrigger);
 
                         // Crouching input
@@ -1074,7 +1084,7 @@ namespace KinematicCharacterController.Examples
                     }
                 case CharacterState.ClimbLadder:
                     {
-                        
+
                         if (_gettingOnOffObstacle)
                         {
                             currentVelocity = Vector3.zero;
@@ -1463,10 +1473,16 @@ namespace KinematicCharacterController.Examples
         //Need To be In same Order As Enums & Fmod "Surface" Parameter. Also same spelling as Tags in TagManager.
         List<string> _groundTypeTags = new List<string>() { "Grass", "Sand", "Stone", "Wood", "ShallowWater" };
         int _currentTagIndex;
+        float _groundHitTick;
 
         public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
         {
-            LastGroundedPosition = hitPoint - (hitStabilityReport.LedgeFacingDirection.normalized);
+            //Slows the Amount of Calls
+            _groundHitTick += Time.deltaTime;
+            if (_groundHitTick < 0.1f) return;
+            _groundHitTick = 0;
+
+            LastGroundedPosition = Motor.TransientPosition - (hitStabilityReport.LedgeFacingDirection.normalized);
             LastGroundedRotation = Motor.TransientRotation;
 
             int tagIndex = _groundTypeTags.IndexOf(hitCollider.tag);
@@ -1475,7 +1491,6 @@ namespace KinematicCharacterController.Examples
             _currentTagIndex = tagIndex;
 
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName("Surface", (float)_currentTagIndex);
-
         }
 
         public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
@@ -1503,7 +1518,7 @@ namespace KinematicCharacterController.Examples
         public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport)
         {
             CurrentHitStabilityReport = hitStabilityReport;
-            
+
 
         }
 
@@ -1679,7 +1694,7 @@ namespace KinematicCharacterController.Examples
 
             _timeFallingInAir += Time.deltaTime;
 
-            if (_timeFallingInAir >= _timetotriggerHardLanding)
+            if (_timeFallingInAir >= _timeToTriggerHardLanding)
             {
                 _hardLanding = true;
             }

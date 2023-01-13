@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: GameSettings_01
   m_EditorClassIdentifier: 
   ControllerType: 0
-  SceneToEnterIn: {fileID: 11400000, guid: 32b2cf3f9bddd4efbb991a67c2dda2da, type: 2}
+  SceneToEnterIn: {fileID: 0}
   StartOfGame: 0
+  FullScreen: 0
   UseDebugSpawnPosition: 0
   MasterVolume: 1
   MusicVolume: 1

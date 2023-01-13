@@ -42,6 +42,7 @@ namespace KinematicCharacterController.Examples
         CharacterState _crawling = CharacterState.Crawling;
 
         public bool isBeingTeleportedTo { get; set; }
+        private Collider[] _probedColliders = new Collider[8];
 
         int _anim_Idle = Animator.StringToHash("Idle");
         int _anim_GetUp = Animator.StringToHash("GetUp");
@@ -88,16 +89,42 @@ namespace KinematicCharacterController.Examples
             {
                 if (cc)
                 {
-                    cc.Motor.SetPositionAndRotation(location, rotation);
-                    print("PlayerTeleported");
-                    //cc.Motor.SetPosition(location);
-                    //cc.Motor.SetRotation(rotation);
-
-                    if (OnCharacterTeleport != null)
+                    //If Teleport position is Obstucted Find new Position
+                    if (cc.Motor.CharacterOverlap(
+                        location,
+                        rotation,
+                        _probedColliders,
+                        cc.Motor.CollidableLayers,
+                        QueryTriggerInteraction.Ignore) > 0)
                     {
-                        OnCharacterTeleport(cc);
+                        Debug.LogError("Teleport Aborted, Obstruction in Path, Need To Find New Safe Position");
+                        //cc.Motor.SetPosition(location);
+                        //cc.Motor.SetRotation(rotation);
+                        cc.Motor.SetPositionAndRotation(location, rotation);
+
+                        print("PlayerTeleported");
+
+                        if (OnCharacterTeleport != null)
+                        {
+                            OnCharacterTeleport(cc);
+                        }
+                        this.isBeingTeleportedTo = true;
                     }
-                    this.isBeingTeleportedTo = true;
+                    else
+                    {
+
+                        //cc.Motor.SetPosition(location);
+                        //cc.Motor.SetRotation(rotation);
+                        cc.Motor.SetPositionAndRotation(location, rotation);
+
+                        print("PlayerTeleported");
+
+                        if (OnCharacterTeleport != null)
+                        {
+                            OnCharacterTeleport(cc);
+                        }
+                        this.isBeingTeleportedTo = true;
+                    }
                 }
             }
 
@@ -201,24 +228,40 @@ namespace KinematicCharacterController.Examples
 
         }
         #endregion
-       
+
         void Fell() => StartCoroutine(ResetPosition());
-        IEnumerator ResetPosition(){
-            UIEvents.OnFadeTo(Color.white, 1.5f);
+        IEnumerator ResetPosition()
+        {
+            //Fade out as player falls
+            UIEvents.FadeTo(Color.white, 1.5f);
+            //Need to disable controls and change to new falling camera position
             yield return new WaitForSecondsRealtime(1.5f);
+
+            //Enable Cutscene Tick & Change to Cutscene State
+            //Teleport Player after fade complete, Prevent Player from being on Edge
             TurnOnTimeScaleZeroTick.TimeScaleZeroTick(0, true);
-            changeState.RaiseEventGame(GameState.CUTSCENE);
             TeleportPlayer(cc.LastGroundedPosition, cc.LastGroundedRotation);
             GetComponent<FallOffPrevention>().enabled = true;
             cc.MaxStableMoveSpeed = 0;
+            changeState.RaiseEventGame(GameState.CUTSCENE);
+
+            //Recenter Camera
             RecenterCamX.ThreeFloats(0, 0.1f, 1);
             RecenterCamY.ThreeFloats(0, 0.1f, 1);
+
+            //Wait for Player to be set, then Disable Cutscene Tick & Fade from white
             yield return new WaitForSecondsRealtime(1.5f);
             TurnOnTimeScaleZeroTick.TimeScaleZeroTick(0, false);
-            UIEvents.OnFadeFrom(Color.white, 1.5f);
-            _animator.CrossFadeInFixedTime(_anim_GetUp, 0 , 0);
+            UIEvents.RaiseBarsOn(0.1f);
+            UIEvents.FadeFrom(Color.white, 1.5f);
+
+            //Play animation to stand up, disable fall of prevention
+            _animator.CrossFadeInFixedTime(_anim_GetUp, 0, 0);
             GetComponent<FallOffPrevention>().enabled = false;
+
+            //Everything Done Game Playing State
             yield return new WaitForSecondsRealtime(2f);
+            UIEvents.RaiseBarsOff(0.3f);
             changeState.RaiseEventGame(GameState.GAME_PLAYING);
             yield break;
         }

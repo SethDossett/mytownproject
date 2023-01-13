@@ -6,6 +6,7 @@ using MyTownProject.Events;
 using MyTownProject.Enviroment;
 using MyTownProject.Core;
 using MyTownProject.SO;
+using MyTownProject.Utility;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -24,7 +25,7 @@ namespace MyTownProject.UI
         [SerializeField]
         private TextMeshProUGUI _interactionText, _interactionPromptText,
          _rightTriggerText, _explainationText;
-        private CanvasGroup _promptCG, _dialogueCG, _explainationCG;
+        private CanvasGroup _gameUICG, _promptCG, _dialogueCG, _explainationCG;
         #endregion
 
         [Header("Events Channels")]
@@ -32,6 +33,8 @@ namespace MyTownProject.UI
         [SerializeField] MainEventChannelSO mainEventChannel;
         [SerializeField] DialogueEventsSO dialogueEvents;
         [SerializeField] ActionSO openDoorEvent;
+        [SerializeField] GeneralEventSO updateDebug;
+        [SerializeField] DebugSettingsSO debugSettings;
 
         [Header("Tween Values")]
         [SerializeField] private float _cycleLength = 2f;
@@ -53,6 +56,7 @@ namespace MyTownProject.UI
             uIEventChannel.OnChangePrompt += ChangePromptPriority;
             uIEventChannel.OnShowExplaination += Bubble;
             openDoorEvent.OnOpenDoor += OpenDoor;
+            updateDebug.OnRaiseEvent += DebugSettingsUpdate;
 
         }
         private void OnDisable()
@@ -66,6 +70,7 @@ namespace MyTownProject.UI
             uIEventChannel.OnChangePrompt -= ChangePromptPriority;
             uIEventChannel.OnShowExplaination -= Bubble;
             openDoorEvent.OnOpenDoor -= OpenDoor;
+            updateDebug.OnRaiseEvent -= DebugSettingsUpdate;
         }
 
         void Awake()
@@ -75,9 +80,17 @@ namespace MyTownProject.UI
         }
         void SetInitialReferences()
         {
+            _gameUICG = _gameUI.GetComponent<CanvasGroup>();
             _promptCG = _interactionPrompt.GetComponent<CanvasGroup>();
             _dialogueCG = _dialogue.GetComponent<CanvasGroup>();
             _explainationCG = _explaination.GetComponent<CanvasGroup>();
+
+            if(_gameUICG.alpha == 1) debugSettings.HudToggle = true;
+            else debugSettings.HudToggle = false;
+        }
+        void DebugSettingsUpdate(){
+            if(debugSettings.HudToggle) _gameUICG.alpha = 1;
+            else _gameUICG.alpha = 0;
         }
         private void CheckGameState(GameState state)
         {

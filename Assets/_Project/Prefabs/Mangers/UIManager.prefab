@@ -61,6 +61,8 @@ MonoBehaviour:
   mainEventChannel: {fileID: 11400000, guid: 15914c0455ed0bf488cad020dfddf2ab, type: 2}
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   openDoorEvent: {fileID: 11400000, guid: 831079ef99d5c4a739e4b5f9efd7cbbc, type: 2}
+  updateDebug: {fileID: 11400000, guid: f3124e5f9f78d4f81ba622d8244c509e, type: 2}
+  debugSettings: {fileID: 11400000, guid: 9eab688510f07415899949641adc3275, type: 2}
   _cycleLength: 0.3
   _currentPrompt:
     name: 0

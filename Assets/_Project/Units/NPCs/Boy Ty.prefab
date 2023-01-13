@@ -1980,6 +1980,7 @@ GameObject:
   - component: {fileID: 1471668308931701929}
   - component: {fileID: 908625629}
   - component: {fileID: 1502148530}
+  - component: {fileID: 2368695857522958122}
   m_Layer: 8
   m_Name: Boy Ty
   m_TagString: NPC
@@ -2169,6 +2170,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SaveLocation>k__BackingField: NPCData
   NPC: {fileID: 11400000, guid: dcb8f49d2cb61fa41a5cffaf9e06b18d, type: 2}
+--- !u!114 &2368695857522958122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6390354504503284726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02bb8648e889849318672bc4dcd8781c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _states:
+  - {fileID: 11400000, guid: c09d5968fd14f4a1a957301a60990f3a, type: 2}
+  - {fileID: 11400000, guid: ff9ae7ac23dd74195a26c58562e8a5c5, type: 2}
 --- !u!1 &6392871650551071180
 GameObject:
   m_ObjectHideFlags: 0

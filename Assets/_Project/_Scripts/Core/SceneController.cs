@@ -40,7 +40,10 @@ namespace MyTownProject.Core
         private void Awake()
         {
             if (instance != null && instance != this)
+            {
                 Destroy(gameObject);
+                return;
+            }
             else
                 instance = this;
 
@@ -98,9 +101,10 @@ namespace MyTownProject.Core
                 sceneSO.playerRotation = sceneSO.NoDoorStartRot;
             }
 
-            if(gameSettings.UseDebugSpawnPosition && !enteredThroughDoor){
+            if (gameSettings.UseDebugSpawnPosition && !enteredThroughDoor)
+            {
                 Transform spawnT = GameObject.Find("DebugSpawnPoint").transform;
-                if(spawnT) teleportPlayer.TeleportObject(spawnT.position, spawnT.rotation);
+                if (spawnT) teleportPlayer.TeleportObject(spawnT.position, spawnT.rotation);
                 else teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
             }
             else teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
@@ -122,7 +126,7 @@ namespace MyTownProject.Core
 
             string sceneName = sceneSO.name;
             print(sceneName);
-            if(sceneName != "TestScene" && sceneName != "MainMenu")
+            if (sceneName != "TestScene" && sceneName != "MainMenu")
                 uIEventChannel.ShowExplaination(new Vector2(250, 50f), 5f, "This Scene is Empty");
             yield break;
         }

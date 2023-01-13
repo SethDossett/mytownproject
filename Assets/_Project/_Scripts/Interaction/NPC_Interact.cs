@@ -31,7 +31,10 @@ namespace MyTownProject.Interaction
         [SerializeField] private TextAsset inkJSON;
         //[SerializeField] private CinemachineTargetGroup _targetGroup;
         [SerializeField] private NPC_ScriptableObject npc;
-        [SerializeField] DialogueEventsSO dialogueEvents;
+        [SerializeField] private DialogueEventsSO dialogueEvents;
+        private NPC_StateMachine _npc_StateMachine;
+
+        private GameObject _playerRef;
 
 
         #region new variables
@@ -69,7 +72,7 @@ namespace MyTownProject.Interaction
         {
             //if (_hasInteracted) return;
             player.TransitionCharacterState(CharacterState.Talking);
-
+            if(!_playerRef) _playerRef = player.gameObject;
             Debug.Log($"Interacting with {gameObject.name}");
             //_targetGroup.m_Targets[1].target = transform;
             Speak();
@@ -86,7 +89,12 @@ namespace MyTownProject.Interaction
 
         private void Speak()
         {
+            //Send Event to Enter Dialogue Mode
             dialogueEvents.Enter(gameObject, inkJSON);
+
+            // Find StateMachine and tell this game object to enter dialogue mode
+            if (!_npc_StateMachine) _npc_StateMachine = GetComponent<NPC_StateMachine>();
+            _npc_StateMachine.EnterTalkingState(gameObject, _playerRef.transform);
         }
 
         void Start()

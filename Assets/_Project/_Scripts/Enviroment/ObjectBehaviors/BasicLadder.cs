@@ -66,12 +66,11 @@ namespace MyTownProject.Enviroment
             inputActions = InputManager.inputActions;
             _ladderCollider = GetComponent<BoxCollider>();
             _cameraInput = inputActions.GamePlay.Camera;
-            _cameraInput.performed += (InputAction.CallbackContext ctx) =>
-            {
-                if (_onLadder)
-                    DisableCamRecter.RaiseEvent();
-            };
-
+            _cameraInput.performed += CamInput;
+        }
+        private void OnDestroy()
+        {
+            _cameraInput.performed -= CamInput;
         }
         private void Start()
         {
@@ -87,6 +86,11 @@ namespace MyTownProject.Enviroment
             _SphereCastOffsetTop = _SphereCastOffsetTop + (-transform.right * 0.5f);
             print(_SphereCastOffsetTop);
 
+        }
+        void CamInput(InputAction.CallbackContext ctx)
+        {
+            if (_onLadder)
+                DisableCamRecter.RaiseEvent();
         }
         private void Update()
         {
