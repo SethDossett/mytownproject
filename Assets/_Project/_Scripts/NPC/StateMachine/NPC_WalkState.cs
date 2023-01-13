@@ -6,6 +6,7 @@ namespace MyTownProject.NPC
     public class NPC_WalkState : NPC_BaseState
     {
         private bool _isReplay;
+        int _isWalking = Animator.StringToHash("isWalking");
 
         public NPC_WalkState(NPC_StateMachine currentContext, NPC_StateFactory npcStateFactory)
         : base(currentContext, npcStateFactory) { }
@@ -15,10 +16,12 @@ namespace MyTownProject.NPC
             _isReplay = false;
 
             if (Ctx.IsReplay)
-            {;
+            {
                 _isReplay = true;
             }
 
+            Ctx.NpcAnimator.SetTrigger(_isStanding);
+            Ctx.NpcAnimator.SetBool(_isWalking, true);
         }
         public override void UpdateState()
         {
