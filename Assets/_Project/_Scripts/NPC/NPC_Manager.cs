@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using MyTownProject.Events;
 using UnityEngine.SceneManagement;
-using System;
 
 namespace MyTownProject.NPC
 {
@@ -39,19 +38,7 @@ namespace MyTownProject.NPC
             CheckScene();
 
         }
-        void DetectForPlayer()
-        {
-            //float rad = 2f;
-            //Collider[] cols = new Collider[3];
-            //int numFound;
-            //numFound = Physics.OverlapSphereNonAlloc(transform.position, rad, cols, _playerLayer);
-            //
-            //if(numFound > 0)
-            //{
-            //    Transform player = cols[0].GetComponent<Transform>();
-            //}
-
-        }
+    
         private void CheckScene()//set ScriptExecutuonOrder  hide npc to before player is teleported.
         {
             if (NPC.currentScene != currentScene.buildIndex)

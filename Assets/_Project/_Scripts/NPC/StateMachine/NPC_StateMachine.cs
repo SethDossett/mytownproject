@@ -7,7 +7,13 @@ namespace MyTownProject.NPC
 {
     public class NPC_StateMachine : MonoBehaviour
     {
-        [SerializeField] private NPC_BaseState _currentState;
+        [Tooltip("For ReadOnly Purposes, Dont Change for inspector")]
+        public NPC_StateNames CurrentRootName;
+
+        [Tooltip("For ReadOnly Purposes, Dont Change for inspector")]
+        public NPC_StateNames CurrenSubName;
+
+        private NPC_BaseState _currentState;
         public NPC_BaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
         private NPC_StateFactory _states;
 
@@ -15,21 +21,27 @@ namespace MyTownProject.NPC
         [field: SerializeField] public NPC_ScriptableObject NPC { get; private set; }
         public Rigidbody Rb { get; private set; }
         public Animator NpcAnimator { get; private set; }
-        public IAstarAI AI { get; private set; }
+        public AILerp AI { get; private set; }
         [SerializeField] public Transform TargetTransform { get; private set; }
         [field: SerializeField] public PathSO CurrentPath { get; private set; }
         #endregion
 
         #region Values
         [field: SerializeField] public float RotSpeed { get; private set; }
+        [field: SerializeField] public bool HasStandingDir { get; private set; }
+        [field: SerializeField] public Quaternion StandingDir { get; private set; }
+
         #endregion
 
-        [Header("Recorded Movement")]
-        public bool IsReplay;
+        [Header("Movement Values")]
+        public bool MoveByRecorded;
+        public bool MoveByPathfinding;
+        public float PathSpeed;
+        public float PathRotSpeed;
 
         private void Awake()
         {
-            AI = GetComponent<IAstarAI>();
+            AI = GetComponent<AILerp>();
             Rb = GetComponent<Rigidbody>();
             NpcAnimator = GetComponent<Animator>();
             _states = new NPC_StateFactory(this);
@@ -38,7 +50,7 @@ namespace MyTownProject.NPC
         }
         private void Update()
         {
-            _currentState.UpdateState();
+            _currentState.UpdateStates();
         }
         private void FixedUpdate()
         {
@@ -51,29 +63,22 @@ namespace MyTownProject.NPC
 
         void OnEnable()
         {
-            stateChanger.OnNPCStateVoid += ChangeState;
-            dialogueEvents.onExit += ChangeState;
+            //stateChanger.OnNPCStateVoid += ChangeState;
+            dialogueEvents.onExit += ReturnToBaseState;
         }
         void OnDisable()
         {
-            stateChanger.OnNPCStateVoid -= ChangeState;
-            dialogueEvents.onExit -= ChangeState;
+            //stateChanger.OnNPCStateVoid -= ChangeState;
+            dialogueEvents.onExit -= ReturnToBaseState;
         }
-        void ChangeState()
-        {
-            if (NPC.moveTowardsDestination)
-                EnterWalkingState();
-            else
-                ReturnToBaseState();
-        }
-
+        
         void EnterWalkingState()
         {
             _currentState.SwitchStates(_states.Walk());
         }
         public void EnterTalkingState(GameObject npc, Transform target)
         {
-            if (this.gameObject != npc) return;
+            //if (this.gameObject != npc) return;
             TargetTransform = target;
 
             _currentState.SwitchStates(_states.Talk());

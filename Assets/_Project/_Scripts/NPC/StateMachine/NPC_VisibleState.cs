@@ -12,6 +12,7 @@ public class NPC_VisibleState : NPC_BaseState
     }
 
     public override void EnterState(){
+        Debug.Log("Enter Visible State");
         InitSubState();
     }
     public override void UpdateState(){

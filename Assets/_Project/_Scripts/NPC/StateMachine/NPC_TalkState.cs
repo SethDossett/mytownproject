@@ -14,7 +14,7 @@ namespace MyTownProject.NPC
 
         public override void EnterState()
         {
-            Debug.Log("Talking State");
+            Debug.Log("Enter Talking State");
             _target = Ctx.TargetTransform;
             _npc = Ctx.transform;
             // Rotate To Face Player
@@ -26,6 +26,7 @@ namespace MyTownProject.NPC
         }
         public override void UpdateState()
         {
+            Debug.Log("Rotate Talk");
             if(_rotate) RotateToFacePlayer();
 
             CheckSwitchStates();
@@ -38,6 +39,7 @@ namespace MyTownProject.NPC
         public override void InitSubState() { }
         private void RotateToFacePlayer()
         {
+            
             //if angle is less than certain amount then just turn head, then rotate rest of body.
             // also set up bool check for just eyes, eyes range, head, range, rotation range.
             Ctx.NPC.currentRotation = Quaternion.RotateTowards(Ctx.NPC.currentRotation, _lookRot, Ctx.RotSpeed * Time.unscaledDeltaTime);
