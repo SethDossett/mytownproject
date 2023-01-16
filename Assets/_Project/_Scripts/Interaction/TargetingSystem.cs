@@ -376,7 +376,7 @@ namespace MyTownProject.Interaction
                 return false;
             }
             if (Blocked(interactionPoint))
-            { //
+            { 
                 interactable.SetHovered(false);
                 return false;
             }

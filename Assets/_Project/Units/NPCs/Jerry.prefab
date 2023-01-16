@@ -917,17 +917,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5d520f376d0448fa8463565c4714b8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentRootName: 0
+  CurrentSubName: 0
   <NPC>k__BackingField: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f,
     type: 2}
   <CurrentPath>k__BackingField: {fileID: 11400000, guid: 0ab668c76602f43e29a99dd11529c717,
     type: 2}
-  <RotSpeed>k__BackingField: 200
+  <RotSpeed>k__BackingField: 20
+  <FaceTargetCurve>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   <HasStandingDir>k__BackingField: 0
   <StandingDir>k__BackingField: {x: 0, y: 0, z: 0, w: 0}
   MoveByRecorded: 0
   MoveByPathfinding: 0
-  PathSpeed: 0
-  PathRotSpeed: 0
+  PathSpeed: 1.5
+  PathRotSpeed: 10
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
 --- !u!114 &2130815107016216063

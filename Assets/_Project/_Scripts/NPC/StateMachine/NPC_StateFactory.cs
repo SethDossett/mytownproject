@@ -23,15 +23,17 @@ namespace MyTownProject.NPC
 
         }
 
-        NPC_BaseState GetBaseState(NPC_StateNames newIndex)
+        public NPC_BaseState GetBaseState(NPC_StateNames newIndex)
         {
             if (_states[newIndex].IsRootState)
             {
                 _context.CurrentRootName = newIndex;
+                _context.NPC.CurrentRootName = newIndex;
             }
             else
             {
-                _context.CurrenSubName = newIndex;
+                _context.CurrentSubName = newIndex;
+                _context.NPC.CurrentSubName = newIndex;
             }
             return _states[newIndex];
         }

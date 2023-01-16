@@ -11,7 +11,7 @@ namespace MyTownProject.NPC
         public NPC_StateNames CurrentRootName;
 
         [Tooltip("For ReadOnly Purposes, Dont Change for inspector")]
-        public NPC_StateNames CurrenSubName;
+        public NPC_StateNames CurrentSubName;
 
         private NPC_BaseState _currentState;
         public NPC_BaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
@@ -28,6 +28,7 @@ namespace MyTownProject.NPC
 
         #region Values
         [field: SerializeField] public float RotSpeed { get; private set; }
+        [field: SerializeField] public AnimationCurve FaceTargetCurve { get; private set; }
         [field: SerializeField] public bool HasStandingDir { get; private set; }
         [field: SerializeField] public Quaternion StandingDir { get; private set; }
 
@@ -44,8 +45,11 @@ namespace MyTownProject.NPC
             AI = GetComponent<AILerp>();
             Rb = GetComponent<Rigidbody>();
             NpcAnimator = GetComponent<Animator>();
+
             _states = new NPC_StateFactory(this);
-            _currentState = _states.Visible();
+            CurrentRootName = NPC.CurrentRootName;
+            CurrentSubName = NPC.CurrentSubName;
+            _currentState = _states.GetBaseState(CurrentRootName);
             _currentState.EnterState();
         }
         private void Update()
@@ -54,6 +58,7 @@ namespace MyTownProject.NPC
         }
         private void FixedUpdate()
         {
+            //Need FixedUpdateStates();
             _currentState.FixedUpdateState();
         }
 
@@ -78,7 +83,7 @@ namespace MyTownProject.NPC
         }
         public void EnterTalkingState(GameObject npc, Transform target)
         {
-            //if (this.gameObject != npc) return;
+            if (this.gameObject != npc) return;
             TargetTransform = target;
 
             _currentState.SwitchStates(_states.Talk());

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace MyTownProject.NPC
@@ -8,7 +6,10 @@ namespace MyTownProject.NPC
     {
         int _isStanding = Animator.StringToHash("isStanding");
         public NPC_IdleState(NPC_StateMachine currentContext, NPC_StateFactory npcStateFactory)
-        : base(currentContext, npcStateFactory) { }
+        : base(currentContext, npcStateFactory)
+        {
+            IsRootState = true;
+        }
 
         public override void EnterState()
         {
@@ -23,7 +24,6 @@ namespace MyTownProject.NPC
         }
         public override void UpdateState()
         {
-            Debug.Log("update idle");
             CheckSwitchStates();
         }
         public override void FixedUpdateState() { }
@@ -34,7 +34,7 @@ namespace MyTownProject.NPC
             //I want to stansfer to Walk based on event called, or check on time.
             if (!Ctx.AI.reachedEndOfPath && Ctx.AI.canMove)
             {
-                SwitchStates(Factory.Walk());
+                //SwitchStates(Factory.Walk());
             }
         }
         public override void InitSubState() { }

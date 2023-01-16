@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b74fa13b73f9546a2101f1fe594207, type: 3}
   m_Name: Jerry
   m_EditorClassIdentifier: 
+  CurrentRootName: 2
+  CurrentSubName: 2
   MoveSpeed: 1
   currentState: 0
   currentPosition: {x: 98, y: 2, z: 94}
-  currentRotation: {x: 0, y: 0, z: 0, w: 0}
+  currentRotation: {x: 0, y: -0.97232115, z: 0, w: -0.23364842}
   currentScene: 4
   moveTowardsDestination: 0
   atDestination: 0
@@ -23,3 +25,4 @@ MonoBehaviour:
   shouldBeStandingRotation: {x: 0, y: 0, z: 0, w: 0}
   currentDestinationIndex: 0
   destinationPaths: []
+  TimeTriggers: []

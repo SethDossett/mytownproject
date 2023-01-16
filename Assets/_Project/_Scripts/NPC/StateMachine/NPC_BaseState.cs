@@ -46,6 +46,7 @@ namespace MyTownProject.NPC
             {
                 _currentSuperState.SetSubState(newState);
             }
+            
         }
         protected void SetSuperState(NPC_BaseState newSuperState)
         {

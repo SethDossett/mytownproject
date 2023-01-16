@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using MyTownProject.Core;
 using MyTownProject.Events;
 
 namespace MyTownProject.NPC
@@ -8,6 +9,8 @@ namespace MyTownProject.NPC
     public class NPC_ScriptableObject : ScriptableObject
     {
         [Header("Values")]
+        public NPC_StateNames CurrentRootName;
+        public NPC_StateNames CurrentSubName;
         public float MoveSpeed = 1f;
         public NPC_StateHandler.NPCSTATE currentState;
         public Vector3 currentPosition;
@@ -19,7 +22,6 @@ namespace MyTownProject.NPC
         public bool moveTowardsDestination = false; // need to set based on save data when game starts.
         public bool atDestination = true;
         
-
         [Header("Talking")]
         public bool returnToStandingRotation = true;
         public Quaternion shouldBeStandingRotation;
@@ -28,13 +30,11 @@ namespace MyTownProject.NPC
         public int currentDestinationIndex; // need to set to 0 when time resets.
         public DestinationPathsSO[] destinationPaths;
 
+        [Header("Time Triggers")]
+        //Might make a new Class that hold DateTime, and more info about state to be in etc.
+        public DateTime[] TimeTriggers;
 
-        //public Vector3 lastDestinationPosition;
-        //public Transform[] destinations;
-        //public Vector3[] significantLocation;
-        //public int currentIndex;
-        //public Vector3[] direction;
-        //public int[] distance;
+
         #region Events
         public UnityAction OnMove;
         public UnityAction<NPC_StateHandler.NPCSTATE> OnChangedState;

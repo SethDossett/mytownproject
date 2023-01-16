@@ -7,9 +7,7 @@ namespace MyTownProject.NPC{
 public class NPC_InvisibleState : NPC_BaseState
 {
     public NPC_InvisibleState(NPC_StateMachine currentContext, NPC_StateFactory npcStateFactory)
-    : base(currentContext,npcStateFactory){
-        IsRootState = true;
-    }
+    : base(currentContext,npcStateFactory) { }
 
     public override void EnterState(){
         InitSubState();
@@ -24,9 +22,6 @@ public class NPC_InvisibleState : NPC_BaseState
             SwitchStates(Factory.Invisible());
         }
     }
-    public override void InitSubState(){
-        //If not walking return, 
-        //else SetSubState(Factory.Walk());
-    }
+    public override void InitSubState() {}
 }
 }

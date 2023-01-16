@@ -11,7 +11,10 @@ namespace MyTownProject.NPC
         int _isWalking = Animator.StringToHash("isWalking");
 
         public NPC_WalkState(NPC_StateMachine currentContext, NPC_StateFactory npcStateFactory)
-        : base(currentContext, npcStateFactory) { }
+        : base(currentContext, npcStateFactory)
+        {
+            IsRootState = true;
+        }
 
         public override void EnterState()
         {
@@ -69,7 +72,7 @@ namespace MyTownProject.NPC
             _aI.canMove = true;
             _aI.speed = 1.5f;
             _aI.rotationSpeed = 10f;
-            
+
             if (_aI.reachedEndOfPath)
             {
                 //Check Time, and see what npc should do
