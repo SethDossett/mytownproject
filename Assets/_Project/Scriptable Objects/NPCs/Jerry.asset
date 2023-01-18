@@ -17,7 +17,7 @@ MonoBehaviour:
   MoveSpeed: 1
   currentState: 0
   currentPosition: {x: 98, y: 2, z: 94}
-  currentRotation: {x: 0, y: -0.97232115, z: 0, w: -0.23364842}
+  currentRotation: {x: 0, y: -0.96778524, z: 0, w: 0.25177738}
   currentScene: 4
   moveTowardsDestination: 0
   atDestination: 0
@@ -25,4 +25,16 @@ MonoBehaviour:
   shouldBeStandingRotation: {x: 0, y: 0, z: 0, w: 0}
   currentDestinationIndex: 0
   destinationPaths: []
-  TimeTriggers: []
+  TimeActions:
+  - ActionTime:
+      date: 0
+      hour: 0
+      minutes: 0
+    ActionTick: 60
+    state: 3
+  - ActionTime:
+      date: 0
+      hour: 0
+      minutes: 0
+    ActionTick: 120
+    state: 2

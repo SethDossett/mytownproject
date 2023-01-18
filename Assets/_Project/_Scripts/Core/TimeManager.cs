@@ -67,6 +67,7 @@ namespace MyTownProject.Core
         public int minutes;
 
         public static DateTime DateTime;
+        public static int GlobalTick;
         public static float GlobalTime;
 
         [Header("Tick Settings")]
@@ -75,6 +76,7 @@ namespace MyTownProject.Core
         private float currentTimeBetweenTicks = 0;
 
         public static UnityAction<DateTime> OnDateTimeChanged;
+        public static UnityAction<int> OnGlobalTick;
         public static UnityAction<DateTime> OnNewDay;
 
         private void Awake()
@@ -83,6 +85,7 @@ namespace MyTownProject.Core
 
             //Global Time is going to be set to whatever the saved time was,
             // if no saved file Global Time = 0.
+            GlobalTick = 0;
             GlobalTime = 0;
         }
 
@@ -106,6 +109,7 @@ namespace MyTownProject.Core
 
         void Tick()
         {
+            GlobalTick = GlobalTick + TickMinutesIncreased;
             AdvanceTime();
         }
 
@@ -113,6 +117,8 @@ namespace MyTownProject.Core
         {
 
             DateTime.AdvanceMinutes(TickMinutesIncreased);
+
+            OnGlobalTick?.Invoke(GlobalTick);
 
             OnDateTimeChanged?.Invoke(DateTime);
 

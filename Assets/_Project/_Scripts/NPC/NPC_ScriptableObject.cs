@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.Events;
 using MyTownProject.Core;
 using MyTownProject.Events;
@@ -16,12 +17,12 @@ namespace MyTownProject.NPC
         public Vector3 currentPosition;
         public Quaternion currentRotation;
         public int currentScene;
-        
+
 
         [Header("Bool Checks")]
         public bool moveTowardsDestination = false; // need to set based on save data when game starts.
         public bool atDestination = true;
-        
+
         [Header("Talking")]
         public bool returnToStandingRotation = true;
         public Quaternion shouldBeStandingRotation;
@@ -32,7 +33,7 @@ namespace MyTownProject.NPC
 
         [Header("Time Triggers")]
         //Might make a new Class that hold DateTime, and more info about state to be in etc.
-        public DateTime[] TimeTriggers;
+        public List<NPC_Action> TimeActions;
 
 
         #region Events
@@ -42,5 +43,14 @@ namespace MyTownProject.NPC
         public void RaiseEventMove() => OnMove?.Invoke();
         public void RaiseChangedState(NPC_StateHandler.NPCSTATE state) => OnChangedState?.Invoke(state);
         #endregion
+    }
+    
+    [System.Serializable]
+    public class NPC_Action
+    {
+        public DateTime ActionTime; //could just be an int value for global tick;
+        public int ActionTick;
+        public NPC_StateNames state; //state that it will go into
+
     }
 }

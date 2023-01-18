@@ -1,4 +1,5 @@
 using UnityEngine;
+using MyTownProject.Core;
 using MyTownProject.Events;
 using MyTownProject.SO;
 using Pathfinding;
@@ -68,15 +69,39 @@ namespace MyTownProject.NPC
 
         void OnEnable()
         {
-            //stateChanger.OnNPCStateVoid += ChangeState;
+            TimeManager.OnGlobalTick += CheckTime;
             dialogueEvents.onExit += ReturnToBaseState;
         }
         void OnDisable()
         {
-            //stateChanger.OnNPCStateVoid -= ChangeState;
+            TimeManager.OnGlobalTick -= CheckTime;
             dialogueEvents.onExit -= ReturnToBaseState;
         }
-        
+        void CheckTime(int globalTick)
+        {
+            foreach (NPC_Action action in NPC.TimeActions)
+            {
+                int tick = action.ActionTick;
+                if (tick < globalTick)
+                {
+                    // If we Remove then we need to instantiate Actions when time resets
+                    //NPC.TimeActions.Remove(action);
+                    continue;
+                }
+                else if (tick == globalTick)
+                {
+                    _currentState.SwitchStates(_states.GetBaseState(action.state));
+                    break;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+
+        }
+
         void EnterWalkingState()
         {
             _currentState.SwitchStates(_states.Walk());
@@ -92,11 +117,6 @@ namespace MyTownProject.NPC
         {
             _currentState.SwitchStates(_states.Idle());
         }
-        public void ResetData()
-        {
-            CurrentPath.Records.Clear();
-        }
-
 
         #endregion
     }
