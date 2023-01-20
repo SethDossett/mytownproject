@@ -5,10 +5,9 @@ namespace MyTownProject.NPC
 {
     public class NPC_WalkState : NPC_BaseState
     {
-        private bool _isReplay;
+        private bool _moveByRecorded;
         private bool _moveByPathfinding;
         private Pathfinding.AILerp _aI;
-        int _isWalking = Animator.StringToHash("isWalking");
 
         public NPC_WalkState(NPC_StateMachine currentContext, NPC_StateFactory npcStateFactory)
         : base(currentContext, npcStateFactory)
@@ -18,33 +17,32 @@ namespace MyTownProject.NPC
 
         public override void EnterState()
         {
-            _isReplay = false;
+            _moveByRecorded = false;
             _moveByPathfinding = false;
 
-            if (Ctx.MoveByRecorded)
+            if (Ctx.NPC.MoveByRecorded)
             {
                 _moveByPathfinding = false;
-                _isReplay = true;
+                _moveByRecorded = true;
             }
-            else if (Ctx.MoveByPathfinding)
+            else if (Ctx.NPC.MoveByPathfinding)
             {
-                _isReplay = false;
-                _moveByPathfinding = true;
                 _aI = Ctx.AI;
+                _moveByRecorded = false;
+                _moveByPathfinding = true;
             }
             else
             {
-                SwitchStates(Factory.Idle());
+                SwitchStates(Factory.GetBaseState(NPC_StateNames.Idle));
                 return;
             }
 
             //Ctx.NpcAnimator.SetTrigger(_isStanding);
-            Ctx.NpcAnimator.SetBool(_isWalking, true);
+            Ctx.NpcAnimator.SetBool(Ctx.IsWalking, true);
             //Use CrossFade Because each state can hold a different animation
         }
         public override void UpdateState()
         {
-            Debug.Log("update walk");
             if (_moveByPathfinding)
             {
                 PathfindingMovement();
@@ -53,14 +51,14 @@ namespace MyTownProject.NPC
         }
         public override void FixedUpdateState()
         {
-            if (_isReplay)
+            if (_moveByRecorded)
             {
                 RecordedMovement();
             }
         }
         public override void ExitState()
         {
-            _isReplay = false;
+            _moveByRecorded = false;
             _moveByPathfinding = false;
         }
         public override void CheckSwitchStates() { }
@@ -68,16 +66,20 @@ namespace MyTownProject.NPC
 
         void PathfindingMovement()
         {
-
+            Debug.Log("update path");
             _aI.canMove = true;
-            _aI.speed = 1.5f;
+            _aI.speed = Ctx.NPC.MoveSpeed;
             _aI.rotationSpeed = 10f;
 
             if (_aI.reachedEndOfPath)
             {
                 //Check Time, and see what npc should do
                 _aI.canMove = false;
+                SwitchStates(Factory.GetBaseState(NPC_StateNames.Idle));
             }
+
+            Ctx.NPC.currentPosition = Ctx.transform.position;
+            Ctx.NPC.currentRotation = Ctx.transform.rotation;
         }
         void RecordedMovement()
         {
@@ -95,7 +97,9 @@ namespace MyTownProject.NPC
 
             if (index2 >= Ctx.CurrentPath.Records.Count)
             {
-                SwitchStates(Factory.Idle());
+                Ctx.NPC.currentPosition = Ctx.transform.position;
+                Ctx.NPC.currentRotation = Ctx.transform.rotation;
+                SwitchStates(Factory.GetBaseState(NPC_StateNames.Idle));
                 return;
             }
 
@@ -112,6 +116,9 @@ namespace MyTownProject.NPC
                 Ctx.transform.eulerAngles = Vector3.Lerp(Ctx.CurrentPath.Records[index1].Rotations, Ctx.CurrentPath.Records[index2].Rotations, interpolationFactor);
 
             }
+
+            Ctx.NPC.currentPosition = Ctx.transform.position;
+            Ctx.NPC.currentRotation = Ctx.transform.rotation;
         }
 
     }

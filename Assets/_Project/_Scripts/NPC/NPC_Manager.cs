@@ -75,6 +75,10 @@ namespace MyTownProject.NPC
                 _collider.enabled = true;
         }
 
+        public void PlayFootStepSound(){
+            
+        }
+
 
     }
 }

@@ -23,7 +23,7 @@ namespace MyTownProject.NPC
         {
             if (Ctx.NPC.currentScene != SceneManager.GetActiveScene().buildIndex)
             {
-                SwitchStates(Factory.Invisible());
+                SwitchStates(Factory.GetBaseState(NPC_StateNames.Invisible));
             }
         }
         public override void InitSubState() { }

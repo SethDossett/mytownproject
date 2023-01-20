@@ -4,7 +4,7 @@ namespace MyTownProject.NPC
 {
     public enum NPC_StateNames
     {
-        Visible, Invisible, Idle, Walk, Talk
+        Null, Visible, Invisible, Idle, Walk, Talk
     }
     public class NPC_StateFactory
     {
@@ -25,6 +25,9 @@ namespace MyTownProject.NPC
 
         public NPC_BaseState GetBaseState(NPC_StateNames newIndex)
         {
+            _context.PreviousState = _context.CurrentRootName;
+            _context.NPC.PreviousStateName = _context.CurrentRootName;
+
             if (_states[newIndex].IsRootState)
             {
                 _context.CurrentRootName = newIndex;
@@ -36,27 +39,6 @@ namespace MyTownProject.NPC
                 _context.NPC.CurrentSubName = newIndex;
             }
             return _states[newIndex];
-        }
-
-        public NPC_BaseState Visible()
-        {
-            return GetBaseState(NPC_StateNames.Visible);
-        }
-        public NPC_BaseState Invisible()
-        {
-            return GetBaseState(NPC_StateNames.Invisible);
-        }
-        public NPC_BaseState Idle()
-        {
-            return GetBaseState(NPC_StateNames.Idle);
-        }
-        public NPC_BaseState Walk()
-        {
-            return GetBaseState(NPC_StateNames.Walk);
-        }
-        public NPC_BaseState Talk()
-        {
-            return GetBaseState(NPC_StateNames.Talk);
         }
 
     }

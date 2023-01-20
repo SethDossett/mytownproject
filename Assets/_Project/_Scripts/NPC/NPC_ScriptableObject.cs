@@ -12,6 +12,7 @@ namespace MyTownProject.NPC
         [Header("Values")]
         public NPC_StateNames CurrentRootName;
         public NPC_StateNames CurrentSubName;
+        public NPC_StateNames PreviousStateName;
         public float MoveSpeed = 1f;
         public NPC_StateHandler.NPCSTATE currentState;
         public Vector3 currentPosition;
@@ -22,6 +23,8 @@ namespace MyTownProject.NPC
         [Header("Bool Checks")]
         public bool moveTowardsDestination = false; // need to set based on save data when game starts.
         public bool atDestination = true;
+        public bool MoveByRecorded;
+        public bool MoveByPathfinding;
 
         [Header("Talking")]
         public bool returnToStandingRotation = true;

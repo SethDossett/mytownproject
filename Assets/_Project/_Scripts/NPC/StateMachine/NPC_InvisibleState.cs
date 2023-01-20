@@ -19,7 +19,7 @@ public class NPC_InvisibleState : NPC_BaseState
     public override void ExitState(){}
     public override void CheckSwitchStates(){
         if(Ctx.NPC.currentScene == SceneManager.GetActiveScene().buildIndex){
-            SwitchStates(Factory.Invisible());
+            SwitchStates(Factory.GetBaseState(NPC_StateNames.Visible));
         }
     }
     public override void InitSubState() {}

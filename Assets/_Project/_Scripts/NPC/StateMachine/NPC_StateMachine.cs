@@ -14,6 +14,9 @@ namespace MyTownProject.NPC
         [Tooltip("For ReadOnly Purposes, Dont Change for inspector")]
         public NPC_StateNames CurrentSubName;
 
+        [Tooltip("For ReadOnly Purposes, Dont Change for inspector")]
+        public NPC_StateNames PreviousState;
+
         private NPC_BaseState _currentState;
         public NPC_BaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
         private NPC_StateFactory _states;
@@ -32,13 +35,14 @@ namespace MyTownProject.NPC
         [field: SerializeField] public AnimationCurve FaceTargetCurve { get; private set; }
         [field: SerializeField] public bool HasStandingDir { get; private set; }
         [field: SerializeField] public Quaternion StandingDir { get; private set; }
+        #endregion
 
+        #region Animator
+        private int _isWalking = Animator.StringToHash("isWalking");
+        public int IsWalking { get { return _isWalking; } }
         #endregion
 
         [Header("Movement Values")]
-        public bool MoveByRecorded;
-        public bool MoveByPathfinding;
-        public float PathSpeed;
         public float PathRotSpeed;
 
         private void Awake()
@@ -48,6 +52,7 @@ namespace MyTownProject.NPC
             NpcAnimator = GetComponent<Animator>();
 
             _states = new NPC_StateFactory(this);
+            //This is going to be initialized with whatever state was saved last, and if no save then Idle()
             CurrentRootName = NPC.CurrentRootName;
             CurrentSubName = NPC.CurrentSubName;
             _currentState = _states.GetBaseState(CurrentRootName);
@@ -55,6 +60,7 @@ namespace MyTownProject.NPC
         }
         private void Update()
         {
+            print(PreviousState);
             _currentState.UpdateStates();
         }
         private void FixedUpdate()
@@ -90,7 +96,8 @@ namespace MyTownProject.NPC
                 }
                 else if (tick == globalTick)
                 {
-                    _currentState.SwitchStates(_states.GetBaseState(action.state));
+                    if (CurrentRootName != action.state)
+                        _currentState.SwitchStates(_states.GetBaseState(action.state));
                     break;
                 }
                 else
@@ -104,18 +111,24 @@ namespace MyTownProject.NPC
 
         void EnterWalkingState()
         {
-            _currentState.SwitchStates(_states.Walk());
+            _currentState.SwitchStates(_states.GetBaseState(NPC_StateNames.Walk));
         }
         public void EnterTalkingState(GameObject npc, Transform target)
         {
             if (this.gameObject != npc) return;
             TargetTransform = target;
 
-            _currentState.SwitchStates(_states.Talk());
+            _currentState.SwitchStates(_states.GetBaseState(NPC_StateNames.Talk));
         }
         void ReturnToBaseState()
         {
-            _currentState.SwitchStates(_states.Idle());
+            //Need to Return to Previous state
+            if (PreviousState == NPC_StateNames.Null)
+            {
+                Debug.LogWarning("No Previous State Found, Switching to Idle by default!");
+                _currentState.SwitchStates(_states.GetBaseState(NPC_StateNames.Idle));
+            }
+            else _currentState.SwitchStates(_states.GetBaseState(PreviousState));
         }
 
         #endregion

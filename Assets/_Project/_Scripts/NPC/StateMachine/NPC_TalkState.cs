@@ -20,6 +20,8 @@ namespace MyTownProject.NPC
         public override void EnterState()
         {
             Debug.Log("Enter Talking State");
+            Ctx.NpcAnimator.SetBool(Ctx.IsWalking, false);
+            Ctx.NpcAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
             _target = Ctx.TargetTransform;
             _npc = Ctx.transform;
             _curve = Ctx.FaceTargetCurve;
@@ -39,6 +41,7 @@ namespace MyTownProject.NPC
         public override void ExitState()
         {
             _rotate = false;
+            Ctx.NpcAnimator.updateMode = AnimatorUpdateMode.Normal;
         }
         public override void CheckSwitchStates() { }
         public override void InitSubState() { }
