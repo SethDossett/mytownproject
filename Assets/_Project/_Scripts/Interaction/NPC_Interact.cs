@@ -11,7 +11,7 @@ namespace MyTownProject.Interaction
     public class NPC_Interact : MonoBehaviour, IInteractable
     {
         [field: SerializeField] public bool IsVisible { get; set; }
-        [field: SerializeField] public bool CanBeInteractedWith { get; private set; }
+        [field: SerializeField] public bool CanBeInteractedWith { get; set; }
         [field: SerializeField] public bool CanBeTargeted { get; private set; }
         [field: SerializeField] public bool Hovered { get; set; }
         [field: SerializeField] public bool Targeted { get; set; }
@@ -72,7 +72,7 @@ namespace MyTownProject.Interaction
         {
             //if (_hasInteracted) return;
             player.TransitionCharacterState(CharacterState.Talking);
-            if(!_playerRef) _playerRef = player.gameObject;
+            if (!_playerRef) _playerRef = player.gameObject;
             Debug.Log($"Interacting with {gameObject.name}");
             //_targetGroup.m_Targets[1].target = transform;
             Speak();
@@ -103,6 +103,15 @@ namespace MyTownProject.Interaction
             if (!_interactionUI.activeInHierarchy)
                 _interactionUI.SetActive(true);
 
+        }
+
+        public void UpdateProperties(bool canInteract, bool canTarget)
+        {
+            CanBeInteractedWith = canInteract;
+            CanBeTargeted = canTarget;
+            // Can add more things like angle etc.
+            if(!CanBeTargeted) TurnOffAllIcons();
+            else _interactionUI.SetActive(true);
         }
 
         void ChangedGameState(GameState state)
@@ -193,14 +202,10 @@ namespace MyTownProject.Interaction
 
         void TurnOffAllIcons()
         {
-            if (_hoverIcon.activeInHierarchy)
-                _hoverIcon.SetActive(false);
-            if (_titleName.activeInHierarchy)
-                _titleName.SetActive(false);
-            if (_targetIcon.activeInHierarchy)
-                _targetIcon.SetActive(false);
-            if (_interactionUI.activeInHierarchy)
-                _interactionUI.SetActive(false);
+            _hoverIcon.SetActive(false);
+            _titleName.SetActive(false);
+            _targetIcon.SetActive(false);
+            _interactionUI.SetActive(false);
         }
 
 

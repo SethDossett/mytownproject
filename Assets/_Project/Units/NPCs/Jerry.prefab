@@ -649,8 +649,6 @@ GameObject:
   - component: {fileID: 1004980797275598657}
   - component: {fileID: 1747431178}
   - component: {fileID: 1004980795796097278}
-  - component: {fileID: 8669813202786129150}
-  - component: {fileID: 1004980796562242122}
   - component: {fileID: 883617143}
   - component: {fileID: 1747431179}
   - component: {fileID: 2130815107016216063}
@@ -762,6 +760,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentRootName: 0
   CurrentSubName: 0
+  PreviousState: 0
   <NPC>k__BackingField: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f,
     type: 2}
   <CurrentPath>k__BackingField: {fileID: 11400000, guid: 0ab668c76602f43e29a99dd11529c717,
@@ -803,7 +802,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f527eed4d979fc4bbff60dff5493f17, type: 3}
   m_Name: 
@@ -832,38 +831,6 @@ MonoBehaviour:
   _name: Jerry
   ShowName: 1
   beenTargeted: 0
---- !u!114 &8669813202786129150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0edd03097c497854cb67743f0662be4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  npcState: 0
-  NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
-  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
-  stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
---- !u!114 &1004980796562242122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36b6460fcaced5049b85925997508aa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
-  _stateHandler: {fileID: 8669813202786129150}
-  _stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
-  _atDestination: 0
 --- !u!114 &883617143
 MonoBehaviour:
   m_ObjectHideFlags: 0

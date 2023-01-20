@@ -16,11 +16,11 @@ namespace MyTownProject.NPC
 
         private void OnEnable()
         {
-            NPC_DestinationHandler.UpdateScene += NextAction;
+
         }
         private void OnDisable()
         {
-            NPC_DestinationHandler.UpdateScene -= NextAction;
+
         }
         private void Awake()
         {
@@ -31,17 +31,12 @@ namespace MyTownProject.NPC
         {
             currentScene = SceneManager.GetActiveScene();
             //transform.position = NPC.currentPosition;
-        }
-
-        private void Update()
-        {
             CheckScene();
-
         }
     
         private void CheckScene()//set ScriptExecutuonOrder  hide npc to before player is teleported.
         {
-            if (NPC.currentScene != currentScene.buildIndex)
+            if ((int)NPC.currentScene != currentScene.buildIndex)
             {
                 HideNPC();
             }
@@ -51,13 +46,7 @@ namespace MyTownProject.NPC
             }
         }
 
-        void NextAction(DestinationPathsSO path) // check when scene starts and when npc action takes place.
-        {
-            Debug.Log(currentScene.buildIndex);
-            Debug.Log(NPC.currentScene);
-            
-           
-        }
+        
 
         void HideNPC()
         {

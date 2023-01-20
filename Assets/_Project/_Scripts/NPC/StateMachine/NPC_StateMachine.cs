@@ -1,5 +1,6 @@
 using UnityEngine;
 using MyTownProject.Core;
+using MyTownProject.Interaction;
 using MyTownProject.Events;
 using MyTownProject.SO;
 using Pathfinding;
@@ -23,6 +24,7 @@ namespace MyTownProject.NPC
 
         #region References
         [field: SerializeField] public NPC_ScriptableObject NPC { get; private set; }
+        private NPC_Interact _interactScript;
         public Rigidbody Rb { get; private set; }
         public Animator NpcAnimator { get; private set; }
         public AILerp AI { get; private set; }
@@ -50,6 +52,7 @@ namespace MyTownProject.NPC
             AI = GetComponent<AILerp>();
             Rb = GetComponent<Rigidbody>();
             NpcAnimator = GetComponent<Animator>();
+            _interactScript = GetComponent<NPC_Interact>();
 
             _states = new NPC_StateFactory(this);
             //This is going to be initialized with whatever state was saved last, and if no save then Idle()
@@ -60,7 +63,6 @@ namespace MyTownProject.NPC
         }
         private void Update()
         {
-            print(PreviousState);
             _currentState.UpdateStates();
         }
         private void FixedUpdate()
@@ -96,6 +98,8 @@ namespace MyTownProject.NPC
                 }
                 else if (tick == globalTick)
                 {
+                    _interactScript.UpdateProperties(action.CanBeInteractedWith, action.CanBeTargeted);
+
                     if (CurrentRootName != action.state)
                         _currentState.SwitchStates(_states.GetBaseState(action.state));
                     break;
