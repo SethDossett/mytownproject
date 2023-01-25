@@ -51,3 +51,4 @@ MonoBehaviour:
   ToggleTimeScaleZeroTick: {fileID: 11400000, guid: 93af479098c934e0a88986d2e614efca,
     type: 2}
   gameSettings: {fileID: 11400000, guid: 0d0728ca21b5c4306bc0ddd80d95d77d, type: 2}
+  debugSettings: {fileID: 11400000, guid: 9eab688510f07415899949641adc3275, type: 2}

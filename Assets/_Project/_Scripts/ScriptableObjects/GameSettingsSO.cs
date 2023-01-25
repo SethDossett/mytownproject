@@ -10,7 +10,6 @@ namespace MyTownProject.SO
         public SceneSO SceneToEnterIn;
         public bool StartOfGame;
         public bool FullScreen;
-        public bool UseDebugSpawnPosition;
         [Range(0f, 1f)] public float MasterVolume;
         [Range(0f, 1f)] public float MusicVolume;
         [Range(0f, 1f)] public float SFXVolume;

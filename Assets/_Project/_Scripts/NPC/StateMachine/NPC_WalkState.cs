@@ -66,7 +66,6 @@ namespace MyTownProject.NPC
 
         void PathfindingMovement()
         {
-            Debug.Log("update path");
             _aI.canMove = true;
             _aI.speed = Ctx.NPC.MoveSpeed;
             _aI.rotationSpeed = 10f;

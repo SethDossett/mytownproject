@@ -24,6 +24,7 @@ namespace MyTownProject.Core
         [SerializeField] TransformEventSO EnteredNewScene;
         [SerializeField] ActionSO ToggleTimeScaleZeroTick;
         [SerializeField] GameSettingsSO gameSettings;
+        [SerializeField] MyTownProject.Utility.DebugSettingsSO debugSettings;
 
         Coroutine _walkCoroutine;
 
@@ -49,8 +50,18 @@ namespace MyTownProject.Core
 
             DontDestroyOnLoad(gameObject);
         }
+
+        private void Start()
+        {
+            if (debugSettings.EnterIndividualScene)
+            {
+                StartCoroutine(EnterScene(debugSettings.SceneToEnter));
+                debugSettings.EnterIndividualScene = false;
+            }
+        }
         void SwitchScene(SceneSO sceneSO)
         {
+            debugSettings.EnterIndividualScene = false;
             //teleportPlayer.TeleportObject(sceneSO.playerLocation, sceneSO.playerRotation);
 
             var progress = SceneManager.LoadSceneAsync(sceneSO.sceneIndex, LoadSceneMode.Single);
@@ -101,7 +112,7 @@ namespace MyTownProject.Core
                 sceneSO.playerRotation = sceneSO.NoDoorStartRot;
             }
 
-            if (gameSettings.UseDebugSpawnPosition && !enteredThroughDoor)
+            if (debugSettings.UseDebugSpawnPosition && !enteredThroughDoor)
             {
                 Transform spawnT = GameObject.Find("DebugSpawnPoint").transform;
                 if (spawnT) teleportPlayer.TeleportObject(spawnT.position, spawnT.rotation);
@@ -129,6 +140,11 @@ namespace MyTownProject.Core
             if (sceneName != "TestScene" && sceneName != "MainMenu")
                 uIEventChannel.ShowExplaination(new Vector2(250, 50f), 5f, "This Scene is Empty");
             yield break;
+        }
+
+        void EnterThroughDoor(SceneSO sceneSO)
+        {
+
         }
         IEnumerator WallkIntoPosition()
         {

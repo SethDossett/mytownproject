@@ -19,6 +19,11 @@ public class DebugSettingsSO : ScriptableObject
     [Header("UI/HUD Control")]
     public bool HudToggle;
 
+    [Header("Scene Control")]
+    public bool EnterIndividualScene;
+    public MyTownProject.SO.SceneSO SceneToEnter;
+    public bool UseDebugSpawnPosition;
+
 
 }
 }
