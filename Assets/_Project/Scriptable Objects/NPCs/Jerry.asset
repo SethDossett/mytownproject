@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentRootName: 3
   CurrentSubName: 0
-  PreviousStateName: 0
+  PreviousStateName: 5
   currentScene: 4
   MoveSpeed: 1.5
   currentPosition: {x: 106.490005, y: 2.01, z: 98.33}
-  currentRotation: {x: -0, y: 0.70710665, z: -0, w: 0.707107}
+  currentRotation: {x: 0, y: -1.6529859e-25, z: 0, w: 0.6916687}
   MoveByRecorded: 0
   MoveByPathfinding: 1
   returnToStandingRotation: 0
@@ -32,6 +32,8 @@ MonoBehaviour:
     state: 4
     CanBeTargeted: 1
     CanBeInteractedWith: 1
+    hasDesiredRotation: 0
+    DesiredIdleRotationY: 0
   - ActionTime:
       date: 0
       hour: 0
@@ -40,6 +42,8 @@ MonoBehaviour:
     state: 3
     CanBeTargeted: 0
     CanBeInteractedWith: 0
+    hasDesiredRotation: 1
+    DesiredIdleRotationY: 180
   - ActionTime:
       date: 0
       hour: 0
@@ -48,3 +52,5 @@ MonoBehaviour:
     state: 3
     CanBeTargeted: 1
     CanBeInteractedWith: 1
+    hasDesiredRotation: 1
+    DesiredIdleRotationY: 0

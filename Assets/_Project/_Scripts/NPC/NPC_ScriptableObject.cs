@@ -45,6 +45,8 @@ namespace MyTownProject.NPC
         public NPC_StateNames state; //state that it will go into
         public bool CanBeTargeted;
         public bool CanBeInteractedWith;
+        public bool hasDesiredRotation;
+        public int  DesiredIdleRotationY;
 
     }
 }

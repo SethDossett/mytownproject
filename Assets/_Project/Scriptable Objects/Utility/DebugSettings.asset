@@ -17,6 +17,6 @@ MonoBehaviour:
   SetFPS_Counter: 1
   FPS_RefreshRate: 1
   HudToggle: 1
-  EnterIndividualScene: 0
-  SceneToEnter: {fileID: 11400000, guid: 7072e3e0518d74a5fa00cba27281dd82, type: 2}
+  EnterIndividualScene: 1
+  SceneToEnter: {fileID: 11400000, guid: 32b2cf3f9bddd4efbb991a67c2dda2da, type: 2}
   UseDebugSpawnPosition: 0

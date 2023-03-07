@@ -74,6 +74,7 @@ namespace MyTownProject.Core
         public int TickMinutesIncreased = 1;
         public float TimeBetweenTicks = 1;
         private float currentTimeBetweenTicks = 0;
+        public float TimeMultiplier = 1;
 
         public static UnityAction<DateTime> OnDateTimeChanged;
         public static UnityAction<int> OnGlobalTick;
@@ -95,8 +96,8 @@ namespace MyTownProject.Core
         }
         private void FixedUpdate()
         {
-            currentTimeBetweenTicks += Time.fixedDeltaTime;
-            GlobalTime += Time.fixedDeltaTime;
+            currentTimeBetweenTicks += Time.fixedDeltaTime * TimeMultiplier;
+            GlobalTime += Time.fixedDeltaTime * TimeMultiplier;
         }
         private void Update()
         {
@@ -308,7 +309,7 @@ namespace MyTownProject.Core
 
             string AmPm = hour < 12 ? "AM" : "PM";
 
-            return $"{adjustedHour.ToString("D2")}:{minutes.ToString("D2")} {AmPm}";
+            return $"{adjustedHour.ToString("D2")}:{(minutes).ToString("D2")} {AmPm}";
         }
 
         #endregion

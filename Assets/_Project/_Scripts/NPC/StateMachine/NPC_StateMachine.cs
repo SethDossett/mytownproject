@@ -36,7 +36,7 @@ namespace MyTownProject.NPC
         [field: SerializeField] public float RotSpeed { get; private set; }
         [field: SerializeField] public AnimationCurve FaceTargetCurve { get; private set; }
         [field: SerializeField] public bool HasStandingDir { get; private set; }
-        [field: SerializeField] public Quaternion StandingDir { get; private set; }
+        [field: SerializeField] public int IdleRotY { get; private set; }
         #endregion
 
         #region Animator
@@ -100,8 +100,10 @@ namespace MyTownProject.NPC
                 {
                     _interactScript.UpdateProperties(action.CanBeInteractedWith, action.CanBeTargeted);
 
-                    if (CurrentRootName != action.state)
-                        _currentState.SwitchStates(_states.GetBaseState(action.state));
+                    HasStandingDir = action.hasDesiredRotation;
+                    if (HasStandingDir) IdleRotY = action.DesiredIdleRotationY;
+
+                    _currentState.SwitchStates(_states.GetBaseState(action.state));
                     break;
                 }
                 else
