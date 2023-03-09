@@ -12,14 +12,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b74fa13b73f9546a2101f1fe594207, type: 3}
   m_Name: Jerry
   m_EditorClassIdentifier: 
-  MoveSpeed: 1
-  currentState: 0
-  currentPosition: {x: 98, y: 2, z: 94}
-  currentRotation: {x: 0, y: 0, z: 0, w: 0}
+  CurrentRootName: 3
+  CurrentSubName: 0
+  PreviousStateName: 5
   currentScene: 4
-  moveTowardsDestination: 0
-  atDestination: 0
-  returnToStandingRotation: 1
+  MoveSpeed: 1.5
+  currentPosition: {x: 106.490005, y: 2.01, z: 98.33}
+  currentRotation: {x: 0, y: -1.6529859e-25, z: 0, w: 0.6916687}
+  MoveByRecorded: 0
+  MoveByPathfinding: 1
+  returnToStandingRotation: 0
   shouldBeStandingRotation: {x: 0, y: 0, z: 0, w: 0}
-  currentDestinationIndex: 0
-  destinationPaths: []
+  TimeActions:
+  - ActionTime:
+      date: 0
+      hour: 0
+      minutes: 0
+    ActionTick: 60
+    state: 4
+    CanBeTargeted: 1
+    CanBeInteractedWith: 1
+    hasDesiredRotation: 0
+    DesiredIdleRotationY: 0
+  - ActionTime:
+      date: 0
+      hour: 0
+      minutes: 0
+    ActionTick: 150
+    state: 3
+    CanBeTargeted: 0
+    CanBeInteractedWith: 0
+    hasDesiredRotation: 1
+    DesiredIdleRotationY: 180
+  - ActionTime:
+      date: 0
+      hour: 0
+      minutes: 0
+    ActionTick: 360
+    state: 3
+    CanBeTargeted: 1
+    CanBeInteractedWith: 1
+    hasDesiredRotation: 1
+    DesiredIdleRotationY: 0

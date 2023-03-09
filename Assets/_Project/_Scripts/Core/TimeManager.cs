@@ -67,14 +67,17 @@ namespace MyTownProject.Core
         public int minutes;
 
         public static DateTime DateTime;
+        public static int GlobalTick;
         public static float GlobalTime;
 
         [Header("Tick Settings")]
         public int TickMinutesIncreased = 1;
         public float TimeBetweenTicks = 1;
         private float currentTimeBetweenTicks = 0;
+        public float TimeMultiplier = 1;
 
         public static UnityAction<DateTime> OnDateTimeChanged;
+        public static UnityAction<int> OnGlobalTick;
         public static UnityAction<DateTime> OnNewDay;
 
         private void Awake()
@@ -83,6 +86,7 @@ namespace MyTownProject.Core
 
             //Global Time is going to be set to whatever the saved time was,
             // if no saved file Global Time = 0.
+            GlobalTick = 0;
             GlobalTime = 0;
         }
 
@@ -92,8 +96,8 @@ namespace MyTownProject.Core
         }
         private void FixedUpdate()
         {
-            currentTimeBetweenTicks += Time.fixedDeltaTime;
-            GlobalTime += Time.fixedDeltaTime;
+            currentTimeBetweenTicks += Time.fixedDeltaTime * TimeMultiplier;
+            GlobalTime += Time.fixedDeltaTime * TimeMultiplier;
         }
         private void Update()
         {
@@ -106,6 +110,7 @@ namespace MyTownProject.Core
 
         void Tick()
         {
+            GlobalTick = GlobalTick + TickMinutesIncreased;
             AdvanceTime();
         }
 
@@ -113,6 +118,8 @@ namespace MyTownProject.Core
         {
 
             DateTime.AdvanceMinutes(TickMinutesIncreased);
+
+            OnGlobalTick?.Invoke(GlobalTick);
 
             OnDateTimeChanged?.Invoke(DateTime);
 
@@ -302,7 +309,7 @@ namespace MyTownProject.Core
 
             string AmPm = hour < 12 ? "AM" : "PM";
 
-            return $"{adjustedHour.ToString("D2")}:{minutes.ToString("D2")} {AmPm}";
+            return $"{adjustedHour.ToString("D2")}:{(minutes).ToString("D2")} {AmPm}";
         }
 
         #endregion

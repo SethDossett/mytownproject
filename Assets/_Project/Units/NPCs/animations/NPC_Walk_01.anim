@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Walking
+  m_Name: NPC_Walk_01
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -43162,21 +43162,21 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.5
-    functionName: FootStepAudio
+    functionName: PlayFootStepSound
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 1
-    functionName: FootStepAudio
+    functionName: PlayFootStepSound
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 1.375
-    functionName: FootStepAudio
+    functionName: PlayFootStepSound
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

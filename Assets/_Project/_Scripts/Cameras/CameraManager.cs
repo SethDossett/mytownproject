@@ -12,7 +12,6 @@ namespace MyTownProject.Cameras
     {
         [Header("References")]
         [SerializeField] private CinemachineTargetGroup _targetGroup_01;
-        private NPC_StateHandler npcStateHandler;
         private CinemachineFreeLook _freeLookCamera_01;
         private CinemachineVirtualCamera _virtualCamera_01;
         private Animator _animator;

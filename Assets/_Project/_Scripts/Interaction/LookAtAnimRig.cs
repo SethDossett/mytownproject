@@ -1,8 +1,6 @@
 using UnityEngine.Animations.Rigging;
 using UnityEngine;
 using MyTownProject.NPC;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace MyTownProject.Interaction
 {
@@ -31,16 +29,13 @@ namespace MyTownProject.Interaction
         }
         private void OnEnable()
         {
-            NPC.OnChangedState += ChangedState; //need to set event from when NPC Talks to look at player.
         }
         private void OnDisable()
         {
-            NPC.OnChangedState -= ChangedState;
         }
-        void ChangedState(NPC_StateHandler.NPCSTATE state)
+        void ChangedState()
         {
-            if (state != NPC_StateHandler.NPCSTATE.TALKING) return;
-
+            //If Player is Looked at
             ChangeWeight(1);
         }
 

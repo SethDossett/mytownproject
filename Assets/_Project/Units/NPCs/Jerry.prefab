@@ -647,15 +647,14 @@ GameObject:
   - component: {fileID: 1004980797275598664}
   - component: {fileID: 1004980797275598656}
   - component: {fileID: 1004980797275598657}
-  - component: {fileID: 8669813202786129150}
+  - component: {fileID: 1747431178}
   - component: {fileID: 1004980795796097278}
-  - component: {fileID: 302200774757386140}
-  - component: {fileID: 1004980796562242122}
   - component: {fileID: 883617143}
+  - component: {fileID: 1747431179}
+  - component: {fileID: 2130815107016216063}
+  - component: {fileID: 1752319687423204956}
   - component: {fileID: 4082729779416141651}
   - component: {fileID: 3851619659205340264}
-  - component: {fileID: 8752861181055656218}
-  - component: {fileID: 1747431178}
   m_Layer: 8
   m_Name: Jerry
   m_TagString: NPC
@@ -747,7 +746,7 @@ MonoBehaviour:
   _meshes: {fileID: 5095986871245467832}
   _head: {fileID: 8622573951059017611}
   IsVisible: 0
---- !u!114 &8669813202786129150
+--- !u!114 &1747431178
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -756,11 +755,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 3861824587936572688}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0edd03097c497854cb67743f0662be4f, type: 3}
+  m_Script: {fileID: 11500000, guid: b5d520f376d0448fa8463565c4714b8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcState: 0
-  NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
+  CurrentRootName: 0
+  CurrentSubName: 0
+  PreviousState: 0
+  <NPC>k__BackingField: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f,
+    type: 2}
+  <CurrentPath>k__BackingField: {fileID: 11400000, guid: 0ab668c76602f43e29a99dd11529c717,
+    type: 2}
+  <RotSpeed>k__BackingField: 20
+  <FaceTargetCurve>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <HasStandingDir>k__BackingField: 0
+  <StandingDir>k__BackingField: {x: 0, y: 0, z: 0, w: 0}
+  PathRotSpeed: 10
   dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
 --- !u!114 &1004980795796097278
@@ -770,7 +802,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f527eed4d979fc4bbff60dff5493f17, type: 3}
   m_Name: 
@@ -799,39 +831,6 @@ MonoBehaviour:
   _name: Jerry
   ShowName: 1
   beenTargeted: 0
---- !u!114 &302200774757386140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cafd63f88e7e2e4ea8f502b1becf60a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
-  playerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
-  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
-  _player: {fileID: 0}
-  _rotSpeed: 200
---- !u!114 &1004980796562242122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36b6460fcaced5049b85925997508aa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
-  _stateHandler: {fileID: 8669813202786129150}
-  _stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
-  _atDestination: 0
 --- !u!114 &883617143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -846,6 +845,77 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SaveLocation>k__BackingField: NPCData
   NPC: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f, type: 2}
+--- !u!114 &1747431179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3861824587936572688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1
+--- !u!114 &2130815107016216063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3861824587936572688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847a14d4dc9cc43679ab34fc78e0182f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 4
+  autoRepath:
+    mode: 2
+    interval: 0.5
+    sensitivity: 10
+    maximumInterval: 2
+    visualizeSensitivity: 0
+  canMove: 0
+  speed: 3
+  orientation: 0
+  enableRotation: 1
+  rotationSpeed: 10
+  interpolatePathSwitches: 1
+  switchPathInterpolationSpeed: 5
+  targetCompatibility: {fileID: 0}
+  repathRateCompatibility: NaN
+  canSearchCompability: 0
+--- !u!114 &1752319687423204956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3861824587936572688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9679e68a0f1144e79c664d9a11ca121, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  target: {fileID: 0}
 --- !u!114 &4082729779416141651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -922,42 +992,6 @@ MonoBehaviour:
   - {fileID: 2107445677175079020}
   - {fileID: 6997261977794827069}
   - {fileID: 145086055348307378}
---- !u!114 &8752861181055656218
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02bb8648e889849318672bc4dcd8781c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _states:
-  - {fileID: 11400000, guid: c09d5968fd14f4a1a957301a60990f3a, type: 2}
-  - {fileID: 11400000, guid: ff9ae7ac23dd74195a26c58562e8a5c5, type: 2}
---- !u!114 &1747431178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861824587936572688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5d520f376d0448fa8463565c4714b8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <NPC>k__BackingField: {fileID: 11400000, guid: c83e59814ccc22840b144256899ba61f,
-    type: 2}
-  <CurrentPath>k__BackingField: {fileID: 11400000, guid: 0ab668c76602f43e29a99dd11529c717,
-    type: 2}
-  <RotSpeed>k__BackingField: 200
-  IsReplay: 0
-  RecordFrequency: 0
-  dialogueEvents: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
-  stateChanger: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
 --- !u!1 &4020160337252914402
 GameObject:
   m_ObjectHideFlags: 0

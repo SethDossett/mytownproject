@@ -2,18 +2,18 @@ using System.Collections.Generic;
 
 namespace MyTownProject.NPC
 {
+    public enum NPC_StateNames
+    {
+        Null, Visible, Invisible, Idle, Walk, Talk
+    }
     public class NPC_StateFactory
     {
-        public enum NPC_StateNames
-        {
-            Visible, Invisible, Idle, Walk, Talk
-        }
-
         Dictionary<NPC_StateNames, NPC_BaseState> _states = new Dictionary<NPC_StateNames, NPC_BaseState>();
 
         NPC_StateMachine _context;
 
-        public NPC_StateFactory(NPC_StateMachine currentContext){
+        public NPC_StateFactory(NPC_StateMachine currentContext)
+        {
             this._context = currentContext;
             _states[NPC_StateNames.Visible] = new NPC_VisibleState(_context, this);
             _states[NPC_StateNames.Invisible] = new NPC_InvisibleState(_context, this);
@@ -23,12 +23,24 @@ namespace MyTownProject.NPC
 
         }
 
-        public NPC_BaseState Visible() {return _states[NPC_StateNames.Visible];}
-        public NPC_BaseState Invisible() {return _states[NPC_StateNames.Invisible];}
-        public NPC_BaseState Idle() {return _states[NPC_StateNames.Idle];}
-        public NPC_BaseState Walk() {return _states[NPC_StateNames.Walk];}
-        public NPC_BaseState Talk() {return _states[NPC_StateNames.Talk];}
+        public NPC_BaseState GetBaseState(NPC_StateNames newIndex)
+        {
+            _context.PreviousState = _context.CurrentRootName;
+            _context.NPC.PreviousStateName = _context.CurrentRootName;
+
+            if (_states[newIndex].IsRootState)
+            {
+                _context.CurrentRootName = newIndex;
+                _context.NPC.CurrentRootName = newIndex;
+            }
+            else
+            {
+                _context.CurrentSubName = newIndex;
+                _context.NPC.CurrentSubName = newIndex;
+            }
+            return _states[newIndex];
+        }
 
     }
-    
+
 }
