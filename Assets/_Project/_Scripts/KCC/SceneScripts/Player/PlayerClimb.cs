@@ -342,6 +342,10 @@ namespace KinematicCharacterController.Examples
             _downOrigin = transform.TransformPoint(_downLedgeCastRayOffset);
             if (!DownCast()) return;
 
+            //Check to See if object can be climbed
+            _climbableObject = _downHitInfo.collider.GetComponent<ClimbableObj_Modifier>();
+            if (_climbableObject != null && !_climbableObject.Climbable) return;
+
             //Send forwardcast to see what angle player is facing
             _forwardCastOffset = new Vector3(transform.position.x, _downHitInfo.point.y - 0.01f, transform.position.z);
             if (!ForwardCast()) return;

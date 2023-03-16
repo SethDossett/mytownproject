@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5baf88f9eb0fd42a3997cf17da0291, type: 3}
   m_Name: TerrainConcept Scene
   m_EditorClassIdentifier: 
-  playerLocation: {x: 100.972, y: 2, z: 93.447}
-  playerRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  SceneName: 
+  playerLocation: {x: -61.43847, y: 8.5, z: -18.926584}
+  playerRotation: {x: -0, y: 0.390156, z: -0, w: 0.92074883}
   sceneIndex: 3
+  NoDoorStartPos: {x: 0, y: 0, z: 0}
+  NoDoorStartRot: {x: 0, y: 0, z: 0, w: 0}
+  EnteredThroughDoor: 1
+  DoorIndex: 2
+  DoorsInScene: []
