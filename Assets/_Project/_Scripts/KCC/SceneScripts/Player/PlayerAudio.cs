@@ -24,7 +24,7 @@ namespace KinematicCharacterController.Examples
         //FMOD.Studio.EventInstance footStepsInstance;
 
         public void CrawlAudio(){
-            if(CC._isCrouching)
+            if(CC.CurrentRootName == P_StateNames.Crawling)
                 _playOneShot.RaiseEvent(crawl);
         }
 

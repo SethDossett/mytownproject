@@ -12,7 +12,8 @@ namespace KinematicCharacterController.Examples
     {
         [Header("References")]
         public Transform _LookAtPoint;
-        public CharacterState CurrentCharacterState;
+        [SerializeField] P_StateNames _currentRootState;
+        [SerializeField] P_StateNames _currentSubState;
         Animator _animator;
         TheCharacterController cc;
 
@@ -21,7 +22,6 @@ namespace KinematicCharacterController.Examples
         [SerializeField] StateChangerEventSO changeState;
         [SerializeField] ActionSO teleportPlayer;
         [SerializeField] ActionSO OpenDoorEvent;
-        [SerializeField] DialogueEventsSO DialogueEvent;
         [SerializeField] GeneralEventSO FellOffLedge;
         [SerializeField] ActionSO TurnOnTimeScaleZeroTick;
         [SerializeField] UIEventChannelSO UIEvents;
@@ -33,13 +33,6 @@ namespace KinematicCharacterController.Examples
         [SerializeField] UnityEvent GamePausedAction;
         [SerializeField] UnityEvent CutSceneAction;
         public UnityAction<TheCharacterController> OnCharacterTeleport;
-
-        [Header("States")]
-        CharacterState _default = CharacterState.Default;
-        CharacterState _climbing = CharacterState.ClimbLadder;
-        CharacterState _targeting = CharacterState.Targeting;
-        CharacterState _talking = CharacterState.Talking;
-        CharacterState _crawling = CharacterState.Crawling;
 
         public bool isBeingTeleportedTo { get; set; }
         private Collider[] _probedColliders = new Collider[8];
@@ -54,7 +47,6 @@ namespace KinematicCharacterController.Examples
 
         private void OnEnable()
         {
-            DialogueEvent.onExit += DefaultState;
             teleportPlayer.OnTeleport += TeleportPlayer;
             OpenDoorEvent.OnOpenDoor += OpenDoorAnimation;
             FellOffLedge.OnRaiseEvent += Fell;
@@ -63,7 +55,6 @@ namespace KinematicCharacterController.Examples
         }
         private void OnDisable()
         {
-            DialogueEvent.onExit -= DefaultState;
             teleportPlayer.OnTeleport -= TeleportPlayer;
             OpenDoorEvent.OnOpenDoor -= OpenDoorAnimation;
             FellOffLedge.OnRaiseEvent -= Fell;
@@ -179,54 +170,12 @@ namespace KinematicCharacterController.Examples
         }
 
         #region Player State Logic
-        void StateChange(CharacterState state)
+        void StateChange(P_StateNames rootState, P_StateNames subState)
         {
-            CurrentCharacterState = state;
-
-            if (state == _default)
-            {
-                DefaultState();
-            }
-            if (state == _climbing)
-            {
-                ClimbingState();
-            }
-            if (state == _targeting)
-            {
-                TargetingState();
-            }
-            if (state == _talking)
-            {
-                TalkingState();
-            }
-            if (state == _crawling)
-            {
-                CrawlingState();
-            }
+            _currentRootState = rootState;
+            _currentSubState = subState;
         }
-        void DefaultState()
-        {
-            if (cc.CurrentCharacterState != _default)
-                cc.TransitionToState(_default);
 
-        }
-        void ClimbingState()
-        {
-
-        }
-        void TargetingState()
-        {
-
-
-        }
-        void TalkingState()
-        {
-
-        }
-        void CrawlingState()
-        {
-
-        }
         #endregion
 
         void Fell() => StartCoroutine(ResetPosition());

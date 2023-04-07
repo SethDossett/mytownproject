@@ -162,7 +162,7 @@ namespace MyTownProject.Enviroment
         }
         void OnLadder()
         {
-            if (CC.CurrentCharacterState == CharacterState.Default) SwitchToDefaltState();
+            if (CC.CurrentRootName == P_StateNames.Default) SwitchToDefaltState();
             if (!_onLadder) return;
             if (_exitLadderCalled) return;
             _heightOnLadder = _player.transform.position.y - _startHeight;
@@ -202,10 +202,10 @@ namespace MyTownProject.Enviroment
             {
                 _startHeight = transform.position.y;
                 _onLadder = true;
-                CC.TransitionToState(CharacterState.ClimbLadder);
+                CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.ClimbLadder));
                 _ladderCollider.enabled = false;
-                CC._newCenteredPosition = transform.position + _StartPosBottom;
-                CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
+                CC.NewCenteredPosition = transform.position + _StartPosBottom;
+                CC.NewLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
                 RecenterCamX.ThreeFloats(0, 0.35f, 1);
                 RecenterCamY.ThreeFloats(0, 0.35f, 1);
             }
@@ -213,16 +213,17 @@ namespace MyTownProject.Enviroment
             {//When player is getting on the Top of the Ladder
                 _ladderForward = transform.right;
                 _startHeight = transform.position.y;
-                CC.TransitionToState(CharacterState.ClimbLadder);
-                CC._newCenteredPosition = transform.position + _StartPosTop;
-                CC._newLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
+                CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.ClimbLadder));
+                CC.NewCenteredPosition = transform.position + _StartPosTop;
+                CC.NewLadderRotation = Quaternion.LookRotation(-_ladderForward, Vector3.up);
                 _ladderCollider.enabled = false;
             }
 
         }
         void SwitchToDefaltState()
         {
-            if (CC.CurrentCharacterState != CharacterState.Default) CC.TransitionToState(CharacterState.Default);
+            if (CC.CurrentRootName != P_StateNames.Default) 
+                CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.Default));
             _onLadder = false;
             _heightOnLadder = 0;
             _ladderCollider.enabled = true;
