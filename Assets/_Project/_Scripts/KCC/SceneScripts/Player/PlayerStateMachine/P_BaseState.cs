@@ -53,7 +53,7 @@ namespace KinematicCharacterController.Examples
             _baseAnimator = _ctx.PlayerAnimator;
             _baseFallOffPrevention = _ctx.FallOffPrevention;
             _basePlayerClimb = _ctx.PlayerClimb;
-            _baseMainCam = Camera.main;
+            _baseMainCam = _ctx.CamMain;
             _baseTransform = _ctx.transform;
             _baseMaxStableMoveSpeed = _ctx.MaxStableMoveSpeed;
         }
@@ -86,7 +86,7 @@ namespace KinematicCharacterController.Examples
         {
             UpdateState();
 
-            if (_currentSubState != null) _currentSubState.UpdateStates();
+            //if (_currentSubState != null) _currentSubState.UpdateStates();
 
         }
         public void SwitchStates(P_BaseState newState)

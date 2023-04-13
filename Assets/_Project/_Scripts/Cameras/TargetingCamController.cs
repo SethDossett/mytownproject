@@ -30,7 +30,7 @@ namespace MyTownProject.Cameras
         }
         void GetPlayerRef(Transform player)
         {
-            LookAtPoint = player.GetComponent<PlayerManager>()._LookAtPoint;
+            LookAtPoint = player.GetComponent<TheCharacterController>()._LookAtPoint;
             cam.m_Follow = LookAtPoint;
         }
         public void OnCameraLive()

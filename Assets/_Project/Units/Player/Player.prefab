@@ -1309,13 +1309,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7684af4313a9b64da11048b181db03e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _LookAtPoint: {fileID: 6875040720797426742}
-  CurrentCharacterState: 0
+  _currentRootState: 0
+  _currentSubState: 0
   PlayerRef: {fileID: 11400000, guid: e97b69a42bd2e0d48a76eb38fe377189, type: 2}
   changeState: {fileID: 11400000, guid: 4046d130cb253b847ab1bc9a3ff10b77, type: 2}
   teleportPlayer: {fileID: 11400000, guid: c96616da58b725043958470403928a7b, type: 2}
   OpenDoorEvent: {fileID: 11400000, guid: 831079ef99d5c4a739e4b5f9efd7cbbc, type: 2}
-  DialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   FellOffLedge: {fileID: 11400000, guid: 3e49724741d5b43fc80a973967176fb3, type: 2}
   TurnOnTimeScaleZeroTick: {fileID: 11400000, guid: 93af479098c934e0a88986d2e614efca,
     type: 2}
@@ -1475,7 +1474,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  obj: {fileID: 1255116438578694, guid: 00d67ddb458a7c14eac37037093d8589, type: 3}
 --- !u!114 &4936703484560184526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1539,28 +1537,32 @@ MonoBehaviour:
   MaxAirMoveSpeed: 4
   AirAccelerationSpeed: 10
   Drag: 0.1
-  _restrictJumping: 0
+  RestrictJumping: 0
   AllowJumpingWhenSliding: 0
   JumpUpSpeed: 6
   JumpScalableForwardSpeed: 3.5
   JumpPreGroundingGraceTime: 0
   JumpPostGroundingGraceTime: 0
-  _speedNeededToJump: 4
+  SpeedNeededToJump: 4
   CanHang: 0
   _isHanging: 0
-  _newCenteredPosition: {x: 0, y: 0, z: 0}
-  _newLadderRotation: {x: 0, y: 0, z: 0, w: 0}
-  _climbSpeedY: 2
-  _climbSpeedX: 2
+  IsDropToHang: 0
+  LedgeDirection: {x: 0, y: 0, z: 0}
+  NewCenteredPosition: {x: 0, y: 0, z: 0}
+  NewLadderRotation: {x: 0, y: 0, z: 0, w: 0}
+  ClimbSpeedY: 2
+  ClimbSpeedX: 2
   _gettingOnOffObstacle: 0
   _jumpOnLadderSpeed: 3
-  _target: {fileID: 0}
-  _targetingRotSpeed: 500
-  _hasTargetToLockOn: 0
-  _crawlSpeed: 2
+  Target: {fileID: 0}
+  TargetingRotSpeed: 500
+  HasTargetToLockOn: 0
+  CrawlSpeed: 2
+  CrawlRotationSpeed: 1
   _timeFallingInAir: 0
-  _timetotriggerHardLanding: 0.85
-  _isFalling: 0
+  _startFallingTimer: 0
+  _timeToTriggerHardLanding: 0.5
+  IsFalling: 0
   IgnoredColliders: []
   BonusOrientationMethod: 0
   BonusOrientationSharpness: 10
@@ -1568,33 +1570,34 @@ MonoBehaviour:
   MeshRoot: {fileID: 6875040722021663315}
   CameraFollowPoint: {fileID: 6875040720797426742}
   CrouchedCapsuleHeight: 0.95
-  _talkingRotSpeed: 500
+  TalkingRotSpeed: 500
   _moveInputVector: {x: 0, y: 0, z: 0}
+  InternalVelocityAdd: {x: 0, y: 0, z: 0}
   _shouldBeCrouching: 0
-  _isCrouching: 0
   _cannotTarget: 0
-  _accelerateCurve:
+  <_LookAtPoint>k__BackingField: {fileID: 6875040720797426742}
+  AccelerateCurve:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _decelerateCurve:
+  DecelerateCurve:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _slideDecelerateCurve:
+  SlideDecelerateCurve:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  accelTime: 2
-  decelTime: 2
-  turnSlideTime: 4
-  _slideDuration: 0.15
+  AccelTime: 2
+  DecelTime: 2
+  TurnSlideTime: 4
+  SlideDuration: 0.15
   dialogueEvent: {fileID: 11400000, guid: 647adcc4bda3332459346e61e904fafa, type: 2}
   RecenterCamX: {fileID: 11400000, guid: d7a841a093f63e34db68c42840648b4c, type: 2}
   RecenterCamY: {fileID: 11400000, guid: bb750ff69f5083c40b86b47eaf69489d, type: 2}
@@ -1605,6 +1608,9 @@ MonoBehaviour:
   SetPlayerPosRot: {fileID: 11400000, guid: 2058ea3555ec84235b1a641170ecfa8c, type: 2}
   TurnOnTimeScaleZeroTick: {fileID: 11400000, guid: 93af479098c934e0a88986d2e614efca,
     type: 2}
+  CurrentRootName: 0
+  CurrentSubName: 0
+  PreviousState: 0
 --- !u!114 &5606128506353790698
 MonoBehaviour:
   m_ObjectHideFlags: 0

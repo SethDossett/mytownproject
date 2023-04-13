@@ -6,7 +6,7 @@ namespace KinematicCharacterController.Examples
 {
     public class ExampleCharacterCamera : MonoBehaviour
     {
-        CharacterState currentCharacterState;
+        P_StateNames currentCharacterState;
 
         [Header("Framing")]
         public Camera Camera;
@@ -73,7 +73,7 @@ namespace KinematicCharacterController.Examples
         {
             print($"awake {gameObject.name}");
             PlayerReference.OnRaiseEvent += GetPlayerReference;
-            currentCharacterState = CharacterState.Default;
+            currentCharacterState = P_StateNames.Default;
             mainCam = Camera.main;
             Transform = this.transform;
 
@@ -112,12 +112,12 @@ namespace KinematicCharacterController.Examples
             return;
 
             if(isTargeting){
-                currentCharacterState = CharacterState.Targeting;
+                currentCharacterState = P_StateNames.Targeting;
             }
-            else currentCharacterState = CharacterState.Default;
+            else currentCharacterState = P_StateNames.Default;
 
             switch(currentCharacterState){
-                case CharacterState.Default:{
+                case P_StateNames.Default:{
                     if (FollowTransform)
                     {
                         if (InvertX)
@@ -222,7 +222,7 @@ namespace KinematicCharacterController.Examples
 
                     break;
                 }
-                case CharacterState.Targeting:
+                case P_StateNames.Targeting:
                 {
                         Vector3 dir = (_player.position + new Vector3(0 ,1.2f, 0)) - Transform.position;
                         dir.y = 0;

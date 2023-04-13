@@ -11,7 +11,6 @@ namespace KinematicCharacterController.Examples
     public class PlayerManager : MonoBehaviour
     {
         [Header("References")]
-        public Transform _LookAtPoint;
         [SerializeField] P_StateNames _currentRootState;
         [SerializeField] P_StateNames _currentSubState;
         Animator _animator;

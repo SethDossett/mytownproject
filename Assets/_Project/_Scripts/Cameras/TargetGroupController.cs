@@ -21,7 +21,7 @@ namespace MyTownProject.Cameras
         [SerializeField] ActionSO _openDoorEvent;
         CinemachineTargetGroup targetGroup;
         [SerializeField] GameObject _player;
-        [SerializeField] PlayerManager _playerManager;
+        [SerializeField] TheCharacterController _playerManager;
         void Awake()
         {
             print($"awake {gameObject.name}");
@@ -59,7 +59,7 @@ namespace MyTownProject.Cameras
         {
             _player = player.gameObject;
             print($"Got Ref {gameObject.name}");
-            _playerManager = _player.GetComponent<PlayerManager>();
+            _playerManager = _player.GetComponent<TheCharacterController>();
             RemoveTargets();
             AddPlayer();
         }
@@ -68,7 +68,7 @@ namespace MyTownProject.Cameras
         {
             if (state == GameState.GAME_PLAYING)
             {
-                if (_playerManager.CurrentCharacterState != CharacterState.Targeting)
+                if (_playerManager.CurrentRootName != P_StateNames.Targeting)
                 {
                     RemoveTargets();
                     AddPlayer();

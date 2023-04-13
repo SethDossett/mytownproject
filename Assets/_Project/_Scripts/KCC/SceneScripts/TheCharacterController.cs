@@ -77,12 +77,12 @@ namespace KinematicCharacterController.Examples
         [Range(0f, 10f)] public float SpeedNeededToJump = 4.5f;
 
         [Header("Climbing")]
-        private PlayerClimb _playerClimb;
-        public PlayerClimb PlayerClimb { get { return _playerClimb; } }
         public bool CanHang;
-        public Vector3 LedgeDirection;
         public bool _isHanging;
         public bool IsDropToHang;
+        public Vector3 LedgeDirection;
+        private PlayerClimb _playerClimb;
+        public PlayerClimb PlayerClimb { get { return _playerClimb; } }
 
         [Header("ClimbingLadder")]
         public Vector3 NewCenteredPosition;
@@ -98,11 +98,11 @@ namespace KinematicCharacterController.Examples
         public bool HasTargetToLockOn;
 
         [Header("Crawling")]
-        FallOffPrevention _fallOffPrevention;
-        public FallOffPrevention FallOffPrevention { get { return _fallOffPrevention; } }
         public float CrawlSpeed = 2f;
         public float CrawlRotationSpeed = 1f;
-        
+        FallOffPrevention _fallOffPrevention;
+        public FallOffPrevention FallOffPrevention { get { return _fallOffPrevention; } }
+
 
         [Header("Falling")]
         [SerializeField] float _timeFallingInAir = 0f;
@@ -127,7 +127,7 @@ namespace KinematicCharacterController.Examples
         //States
 
 
-        
+
 
         int _jumpState = Animator.StringToHash("Jump");
         int _hardLandState = Animator.StringToHash("HardLanding");
@@ -160,7 +160,8 @@ namespace KinematicCharacterController.Examples
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
 
-        Camera _cam;
+        public Camera CamMain { get; private set; }
+        [field: SerializeField] public Transform _LookAtPoint { get; private set; }
 
         [Header("Acceleration")]
 
@@ -203,18 +204,20 @@ namespace KinematicCharacterController.Examples
         {
             GameStateManager.OnGameStateChanged += CheckGameState;
             SetPlayerPosRot.OnSetPosRot += SetTransientPosRot;
-            dialogueEvent.onEnter += SetTarget;
+            dialogueEvent.onEnter += EnterDialogue;
             dialogueEvent.onExit += EnterDefault;
         }
         private void OnDisable()
         {
             GameStateManager.OnGameStateChanged -= CheckGameState;
             SetPlayerPosRot.OnSetPosRot -= SetTransientPosRot;
-            dialogueEvent.onEnter -= SetTarget;
+            dialogueEvent.onEnter -= EnterDialogue;
             dialogueEvent.onExit -= EnterDefault;
         }
         private void Awake()
         {
+            _states = new P_StateFactory(this);
+            _currentState = _states.GetBaseState(CurrentRootName);
             SetInitialReferences();
             _currentState.Init();
             // Handle initial state
@@ -228,7 +231,7 @@ namespace KinematicCharacterController.Examples
             _animator = GetComponent<Animator>();
             _playerClimb = GetComponent<PlayerClimb>();
             _fallOffPrevention = GetComponent<FallOffPrevention>();
-
+            CamMain = Camera.main;
             MaxStableMoveSpeed = 2;
 
         }
@@ -250,8 +253,9 @@ namespace KinematicCharacterController.Examples
                     _currentState.SwitchStates(_states.GetBaseState(P_StateNames.CutsceneControl));
             }
         }
-        void SetTarget(GameObject npc, TextAsset inkFile)
+        void EnterDialogue(GameObject npc, TextAsset inkFile)
         {
+            _currentState.SwitchStates(_states.GetBaseState(P_StateNames.Talking));
             Target = npc.transform;
         }
         private void Update()
@@ -501,7 +505,7 @@ namespace KinematicCharacterController.Examples
             yield break;
 
         }
-        
+
         public void FallingCheck() // make into coroutine
         {
             StartCoroutine(FallingTimer());
