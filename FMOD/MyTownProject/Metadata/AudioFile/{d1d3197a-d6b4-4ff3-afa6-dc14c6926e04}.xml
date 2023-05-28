@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{d1d3197a-d6b4-4ff3-afa6-dc14c6926e04}">
+		<property name="assetPath">
+			<value>FootSteps&amp;Breaths/Stone/Light_stone_step_2.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.17188208616780046</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{936dc49d-2b59-4bd4-8f84-dd7777f0d247}</destination>
+		</relationship>
+	</object>
+</objects>

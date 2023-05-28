@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{e93517e9-4ca9-4989-b356-5dfc80e921d9}">
+		<property name="assetPath">
+			<value>FootSteps&amp;Breaths/Stone/Heavy_stone_step_4.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.12501133786848073</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{936dc49d-2b59-4bd4-8f84-dd7777f0d247}</destination>
+		</relationship>
+	</object>
+</objects>
