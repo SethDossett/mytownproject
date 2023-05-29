@@ -19,4 +19,4 @@ MonoBehaviour:
   HudToggle: 1
   EnterIndividualScene: 0
   SceneToEnter: {fileID: 11400000, guid: 7072e3e0518d74a5fa00cba27281dd82, type: 2}
-  UseDebugSpawnPosition: 1
+  UseDebugSpawnPosition: 0

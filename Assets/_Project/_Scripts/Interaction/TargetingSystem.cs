@@ -33,7 +33,7 @@ namespace MyTownProject.Interaction
         [SerializeField] TheCharacterController CC;
         private IInteractable _interactable;
         Transform _cam;
-        CharacterState _currentCharacterState;
+        P_StateNames _currentRootState;
 
         [Header("Settings")]
         [SerializeField] bool zeroVert_Look;
@@ -133,16 +133,16 @@ namespace MyTownProject.Interaction
                 canRaycast = false;
             }
         }
-        void CheckPlayerState(CharacterState state)
+        void CheckPlayerState(P_StateNames rootState, P_StateNames pubState)
         {
             print("CALLED");
-            _currentCharacterState = state;
-            if (state == CharacterState.Default)
+            _currentRootState = rootState;
+            if (rootState == P_StateNames.Default)
             {
                 if (_targetLockedOn) ResetTarget();
                 canRaycast = true;
             }
-            else if (state == CharacterState.Targeting)
+            else if (rootState == P_StateNames.Targeting)
                 canRaycast = true;
             else
                 canRaycast = false;
@@ -155,12 +155,12 @@ namespace MyTownProject.Interaction
             if (_shouldReleaseTargeting)
             {
                 ResetTarget();
-                if (_currentCharacterState == CharacterState.Targeting) CC.TransitionToState(CharacterState.Default);
+                if (_currentRootState == P_StateNames.Targeting)
+                    CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.Default));
             }
 
             yield break;
         }
-        public void TransitionCharacterState(CharacterState newState) => CC.TransitionToState(newState);
         private void Update()
         {
             if (!canRaycast) return;
@@ -174,6 +174,7 @@ namespace MyTownProject.Interaction
             }
 
             IconControl();
+
             if (!_isInteracting) CheckForIInteractable();
 
             if (_closestTarget != null)
@@ -435,8 +436,8 @@ namespace MyTownProject.Interaction
             _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
             _targetingEvent.RaiseEvent(currentTarget);
             uiEventChannel.RaiseBarsOn(0.1f);
-            CC._hasTargetToLockOn = true;
-            CC.TransitionToState(CharacterState.Targeting);
+            CC.HasTargetToLockOn = true;
+            CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.Targeting));
             currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true);
             //HideHover(currentTarget);
             //currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true)(); //Make Events that fire for UI Targeted
@@ -507,7 +508,7 @@ namespace MyTownProject.Interaction
                 _audioEvent.RaiseEvent2(_LockOnSFX, currentTarget.position);
                 currentTarget = closetT;
                 currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true);
-                CC._target = currentTarget;
+                CC.Target = currentTarget;
                 //currentTarget.gameObject.GetComponent<IInteractable>().SetTargeted(true)();
                 closetT.gameObject.GetComponent<IInteractable>().SetBeenTargeted(true);
                 _changeTargetEvent.RaiseEvent(currentTarget);
@@ -527,7 +528,7 @@ namespace MyTownProject.Interaction
             //if(CC.CurrentCharacterState != CharacterState.Talking) CC.TransitionToState(CharacterState.Default);
             _timer = 0;
 
-            CC._hasTargetToLockOn = false;
+            CC.HasTargetToLockOn = false;
             currentTarget = null;
             _closestTarget = null;
             _preventNewLockOn = false;
@@ -644,7 +645,7 @@ namespace MyTownProject.Interaction
             { // Do not want all this to happen here, needs to function same from, talking, open door, pick up item etc.
                 Debug.Log($"interacted with {t.gameObject.name}");
                 _isInteracting = true;
-                CC._target = t;
+                CC.Target = t;
                 if (currentTarget) ResetTarget();
                 _interactable.OnInteract(this);
                 _isInteracting = false;
@@ -726,7 +727,8 @@ namespace MyTownProject.Interaction
             print("RELESE");
             _releasingTargeting = true;
             uiEventChannel.RaiseBarsOff(0.1f);
-            if (_currentCharacterState == CharacterState.Targeting) CC.TransitionToState(CharacterState.Default);
+            if (_currentRootState == P_StateNames.Targeting) 
+                CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.Default));
 
             if (_targetLockedOn)
                 ResetTarget();
@@ -762,7 +764,7 @@ namespace MyTownProject.Interaction
             }
             if (currentTarget)
             {
-                CC._target = currentTarget;
+                CC.Target = currentTarget;
                 //If Target is already locked on, Look for new target//
                 //If not, then we Found Target to Lock on to//
                 if (_targetLockedOn) StartCoroutine(FindNextTarget()); else FoundTarget();
@@ -780,10 +782,8 @@ namespace MyTownProject.Interaction
             //Need a Recenter CoolDown
             // We Also might want this handled in another Script,
             // and to be able to recenter in other states like Crawling
-            if (_currentCharacterState == CharacterState.Default)
-            {
-                CC.TransitionToState(CharacterState.Targeting);
-            }
+            if (_currentRootState == P_StateNames.Default) 
+                CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.Targeting));
             RecenterCamera(0, 0.1f, 1);
             _audioEvent.RaiseEvent2(_recenterCameraSFX, transform.position);
             uiEventChannel.RaiseBarsOn(0.1f);

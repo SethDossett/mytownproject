@@ -10,7 +10,7 @@ namespace KinematicCharacterController.Examples
         TheCharacterController CC;
         NewControls inputActions;
         CapsuleCollider _capsule;
-        CharacterState CurrentCharacterState;
+        P_StateNames CurrentCharacterState;
         ClimbableObj_Modifier _climbableObject;
 
         [Header("Raycast Checks")]
@@ -51,8 +51,6 @@ namespace KinematicCharacterController.Examples
 
         [Header("Checks")]
         public bool _isClimbing;
-        bool _onGround;
-        bool _crawling;
 
         [Header("Heights")]
         [SerializeField] float _hangHeight = 1.5f;
@@ -90,58 +88,47 @@ namespace KinematicCharacterController.Examples
             _animator = GetComponent<Animator>();
             CC = GetComponent<TheCharacterController>();
             _capsule = GetComponent<CapsuleCollider>();
-            _onGround = true;
         }
-        void PlayerStateChange(CharacterState state)
+        void PlayerStateChange(P_StateNames rootState, P_StateNames subState)
         {
-            CurrentCharacterState = state;
-            if (state == CharacterState.Default || state == CharacterState.CutsceneControl)
+            CurrentCharacterState = rootState;
+            if (rootState == P_StateNames.Default || rootState == P_StateNames.CutsceneControl)
             {
-                _onGround = true;
                 _isClimbing = false;
-                _crawling = false;
             }
-            else if (state == CharacterState.Jumping)
+            else if (rootState == P_StateNames.Jumping)
             {
-                _onGround = false;
                 _isClimbing = false;
-                _crawling = false;
             }
-            else if (state == CharacterState.Crawling)
+            else if (rootState == P_StateNames.Crawling)
             {
-                _onGround = true;
                 _isClimbing = false;
-                _crawling = true;
             }
             else
             {
                 _isClimbing = true;
-                _crawling = false;
             }
         }
         void Update()
         {
-            if (_isClimbing) return;
+            //if (_isClimbing) return;
 
-            if (_onGround) GroundCheck(); else DetectLedge();
+            //if (_onGround) GroundCheck(); else DetectLedge();
 
         }
-        void GroundCheck()
+        public void GroundCheck()
         {
-            if (!_crawling)
+            //Need to Change how input is given here using _moveInputVector
+            Vector3 input = CC._moveInputVector;
+            float dot = Vector3.Dot(input, transform.forward.normalized);
+            if (dot >= 0.8f)
             {
-                Vector3 input = CC._moveInputVector;
-                float dot = Vector3.Dot(input, transform.forward.normalized);
-                if (dot >= 0.8f)
+                if (CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition))
                 {
-                    if (CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition))
-                    {
-                        InitiateClimb();
-                        print("Initiate");
-                    }
-                    else timer = 0;
+                    InitiateClimb();
+                    print("Initiate");
                 }
-
+                else timer = 0;
             }
 
         }
@@ -257,7 +244,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] float amount; // set distance and dispose variable
         void InitiateClimb()
         {
-            CC.TransitionToState(CharacterState.Climbing);
+            CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.Climbing));
             _isClimbing = true;
             float climbHeight = _downHitInfo.point.y - transform.position.y;
             _matchTargetRotation = FindLedgeNormal(_forwardHitInfo);
@@ -328,14 +315,15 @@ namespace KinematicCharacterController.Examples
             if (!CC._isHanging)
             {
                 _isClimbing = false;
-                CC.TransitionToState(CharacterState.Default);
+                CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.Default));
             }
             yield break;
         }
 
-        void DetectLedge()
+        public void DetectLedge()
         { //stops working after climbUp maybe doclimb etc.
-            if (!CC._isFalling) return;
+            print("Detect Ledge");
+            if (!CC.IsFalling) return;
             //downcast if there is a ledge infront of player
             //Could Lower on Y, so how doesnt grab ledge when it is over his head/arm length, so it looks more natural.
             // This will bring his max grab height down. At Down Cast Y = 1.8, he can grab 2.5f above Ground sometimes.
@@ -369,7 +357,7 @@ namespace KinematicCharacterController.Examples
         }
         void GrabLedge(Quaternion wallRotation)
         {
-            CC.TransitionToState(CharacterState.Climbing);
+            CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.Climbing));
             _isClimbing = true;
             _matchTargetPosition = transform.TransformPoint(0, _downRaycastHitDis - 1.21f, amount);
             CC.CapsuleEnable(false);
@@ -401,7 +389,7 @@ namespace KinematicCharacterController.Examples
             print("done2");
             CC.CapsuleEnable(true);
             //Moveinputvector needs to be 0 at this point.
-            CC.TransitionToState(CharacterState.Default);
+            CC.CurrentState.SwitchStates(CC.CurrentFactory.GetBaseState(P_StateNames.Default));
             _isClimbing = false;
             CC._gettingOnOffObstacle = false;
             yield break;

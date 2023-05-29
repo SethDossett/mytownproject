@@ -71,7 +71,6 @@ namespace MyTownProject.Interaction
         public void OnInteract(TargetingSystem player)
         {
             //if (_hasInteracted) return;
-            player.TransitionCharacterState(CharacterState.Talking);
             if (!_playerRef) _playerRef = player.gameObject;
             Debug.Log($"Interacting with {gameObject.name}");
             //_targetGroup.m_Targets[1].target = transform;

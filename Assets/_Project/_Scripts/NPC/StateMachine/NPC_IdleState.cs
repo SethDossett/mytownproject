@@ -40,7 +40,7 @@ namespace MyTownProject.NPC
         }
         public override void UpdateState()
         {
-            Debug.Log(_rotate);
+            //Debug.Log(_rotate);
             if (_rotate) RotateNPC();
             CheckSwitchStates();
         }
