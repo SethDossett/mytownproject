@@ -51,8 +51,6 @@ namespace KinematicCharacterController.Examples
 
         [Header("Checks")]
         public bool _isClimbing;
-        bool _onGround;
-        bool _crawling;
 
         [Header("Heights")]
         [SerializeField] float _hangHeight = 1.5f;
@@ -90,58 +88,47 @@ namespace KinematicCharacterController.Examples
             _animator = GetComponent<Animator>();
             CC = GetComponent<TheCharacterController>();
             _capsule = GetComponent<CapsuleCollider>();
-            _onGround = true;
         }
         void PlayerStateChange(P_StateNames rootState, P_StateNames subState)
         {
             CurrentCharacterState = rootState;
             if (rootState == P_StateNames.Default || rootState == P_StateNames.CutsceneControl)
             {
-                _onGround = true;
                 _isClimbing = false;
-                _crawling = false;
             }
             else if (rootState == P_StateNames.Jumping)
             {
-                _onGround = false;
                 _isClimbing = false;
-                _crawling = false;
             }
             else if (rootState == P_StateNames.Crawling)
             {
-                _onGround = true;
                 _isClimbing = false;
-                _crawling = true;
             }
             else
             {
                 _isClimbing = true;
-                _crawling = false;
             }
         }
         void Update()
         {
-            if (_isClimbing) return;
+            //if (_isClimbing) return;
 
-            if (_onGround) GroundCheck(); else DetectLedge();
+            //if (_onGround) GroundCheck(); else DetectLedge();
 
         }
         public void GroundCheck()
         {
-            if (!_crawling)
+            //Need to Change how input is given here using _moveInputVector
+            Vector3 input = CC._moveInputVector;
+            float dot = Vector3.Dot(input, transform.forward.normalized);
+            if (dot >= 0.8f)
             {
-                Vector3 input = CC._moveInputVector;
-                float dot = Vector3.Dot(input, transform.forward.normalized);
-                if (dot >= 0.8f)
+                if (CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition))
                 {
-                    if (CanClimb(out _downHitInfo, out _forwardHitInfo, out _endPosition))
-                    {
-                        InitiateClimb();
-                        print("Initiate");
-                    }
-                    else timer = 0;
+                    InitiateClimb();
+                    print("Initiate");
                 }
-
+                else timer = 0;
             }
 
         }
@@ -335,6 +322,7 @@ namespace KinematicCharacterController.Examples
 
         public void DetectLedge()
         { //stops working after climbUp maybe doclimb etc.
+            print("Detect Ledge");
             if (!CC.IsFalling) return;
             //downcast if there is a ledge infront of player
             //Could Lower on Y, so how doesnt grab ledge when it is over his head/arm length, so it looks more natural.
