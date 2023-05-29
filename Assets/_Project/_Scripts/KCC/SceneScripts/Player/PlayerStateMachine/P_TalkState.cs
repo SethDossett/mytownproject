@@ -14,6 +14,10 @@ namespace KinematicCharacterController.Examples
         public override void OnStateEnter(P_BaseState state)
         {
             base.OnStateEnter(state);
+            _baseMotor = Ctx.Motor;
+            _baseAnimator = Ctx.PlayerAnimator;
+            _baseMainCam = Ctx.CamMain;
+            _baseTransform = Ctx.transform;
 
             Ctx.TurnOnTimeScaleZeroTick.TimeScaleZeroTick(1f, false);
             _baseAnimator.SetFloat(anim_moving, 0, 0f, Time.deltaTime);

@@ -14,6 +14,8 @@ namespace KinematicCharacterController.Examples
         public override void OnStateEnter(P_BaseState state)
         {
             base.OnStateEnter(state);
+            _baseMainCam = Ctx.CamMain;
+            _baseMotor = Ctx.Motor;
 
 
         }
@@ -26,7 +28,7 @@ namespace KinematicCharacterController.Examples
             Vector3 moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveDirection.x, 0f, inputs.MoveDirection.y), 1f);
 
             // Calculate camera direction and rotation on the character plane
-            Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(Ctx.CamMain.transform.rotation * Vector3.forward, _baseMotor.CharacterUp).normalized;
+            Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(_baseMainCam.transform.rotation * Vector3.forward, _baseMotor.CharacterUp).normalized;
             if (cameraPlanarDirection.sqrMagnitude == 0f)
             {
                 cameraPlanarDirection = Vector3.ProjectOnPlane(_baseMainCam.transform.rotation * Vector3.up, _baseMotor.CharacterUp).normalized;
@@ -40,9 +42,10 @@ namespace KinematicCharacterController.Examples
 
         public override void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
         {
-            //base.UpdateVelocity(ref currentVelocity, deltaTime);
+            base.UpdateVelocity(ref currentVelocity, deltaTime);
 
             // Might want to tighten up how much you can move in air.
+            Debug.Log("jumping");
 
             // Air movement
             if (!_baseMotor.GroundingStatus.IsStableOnGround)

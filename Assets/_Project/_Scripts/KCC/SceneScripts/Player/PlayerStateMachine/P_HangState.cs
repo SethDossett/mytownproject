@@ -6,6 +6,7 @@ namespace KinematicCharacterController.Examples
     {
         int anim_FreeHangDrop = Animator.StringToHash("FreeHangDrop");
         int anim_ClimbUp = Animator.StringToHash("ClimbUp");
+        int anim_Hang = Animator.StringToHash("Hang");
         float _climbTimer;
         bool _dropDownRequested;
         bool _checkInput;
@@ -19,8 +20,15 @@ namespace KinematicCharacterController.Examples
         {
             base.OnStateEnter(state);
 
+            _baseMotor = Ctx.Motor;
+            _baseAnimator = Ctx.PlayerAnimator;
+            _baseMainCam = Ctx.CamMain;
+            _baseTransform = Ctx.transform;
+            _basePlayerClimb = Ctx.PlayerClimb;
+
             Ctx._isHanging = true;
-            _baseMotor.ForceUnground();
+            //_baseMotor.ForceUnground();
+            _baseAnimator.CrossFadeInFixedTime(anim_Hang, 0.25f, 0);
             _climbTimer = 0;
         }
 
@@ -129,10 +137,11 @@ namespace KinematicCharacterController.Examples
                 Ctx._startFallingTimer = true;
                 _dropDownRequested = false;
                 Ctx.CapsuleEnable(true);
-                SwitchStates(Factory.GetBaseState(P_StateNames.Falling));
+                SwitchStates(Factory.GetBaseState(P_StateNames.Default));
                 _basePlayerClimb._isClimbing = false;
                 Ctx._gettingOnOffObstacle = false;
                 Ctx._isHanging = false;
+                Debug.Log("THIS GETS RUN");
             }
 
         }

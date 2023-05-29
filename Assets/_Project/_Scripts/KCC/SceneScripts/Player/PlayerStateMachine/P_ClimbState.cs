@@ -16,12 +16,19 @@ namespace KinematicCharacterController.Examples
         {
             base.OnStateEnter(state);
 
+            _baseMotor = Ctx.Motor;
+            _baseAnimator = Ctx.PlayerAnimator;
+            _baseMainCam = Ctx.CamMain;
+
             _baseMotor.ForceUnground();
         }
 
         public override void OnStateExit()
         {
             base.OnStateExit();
+            
+            // If we switch to hanging state then dont switch animation
+            if(Ctx._isHanging) return; 
 
             if (Ctx.IsFalling) 
                 _baseAnimator.CrossFadeInFixedTime(anim_FreeHangDrop, 0.25f, 0);

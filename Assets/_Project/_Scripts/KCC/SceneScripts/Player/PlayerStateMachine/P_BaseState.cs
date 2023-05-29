@@ -45,6 +45,8 @@ namespace KinematicCharacterController.Examples
         {
             this._ctx = currentContext;
             this._factory = p_StateFactory;
+
+
         }
 
         public void Init()
@@ -65,7 +67,6 @@ namespace KinematicCharacterController.Examples
 
             if (_isRootState)
             {
-
             }
         }
         public virtual void OnStateExit()

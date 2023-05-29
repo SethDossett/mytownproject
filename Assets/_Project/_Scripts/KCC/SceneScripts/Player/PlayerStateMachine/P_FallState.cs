@@ -14,6 +14,10 @@ namespace KinematicCharacterController.Examples
         public override void OnStateEnter(P_BaseState state)
         {
             base.OnStateEnter(state);
+            _baseMotor = Ctx.Motor;
+            _basePlayerClimb = Ctx.PlayerClimb;
+            _baseMainCam = Ctx.CamMain;           
+
 
             Ctx.IsFalling = true;
             Ctx.FallingCheck();

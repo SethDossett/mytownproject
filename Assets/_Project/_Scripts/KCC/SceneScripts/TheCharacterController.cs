@@ -137,7 +137,6 @@ namespace KinematicCharacterController.Examples
         int anim_talking = Animator.StringToHash("isTalking");
 
         //Climb States
-        int anim_Hang = Animator.StringToHash("Hang");
         int anim_DropToHang = Animator.StringToHash("DropToHang");
 
 
@@ -306,7 +305,7 @@ namespace KinematicCharacterController.Examples
         /// </summary>
         public void SetInputs(ref AICharacterInputs inputs)
         {
-            _moveInputVector = inputs.MoveVector;
+            //_moveInputVector = inputs.MoveVector;
             //_lookInputVector = inputs.LookVector;
         }
 

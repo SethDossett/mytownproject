@@ -30,6 +30,13 @@ namespace KinematicCharacterController.Examples
             //Get references from base state
             base.OnStateEnter(state);
 
+            _baseMotor = Ctx.Motor;
+            _baseAnimator = Ctx.PlayerAnimator;
+            _baseFallOffPrevention = Ctx.FallOffPrevention;
+            _baseMainCam = Ctx.CamMain;
+            _baseTransform = Ctx.transform;
+            _basePlayerClimb = Ctx.PlayerClimb;
+
             Ctx.Gravity = new Vector3(0, -30f, 0);
             _baseAnimator.SetFloat(anim_SpeedMultiplier, 2.5f, 0.1f, Time.unscaledDeltaTime);
             _lookInputVector = Vector3.zero;
@@ -65,6 +72,7 @@ namespace KinematicCharacterController.Examples
 
             // Move and look inputs
             _baseMoveInputVector = cameraPlanarRotation * moveInputVector;
+            Ctx._moveInputVector = _baseMoveInputVector;
 
             switch (Ctx.OrientationMethod)
             {

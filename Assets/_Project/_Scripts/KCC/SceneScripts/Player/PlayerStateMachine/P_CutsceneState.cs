@@ -14,6 +14,10 @@ namespace KinematicCharacterController.Examples
         {
             base.OnStateEnter(state);
 
+            _baseMotor = Ctx.Motor;
+            _baseAnimator = Ctx.PlayerAnimator;
+            _baseTransform = Ctx.transform;
+
             Ctx.MaxStableMoveSpeed = 1.2f;
             Ctx.IsFalling = false; 
         }

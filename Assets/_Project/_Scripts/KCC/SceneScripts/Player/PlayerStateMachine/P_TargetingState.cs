@@ -16,6 +16,11 @@ namespace KinematicCharacterController.Examples
         public override void OnStateEnter(P_BaseState state)
         {
             base.OnStateEnter(state);
+            _baseMotor = Ctx.Motor;
+            _baseAnimator = Ctx.PlayerAnimator;
+            _baseMainCam = Ctx.CamMain;
+            _baseTransform = Ctx.transform;
+
             _baseAnimator.CrossFadeInFixedTime(_strafeState, 0.25f, 0);
         }
 
@@ -56,6 +61,8 @@ namespace KinematicCharacterController.Examples
                     _lookInputVector = _baseMoveInputVector.normalized;
                     break;
             }
+
+            // Crouch requested if there is no object targeted and just facing forward.
         }
 
         public override void UpdateRotation(ref Quaternion currentRotation, float deltaTime)

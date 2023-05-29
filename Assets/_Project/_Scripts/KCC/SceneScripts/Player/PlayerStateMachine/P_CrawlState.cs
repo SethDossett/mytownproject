@@ -20,6 +20,12 @@ namespace KinematicCharacterController.Examples
         {
             base.OnStateEnter(state);
 
+            _baseMotor = Ctx.Motor;
+            _baseAnimator = Ctx.PlayerAnimator;
+            _baseFallOffPrevention = Ctx.FallOffPrevention;
+            _baseMainCam = Ctx.CamMain;
+            _baseTransform = Ctx.transform;
+
             Ctx._shouldBeCrouching = true;
             _isCrouching = true;
             _baseMotor.SetCapsuleDimensions(0.44f, Ctx.CrouchedCapsuleHeight, Ctx.CrouchedCapsuleHeight * 0.5f);
