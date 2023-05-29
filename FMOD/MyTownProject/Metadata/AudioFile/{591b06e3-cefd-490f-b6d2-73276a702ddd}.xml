@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{591b06e3-cefd-490f-b6d2-73276a702ddd}">
+		<property name="assetPath">
+			<value>Birds/TropicalTexture.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>121.75806249999999</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{936dc49d-2b59-4bd4-8f84-dd7777f0d247}</destination>
+		</relationship>
+	</object>
+</objects>
