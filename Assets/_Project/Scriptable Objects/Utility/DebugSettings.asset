@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: DebugSettings
   m_EditorClassIdentifier: 
   SetFrameRate: 0
-  TargetFrameRate: 0
+  TargetFrameRate: 20
   SetFPS_Counter: 1
   FPS_RefreshRate: 1
   HudToggle: 1
   EnterIndividualScene: 0
   SceneToEnter: {fileID: 11400000, guid: 7072e3e0518d74a5fa00cba27281dd82, type: 2}
-  UseDebugSpawnPosition: 0
+  UseDebugSpawnPosition: 1
